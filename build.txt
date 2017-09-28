@@ -1,0 +1,11 @@
+author = Eternal Team
+version = 0.2.2
+displayName = Portable Storage
+homepage = http://forums.terraria.org/index.php?threads/itorius-mods.42289/
+hideCode = true
+hideResources = true
+includeSource = false
+buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
+includePDB = true
+languageVersion = 6
+modReferences = BaseLib, ContainerLib2 
