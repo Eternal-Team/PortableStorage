@@ -36,11 +36,11 @@ namespace PortableStorage
 
 	public class PSWorld : ModWorld
 	{
-		public IDictionary<Frequency, IList<Item>> enderItems = new Dictionary<Frequency, IList<Item>>();
+		public Dictionary<Frequency, List<Item>> enderItems = new Dictionary<Frequency, List<Item>>();
 
 		public override void Initialize()
 		{
-			IList<Item> items = new List<Item>();
+			List<Item> items = new List<Item>();
 			for (int i = 0; i < 27; i++) items.Add(new Item());
 			enderItems[new Frequency()] = items;
 		}
@@ -56,7 +56,7 @@ namespace PortableStorage
 			IList<Frequency> frequencies = tag.GetList<Frequency>("Frequencies");
 			IList<List<Item>> items = tag.GetList<List<Item>>("Items");
 
-			enderItems = frequencies.Zip(items, (frequency, list) => new KeyValuePair<Frequency, IList<Item>>(frequency, list)).ToDictionary(x => x.Key, x => x.Value);
+			enderItems = frequencies.Zip(items, (frequency, list) => new KeyValuePair<Frequency, List<Item>>(frequency, list)).ToDictionary(x => x.Key, x => x.Value);
 		}
 
 		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);

@@ -60,6 +60,7 @@ namespace PortableStorage.UI
 			for (int i = 0; i < bag.GetItems().Count; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(bag, i);
+				slot.CanInteract += (item, mouse) => mouse.IsAir || mouse.ammo > 0;
 				gridItems.Add(slot);
 			}
 		}

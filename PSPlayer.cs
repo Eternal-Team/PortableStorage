@@ -65,7 +65,7 @@ namespace PortableStorage
 						{
 							if (!mod.GetModWorld<PSWorld>().enderItems.ContainsKey(frequency))
 							{
-								IList<Item> items = new List<Item>();
+								List<Item> items = new List<Item>();
 								for (int x = 0; x < 27; x++) items.Add(new Item());
 								mod.GetModWorld<PSWorld>().enderItems[frequency] = items;
 							}
@@ -82,7 +82,7 @@ namespace PortableStorage
 				}
 			}
 		}
-		
+
 		public override void ProcessTriggers(TriggersSet triggersSet)
 		{
 			if (PortableStorage.bagKey.JustPressed)

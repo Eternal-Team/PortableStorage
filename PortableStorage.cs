@@ -22,11 +22,11 @@ namespace PortableStorage
 		public const string TileTexturePath = "PortableStorage/Textures/Tiles/";
 		public const string ItemTexturePath = "PortableStorage/Textures/Items/";
 
-		public static Texture2D[] gemsMiddle = new Texture2D[3];
-		public static Texture2D[] gemsSide = new Texture2D[3];
+		public Texture2D[] gemsMiddle = new Texture2D[3];
+		public Texture2D[] gemsSide = new Texture2D[3];
 
-		public static Texture2D vacuumBagOn;
-		public static Texture2D vacuumBagOff;
+		public Texture2D vacuumBagOn;
+		public Texture2D vacuumBagOff;
 
 		public static ModHotKey bagKey;
 
@@ -59,9 +59,6 @@ namespace PortableStorage
 				vacuumBagOn = ModLoader.GetTexture(ItemTexturePath + "VacuumBagActive");
 				vacuumBagOff = ModLoader.GetTexture(ItemTexturePath + "VacuumBagInactive");
 
-				gemsMiddle = new Texture2D[3];
-				gemsSide = new Texture2D[3];
-
 				for (int i = 0; i < 3; i++)
 				{
 					gemsMiddle[i] = ModLoader.GetTexture(TileTexturePath + "GemMiddle" + i);
@@ -73,14 +70,6 @@ namespace PortableStorage
 		public override void Unload()
 		{
 			Instance = null;
-
-			GetModWorld<PSWorld>().enderItems.Clear();
-
-			vacuumBagOn = null;
-			vacuumBagOff = null;
-
-			gemsMiddle = null;
-			gemsSide = null;
 		}
 
 		public override void AddRecipes()

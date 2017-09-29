@@ -7,7 +7,6 @@ using PortableStorage.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Xna.Framework.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -106,11 +105,11 @@ namespace PortableStorage.Items
 			posY += up ? -0.08f : 0.08f;
 			if (posY <= -2) up = false;
 			else if (posY >= 2) up = true;
-			spriteBatch.Draw(active ? PortableStorage.vacuumBagOn : PortableStorage.vacuumBagOff, position + new Vector2(0, posY), frame, drawColor, 0f, origin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(active ? PortableStorage.Instance.vacuumBagOn : PortableStorage.Instance.vacuumBagOff, position + new Vector2(0, posY), frame, drawColor, 0f, origin, scale, SpriteEffects.None, 0f);
 
 			return false;
 		}
-		
+
 		public override TagCompound Save() => new TagCompound { ["Items"] = Items.Save(), ["GUID"] = guid.ToString(), ["Active"] = active };
 
 		public override void Load(TagCompound tag)

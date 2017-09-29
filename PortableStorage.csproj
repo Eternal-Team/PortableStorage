@@ -91,6 +91,12 @@
     <Content Include="build.txt" />
     <Content Include="description.txt" />
     <Content Include="icon.png" />
+    <Content Include="Textures\Items\Bag.png" />
+    <Content Include="Textures\Items\GemsSide.png" />
+    <Content Include="Textures\Items\QEBag.png" />
+    <Content Include="Textures\Items\QEChest.png" />
+    <Content Include="Textures\Items\VacuumBagActive.png" />
+    <Content Include="Textures\Items\VacuumBagInactive.png" />
     <Content Include="Textures\Tiles\GemMiddle0.png" />
     <Content Include="Textures\Tiles\GemMiddle1.png" />
     <Content Include="Textures\Tiles\GemMiddle2.png" />

@@ -1,3 +1,8 @@
 All your storage on the go!
 
-Includes: Bags, Quantum Entangled Bags and Quantum Entangled Chests
+Includes: 
+Bag - stores 54 stacks of items
+Ammo Bag - stores 27 stacks of items, automatically replenish ammo slots
+Vacuum Bag - stores 27 stacks of items, sucks up items
+Quantum Entangled Bag - stores 27 stacks of items, shares the inventory with QE Bags/Chest of the same freqency
+Quantum Entangled Chest - stores 27 stacks of items, shares the inventory with QE Bags/Chest of the same freqency
