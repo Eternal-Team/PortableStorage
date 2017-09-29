@@ -82,7 +82,7 @@ namespace PortableStorage
 				}
 			}
 		}
-
+		
 		public override void ProcessTriggers(TriggersSet triggersSet)
 		{
 			if (PortableStorage.bagKey.JustPressed)

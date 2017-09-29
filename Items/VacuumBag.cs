@@ -7,6 +7,7 @@ using PortableStorage.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.Xna.Framework.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -32,6 +33,7 @@ namespace PortableStorage.Items
 			VacuumBag clone = (VacuumBag)base.Clone(item);
 			clone.Items = Items;
 			clone.guid = guid;
+			clone.active = active;
 			return clone;
 		}
 
@@ -45,6 +47,7 @@ namespace PortableStorage.Items
 
 		public override void SetDefaults()
 		{
+			Items.Clear();
 			for (int i = 0; i < 27; i++) Items.Add(new Item());
 
 			item.width = 36;
@@ -107,47 +110,7 @@ namespace PortableStorage.Items
 
 			return false;
 		}
-
-		//public override void UpdateInventory(Player player)
-		//{
-		//	List<Item> list = player.inventory.Where((x, i) => i >= 54 && i <= 57).ToList();
-
-		//	if (list.Select(x => x.type).Any(x => Items.Select(y => y.type).Contains(x)))
-		//	{
-		//		for (int i = 0; i < Items.Count; i++)
-		//		{
-		//			Item ammo = list.FirstOrDefault(x => x.type == Items[i].type);
-		//			if (ammo != null)
-		//			{
-		//				int count = Math.Min(Items[i].stack, ammo.maxStack - ammo.stack);
-		//				ammo.stack += count;
-		//				Items[i].stack -= count;
-		//				if (Items[i].stack <= 0) Items[i].TurnToAir();
-		//			}
-		//		}
-		//	}
-		//}
-
-		//public override void UpdateAccessory(Player player, bool hideVisual)
-		//{
-		//	List<Item> list = player.inventory.Where((x, i) => i >= 54 && i <= 57).ToList();
-
-		//	if (list.Select(x => x.type).Any(x => Items.Select(y => y.type).Contains(x)))
-		//	{
-		//		for (int i = 0; i < Items.Count; i++)
-		//		{
-		//			Item ammo = list.FirstOrDefault(x => x.type == Items[i].type);
-		//			if (ammo != null)
-		//			{
-		//				int count = Math.Min(Items[i].stack, ammo.maxStack - ammo.stack);
-		//				ammo.stack += count;
-		//				Items[i].stack -= count;
-		//				if (Items[i].stack <= 0) Items[i].TurnToAir();
-		//			}
-		//		}
-		//	}
-		//}
-
+		
 		public override TagCompound Save() => new TagCompound { ["Items"] = Items.Save(), ["GUID"] = guid.ToString(), ["Active"] = active };
 
 		public override void Load(TagCompound tag)

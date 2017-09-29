@@ -12,7 +12,7 @@ namespace PortableStorage.UI
 {
 	public class VacuumBagUI : BaseUI
 	{
-		public UIText textLabel = new UIText("Ammo Bag");
+		public UIText textLabel = new UIText("Vacuum Bag");
 		public UITextButton buttonClose = new UITextButton("X", 4);
 		public UIGrid gridItems = new UIGrid(9);
 
@@ -40,7 +40,7 @@ namespace PortableStorage.UI
 			buttonClose.OnClick += (evt, element) =>
 			{
 				PortableStorage.Instance.BagUI.Remove(guid);
-				Main.PlaySound(SoundID.Item59.WithVolume(0.5f));
+				Main.PlaySound(SoundID.Item59);
 			};
 			panelMain.Append(buttonClose);
 
