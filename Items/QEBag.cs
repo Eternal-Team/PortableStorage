@@ -1,4 +1,3 @@
-using BaseLib.Items;
 using BaseLib.UI;
 using ContainerLib2.Container;
 using Microsoft.Xna.Framework;
@@ -16,7 +15,7 @@ using static BaseLib.Utility.Utility;
 
 namespace PortableStorage.Items
 {
-	public class QEBag : BaseItem, IContainerItem
+	public class QEBag : BaseBag, IContainerItem
 	{
 		public Guid guid = Guid.NewGuid();
 		public Frequency frequency = new Frequency(Colors.White);
@@ -51,10 +50,9 @@ namespace PortableStorage.Items
 			item.value = GetItemValue(mod.ItemType<Bag>()) + GetItemValue(ItemID.ShadowScale) * 25 + GetItemValue(ItemID.DemoniteBar) * 5;
 			item.rare = 9;
 			item.accessory = true;
-			item.UseSound = SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f);
 		}
 
-		public void HandleUI()
+		public override void HandleUI()
 		{
 			if (!PortableStorage.Instance.BagUI.ContainsKey(guid))
 			{
@@ -67,6 +65,8 @@ namespace PortableStorage.Items
 				PortableStorage.Instance.BagUI.Add(guid, new GUI(ui, userInterface));
 			}
 			else PortableStorage.Instance.BagUI.Remove(guid);
+
+			Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
 		}
 
 		public override bool UseItem(Player player)
@@ -81,7 +81,6 @@ namespace PortableStorage.Items
 		public override void RightClick(Player player)
 		{
 			item.stack++;
-			Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
 
 			HandleUI();
 		}
@@ -99,11 +98,7 @@ namespace PortableStorage.Items
 			tooltip.text = $"Use the bag, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it";
 		}
 
-		public override TagCompound Save() => new TagCompound
-		{
-			["Frequency"] = frequency,
-			["GUID"] = guid.ToString()
-		};
+		public override TagCompound Save() => new TagCompound { ["Frequency"] = frequency, ["GUID"] = guid.ToString() };
 
 		public override void Load(TagCompound tag)
 		{

@@ -1,4 +1,3 @@
-using BaseLib.Items;
 using BaseLib.UI;
 using ContainerLib2;
 using ContainerLib2.Container;
@@ -16,7 +15,7 @@ using static BaseLib.Utility.Utility;
 
 namespace PortableStorage.Items
 {
-	public class AmmoBag : BaseItem, IContainerItem
+	public class AmmoBag : BaseBag, IContainerItem
 	{
 		public Guid guid = Guid.NewGuid();
 		public IList<Item> Items = new List<Item>();
@@ -52,10 +51,9 @@ namespace PortableStorage.Items
 			item.value = GetItemValue(ItemID.Leather) * 10;
 			item.rare = 1;
 			item.accessory = true;
-			item.UseSound = SoundID.Item59;
 		}
 
-		public void HandleUI()
+		public override void HandleUI()
 		{
 			if (!PortableStorage.Instance.BagUI.ContainsKey(guid))
 			{
@@ -68,6 +66,8 @@ namespace PortableStorage.Items
 				PortableStorage.Instance.BagUI.Add(guid, new GUI(ui, userInterface));
 			}
 			else PortableStorage.Instance.BagUI.Remove(guid);
+
+			Main.PlaySound(SoundID.Item59);
 		}
 
 		public override bool UseItem(Player player)
@@ -82,7 +82,6 @@ namespace PortableStorage.Items
 		public override void RightClick(Player player)
 		{
 			item.stack++;
-			Main.PlaySound(SoundID.Item59);
 
 			HandleUI();
 		}
@@ -90,7 +89,7 @@ namespace PortableStorage.Items
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			TooltipLine tooltip = tooltips.Find(x => x.mod == "Terraria" && x.Name == "Tooltip0");
-			tooltip.text = $"Use the bag, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it\nRestocks your ammo slots!";
+			tooltip.text = $"Use the bag, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it";
 		}
 
 		public override void UpdateInventory(Player player)

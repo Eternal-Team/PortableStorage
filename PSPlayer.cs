@@ -87,19 +87,12 @@ namespace PortableStorage
 		{
 			if (PortableStorage.bagKey.JustPressed)
 			{
-				Item item = BaseLib.Utility.Utility.AccessoryItems.FirstOrDefault(x => x.modItem is Bag || x.modItem is QEBag);
+				Item item = BaseLib.Utility.Utility.AccessoryItems.FirstOrDefault(x => x.modItem is BaseBag);
 
-				if (item?.modItem is Bag)
+				if (item?.modItem is BaseBag)
 				{
-					Bag bag = (Bag)item.modItem;
+					BaseBag bag = (BaseBag)item.modItem;
 					bag.HandleUI();
-					Main.PlaySound(SoundID.Item59);
-				}
-				else if (item?.modItem is QEBag)
-				{
-					QEBag qeBag = (QEBag)item.modItem;
-					qeBag.HandleUI();
-					Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
 				}
 			}
 		}

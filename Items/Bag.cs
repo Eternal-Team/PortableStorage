@@ -1,4 +1,3 @@
-using BaseLib.Items;
 using BaseLib.UI;
 using ContainerLib2;
 using ContainerLib2.Container;
@@ -15,7 +14,7 @@ using static BaseLib.Utility.Utility;
 
 namespace PortableStorage.Items
 {
-	public class Bag : BaseItem, IContainerItem
+	public class Bag : BaseBag, IContainerItem
 	{
 		public Guid guid = Guid.NewGuid();
 		public IList<Item> Items = new List<Item>();
@@ -51,10 +50,9 @@ namespace PortableStorage.Items
 			item.value = GetItemValue(ItemID.Leather) * 10;
 			item.rare = 0;
 			item.accessory = true;
-			item.UseSound = SoundID.Item59;
 		}
 
-		public void HandleUI()
+		public override void HandleUI()
 		{
 			if (!PortableStorage.Instance.BagUI.ContainsKey(guid))
 			{
@@ -67,6 +65,8 @@ namespace PortableStorage.Items
 				PortableStorage.Instance.BagUI.Add(guid, new GUI(ui, userInterface));
 			}
 			else PortableStorage.Instance.BagUI.Remove(guid);
+
+			Main.PlaySound(SoundID.Item59);
 		}
 
 		public override bool UseItem(Player player)
@@ -81,7 +81,6 @@ namespace PortableStorage.Items
 		public override void RightClick(Player player)
 		{
 			item.stack++;
-			Main.PlaySound(SoundID.Item59);
 
 			HandleUI();
 		}

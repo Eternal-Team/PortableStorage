@@ -25,6 +25,9 @@ namespace PortableStorage
 		public static Texture2D[] gemsMiddle = new Texture2D[3];
 		public static Texture2D[] gemsSide = new Texture2D[3];
 
+		public static Texture2D vacuumBagOn;
+		public static Texture2D vacuumBagOff;
+
 		public static ModHotKey bagKey;
 
 		public PortableStorage()
@@ -53,6 +56,9 @@ namespace PortableStorage
 
 			if (!Main.dedServ)
 			{
+				vacuumBagOn = ModLoader.GetTexture(ItemTexturePath + "VacuumBagActive");
+				vacuumBagOff = ModLoader.GetTexture(ItemTexturePath + "VacuumBagInactive");
+
 				gemsMiddle = new Texture2D[3];
 				gemsSide = new Texture2D[3];
 
@@ -67,8 +73,11 @@ namespace PortableStorage
 		public override void Unload()
 		{
 			Instance = null;
-			
+
 			GetModWorld<PSWorld>().enderItems.Clear();
+
+			vacuumBagOn = null;
+			vacuumBagOff = null;
 
 			gemsMiddle = null;
 			gemsSide = null;
