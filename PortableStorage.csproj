@@ -36,7 +36,7 @@
   <ItemGroup>
     <Compile Include="Items\BaseBag.cs" />
     <Compile Include="Items\VacuumBag.cs" />
-    <Compile Include="Items\AmmoBag.cs" />
+    <Compile Include="Items\AmmoBelt.cs" />
     <Compile Include="Items\QEChest.cs" />
     <Compile Include="Items\QEBag.cs" />
     <Compile Include="Items\Bag.cs" />
@@ -48,7 +48,7 @@
     <Compile Include="Tiles\QEChest.cs" />
     <Compile Include="TileEntities\TEQEChest.cs" />
     <Compile Include="UI\VacuumBagUI.cs" />
-    <Compile Include="UI\AmmoBagUI.cs" />
+    <Compile Include="UI\AmmoBeltUI.cs" />
     <Compile Include="UI\QEBagUI.cs" />
     <Compile Include="UI\BagUI.cs" />
     <Compile Include="UI\QEChestUI.cs" />

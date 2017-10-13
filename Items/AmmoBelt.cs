@@ -15,18 +15,18 @@ using static BaseLib.Utility.Utility;
 
 namespace PortableStorage.Items
 {
-	public class AmmoBag : BaseBag, IContainerItem
+	public class AmmoBelt : BaseBag, IContainerItem
 	{
 		public Guid guid = Guid.NewGuid();
 		public IList<Item> Items = new List<Item>();
 
-		public override string Texture => PortableStorage.ItemTexturePath + "Bag";
+		public override string Texture => PortableStorage.ItemTexturePath + "AmmoBelt";
 
 		public override bool CloneNewInstances => true;
 
 		public override ModItem Clone(Item item)
 		{
-			AmmoBag clone = (AmmoBag)base.Clone(item);
+			AmmoBelt clone = (AmmoBelt)base.Clone(item);
 			clone.Items = Items;
 			clone.guid = guid;
 			return clone;
@@ -34,16 +34,17 @@ namespace PortableStorage.Items
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Ammo Bag");
-			Tooltip.SetDefault("Use the bag, right-click it or press [c/83fcec:B] while having it in an accessory slot to open it\nRestocks your ammo slots!");
+			DisplayName.SetDefault("Ammo Belt");
+			Tooltip.SetDefault("Use the belt, right-click it or press [c/83fcec:B] while having it in an accessory slot to open it\nRestocks your ammo slots!");
 		}
 
 		public override void SetDefaults()
 		{
+			Items.Clear();
 			for (int i = 0; i < 27; i++) Items.Add(new Item());
 
-			item.width = 32;
-			item.height = 34;
+			item.width = 30;
+			item.height = 14;
 			item.useTime = 5;
 			item.useAnimation = 5;
 			item.noUseGraphic = true;
@@ -57,7 +58,7 @@ namespace PortableStorage.Items
 		{
 			if (!PortableStorage.Instance.BagUI.ContainsKey(guid))
 			{
-				AmmoBagUI ui = new AmmoBagUI();
+				AmmoBeltUI ui = new AmmoBeltUI();
 				UserInterface userInterface = new UserInterface();
 				ui.Activate();
 				userInterface.SetState(ui);
@@ -89,7 +90,7 @@ namespace PortableStorage.Items
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			TooltipLine tooltip = tooltips.Find(x => x.mod == "Terraria" && x.Name == "Tooltip0");
-			tooltip.text = $"Use the bag, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it";
+			tooltip.text = $"Use the belt, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it";
 		}
 
 		public override void UpdateInventory(Player player)

@@ -39,6 +39,7 @@ namespace PortableStorage.Items
 
 		public override void SetDefaults()
 		{
+			Items.Clear();
 			for (int i = 0; i < 54; i++) Items.Add(new Item());
 
 			item.width = 32;

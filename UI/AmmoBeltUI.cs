@@ -10,9 +10,9 @@ using Terraria.ID;
 
 namespace PortableStorage.UI
 {
-	public class AmmoBagUI : BaseUI
+	public class AmmoBeltUI : BaseUI
 	{
-		public UIText textLabel = new UIText("Ammo Bag");
+		public UIText textLabel = new UIText("Ammo Belt");
 		public UITextButton buttonClose = new UITextButton("X", 4);
 		public UIGrid gridItems = new UIGrid(9);
 
@@ -53,13 +53,13 @@ namespace PortableStorage.UI
 			panelMain.Append(gridItems);
 		}
 
-		public void Load(AmmoBag bag)
+		public void Load(AmmoBelt belt)
 		{
-			guid = bag.guid;
+			guid = belt.guid;
 
-			for (int i = 0; i < bag.GetItems().Count; i++)
+			for (int i = 0; i < belt.GetItems().Count; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(bag, i);
+				UIContainerSlot slot = new UIContainerSlot(belt, i);
 				slot.CanInteract += (item, mouse) => mouse.IsAir || mouse.ammo > 0;
 				gridItems.Add(slot);
 			}
