@@ -20,8 +20,6 @@ namespace PortableStorage.Items
 		public Guid guid = Guid.NewGuid();
 		public Frequency frequency = new Frequency(Colors.White);
 
-		public override bool CloneNewInstances => true;
-
 		public override string Texture => PortableStorage.ItemTexturePath + "QEBag";
 
 		public override ModItem Clone(Item item)

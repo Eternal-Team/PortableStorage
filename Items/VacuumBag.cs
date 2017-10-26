@@ -25,8 +25,6 @@ namespace PortableStorage.Items
 
 		public override string Texture => PortableStorage.ItemTexturePath + "VacuumBagActive";
 
-		public override bool CloneNewInstances => true;
-
 		public override ModItem Clone(Item item)
 		{
 			VacuumBag clone = (VacuumBag)base.Clone(item);
@@ -130,6 +128,12 @@ namespace PortableStorage.Items
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
+		}
+
+		public override void OnCraft(Recipe recipe)
+		{
+			Items.Clear();
+			for (int i = 0; i < 27; i++) Items.Add(new Item());
 		}
 
 		public IList<Item> GetItems() => Items;

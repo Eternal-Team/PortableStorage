@@ -21,9 +21,7 @@ namespace PortableStorage.Items
 		public IList<Item> Items = new List<Item>();
 
 		public override string Texture => PortableStorage.ItemTexturePath + "AmmoBelt";
-
-		public override bool CloneNewInstances => true;
-
+		
 		public override ModItem Clone(Item item)
 		{
 			AmmoBelt clone = (AmmoBelt)base.Clone(item);
@@ -152,6 +150,12 @@ namespace PortableStorage.Items
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
+		}
+
+		public override void OnCraft(Recipe recipe)
+		{
+			Items.Clear();
+			for (int i = 0; i < 27; i++) Items.Add(new Item());
 		}
 
 		public IList<Item> GetItems() => Items;
