@@ -84,10 +84,6 @@ namespace PortableStorage.TileEntities
 
 		public IList<Item> GetItems() => mod.GetModWorld<PSWorld>().enderItems[frequency];
 
-		public Item GetItem(int slot) => mod.GetModWorld<PSWorld>().enderItems[frequency][slot];
-
-		public void SetItem(Item item, int slot) => mod.GetModWorld<PSWorld>().enderItems[frequency][slot] = item;
-
 		public ModTileEntity GetTileEntity() => this;
 	}
 }

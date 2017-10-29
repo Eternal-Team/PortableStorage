@@ -137,9 +137,5 @@ namespace PortableStorage.Items
 		}
 
 		public IList<Item> GetItems() => Items;
-
-		public Item GetItem(int slot) => Items[slot];
-
-		public void SetItem(Item item, int slot) => Items[slot] = item;
 	}
 }
