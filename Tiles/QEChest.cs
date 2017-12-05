@@ -5,11 +5,12 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using static BaseLib.Utility.Utility;
+using TheOneLibrary.Base;
+using TheOneLibrary.Utility;
 
 namespace PortableStorage.Tiles
 {
-	public class QEChest : ModTile
+	public class QEChest : BaseTile
 	{
 		public override bool Autoload(ref string name, ref string texture)
 		{

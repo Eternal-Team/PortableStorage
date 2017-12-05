@@ -1,12 +1,11 @@
-﻿using BaseLib.Elements;
-using BaseLib.UI;
-using BaseLib.Utility;
-using ContainerLib2.Container;
-using PortableStorage.Items;
+﻿using PortableStorage.Items;
 using System;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
+using TheOneLibrary.Base.UI;
+using TheOneLibrary.UI.Elements;
+using TheOneLibrary.Utility;
 
 namespace PortableStorage.UI
 {

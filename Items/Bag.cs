@@ -1,6 +1,3 @@
-using BaseLib.UI;
-using ContainerLib2;
-using ContainerLib2.Container;
 using PortableStorage.UI;
 using System;
 using System.Collections.Generic;
@@ -10,7 +7,9 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
-using static BaseLib.Utility.Utility;
+using TheOneLibrary.Base.UI;
+using TheOneLibrary.Storage;
+using static TheOneLibrary.Utility.Utility;
 
 namespace PortableStorage.Items
 {
@@ -20,7 +19,7 @@ namespace PortableStorage.Items
 		public IList<Item> Items = new List<Item>();
 
 		public override string Texture => PortableStorage.ItemTexturePath + "Bag";
-		
+
 		public override ModItem Clone(Item item)
 		{
 			Bag clone = (Bag)base.Clone(item);
@@ -94,13 +93,13 @@ namespace PortableStorage.Items
 
 		public override void Load(TagCompound tag)
 		{
-			Items = ContainerLib2.Utility.Load(tag);
+			Items = TheOneLibrary.Utility.Utility.Load(tag);
 			guid = tag.ContainsKey("GUID") && !string.IsNullOrEmpty((string)tag["GUID"]) ? Guid.Parse(tag.GetString("GUID")) : Guid.NewGuid();
 		}
 
 		public override void NetSend(BinaryWriter writer) => writer.Write(Items);
 
-		public override void NetRecieve(BinaryReader reader) => Items = ContainerLib2.Utility.Read(reader);
+		public override void NetRecieve(BinaryReader reader) => Items = TheOneLibrary.Utility.Utility.Read(reader);
 
 		public override void AddRecipes()
 		{

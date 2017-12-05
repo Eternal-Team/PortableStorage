@@ -1,6 +1,3 @@
-using BaseLib;
-using BaseLib.UI;
-using BaseLib.Utility;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -9,14 +6,18 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
+using TheOneLibrary.Base;
+using TheOneLibrary.Base.UI;
+using TheOneLibrary.Utility;
 
 namespace PortableStorage
 {
-	public class PortableStorage : Mod, IMod
+	public class PortableStorage : Mod
 	{
 		public static PortableStorage Instance;
 
 		public IDictionary<Guid, GUI> BagUI = new Dictionary<Guid, GUI>();
+		[UI("TileEntity")]
 		public IDictionary<ModTileEntity, GUI> TEUI = new Dictionary<ModTileEntity, GUI>();
 
 		public const string TileTexturePath = "PortableStorage/Textures/Tiles/";

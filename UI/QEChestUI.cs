@@ -1,16 +1,15 @@
-﻿using BaseLib.Elements;
-using BaseLib.UI;
-using BaseLib.Utility;
-using ContainerLib2.Container;
-using PortableStorage.TileEntities;
+﻿using PortableStorage.TileEntities;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
+using TheOneLibrary.Base.UI;
+using TheOneLibrary.UI.Elements;
+using TheOneLibrary.Utility;
 
 namespace PortableStorage.UI
 {
-	public class QEChestUI : BaseUI, TileEntityUI
+	public class QEChestUI : BaseUI, ITileEntityUI
 	{
 		public UIText textLabel = new UIText("Quantum Entangled Chest");
 		public UITextButton buttonClose = new UITextButton("X", 4);

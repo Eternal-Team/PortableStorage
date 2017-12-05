@@ -8,7 +8,7 @@ namespace PortableStorage
 		public static Colors ColorFromItem(Colors existing)
 		{
 			Main.LocalPlayer.noThrow = 2;
-			switch (BaseLib.Utility.Utility.HeldItem.type)
+			switch (TheOneLibrary.Utility.Utility.HeldItem.type)
 			{
 				case ItemID.Diamond: return Colors.White;
 				case ItemID.Ruby: return Colors.Red;

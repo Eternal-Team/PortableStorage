@@ -1,7 +1,7 @@
-﻿using BaseLib.Items;
-using Terraria.ID;
+﻿using Terraria.ID;
 using Terraria.ModLoader;
-using static BaseLib.Utility.Utility;
+using TheOneLibrary.Base.Items;
+using static TheOneLibrary.Utility.Utility;
 
 namespace PortableStorage.Items
 {

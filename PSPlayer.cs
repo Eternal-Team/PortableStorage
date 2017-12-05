@@ -1,6 +1,4 @@
-﻿using BaseLib;
-using BaseLib.Utility;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using PortableStorage.Items;
 using PortableStorage.TileEntities;
 using PortableStorage.UI;
@@ -11,6 +9,9 @@ using Terraria.DataStructures;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
+using TheOneLibrary.Base;
+using TheOneLibrary.Utility;
+using static TheOneLibrary.Utility.Utility;
 
 namespace PortableStorage
 {
@@ -18,7 +19,7 @@ namespace PortableStorage
 	{
 		public override void PreUpdate()
 		{
-			int ID = mod.GetID<TEQEChest>(BaseLib.Utility.Utility.MouseToWorldPoint());
+			int ID = mod.GetID<TEQEChest>(MouseToWorldPoint());
 			if (ID == -1) return;
 
 			TEQEChest qeChest = (TEQEChest)TileEntity.ByID[ID];
@@ -34,7 +35,7 @@ namespace PortableStorage
 
 				if (Main.mouseRight && Main.mouseRightRelease)
 				{
-					if (BaseLib.Utility.Utility.HeldItem.type != mod.ItemType<QEBag>())
+					if (HeldItem.type != mod.ItemType<QEBag>())
 					{
 						Frequency frequency = qeChest.frequency;
 						bool handleFrequency = false;
@@ -77,7 +78,7 @@ namespace PortableStorage
 					else
 					{
 						player.noThrow = 2;
-						((QEBag)BaseLib.Utility.Utility.HeldItem.modItem).frequency = qeChest.frequency;
+						((QEBag)HeldItem.modItem).frequency = qeChest.frequency;
 					}
 				}
 			}
@@ -87,7 +88,7 @@ namespace PortableStorage
 		{
 			if (PortableStorage.bagKey.JustPressed)
 			{
-				Item item = BaseLib.Utility.Utility.AccessoryItems.FirstOrDefault(x => x.modItem is BaseBag);
+				Item item = AccessoryItems.FirstOrDefault(x => x.modItem is BaseBag);
 
 				if (item?.modItem is BaseBag)
 				{
