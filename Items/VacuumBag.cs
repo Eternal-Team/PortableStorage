@@ -37,8 +37,7 @@ namespace PortableStorage.Items
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Vacuum Bag");
-			Tooltip.SetDefault("Use the bag or press [c/83fcec:B] while having it in an accessory slot to open it\nRight-click it to enable/disable vacuum mode\nSucks up items!");
-
+			Tooltip.SetDefault("Right-click it to enable/disable vacuum mode\nSucks up items!");
 			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(5, 4));
 		}
 
@@ -92,8 +91,7 @@ namespace PortableStorage.Items
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			TooltipLine tooltip = tooltips.Find(x => x.mod == "Terraria" && x.Name == "Tooltip0");
-			tooltip.text = $"Use the bag or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it";
+			tooltips.Add(new TooltipLine(mod, "BagInfo", $"Use the bag, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it"));
 		}
 
 		public float posY;
@@ -103,7 +101,7 @@ namespace PortableStorage.Items
 			posY += up ? -0.08f : 0.08f;
 			if (posY <= -2) up = false;
 			else if (posY >= 2) up = true;
-			spriteBatch.Draw(active ? PortableStorage.Instance.vacuumBagOn : PortableStorage.Instance.vacuumBagOff, position + new Vector2(0, posY), frame, drawColor, 0f, origin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(active ? PortableStorage.vacuumBagOn : PortableStorage.vacuumBagOff, position + new Vector2(0, posY), frame, drawColor, 0f, origin, scale, SpriteEffects.None, 0f);
 
 			return false;
 		}

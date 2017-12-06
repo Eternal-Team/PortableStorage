@@ -12,11 +12,7 @@ namespace PortableStorage.Tiles
 {
 	public class QEChest : BaseTile
 	{
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = PortableStorage.TileTexturePath + "QEChest";
-			return base.Autoload(ref name, ref texture);
-		}
+		public override string Texture => PortableStorage.TileTexturePath + "QEChest";
 
 		public override void SetDefaults()
 		{
@@ -59,19 +55,19 @@ namespace PortableStorage.Tiles
 				switch (qeChest.animState)
 				{
 					case 0:
-						spriteBatch.Draw(PortableStorage.Instance.gemsSide[0], position + new Vector2(2, 4), new Rectangle(6 * (int)qeChest.frequency.colorLeft, 0, 6, 10), Color.White);
-						spriteBatch.Draw(PortableStorage.Instance.gemsMiddle[0], position + new Vector2(12, 4), new Rectangle(8 * (int)qeChest.frequency.colorMiddle, 0, 8, 10), Color.White);
-						spriteBatch.Draw(PortableStorage.Instance.gemsSide[0], position + new Vector2(24, 4), new Rectangle(6 * (int)qeChest.frequency.colorRight, 0, 6, 10), Color.White, 0f, Vector2.Zero, Vector2.One, SpriteEffects.FlipHorizontally, 0f);
+						spriteBatch.Draw(PortableStorage.gemsSide[0], position + new Vector2(2, 4), new Rectangle(6 * (int)qeChest.frequency.colorLeft, 0, 6, 10), Color.White);
+						spriteBatch.Draw(PortableStorage.gemsMiddle[0], position + new Vector2(12, 4), new Rectangle(8 * (int)qeChest.frequency.colorMiddle, 0, 8, 10), Color.White);
+						spriteBatch.Draw(PortableStorage.gemsSide[0], position + new Vector2(24, 4), new Rectangle(6 * (int)qeChest.frequency.colorRight, 0, 6, 10), Color.White, 0f, Vector2.Zero, Vector2.One, SpriteEffects.FlipHorizontally, 0f);
 						break;
 					case 1:
-						spriteBatch.Draw(PortableStorage.Instance.gemsSide[1], position + new Vector2(2, 4), new Rectangle(8 * (int)qeChest.frequency.colorLeft, 0, 8, 4), Color.White);
-						spriteBatch.Draw(PortableStorage.Instance.gemsMiddle[1], position + new Vector2(14, 4), new Rectangle(4 * (int)qeChest.frequency.colorMiddle, 0, 4, 4), Color.White);
-						spriteBatch.Draw(PortableStorage.Instance.gemsSide[1], position + new Vector2(22, 4), new Rectangle(8 * (int)qeChest.frequency.colorRight, 0, 8, 4), Color.White, 0f, Vector2.Zero, Vector2.One, SpriteEffects.FlipHorizontally, 0f);
+						spriteBatch.Draw(PortableStorage.gemsSide[1], position + new Vector2(2, 4), new Rectangle(8 * (int)qeChest.frequency.colorLeft, 0, 8, 4), Color.White);
+						spriteBatch.Draw(PortableStorage.gemsMiddle[1], position + new Vector2(14, 4), new Rectangle(4 * (int)qeChest.frequency.colorMiddle, 0, 4, 4), Color.White);
+						spriteBatch.Draw(PortableStorage.gemsSide[1], position + new Vector2(22, 4), new Rectangle(8 * (int)qeChest.frequency.colorRight, 0, 8, 4), Color.White, 0f, Vector2.Zero, Vector2.One, SpriteEffects.FlipHorizontally, 0f);
 						break;
 					case 2:
-						spriteBatch.Draw(PortableStorage.Instance.gemsSide[2], position + new Vector2(4, 4), new Rectangle(6 * (int)qeChest.frequency.colorLeft, 0, 6, 2), Color.White);
-						spriteBatch.Draw(PortableStorage.Instance.gemsMiddle[2], position + new Vector2(14, 4), new Rectangle(4 * (int)qeChest.frequency.colorMiddle, 0, 4, 2), Color.White);
-						spriteBatch.Draw(PortableStorage.Instance.gemsSide[2], position + new Vector2(22, 4), new Rectangle(6 * (int)qeChest.frequency.colorRight, 0, 6, 2), Color.White, 0f, Vector2.Zero, Vector2.One, SpriteEffects.FlipHorizontally, 0f);
+						spriteBatch.Draw(PortableStorage.gemsSide[2], position + new Vector2(4, 4), new Rectangle(6 * (int)qeChest.frequency.colorLeft, 0, 6, 2), Color.White);
+						spriteBatch.Draw(PortableStorage.gemsMiddle[2], position + new Vector2(14, 4), new Rectangle(4 * (int)qeChest.frequency.colorMiddle, 0, 4, 2), Color.White);
+						spriteBatch.Draw(PortableStorage.gemsSide[2], position + new Vector2(22, 4), new Rectangle(6 * (int)qeChest.frequency.colorRight, 0, 6, 2), Color.White, 0f, Vector2.Zero, Vector2.One, SpriteEffects.FlipHorizontally, 0f);
 						break;
 				}
 			}

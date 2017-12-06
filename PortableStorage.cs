@@ -16,20 +16,21 @@ namespace PortableStorage
 	{
 		public static PortableStorage Instance;
 
-		public IDictionary<Guid, GUI> BagUI = new Dictionary<Guid, GUI>();
+		public Dictionary<Guid, GUI> BagUI = new Dictionary<Guid, GUI>();
 		[UI("TileEntity")]
-		public IDictionary<ModTileEntity, GUI> TEUI = new Dictionary<ModTileEntity, GUI>();
+		public Dictionary<ModTileEntity, GUI> TEUI = new Dictionary<ModTileEntity, GUI>();
 
-		public const string TileTexturePath = "PortableStorage/Textures/Tiles/";
-		public const string ItemTexturePath = "PortableStorage/Textures/Items/";
+		public const string TexturePath = "PortableStorage/Textures/";
+		public const string TileTexturePath = TexturePath + "Tiles/";
+		public const string ItemTexturePath = TexturePath + "Items/";
 
-		public Texture2D[] gemsMiddle = new Texture2D[3];
-		public Texture2D[] gemsSide = new Texture2D[3];
+		[Null] public static Texture2D[] gemsMiddle = new Texture2D[3];
+		[Null] public static Texture2D[] gemsSide = new Texture2D[3];
 
-		public Texture2D vacuumBagOn;
-		public Texture2D vacuumBagOff;
+		[Null] public static Texture2D vacuumBagOn;
+		[Null] public static Texture2D vacuumBagOff;
 
-		public static ModHotKey bagKey;
+		[Null] public static ModHotKey bagKey;
 
 		public PortableStorage()
 		{
@@ -70,7 +71,9 @@ namespace PortableStorage
 
 		public override void Unload()
 		{
-			Instance = null;
+			this.UnloadNullableTypes();
+
+			GC.Collect();
 		}
 
 		public override void AddRecipes()
@@ -101,7 +104,5 @@ namespace PortableStorage
 				);
 			}
 		}
-
-		public IDictionary<ModTileEntity, GUI> GetTEUIs() => TEUI;
 	}
 }

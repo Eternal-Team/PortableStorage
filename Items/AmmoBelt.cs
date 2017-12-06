@@ -33,7 +33,7 @@ namespace PortableStorage.Items
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Ammo Belt");
-			Tooltip.SetDefault("Use the belt, right-click it or press [c/83fcec:B] while having it in an accessory slot to open it\nRestocks your ammo slots!");
+			Tooltip.SetDefault("Restocks your ammo slots!");
 		}
 
 		public override void SetDefaults()
@@ -87,8 +87,7 @@ namespace PortableStorage.Items
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			TooltipLine tooltip = tooltips.Find(x => x.mod == "Terraria" && x.Name == "Tooltip0");
-			tooltip.text = $"Use the belt, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it";
+			tooltips.Add(new TooltipLine(mod, "BagInfo", $"Use the bag, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it"));
 		}
 
 		public override void UpdateInventory(Player player)
