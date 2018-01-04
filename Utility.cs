@@ -1,10 +1,22 @@
-﻿using Terraria;
+﻿using System.Collections.Generic;
+using Terraria;
 using Terraria.ID;
 
 namespace PortableStorage
 {
 	public static class Utility
 	{
+		public static readonly List<int> Gems = new List<int>
+		{
+			ItemID.Diamond ,
+			ItemID.Ruby    ,
+			ItemID.Emerald ,
+			ItemID.Sapphire,
+			ItemID.Topaz   ,
+			ItemID.Amethyst,
+			ItemID.Amber
+		};
+
 		public static Colors ColorFromItem(Colors existing)
 		{
 			Main.LocalPlayer.noThrow = 2;

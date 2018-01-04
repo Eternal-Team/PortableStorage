@@ -6,6 +6,8 @@ namespace PortableStorage.Items
 	{
 		public override bool CloneNewInstances => true;
 
-		public virtual void HandleUI() { }
+		public virtual void HandleUI()
+		{
+		}
 	}
 }

@@ -1,9 +1,9 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using PortableStorage.UI;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -12,7 +12,6 @@ using Terraria.ModLoader.IO;
 using Terraria.UI;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.Storage;
-using TheOneLibrary.Utility;
 using static TheOneLibrary.Utility.Utility;
 
 namespace PortableStorage.Items
@@ -96,6 +95,7 @@ namespace PortableStorage.Items
 
 		public float posY;
 		public bool up;
+
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
 			posY += up ? -0.08f : 0.08f;
@@ -106,7 +106,7 @@ namespace PortableStorage.Items
 			return false;
 		}
 
-		public override TagCompound Save() => new TagCompound { ["Items"] = Items.Save(), ["GUID"] = guid.ToString(), ["Active"] = active };
+		public override TagCompound Save() => new TagCompound {["Items"] = Items.Save(), ["GUID"] = guid.ToString(), ["Active"] = active};
 
 		public override void Load(TagCompound tag)
 		{

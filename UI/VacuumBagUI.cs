@@ -1,5 +1,5 @@
-﻿using PortableStorage.Items;
-using System;
+﻿using System;
+using PortableStorage.Items;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;

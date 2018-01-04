@@ -1,5 +1,5 @@
-﻿using PortableStorage.Items;
-using System.Linq;
+﻿using System.Linq;
+using PortableStorage.Items;
 using Terraria;
 using Terraria.ModLoader;
 using static TheOneLibrary.Utility.Utility;

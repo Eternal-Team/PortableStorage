@@ -34,8 +34,27 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Items\BaseBag.cs" />
+    <Compile Include="Items\QETank.cs" />
     <Compile Include="Items\VacuumBag.cs" />
     <Compile Include="Items\AmmoBelt.cs" />
     <Compile Include="Items\QEChest.cs" />
@@ -46,6 +65,8 @@
     <Compile Include="PSPlayer.cs" />
     <Compile Include="PSItem.cs" />
     <Compile Include="PSWorld.cs" />
+    <Compile Include="TileEntities\TEQETank.cs" />
+    <Compile Include="Tiles\QETank.cs" />
     <Compile Include="Tiles\QEChest.cs" />
     <Compile Include="TileEntities\TEQEChest.cs" />
     <Compile Include="UI\VacuumBagUI.cs" />
@@ -82,10 +103,13 @@
     <Content Include="build.txt" />
     <Content Include="description.txt" />
     <Content Include="icon.png" />
+    <Content Include="Textures\Items\AmmoBelt.png" />
     <Content Include="Textures\Items\Bag.png" />
-    <Content Include="Textures\Items\GemsSide.png" />
+    <Content Include="Textures\Items\BagGrayscale.png" />
     <Content Include="Textures\Items\QEBag.png" />
+    <Content Include="Textures\Items\QEBucket.png" />
     <Content Include="Textures\Items\QEChest.png" />
+    <Content Include="Textures\Items\QETank.png" />
     <Content Include="Textures\Items\VacuumBagActive.png" />
     <Content Include="Textures\Items\VacuumBagInactive.png" />
     <Content Include="Textures\Tiles\GemMiddle0.png" />
@@ -95,6 +119,7 @@
     <Content Include="Textures\Tiles\GemSide1.png" />
     <Content Include="Textures\Tiles\GemSide2.png" />
     <Content Include="Textures\Tiles\QEChest.png" />
+    <Content Include="Textures\Tiles\QETank.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TheOneLibrary\TheOneLibrary.csproj">

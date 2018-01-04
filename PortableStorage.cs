@@ -17,8 +17,7 @@ namespace PortableStorage
 		public static PortableStorage Instance;
 
 		public Dictionary<Guid, GUI> BagUI = new Dictionary<Guid, GUI>();
-		[UI("TileEntity")]
-		public Dictionary<ModTileEntity, GUI> TEUI = new Dictionary<ModTileEntity, GUI>();
+		[UI("TileEntity")] public Dictionary<ModTileEntity, GUI> TEUI = new Dictionary<ModTileEntity, GUI>();
 
 		public const string TexturePath = "PortableStorage/Textures/";
 		public const string TileTexturePath = TexturePath + "Tiles/";
@@ -26,6 +25,8 @@ namespace PortableStorage
 
 		[Null] public static Texture2D[] gemsMiddle = new Texture2D[3];
 		[Null] public static Texture2D[] gemsSide = new Texture2D[3];
+
+		[Null] public static Texture2D GlowTexture;
 
 		[Null] public static Texture2D vacuumBagOn;
 		[Null] public static Texture2D vacuumBagOff;
@@ -61,6 +62,10 @@ namespace PortableStorage
 				vacuumBagOn = ModLoader.GetTexture(ItemTexturePath + "VacuumBagActive");
 				vacuumBagOff = ModLoader.GetTexture(ItemTexturePath + "VacuumBagInactive");
 
+				GlowTexture = ModLoader.GetTexture(TexturePath + "Glow");
+
+				gemsMiddle = new Texture2D[3];
+				gemsSide = new Texture2D[3];
 				for (int i = 0; i < 3; i++)
 				{
 					gemsMiddle[i] = ModLoader.GetTexture(TileTexturePath + "GemMiddle" + i);

@@ -6,21 +6,20 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using TheOneLibrary.Base;
+using TheOneLibrary.Fluid;
 using TheOneLibrary.Storage;
 using TheOneLibrary.Utility;
 
 namespace PortableStorage.TileEntities
 {
-	public class TEQEChest : BaseTE, IContainerTile
+	public class TEQETank : BaseTE, IFluidContainer
 	{
-		public override bool ValidTile(Tile tile) => tile.type == mod.TileType<QEChest>() && tile.TopLeft();
+		public const int MaxVolume = 16000;
+
+		public override bool ValidTile(Tile tile) => tile.type == mod.TileType<QETank>() && tile.TopLeft();
 
 		public Frequency frequency = new Frequency(Colors.White);
-		public int animState;
-		public int animTimer;
 
-		public bool opened = false;
-		
 		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
 		{
 			if (Main.netMode != NetmodeID.MultiplayerClient) return Place(i, j - 1);
@@ -31,30 +30,15 @@ namespace PortableStorage.TileEntities
 			return -1;
 		}
 
+		public override void OnPlace()
+		{
+			if (!mod.GetModWorld<PSWorld>().enderFluids.ContainsKey(frequency)) mod.GetModWorld<PSWorld>().enderFluids.Add(frequency, null);
+		}
+
+		public override void OnNetPlace() => OnPlace();
+
 		public override void Update()
 		{
-			if (opened && animState < 2)
-			{
-				if (++animTimer >= 10)
-				{
-					animState++;
-					animTimer = 0;
-				}
-			}
-			else if (!opened && animState > 0)
-			{
-				if (++animTimer >= 10)
-				{
-					animState--;
-					animTimer = 0;
-				}
-			}
-
-			Main.tile[Position.X, Position.Y].frameX = (short)(animState * 36);
-			Main.tile[Position.X, Position.Y + 1].frameX = (short)(animState * 36);
-			Main.tile[Position.X + 1, Position.Y].frameX = (short)(animState * 36 + 18);
-			Main.tile[Position.X + 1, Position.Y + 1].frameX = (short)(animState * 36 + 18);
-
 			this.HandleUIFar();
 		}
 
@@ -82,7 +66,7 @@ namespace PortableStorage.TileEntities
 			frequency.colorRight = (Colors)reader.ReadInt32();
 		}
 
-		public IList<Item> GetItems() => mod.GetModWorld<PSWorld>().enderItems[frequency];
+		public IList<ModFluid> GetFluids() => new List<ModFluid> { mod.GetModWorld<PSWorld>().enderFluids[frequency] };
 
 		public ModTileEntity GetTileEntity() => this;
 	}
