@@ -1,6 +1,6 @@
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -26,7 +26,8 @@ namespace PortableStorage
 		[Null] public static Texture2D[] gemsMiddle = new Texture2D[3];
 		[Null] public static Texture2D[] gemsSide = new Texture2D[3];
 
-		[Null] public static Texture2D GlowTexture;
+		[Null] public static Texture2D ringBig;
+		[Null] public static Texture2D ringSmall;
 
 		[Null] public static Texture2D vacuumBagOn;
 		[Null] public static Texture2D vacuumBagOff;
@@ -62,7 +63,8 @@ namespace PortableStorage
 				vacuumBagOn = ModLoader.GetTexture(ItemTexturePath + "VacuumBagActive");
 				vacuumBagOff = ModLoader.GetTexture(ItemTexturePath + "VacuumBagInactive");
 
-				GlowTexture = ModLoader.GetTexture(TexturePath + "Glow");
+				ringBig = ModLoader.GetTexture(ItemTexturePath + "RingBig");
+				ringSmall = ModLoader.GetTexture(ItemTexturePath + "RingSmall");
 
 				gemsMiddle = new Texture2D[3];
 				gemsSide = new Texture2D[3];

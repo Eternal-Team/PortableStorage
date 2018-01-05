@@ -1,6 +1,6 @@
-﻿using PortableStorage.Tiles;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using PortableStorage.Tiles;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -18,7 +18,7 @@ namespace PortableStorage.TileEntities
 
 		public override bool ValidTile(Tile tile) => tile.type == mod.TileType<QETank>() && tile.TopLeft();
 
-		public Frequency frequency = new Frequency(Colors.White);
+		public Frequency frequency;
 
 		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
 		{
@@ -66,7 +66,13 @@ namespace PortableStorage.TileEntities
 			frequency.colorRight = (Colors)reader.ReadInt32();
 		}
 
-		public IList<ModFluid> GetFluids() => new List<ModFluid> { mod.GetModWorld<PSWorld>().enderFluids[frequency] };
+		public IList<ModFluid> GetFluids() => new List<ModFluid> {mod.GetModWorld<PSWorld>().enderFluids[frequency]};
+
+		public void SetFluid(ModFluid value, int slot = 0) => mod.GetModWorld<PSWorld>().enderFluids[frequency] = value;
+
+		public ModFluid GetFluid(int slot = 0) => mod.GetModWorld<PSWorld>().enderFluids[frequency];
+
+		public int GetFluidCapacity(int slot = 0) => MaxVolume;
 
 		public ModTileEntity GetTileEntity() => this;
 	}

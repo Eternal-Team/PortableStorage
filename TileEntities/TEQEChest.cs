@@ -1,6 +1,6 @@
-﻿using PortableStorage.Tiles;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using PortableStorage.Tiles;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -15,12 +15,12 @@ namespace PortableStorage.TileEntities
 	{
 		public override bool ValidTile(Tile tile) => tile.type == mod.TileType<QEChest>() && tile.TopLeft();
 
-		public Frequency frequency = new Frequency(Colors.White);
+		public Frequency frequency;
 		public int animState;
 		public int animTimer;
 
 		public bool opened = false;
-		
+
 		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
 		{
 			if (Main.netMode != NetmodeID.MultiplayerClient) return Place(i, j - 1);

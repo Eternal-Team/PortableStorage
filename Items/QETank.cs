@@ -1,4 +1,5 @@
 ﻿using Terraria.ID;
+using Terraria.ModLoader;
 using TheOneLibrary.Base.Items;
 using static TheOneLibrary.Utility.Utility;
 
@@ -25,19 +26,20 @@ namespace PortableStorage.Items
 			item.useTime = 10;
 			item.useStyle = 1;
 			item.consumable = true;
-			item.value = GetItemValue(ItemID.Obsidian) * 15 + GetItemValue(ItemID.ShadowScale) * 25 + GetItemValue(ItemID.DemoniteBar) * 5;
+			item.value = GetItemValue(ItemID.Obsidian) * 15 + GetItemValue(ItemID.Glass) * 15 + GetItemValue(ItemID.ShadowScale) * 25 + GetItemValue(ItemID.DemoniteBar) * 5;
 			item.createTile = mod.TileType<Tiles.QETank>();
 		}
 
 		public override void AddRecipes()
 		{
-			//ModRecipe recipe = new ModRecipe(mod);
-			//recipe.AddIngredient(ItemID.Obsidian, 15);
-			//recipe.AddIngredient(ItemID.ShadowScale, 25);
-			//recipe.AddIngredient(ItemID.DemoniteBar, 5);
-			//recipe.AddTile(TileID.Anvils);
-			//recipe.SetResult(this);
-			//recipe.AddRecipe();
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.Obsidian, 15);
+			recipe.AddIngredient(ItemID.Glass, 15);
+			recipe.AddIngredient(ItemID.ShadowScale, 25);
+			recipe.AddIngredient(ItemID.DemoniteBar, 5);
+			recipe.AddTile(TileID.Anvils);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
 		}
 	}
 }

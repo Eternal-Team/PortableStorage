@@ -18,7 +18,7 @@ namespace PortableStorage.Items
 	public class QEBag : BaseBag, IContainerItem
 	{
 		public Guid guid = Guid.NewGuid();
-		public Frequency frequency = new Frequency(Colors.White);
+		public Frequency frequency;
 
 		public override string Texture => PortableStorage.ItemTexturePath + "QEBag";
 

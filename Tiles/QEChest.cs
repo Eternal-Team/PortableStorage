@@ -1,9 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Items;
 using PortableStorage.TileEntities;
 using PortableStorage.UI;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -26,7 +26,7 @@ namespace PortableStorage.Tiles
 			Main.tileLavaDeath[Type] = false;
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
 			TileObjectData.newTile.Origin = new Point16(0, 1);
-			TileObjectData.newTile.CoordinateHeights = new[] { 16, 16 };
+			TileObjectData.newTile.CoordinateHeights = new[] {16, 16};
 			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<TEQEChest>().Hook_AfterPlacement, -1, 0, false);
 			TileObjectData.addTile(Type);
 			disableSmartCursor = true;
@@ -102,7 +102,7 @@ namespace PortableStorage.Tiles
 			Main.specY[nextSpecialDrawIndex] = j;
 			nextSpecialDrawIndex++;
 		}
-		
+
 		public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
 		{
 			int ID = mod.GetID<TEQEChest>(i, j);
@@ -116,7 +116,7 @@ namespace PortableStorage.Tiles
 				Vector2 position = new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero;
 
 				TEQEChest qeChest = (TEQEChest)TileEntity.ByID[ID];
-				
+
 				switch (qeChest.animState)
 				{
 					case 0:

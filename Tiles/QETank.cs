@@ -1,5 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PortableStorage.Items;
 using PortableStorage.TileEntities;
 using Terraria;
 using Terraria.DataStructures;
@@ -7,11 +9,13 @@ using Terraria.ModLoader;
 using Terraria.ObjectData;
 using TheOneLibrary.Base;
 using TheOneLibrary.Fluid;
+using TheOneLibrary.Storage;
 using TheOneLibrary.Utility;
 
 namespace PortableStorage.Tiles
 {
-	[BucketDisable]
+	[BucketDisablePlacement]
+	[BucketDisablePickup]
 	public class QETank : BaseTile
 	{
 		public override string Texture => PortableStorage.TileTexturePath + "QETank";
@@ -24,10 +28,11 @@ namespace PortableStorage.Tiles
 			Main.tileLavaDeath[Type] = false;
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
 			TileObjectData.newTile.Origin = new Point16(0, 1);
-			TileObjectData.newTile.CoordinateHeights = new[] { 16, 16 };
+			TileObjectData.newTile.CoordinateHeights = new[] {16, 16};
 			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<TEQETank>().Hook_AfterPlacement, -1, 0, false);
 			TileObjectData.addTile(Type);
 			disableSmartCursor = true;
+			mineResist = 5f;
 
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Quantum Entangled Tank");
@@ -36,10 +41,10 @@ namespace PortableStorage.Tiles
 
 		public override void RightClickCont(int i, int j)
 		{
-			int IDTank = mod.GetID<TEQETank>(i, j);
-			if (IDTank == -1) return;
+			int ID = mod.GetID<TEQETank>(i, j);
+			if (ID == -1) return;
 
-			TEQETank qeTank = (TEQETank)TileEntity.ByID[IDTank];
+			TEQETank qeTank = (TEQETank)TileEntity.ByID[ID];
 
 			Point16 topLeft = TheOneLibrary.Utility.Utility.TileEntityTopLeft(i, j);
 			int realTileX = topLeft.X * 16;
@@ -49,7 +54,44 @@ namespace PortableStorage.Tiles
 			Rectangle middle = new Rectangle(realTileX + 14, realTileY + 27, 4, 4);
 			Rectangle right = new Rectangle(realTileX + 26, realTileY + 2, 4, 4);
 
-			if (Main.LocalPlayer.HeldItem.type != TheOneLibrary.TheOneLibrary.Instance.ItemType<Bucket>())
+			if (Main.LocalPlayer.HeldItem.type == mod.ItemType<QEBucket>()) // copy frequency
+			{
+				Main.LocalPlayer.noThrow = 2;
+				((QEBucket)Main.LocalPlayer.HeldItem.modItem).frequency = qeTank.frequency;
+			}
+			else if (Main.LocalPlayer.HeldItem.modItem is IFluidContainerItem) // insert fluid
+			{
+				IFluidContainerItem fluidContainer = (IFluidContainerItem)Main.LocalPlayer.HeldItem.modItem;
+
+				ModFluid fluid = qeTank.GetFluid();
+				ModFluid itemFluid = fluidContainer.GetFluid();
+
+				if (itemFluid != null)
+				{
+					if (fluid == null)
+					{
+						fluid = TheOneLibrary.Utility.Utility.SetDefaults(itemFluid.type);
+
+						int volume = Math.Min(itemFluid.volume, TEQETank.MaxVolume - fluid.volume);
+						fluid.volume += volume;
+						itemFluid.volume -= volume;
+
+						if (itemFluid.volume <= 0) itemFluid = null;
+					}
+					else if (fluid.type == itemFluid.type && fluid.volume < TEQETank.MaxVolume)
+					{
+						int volume = Math.Min(itemFluid.volume, TEQETank.MaxVolume - fluid.volume);
+						fluid.volume += volume;
+						itemFluid.volume -= volume;
+
+						if (itemFluid.volume <= 0) itemFluid = null;
+					}
+				}
+
+				fluidContainer.SetFluid(itemFluid);
+				qeTank.SetFluid(fluid);
+			}
+			else // general click
 			{
 				Frequency frequency = qeTank.frequency;
 				bool handleFrequency = false;
@@ -69,34 +111,56 @@ namespace PortableStorage.Tiles
 					frequency.colorRight = Utility.ColorFromItem(frequency.colorRight);
 					handleFrequency = true;
 				}
+
 				if (handleFrequency)
 				{
-					if (!mod.GetModWorld<PSWorld>().enderFluids.ContainsKey(frequency))
-					{
-						mod.GetModWorld<PSWorld>().enderFluids.Add(frequency, null);
-					}
+					if (!mod.GetModWorld<PSWorld>().enderFluids.ContainsKey(frequency)) mod.GetModWorld<PSWorld>().enderFluids.Add(frequency, null);
 					qeTank.frequency = frequency;
 				}
 
 				qeTank.SendUpdate();
 			}
-			else
+		}
+
+		public override void LeftClickCont(int i, int j)
+		{
+			int ID = mod.GetID<TEQETank>(i, j);
+			if (ID == -1) return;
+
+			TEQETank qeTank = (TEQETank)TileEntity.ByID[ID];
+
+			if (Main.LocalPlayer.HeldItem.modItem is IFluidContainerItem) // extract fluid
 			{
-				ModFluid fluid = mod.GetModWorld<PSWorld>().enderFluids[qeTank.frequency];
-				Main.NewText(fluid == null);
-				Bucket bucket = (Bucket)Main.LocalPlayer.HeldItem.modItem;
+				IFluidContainerItem fluidContainer = (IFluidContainerItem)Main.LocalPlayer.HeldItem.modItem;
 
-				if (fluid == null && bucket.fluid != null)
+				ModFluid fluid = qeTank.GetFluid();
+				ModFluid itemFluid = fluidContainer.GetFluid();
+				int capacity = fluidContainer.GetFluidCapacity();
+
+				if (fluid != null)
 				{
-					fluid = TheOneLibrary.Utility.Utility.SetDefaults(bucket.fluid.type);
-					fluid.volume = 500;
-				}
-				if (fluid != null && bucket.fluid != null && fluid.type == bucket.fluid.type && fluid.volume < TEQETank.MaxVolume)
-				{
-					fluid.volume += 500;
+					if (itemFluid == null)
+					{
+						itemFluid = TheOneLibrary.Utility.Utility.SetDefaults(fluid.type);
+
+						int volume = Math.Min(fluid.volume, capacity - itemFluid.volume);
+						itemFluid.volume += volume;
+						fluid.volume -= volume;
+
+						if (fluid.volume <= 0) fluid = null;
+					}
+					else if (fluid.type == itemFluid.type && itemFluid.volume < capacity)
+					{
+						int volume = Math.Min(fluid.volume, capacity - itemFluid.volume);
+						itemFluid.volume += volume;
+						fluid.volume -= volume;
+
+						if (fluid.volume <= 0) fluid = null;
+					}
 				}
 
-				mod.GetModWorld<PSWorld>().enderFluids[qeTank.frequency] = fluid;
+				fluidContainer.SetFluid(itemFluid);
+				qeTank.SetFluid(fluid);
 			}
 		}
 
@@ -116,17 +180,10 @@ namespace PortableStorage.Tiles
 				ModFluid fluid = qeTank.GetFluids()[0];
 
 				if (fluid != null)
-				{
-					spriteBatch.Draw(ModLoader.GetTexture(FluidLoader.GetFluid(fluid.Name).Texture), new Rectangle((int)position.X, (int)position.Y, 32, (int)(32 * (fluid.volume / (float)TEQETank.MaxVolume))), Color.White);
-				}
+					spriteBatch.Draw(ModLoader.GetTexture(FluidLoader.GetFluid(fluid.Name).Texture), new Rectangle((int)position.X + 6, (int)(position.Y + 6 + (20 - 20 * (fluid.volume / (float)TEQETank.MaxVolume))), 20, (int)(20 * (fluid.volume / (float)TEQETank.MaxVolume))), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
 			}
 
 			return true;
-		}
-
-		public override void LeftClick(int i, int j)
-		{
-			Main.NewText($"leftclicked tile at [{i},{j}]");
 		}
 
 		public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref Color drawColor, ref int nextSpecialDrawIndex)

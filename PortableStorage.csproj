@@ -54,6 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Items\BaseBag.cs" />
+    <Compile Include="Items\QEBucket.cs" />
     <Compile Include="Items\QETank.cs" />
     <Compile Include="Items\VacuumBag.cs" />
     <Compile Include="Items\AmmoBelt.cs" />
@@ -95,7 +96,8 @@
     </Reference>
     <Reference Include="ReLogic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="System" />
-    <Reference Include="Terraria">
+    <Reference Include="Terraria, Version=1.3.5.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Terraria Modded\Terraria.exe</HintPath>
     </Reference>
   </ItemGroup>
@@ -110,6 +112,8 @@
     <Content Include="Textures\Items\QEBucket.png" />
     <Content Include="Textures\Items\QEChest.png" />
     <Content Include="Textures\Items\QETank.png" />
+    <Content Include="Textures\Items\RingBig.png" />
+    <Content Include="Textures\Items\RingSmall.png" />
     <Content Include="Textures\Items\VacuumBagActive.png" />
     <Content Include="Textures\Items\VacuumBagInactive.png" />
     <Content Include="Textures\Tiles\GemMiddle0.png" />
