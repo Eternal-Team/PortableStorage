@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PortableStorage.TileEntities;
+using ReLogic.Utilities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,11 +16,6 @@ namespace PortableStorage.Items
 {
 	public class QEBucket : BaseBag
 	{
-		public QEBucket()
-		{
-			Main.NewText("Constructor test");
-		}
-
 		public Frequency frequency;
 
 		public override string Texture => PortableStorage.ItemTexturePath + "QEBucket";
@@ -39,17 +37,80 @@ namespace PortableStorage.Items
 		{
 			item.width = 32;
 			item.height = 34;
-			item.useTime = 5;
-			item.useAnimation = 5;
-			item.noUseGraphic = true;
 			item.useStyle = 1;
+			item.useTurn = true;
+			item.useAnimation = 15;
+			item.useTime = 15;
+			item.maxStack = 1;
+			item.autoReuse = true;
 			item.value = GetItemValue(TheOneLibrary.TheOneLibrary.Instance.ItemType<Bucket>()) + GetItemValue(ItemID.ShadowScale) * 25 + GetItemValue(ItemID.DemoniteBar) * 5;
 			item.rare = 9;
-			item.accessory = true;
 		}
+
+		public override bool AltFunctionUse(Player player) => true;
 
 		public override bool UseItem(Player player)
 		{
+			ModFluid fluid = mod.GetModWorld<PSWorld>().enderFluids[frequency];
+			if (player.altFunctionUse == 2)
+			{
+				if (fluid != null)
+				{
+					Tile tile = Main.tile[Player.tileTargetX, Player.tileTargetY];
+					if ((!tile.nactive() || !Main.tileSolid[tile.type] || Main.tileSolidTop[tile.type]) && TileLoader.GetTile(tile.type)?.GetType().GetAttribute<BucketDisablePlacement>() == null)
+					{
+						if (tile.liquid == 0 || tile.liquidType() == fluid.type)
+						{
+							Main.PlaySound(19, (int)player.position.X, (int)player.position.Y);
+
+							if (tile.liquid == 0) tile.liquidType(fluid.type);
+
+							int volume = Math.Min(fluid.volume, 255 - tile.liquid);
+							tile.liquid += (byte)volume;
+							fluid.volume -= volume;
+							if (fluid.volume == 0) fluid = null;
+
+							WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY);
+
+							if (Main.netMode == 1) NetMessage.sendWater(Player.tileTargetX, Player.tileTargetY);
+						}
+					}
+				}
+			}
+			else
+			{
+				if (!Main.GamepadDisableCursorItemIcon)
+				{
+					player.showItemIcon = true;
+					Main.ItemIconCacheUpdate(item.type);
+				}
+
+				Tile tile = Main.tile[Player.tileTargetX, Player.tileTargetY];
+				if ((fluid == null || fluid.type == tile.liquidType()) && tile.liquid > 0 && TileLoader.GetTile(tile.type)?.GetType().GetAttribute<BucketDisablePickup>() == null)
+				{
+					Main.PlaySound(19, (int)player.position.X, (int)player.position.Y);
+
+					if (fluid == null) fluid = TheOneLibrary.Utility.Utility.SetDefaults(tile.liquidType());
+
+					int drain = Math.Min(tile.liquid, TEQETank.MaxVolume - fluid.volume);
+					fluid.volume += drain;
+
+					tile.liquid -= (byte)drain;
+
+					if (tile.liquid <= 0)
+					{
+						tile.lava(false);
+						tile.honey(false);
+					}
+
+					WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, false);
+					if (Main.netMode == 1) NetMessage.sendWater(Player.tileTargetX, Player.tileTargetY);
+					else Liquid.AddWater(Player.tileTargetX, Player.tileTargetY);
+				}
+			}
+
+			mod.GetModWorld<PSWorld>().enderFluids[frequency] = fluid;
+
 			return true;
 		}
 

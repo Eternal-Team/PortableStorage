@@ -177,7 +177,7 @@ namespace PortableStorage.Tiles
 				Vector2 position = new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero;
 
 				TEQETank qeTank = (TEQETank)TileEntity.ByID[ID];
-				ModFluid fluid = qeTank.GetFluids()[0];
+				ModFluid fluid = qeTank.GetFluid();
 
 				if (fluid != null)
 					spriteBatch.Draw(ModLoader.GetTexture(FluidLoader.GetFluid(fluid.Name).Texture), new Rectangle((int)position.X + 6, (int)(position.Y + 6 + (20 - 20 * (fluid.volume / (float)TEQETank.MaxVolume))), 20, (int)(20 * (fluid.volume / (float)TEQETank.MaxVolume))), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
