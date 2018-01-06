@@ -56,7 +56,7 @@ namespace PortableStorage.UI
 		{
 			guid = bag.guid;
 
-			for (int i = 0; i < PortableStorage.Instance.GetModWorld<PSWorld>().enderItems[bag.frequency].Count; i++)
+			for (int i = 0; i < PortableStorage.Instance.GetModWorld<PSWorld>().GetItemStorage(bag.frequency).Count; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(bag, i);
 				gridItems.Add(slot);

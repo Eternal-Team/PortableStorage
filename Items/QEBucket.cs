@@ -1,10 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.TileEntities;
 using ReLogic.Utilities;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -122,7 +122,7 @@ namespace PortableStorage.Items
 			spriteBatch.Draw(PortableStorage.ringSmall, position + new Vector2(6, 24) * scale, new Rectangle(0, 4 * (int)frequency.colorRight, 18, 4), Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
 		}
 
-		public override TagCompound Save() => new TagCompound {["Frequency"] = frequency};
+		public override TagCompound Save() => new TagCompound { ["Frequency"] = frequency };
 
 		public override void Load(TagCompound tag)
 		{
@@ -151,11 +151,11 @@ namespace PortableStorage.Items
 			recipe.AddRecipe();
 		}
 
-		public IList<ModFluid> GetFluids() => new List<ModFluid> {mod.GetModWorld<PSWorld>().enderFluids[frequency]};
+		public IList<ModFluid> GetFluids() => new List<ModFluid> { mod.GetModWorld<PSWorld>().GetFluidStorage(frequency) };
 
-		public void SetFluid(ModFluid value, int slot = 0) => mod.GetModWorld<PSWorld>().enderFluids[frequency] = value;
+		public void SetFluid(ModFluid value, int slot = 0) => mod.GetModWorld<PSWorld>().SetFluidStorage(frequency, value);
 
-		public ModFluid GetFluid(int slot = 0) => mod.GetModWorld<PSWorld>().enderFluids[frequency];
+		public ModFluid GetFluid(int slot = 0) => mod.GetModWorld<PSWorld>().GetFluidStorage(frequency);
 
 		public int GetFluidCapacity(int slot = 0) => TEQETank.MaxVolume;
 	}

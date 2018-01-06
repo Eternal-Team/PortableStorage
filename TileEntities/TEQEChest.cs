@@ -82,7 +82,7 @@ namespace PortableStorage.TileEntities
 			frequency.colorRight = (Colors)reader.ReadInt32();
 		}
 
-		public IList<Item> GetItems() => mod.GetModWorld<PSWorld>().enderItems[frequency];
+		public IList<Item> GetItems() => mod.GetModWorld<PSWorld>().GetItemStorage(frequency);
 
 		public ModTileEntity GetTileEntity() => this;
 	}

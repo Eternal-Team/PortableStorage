@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using PortableStorage.Tiles;
+using System.Collections.Generic;
 using System.IO;
-using PortableStorage.Tiles;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -66,11 +66,11 @@ namespace PortableStorage.TileEntities
 			frequency.colorRight = (Colors)reader.ReadInt32();
 		}
 
-		public IList<ModFluid> GetFluids() => new List<ModFluid> {mod.GetModWorld<PSWorld>().enderFluids[frequency]};
+		public IList<ModFluid> GetFluids() => new List<ModFluid> { mod.GetModWorld<PSWorld>().GetFluidStorage(frequency) };
 
-		public void SetFluid(ModFluid value, int slot = 0) => mod.GetModWorld<PSWorld>().enderFluids[frequency] = value;
+		public void SetFluid(ModFluid value, int slot = 0) => mod.GetModWorld<PSWorld>().SetFluidStorage(frequency, value);
 
-		public ModFluid GetFluid(int slot = 0) => mod.GetModWorld<PSWorld>().enderFluids[frequency];
+		public ModFluid GetFluid(int slot = 0) => mod.GetModWorld<PSWorld>().GetFluidStorage(frequency);
 
 		public int GetFluidCapacity(int slot = 0) => MaxVolume;
 

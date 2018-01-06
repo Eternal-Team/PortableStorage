@@ -1,8 +1,8 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Items;
 using PortableStorage.TileEntities;
+using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -28,7 +28,7 @@ namespace PortableStorage.Tiles
 			Main.tileLavaDeath[Type] = false;
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
 			TileObjectData.newTile.Origin = new Point16(0, 1);
-			TileObjectData.newTile.CoordinateHeights = new[] {16, 16};
+			TileObjectData.newTile.CoordinateHeights = new[] { 16, 16 };
 			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<TEQETank>().Hook_AfterPlacement, -1, 0, false);
 			TileObjectData.addTile(Type);
 			disableSmartCursor = true;
@@ -112,11 +112,7 @@ namespace PortableStorage.Tiles
 					handleFrequency = true;
 				}
 
-				if (handleFrequency)
-				{
-					if (!mod.GetModWorld<PSWorld>().enderFluids.ContainsKey(frequency)) mod.GetModWorld<PSWorld>().enderFluids.Add(frequency, null);
-					qeTank.frequency = frequency;
-				}
+				if (handleFrequency) qeTank.frequency = frequency;
 
 				qeTank.SendUpdate();
 			}

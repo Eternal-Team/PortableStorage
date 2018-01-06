@@ -125,6 +125,6 @@ namespace PortableStorage.Items
 			recipe.AddRecipe();
 		}
 
-		public IList<Item> GetItems() => mod.GetModWorld<PSWorld>().enderItems[frequency];
+		public IList<Item> GetItems() => mod.GetModWorld<PSWorld>().GetItemStorage(frequency);
 	}
 }
