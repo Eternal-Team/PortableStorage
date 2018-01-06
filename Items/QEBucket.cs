@@ -10,11 +10,12 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using TheOneLibrary.Fluid;
+using TheOneLibrary.Storage;
 using static TheOneLibrary.Utility.Utility;
 
 namespace PortableStorage.Items
 {
-	public class QEBucket : BaseBag
+	public class QEBucket : BaseBag, IFluidContainerItem
 	{
 		public Frequency frequency;
 
@@ -51,7 +52,7 @@ namespace PortableStorage.Items
 
 		public override bool UseItem(Player player)
 		{
-			ModFluid fluid = mod.GetModWorld<PSWorld>().enderFluids[frequency];
+			ModFluid fluid = GetFluid();
 			if (player.altFunctionUse == 2)
 			{
 				if (fluid != null)
@@ -109,7 +110,7 @@ namespace PortableStorage.Items
 				}
 			}
 
-			mod.GetModWorld<PSWorld>().enderFluids[frequency] = fluid;
+			SetFluid(fluid);
 
 			return true;
 		}
@@ -119,11 +120,6 @@ namespace PortableStorage.Items
 			spriteBatch.Draw(PortableStorage.ringBig, position + new Vector2(4, 16) * scale, new Rectangle(0, 4 * (int)frequency.colorLeft, 22, 4), Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
 			spriteBatch.Draw(PortableStorage.ringBig, position + new Vector2(4, 20) * scale, new Rectangle(0, 4 * (int)frequency.colorMiddle, 22, 4), Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
 			spriteBatch.Draw(PortableStorage.ringSmall, position + new Vector2(6, 24) * scale, new Rectangle(0, 4 * (int)frequency.colorRight, 18, 4), Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-		}
-
-		public override void ModifyTooltips(List<TooltipLine> tooltips)
-		{
-			//tooltips.Add(new TooltipLine(mod, "BagInfo", $"Use the bag, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it"));
 		}
 
 		public override TagCompound Save() => new TagCompound {["Frequency"] = frequency};
@@ -154,5 +150,13 @@ namespace PortableStorage.Items
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}
+
+		public IList<ModFluid> GetFluids() => new List<ModFluid> {mod.GetModWorld<PSWorld>().enderFluids[frequency]};
+
+		public void SetFluid(ModFluid value, int slot = 0) => mod.GetModWorld<PSWorld>().enderFluids[frequency] = value;
+
+		public ModFluid GetFluid(int slot = 0) => mod.GetModWorld<PSWorld>().enderFluids[frequency];
+
+		public int GetFluidCapacity(int slot = 0) => TEQETank.MaxVolume;
 	}
 }

@@ -20,7 +20,7 @@ namespace PortableStorage.Items
 		public IList<Item> Items = new List<Item>();
 
 		public override string Texture => PortableStorage.ItemTexturePath + "AmmoBelt";
-		
+
 		public override ModItem Clone(Item item)
 		{
 			AmmoBelt clone = (AmmoBelt)base.Clone(item);
