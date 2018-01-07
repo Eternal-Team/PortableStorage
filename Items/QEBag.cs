@@ -1,9 +1,10 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using PortableStorage.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.UI;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -66,7 +67,7 @@ namespace PortableStorage.Items
 
 			Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
 		}
-
+		
 		public override bool UseItem(Player player)
 		{
 			HandleUI();
@@ -95,7 +96,7 @@ namespace PortableStorage.Items
 			tooltips.Add(new TooltipLine(mod, "BagInfo", $"Use the bag, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it"));
 		}
 
-		public override TagCompound Save() => new TagCompound {["Frequency"] = frequency, ["GUID"] = guid.ToString()};
+		public override TagCompound Save() => new TagCompound { ["Frequency"] = frequency, ["GUID"] = guid.ToString() };
 
 		public override void Load(TagCompound tag)
 		{
