@@ -22,6 +22,7 @@ namespace PortableStorage
 		public const string TexturePath = "PortableStorage/Textures/";
 		public const string TileTexturePath = TexturePath + "Tiles/";
 		public const string ItemTexturePath = TexturePath + "Items/";
+		public const string UITexturePath = TexturePath + "UI/";
 
 		[Null] public static Texture2D[] gemsMiddle = new Texture2D[3];
 		[Null] public static Texture2D[] gemsSide = new Texture2D[3];
@@ -31,6 +32,9 @@ namespace PortableStorage
 
 		[Null] public static Texture2D vacuumBagOn;
 		[Null] public static Texture2D vacuumBagOff;
+
+		[Null] public static Texture2D lootAll;
+		[Null] public static Texture2D depositAll;
 
 		[Null] public static ModHotKey bagKey;
 
@@ -65,6 +69,9 @@ namespace PortableStorage
 
 				ringBig = ModLoader.GetTexture(ItemTexturePath + "RingBig");
 				ringSmall = ModLoader.GetTexture(ItemTexturePath + "RingSmall");
+
+				lootAll = ModLoader.GetTexture(UITexturePath + "LootAll");
+				depositAll = ModLoader.GetTexture(UITexturePath + "DepositAll");
 
 				gemsMiddle = new Texture2D[3];
 				gemsSide = new Texture2D[3];
