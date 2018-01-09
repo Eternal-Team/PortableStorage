@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using TheOneLibrary.Storage;
@@ -224,7 +225,7 @@ namespace PortableStorage
 			}
 		}
 
-		public static void QuickStack(IContainerItem container)
+		public static void QuickStack(IContainerItem container, Func<Item, bool> selector = null)
 		{
 			if (Main.LocalPlayer.IsStackingItems()) return;
 			IList<Item> Items = container.GetItems();
@@ -232,7 +233,7 @@ namespace PortableStorage
 			bool stacked = false;
 			for (int i = 0; i < Items.Count; i++)
 			{
-				if (Items[i].type > 0 && Items[i].stack > 0 && !Items[i].favorited)
+				if (Items[i].type > 0 && Items[i].stack > 0 && !Items[i].favorited && (selector?.Invoke(Items[i]) ?? true))
 				{
 					int type = Items[i].type;
 					int stack = Items[i].stack;
@@ -244,14 +245,14 @@ namespace PortableStorage
 			if (stacked) Main.PlaySound(7);
 		}
 
-		public static void LootAll(IContainerItem container)
+		public static void LootAll(IContainerItem container, Func<Item, bool> selector = null)
 		{
 			Player player = Main.LocalPlayer;
 			IList<Item> Items = container.GetItems();
 
 			for (int i = 0; i < Items.Count; i++)
 			{
-				if (Items[i].type > 0)
+				if (Items[i].type > 0 && (selector?.Invoke(Items[i]) ?? true))
 				{
 					Items[i].position = player.Center;
 					Items[i] = player.GetItem(Main.myPlayer, Items[i]);
@@ -259,7 +260,7 @@ namespace PortableStorage
 			}
 		}
 
-		public static void DepositAll(IContainerItem container)
+		public static void DepositAll(IContainerItem container, Func<Item, bool> selector = null)
 		{
 			Player player = Main.LocalPlayer;
 			IList<Item> Items = container.GetItems();
@@ -268,7 +269,7 @@ namespace PortableStorage
 
 			for (int pIndex = 49; pIndex >= 10; pIndex--)
 			{
-				if (player.inventory[pIndex].stack > 0 && player.inventory[pIndex].type > 0 && !player.inventory[pIndex].favorited)
+				if (player.inventory[pIndex].stack > 0 && player.inventory[pIndex].type > 0 && !player.inventory[pIndex].favorited && (selector?.Invoke(player.inventory[pIndex]) ?? true))
 				{
 					if (player.inventory[pIndex].maxStack > 1)
 					{

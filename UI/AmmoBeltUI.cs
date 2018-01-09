@@ -1,5 +1,4 @@
 ﻿using PortableStorage.Items;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
@@ -7,7 +6,6 @@ using Terraria.Localization;
 using Terraria.UI;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.Base.UI.Elements;
-using TheOneLibrary.Storage;
 using TheOneLibrary.UI.Elements;
 using TheOneLibrary.Utility;
 
@@ -94,65 +92,11 @@ namespace PortableStorage.UI
 			}
 		}
 
-		public static void DepositAll(IContainerItem container)
-		{
-			Player player = Main.LocalPlayer;
-			IList<Item> Items = container.GetItems();
-
-			for (int pIndex = 49; pIndex >= 10; pIndex--)
-			{
-				Item pItem = player.inventory[pIndex];
-
-				if (pItem.stack > 0 && pItem.type > 0 && !pItem.favorited && pItem.ammo > 0)
-				{
-					if (pItem.maxStack > 1)
-					{
-						for (int bIndex = 0; bIndex < Items.Count; bIndex++)
-						{
-							if (Items[bIndex].stack < Items[bIndex].maxStack && pItem.IsTheSameAs(Items[bIndex]))
-							{
-								int stack = pItem.stack;
-								if (pItem.stack + Items[bIndex].stack > Items[bIndex].maxStack) stack = Items[bIndex].maxStack - Items[bIndex].stack;
-
-								pItem.stack -= stack;
-								Items[bIndex].stack += stack;
-								Main.PlaySound(7);
-
-								if (pItem.stack <= 0)
-								{
-									pItem.SetDefaults();
-									break;
-								}
-								if (Items[bIndex].type == 0)
-								{
-									Items[bIndex] = pItem.Clone();
-									pItem.SetDefaults();
-								}
-							}
-						}
-					}
-					if (pItem.stack > 0)
-					{
-						for (int bIndex = 0; bIndex < Items.Count; bIndex++)
-						{
-							if (Items[bIndex].stack == 0)
-							{
-								Main.PlaySound(7);
-								Items[bIndex] = pItem.Clone();
-								pItem.SetDefaults();
-								break;
-							}
-						}
-					}
-				}
-			}
-		}
-
 		private void DepositAllClick(UIMouseEvent evt, UIElement listeningElement)
 		{
 			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
 			{
-				DepositAll(ammoBelt);
+				Utility.DepositAll(ammoBelt, item => item.ammo > 0);
 				Recipe.FindRecipes();
 			}
 		}
