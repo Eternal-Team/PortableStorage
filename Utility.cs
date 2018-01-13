@@ -1,7 +1,11 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
+using Terraria.UI;
+using TheOneLibrary.Base;
 using TheOneLibrary.Storage;
 
 namespace PortableStorage
@@ -71,7 +75,7 @@ namespace PortableStorage
 			List<int> coinSlotsContainer = new List<int>();
 
 			bool anyCoins = false;
-			int[] coinValueArr = new int[40];
+			int[] coinValueArr = new int[containerInv.Count];
 
 			for (int i = 0; i < containerInv.Count; i++)
 			{
@@ -225,9 +229,98 @@ namespace PortableStorage
 			}
 		}
 
+		public static void Restock(IContainerItem container)
+		{
+			Player player = Main.LocalPlayer;
+			Item[] inventory = player.inventory;
+			IList<Item> item = container.GetItems();
+
+			HashSet<int> restackableItems = new HashSet<int>();
+			List<int> canRestackIndex = new List<int>();
+			List<int> list2 = new List<int>();
+
+			for (int i = 57; i >= 0; i--)
+			{
+				if ((i < 50 || i >= 54) && (inventory[i].type < 71 || inventory[i].type > 74))
+				{
+					if (inventory[i].stack > 0 && inventory[i].maxStack > 1 && inventory[i].prefix == 0)
+					{
+						restackableItems.Add(inventory[i].netID);
+						if (inventory[i].stack < inventory[i].maxStack) canRestackIndex.Add(i);
+					}
+					else if (inventory[i].stack == 0 || inventory[i].netID == 0 || inventory[i].type == 0) list2.Add(i);
+				}
+			}
+			bool restocked = false;
+			for (int j = 0; j < item.Count; j++)
+			{
+				if (item[j].stack >= 1 && item[j].prefix == 0 && restackableItems.Contains(item[j].netID))
+				{
+					bool flag2 = false;
+					for (int k = 0; k < canRestackIndex.Count; k++)
+					{
+						int num = canRestackIndex[k];
+						int context = 0;
+						if (num >= 50)
+						{
+							context = 2;
+						}
+						if (inventory[num].netID == item[j].netID && ItemSlot.PickItemMovementAction(inventory, context, num, item[j]) != -1)
+						{
+							int num2 = item[j].stack;
+							if (inventory[num].maxStack - inventory[num].stack < num2)
+							{
+								num2 = inventory[num].maxStack - inventory[num].stack;
+							}
+							inventory[num].stack += num2;
+							item[j].stack -= num2;
+							restocked = true;
+							if (inventory[num].stack == inventory[num].maxStack)
+							{
+								canRestackIndex.RemoveAt(k);
+								k--;
+							}
+							if (item[j].stack == 0)
+							{
+								item[j] = new Item();
+								flag2 = true;
+								break;
+							}
+						}
+					}
+					if (!flag2 && list2.Count > 0 && item[j].ammo != 0)
+					{
+						for (int l = 0; l < list2.Count; l++)
+						{
+							int context2 = 0;
+							if (list2[l] >= 50)
+							{
+								context2 = 2;
+							}
+							if (ItemSlot.PickItemMovementAction(inventory, context2, list2[l], item[j]) != -1)
+							{
+								Item temp = inventory[list2[l]];
+								inventory[list2[l]] = item[j];
+								item[j] = temp;
+
+								canRestackIndex.Add(list2[l]);
+								list2.RemoveAt(l);
+								restocked = true;
+								break;
+							}
+						}
+					}
+				}
+			}
+			if (restocked) Main.PlaySound(7);
+
+			NetUtility.SyncItem(container.GetItem().item);
+		}
+
 		public static void QuickStack(IContainerItem container, Func<Item, bool> selector = null)
 		{
 			if (Main.LocalPlayer.IsStackingItems()) return;
+			
 			IList<Item> Items = container.GetItems();
 
 			bool stacked = false;
@@ -243,6 +336,82 @@ namespace PortableStorage
 			}
 
 			if (stacked) Main.PlaySound(7);
+
+			NetUtility.SyncItem(container.GetItem().item);
+		}
+
+		public static void QuickRestack(IContainerItem container)
+		{
+			if (Main.LocalPlayer.IsStackingItems()) return;
+			IList<Item> Items = container.GetItems();
+
+			bool stacked = false;
+			for (int i = 0; i < Items.Count; i++)
+			{
+				if (Items[i].type > 0 && Items[i].stack > 0)
+				{
+					int type = Items[i].type;
+					int stack = Items[i].stack;
+					Items[i] = TakeItemFromNearbyChest(Items[i], Main.LocalPlayer.Center);
+					if (Items[i].type != type || Items[i].stack != stack) stacked = true;
+				}
+			}
+
+			if (stacked) Main.PlaySound(7);
+
+			NetUtility.SyncItem(container.GetItem().item);
+		}
+
+		private static bool IsPlayerInChest(int i) => Main.player.Any(x => x.chest == i);
+
+		public static Item TakeItemFromNearbyChest(Item item, Vector2 position)
+		{
+			if (Main.netMode == 1) return item;
+			for (int i = 0; i < Main.chest.Length; i++)
+			{
+				//bool hasItem = false;
+				//bool emptySlot = false;
+				if (Main.chest[i] != null && !IsPlayerInChest(i) && !Chest.isLocked(Main.chest[i].x, Main.chest[i].y))
+				{
+					Vector2 value = new Vector2(Main.chest[i].x * 16 + 16, Main.chest[i].y * 16 + 16);
+					if ((value - position).Length() < 200f)
+					{
+						for (int j = 0; j < Main.chest[i].item.Length; j++)
+						{
+							if (Main.chest[i].item[j].type > 0 && Main.chest[i].item[j].stack > 0)
+							{
+								if (item.IsTheSameAs(Main.chest[i].item[j]))
+								{
+									//hasItem = true;
+									int num = item.maxStack - item.stack;
+									if (num > 0)
+									{
+										if (num > Main.chest[i].item[j].stack) num = Main.chest[i].item[j].stack;
+										item.stack += num;
+										Main.chest[i].item[j].stack -= num;
+										if (Main.chest[i].item[j].stack <= 0) Main.chest[i].item[j].SetDefaults();
+									}
+								}
+							}
+							//else emptySlot = true;
+						}
+						//if (hasItem && emptySlot && item.stack > 0)
+						//{
+						//	for (int k = 0; k < Main.chest[i].item.Length; k++)
+						//	{
+						//		if (Main.chest[i].item[k].type == 0 || Main.chest[i].item[k].stack == 0)
+						//		{
+						//			Main.chest[i].item[k] = item.Clone();
+						//			item.SetDefaults();
+						//			return item;
+						//		}
+						//	}
+						//}
+					}
+				}
+			}
+
+			return item;
 		}
 
 		public static void LootAll(IContainerItem container, Func<Item, bool> selector = null)
@@ -258,6 +427,8 @@ namespace PortableStorage
 					Items[i] = player.GetItem(Main.myPlayer, Items[i]);
 				}
 			}
+
+			NetUtility.SyncItem(container.GetItem().item);
 		}
 
 		public static void DepositAll(IContainerItem container, Func<Item, bool> selector = null)
@@ -312,6 +483,8 @@ namespace PortableStorage
 					}
 				}
 			}
+
+			NetUtility.SyncItem(container.GetItem().item);
 		}
 	}
 }

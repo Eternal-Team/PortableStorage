@@ -85,7 +85,9 @@ namespace PortableStorage.Tiles
 			else
 			{
 				Main.LocalPlayer.noThrow = 2;
-				((QEBag)Main.LocalPlayer.HeldItem.modItem).frequency = qeChest.frequency;
+				QEBag bag = (QEBag)Main.LocalPlayer.HeldItem.modItem;
+				bag.frequency = qeChest.frequency;
+				NetUtility.SyncItem(bag.item);
 			}
 		}
 

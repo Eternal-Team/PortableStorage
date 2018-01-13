@@ -16,8 +16,13 @@ namespace PortableStorage.UI
 		public UIText textLabel = new UIText("Bag");
 
 		public UIHoverButton buttonQuickStack = new UIHoverButton(Main.chestStackTexture);
+		public UIHoverButton buttonQuickRestack = new UIHoverButton(PortableStorage.restack);
+
 		public UIButton buttonLootAll = new UIButton(PortableStorage.lootAll);
 		public UIButton buttonDepositAll = new UIButton(PortableStorage.depositAll);
+
+		public UIButton buttonRestock = new UIButton(PortableStorage.restock);
+
 		public UITextButton buttonClose = new UITextButton("X", 4);
 
 		public UIGrid gridItems = new UIGrid(9);
@@ -44,12 +49,20 @@ namespace PortableStorage.UI
 			buttonQuickStack.Left.Pixels = 8;
 			buttonQuickStack.Top.Pixels = 8;
 			buttonQuickStack.HoverText = Language.GetTextValue("GameUI.QuickStackToNearby");
-			buttonQuickStack.OnClick += QuickStackClick;
+			buttonQuickStack.OnClick += QuickStack;
 			panelMain.Append(buttonQuickStack);
+
+			buttonQuickRestack.Width.Pixels = 24;
+			buttonQuickRestack.Height.Pixels = 24;
+			buttonQuickRestack.Left.Pixels = 40;
+			buttonQuickRestack.Top.Pixels = 8;
+			buttonQuickRestack.HoverText = "Quick restack from nearby chests";
+			buttonQuickRestack.OnClick += QuickRestack;
+			panelMain.Append(buttonQuickRestack);
 
 			buttonLootAll.Width.Pixels = 24;
 			buttonLootAll.Height.Pixels = 24;
-			buttonLootAll.Left.Pixels = 40;
+			buttonLootAll.Left.Pixels = 72;
 			buttonLootAll.Top.Pixels = 8;
 			buttonLootAll.HoverText = Language.GetTextValue("LegacyInterface.29");
 			buttonLootAll.OnClick += LootAllClick;
@@ -57,11 +70,19 @@ namespace PortableStorage.UI
 
 			buttonDepositAll.Width.Pixels = 24;
 			buttonDepositAll.Height.Pixels = 24;
-			buttonDepositAll.Left.Pixels = 72;
+			buttonDepositAll.Left.Pixels = 104;
 			buttonDepositAll.Top.Pixels = 8;
 			buttonDepositAll.HoverText = Language.GetTextValue("LegacyInterface.30");
 			buttonDepositAll.OnClick += DepositAllClick;
 			panelMain.Append(buttonDepositAll);
+
+			buttonRestock.Width.Pixels = 24;
+			buttonRestock.Height.Pixels = 24;
+			buttonRestock.Left.Pixels = 136;
+			buttonRestock.Top.Pixels = 8;
+			buttonRestock.HoverText = Language.GetTextValue("LegacyInterface.82");
+			buttonRestock.OnClick += Restock;
+			panelMain.Append(buttonRestock);
 
 			buttonClose.Width.Pixels = 24;
 			buttonClose.Height.Pixels = 24;
@@ -101,7 +122,25 @@ namespace PortableStorage.UI
 			}
 		}
 
-		private void QuickStackClick(UIMouseEvent evt, UIElement listeningElement)
+		private void Restock(UIMouseEvent evt, UIElement listeningElement)
+		{
+			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			{
+				Utility.Restock(bag);
+				Recipe.FindRecipes();
+			}
+		}
+
+		private void QuickRestack(UIMouseEvent evt, UIElement listeningElement)
+		{
+			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			{
+				Utility.QuickRestack(bag);
+				Recipe.FindRecipes();
+			}
+		}
+
+		private void QuickStack(UIMouseEvent evt, UIElement listeningElement)
 		{
 			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
 			{

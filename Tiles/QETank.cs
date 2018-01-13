@@ -57,7 +57,9 @@ namespace PortableStorage.Tiles
 			if (Main.LocalPlayer.HeldItem.type == mod.ItemType<QEBucket>()) // copy frequency
 			{
 				Main.LocalPlayer.noThrow = 2;
-				((QEBucket)Main.LocalPlayer.HeldItem.modItem).frequency = qeTank.frequency;
+				QEBucket bucket = (QEBucket)Main.LocalPlayer.HeldItem.modItem;
+				bucket.frequency = qeTank.frequency;
+				NetUtility.SyncItem(bucket.item);
 			}
 			else if (Main.LocalPlayer.HeldItem.modItem is IFluidContainerItem) // insert fluid
 			{
@@ -90,6 +92,9 @@ namespace PortableStorage.Tiles
 
 				fluidContainer.SetFluid(itemFluid);
 				qeTank.SetFluid(fluid);
+
+				NetUtility.SyncItem(fluidContainer.GetItem().item);
+				Net.SyncQE();
 			}
 			else // general click
 			{
@@ -157,6 +162,9 @@ namespace PortableStorage.Tiles
 
 				fluidContainer.SetFluid(itemFluid);
 				qeTank.SetFluid(fluid);
+
+				NetUtility.SyncItem(fluidContainer.GetItem().item);
+				Net.SyncQE();
 			}
 		}
 

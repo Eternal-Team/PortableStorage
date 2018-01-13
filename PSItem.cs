@@ -16,11 +16,13 @@ namespace PortableStorage
 			if (vacuumBagAcc != null && vacuumBagAcc.active)
 			{
 				InsertItem(item, vacuumBagAcc.Items.ToList());
+				TheOneLibrary.Base.NetUtility.SyncItem(vacuumBagAcc.item);
 				return false;
 			}
 			if (vacuumBag != null && vacuumBag.active)
 			{
 				InsertItem(item, vacuumBag.Items.ToList());
+				TheOneLibrary.Base.NetUtility.SyncItem(vacuumBag.item);
 				return false;
 			}
 

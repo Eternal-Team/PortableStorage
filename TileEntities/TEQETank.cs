@@ -26,13 +26,11 @@ namespace PortableStorage.TileEntities
 
 			NetMessage.SendTileSquare(Main.myPlayer, i, j - 1, 2);
 			NetMessage.SendData(MessageID.TileEntityPlacement, number: i, number2: j - 1, number3: Type);
-
 			return -1;
 		}
 
 		public override void OnPlace()
 		{
-			if (!mod.GetModWorld<PSWorld>().enderFluids.ContainsKey(frequency)) mod.GetModWorld<PSWorld>().enderFluids.Add(frequency, null);
 		}
 
 		public override void OnNetPlace() => OnPlace();

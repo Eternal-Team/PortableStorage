@@ -27,6 +27,7 @@ namespace PortableStorage.TileEntities
 
 			NetMessage.SendTileSquare(Main.myPlayer, i, j - 1, 2);
 			NetMessage.SendData(MessageID.TileEntityPlacement, number: i, number2: j - 1, number3: Type);
+			this.SendUpdate();
 
 			return -1;
 		}

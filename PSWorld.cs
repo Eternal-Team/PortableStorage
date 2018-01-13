@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
@@ -20,6 +19,7 @@ namespace PortableStorage
 				List<Item> items = new List<Item>();
 				for (int i = 0; i < 27; i++) items.Add(new Item());
 				enderItems.Add(frequency, items);
+				Net.SyncQE();
 			}
 
 			return enderItems[frequency];
@@ -27,14 +27,22 @@ namespace PortableStorage
 
 		public ModFluid GetFluidStorage(Frequency frequency)
 		{
-			if (!enderFluids.ContainsKey(frequency)) enderFluids.Add(frequency, null);
+			if (!enderFluids.ContainsKey(frequency))
+			{
+				enderFluids.Add(frequency, null);
+				Net.SyncQE();
+			}
 
 			return enderFluids[frequency];
 		}
 
 		public void SetFluidStorage(Frequency frequency, ModFluid value)
 		{
-			if (!enderFluids.ContainsKey(frequency)) enderFluids.Add(frequency, null);
+			if (!enderFluids.ContainsKey(frequency))
+			{
+				enderFluids.Add(frequency, null);
+				Net.SyncQE();
+			}
 
 			enderFluids[frequency] = value;
 		}
@@ -91,9 +99,5 @@ namespace PortableStorage
 				}).ToDictionary(x => x.Key, x => x.Value);
 			}
 		}
-
-		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
-
-		public override void NetReceive(BinaryReader reader) => Load(TagIO.Read(reader));
 	}
 }

@@ -1,8 +1,8 @@
+using PortableStorage.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using PortableStorage.UI;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -104,6 +104,7 @@ namespace PortableStorage.Items
 						ammo.stack += count;
 						Items[i].stack -= count;
 						if (Items[i].stack <= 0) Items[i].TurnToAir();
+						TheOneLibrary.Base.NetUtility.SyncItem(item);
 					}
 				}
 			}
@@ -124,12 +125,13 @@ namespace PortableStorage.Items
 						ammo.stack += count;
 						Items[i].stack -= count;
 						if (Items[i].stack <= 0) Items[i].TurnToAir();
+						TheOneLibrary.Base.NetUtility.SyncItem(item);
 					}
 				}
 			}
 		}
 
-		public override TagCompound Save() => new TagCompound {["Items"] = Items.Save(), ["GUID"] = guid.ToString()};
+		public override TagCompound Save() => new TagCompound { ["Items"] = Items.Save(), ["GUID"] = guid.ToString() };
 
 		public override void Load(TagCompound tag)
 		{
@@ -137,9 +139,9 @@ namespace PortableStorage.Items
 			guid = tag.ContainsKey("GUID") && !string.IsNullOrEmpty((string)tag["GUID"]) ? Guid.Parse(tag.GetString("GUID")) : Guid.NewGuid();
 		}
 
-		public override void NetSend(BinaryWriter writer) => writer.Write(Items);
+		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
 
-		public override void NetRecieve(BinaryReader reader) => Items = TheOneLibrary.Utility.Utility.Read(reader);
+		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));
 
 		public override void AddRecipes()
 		{
@@ -157,5 +159,7 @@ namespace PortableStorage.Items
 		}
 
 		public IList<Item> GetItems() => Items;
+
+		public ModItem GetItem() => this;
 	}
 }

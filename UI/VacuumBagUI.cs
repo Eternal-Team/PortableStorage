@@ -1,5 +1,4 @@
-﻿using System;
-using PortableStorage.Items;
+﻿using PortableStorage.Items;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
@@ -19,6 +18,8 @@ namespace PortableStorage.UI
 		public UIHoverButton buttonQuickStack = new UIHoverButton(Main.chestStackTexture);
 		public UIButton buttonLootAll = new UIButton(PortableStorage.lootAll);
 		public UIButton buttonDepositAll = new UIButton(PortableStorage.depositAll);
+		public UIButton buttonRestock = new UIButton(PortableStorage.restock);
+
 		public UITextButton buttonClose = new UITextButton("X", 4);
 
 		public UIGrid gridItems = new UIGrid(9);
@@ -64,6 +65,14 @@ namespace PortableStorage.UI
 			buttonDepositAll.OnClick += DepositAllClick;
 			panelMain.Append(buttonDepositAll);
 
+			buttonRestock.Width.Pixels = 24;
+			buttonRestock.Height.Pixels = 24;
+			buttonRestock.Left.Pixels = 104;
+			buttonRestock.Top.Pixels = 8;
+			buttonRestock.HoverText = Language.GetTextValue("LegacyInterface.82");
+			buttonRestock.OnClick += Restock;
+			panelMain.Append(buttonRestock);
+
 			buttonClose.Width.Pixels = 24;
 			buttonClose.Height.Pixels = 24;
 			buttonClose.Left.Set(-28, 1);
@@ -98,6 +107,15 @@ namespace PortableStorage.UI
 			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
 			{
 				Utility.DepositAll(vacuumBag);
+				Recipe.FindRecipes();
+			}
+		}
+
+		private void Restock(UIMouseEvent evt, UIElement listeningElement)
+		{
+			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			{
+				Utility.Restock(vacuumBag);
 				Recipe.FindRecipes();
 			}
 		}

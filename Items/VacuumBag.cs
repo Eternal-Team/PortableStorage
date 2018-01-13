@@ -115,9 +115,9 @@ namespace PortableStorage.Items
 			active = tag.GetBool("Active");
 		}
 
-		public override void NetSend(BinaryWriter writer) => writer.Write(Items);
+		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
 
-		public override void NetRecieve(BinaryReader reader) => Items = TheOneLibrary.Utility.Utility.Read(reader);
+		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));
 
 		public override void AddRecipes()
 		{
@@ -135,5 +135,7 @@ namespace PortableStorage.Items
 		}
 
 		public IList<Item> GetItems() => Items;
+
+		public ModItem GetItem() => this;
 	}
 }

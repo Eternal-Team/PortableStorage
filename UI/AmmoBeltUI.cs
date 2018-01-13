@@ -16,8 +16,11 @@ namespace PortableStorage.UI
 		public UIText textLabel = new UIText("Ammo Belt");
 
 		public UIHoverButton buttonQuickStack = new UIHoverButton(Main.chestStackTexture);
+		public UIHoverButton buttonQuickRestack = new UIHoverButton(PortableStorage.restack);
+
 		public UIButton buttonLootAll = new UIButton(PortableStorage.lootAll);
 		public UIButton buttonDepositAll = new UIButton(PortableStorage.depositAll);
+
 		public UITextButton buttonClose = new UITextButton("X", 4);
 
 		public UIGrid gridItems = new UIGrid(9);
@@ -47,9 +50,17 @@ namespace PortableStorage.UI
 			buttonQuickStack.OnClick += QuickStackClick;
 			panelMain.Append(buttonQuickStack);
 
+			buttonQuickRestack.Width.Pixels = 24;
+			buttonQuickRestack.Height.Pixels = 24;
+			buttonQuickRestack.Left.Pixels = 40;
+			buttonQuickRestack.Top.Pixels = 8;
+			buttonQuickRestack.HoverText = "Quick restack from nearby chests";
+			buttonQuickRestack.OnClick += QuickRestack;
+			panelMain.Append(buttonQuickRestack);
+
 			buttonLootAll.Width.Pixels = 24;
 			buttonLootAll.Height.Pixels = 24;
-			buttonLootAll.Left.Pixels = 40;
+			buttonLootAll.Left.Pixels = 72;
 			buttonLootAll.Top.Pixels = 8;
 			buttonLootAll.HoverText = Language.GetTextValue("LegacyInterface.29");
 			buttonLootAll.OnClick += LootAllClick;
@@ -57,7 +68,7 @@ namespace PortableStorage.UI
 
 			buttonDepositAll.Width.Pixels = 24;
 			buttonDepositAll.Height.Pixels = 24;
-			buttonDepositAll.Left.Pixels = 72;
+			buttonDepositAll.Left.Pixels = 104;
 			buttonDepositAll.Top.Pixels = 8;
 			buttonDepositAll.HoverText = Language.GetTextValue("LegacyInterface.30");
 			buttonDepositAll.OnClick += DepositAllClick;
@@ -97,6 +108,15 @@ namespace PortableStorage.UI
 			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
 			{
 				Utility.DepositAll(ammoBelt, item => item.ammo > 0);
+				Recipe.FindRecipes();
+			}
+		}
+
+		private void QuickRestack(UIMouseEvent evt, UIElement listeningElement)
+		{
+			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			{
+				Utility.QuickRestack(ammoBelt);
 				Recipe.FindRecipes();
 			}
 		}

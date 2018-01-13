@@ -158,5 +158,7 @@ namespace PortableStorage.Items
 		public ModFluid GetFluid(int slot = 0) => mod.GetModWorld<PSWorld>().GetFluidStorage(frequency);
 
 		public int GetFluidCapacity(int slot = 0) => TEQETank.MaxVolume;
+
+		public ModItem GetItem() => this;
 	}
 }
