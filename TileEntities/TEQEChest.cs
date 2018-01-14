@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using PortableStorage.Tiles;
+using System.Collections.Generic;
 using System.IO;
-using PortableStorage.Tiles;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -19,7 +19,7 @@ namespace PortableStorage.TileEntities
 		public int animState;
 		public int animTimer;
 
-		public bool opened = false;
+		public bool opened;
 
 		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
 		{
@@ -27,34 +27,42 @@ namespace PortableStorage.TileEntities
 
 			NetMessage.SendTileSquare(Main.myPlayer, i, j - 1, 2);
 			NetMessage.SendData(MessageID.TileEntityPlacement, number: i, number2: j - 1, number3: Type);
-			this.SendUpdate();
 
 			return -1;
 		}
 
 		public override void Update()
 		{
-			if (opened && animState < 2)
-			{
-				if (++animTimer >= 10)
-				{
-					animState++;
-					animTimer = 0;
-				}
-			}
-			else if (!opened && animState > 0)
-			{
-				if (++animTimer >= 10)
-				{
-					animState--;
-					animTimer = 0;
-				}
-			}
+			//if (opened && animState < 2)
+			//{
+			//	if (++animTimer >= 10)
+			//	{
+			//		animState++;
+			//		animTimer = 0;
+			//		WorldGen.TileFrame(Position.X, Position.Y);
+			//		WorldGen.TileFrame(Position.X, Position.Y + 1);
+			//		WorldGen.TileFrame(Position.X + 1, Position.Y);
+			//		WorldGen.TileFrame(Position.X + 1, Position.Y + 1);
+			//		//WorldGen.SectionTileFrame(Position.X, Position.Y, Position.X + 1, Position.Y + 1);
+			//		//mod.ClientSendTEUpdate(ID);
+			//		//this.SendUpdate();
+			//	}
+			//}
+			//else if (!opened && animState > 0)
+			//{
+			//	if (++animTimer >= 10)
+			//	{
+			//		animState--;
+			//		animTimer = 0;
 
-			Main.tile[Position.X, Position.Y].frameX = (short)(animState * 36);
-			Main.tile[Position.X, Position.Y + 1].frameX = (short)(animState * 36);
-			Main.tile[Position.X + 1, Position.Y].frameX = (short)(animState * 36 + 18);
-			Main.tile[Position.X + 1, Position.Y + 1].frameX = (short)(animState * 36 + 18);
+			//		WorldGen.TileFrame(Position.X, Position.Y);
+			//		WorldGen.TileFrame(Position.X, Position.Y + 1);
+			//		WorldGen.TileFrame(Position.X + 1, Position.Y);
+			//		WorldGen.TileFrame(Position.X + 1, Position.Y + 1);
+			//		//mod.ClientSendTEUpdate(ID);
+			//		//this.SendUpdate();
+			//	}
+			//}
 
 			this.HandleUIFar();
 		}
@@ -74,6 +82,8 @@ namespace PortableStorage.TileEntities
 			writer.Write((int)frequency.colorLeft);
 			writer.Write((int)frequency.colorMiddle);
 			writer.Write((int)frequency.colorRight);
+			writer.Write(opened);
+			writer.Write(animState);
 		}
 
 		public override void NetReceive(BinaryReader reader, bool lightReceive)
@@ -81,6 +91,8 @@ namespace PortableStorage.TileEntities
 			frequency.colorLeft = (Colors)reader.ReadInt32();
 			frequency.colorMiddle = (Colors)reader.ReadInt32();
 			frequency.colorRight = (Colors)reader.ReadInt32();
+			opened = reader.ReadBoolean();
+			animState = reader.ReadInt32();
 		}
 
 		public IList<Item> GetItems() => mod.GetModWorld<PSWorld>().GetItemStorage(frequency);

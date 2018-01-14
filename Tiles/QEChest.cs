@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Items;
 using PortableStorage.TileEntities;
@@ -33,7 +34,7 @@ namespace PortableStorage.Tiles
 			name.SetDefault("Quantum Entangled Chest");
 			AddMapEntry(Color.Purple, name);
 		}
-
+		
 		public override void RightClick(int i, int j)
 		{
 			int ID = mod.GetID<TEQEChest>(i, j);
