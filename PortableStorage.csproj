@@ -67,6 +67,7 @@
     <Compile Include="PSPlayer.cs" />
     <Compile Include="PSItem.cs" />
     <Compile Include="PSWorld.cs" />
+    <Compile Include="QEChestMTAdapter.cs" />
     <Compile Include="TileEntities\TEQETank.cs" />
     <Compile Include="Tiles\QETank.cs" />
     <Compile Include="Tiles\QEChest.cs" />

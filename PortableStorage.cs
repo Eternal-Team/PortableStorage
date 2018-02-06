@@ -99,7 +99,18 @@ namespace PortableStorage
 			GC.Collect();
 		}
 
-		public override void AddRecipes()
+        public override void PostSetupContent()
+        {
+            Mod mechTansfer = ModLoader.GetMod("MechTransfer");
+
+            if (mechTansfer != null)
+            {
+                QEChestMTAdapter adapter = new QEChestMTAdapter(this);
+                mechTansfer.Call("RegisterAdapterReflection", adapter, new int[] { TileType<Tiles.QEChest>() });
+            }
+        }
+
+        public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(this);
 			recipe.AddIngredient(ItemID.Vertebrae, 5);
