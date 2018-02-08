@@ -1,20 +1,14 @@
 ﻿using PortableStorage.TileEntities;
-using PortableStorage;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
-using Terraria.ModLoader;
-using TheOneLibrary.Base;
-using TheOneLibrary.Storage;
-using TheOneLibrary.Utility;
 using Terraria.DataStructures;
+using Terraria.ModLoader;
+using TheOneLibrary.Utility;
 
 namespace PortableStorage
 {
-    class QEChestMTAdapter
+    internal class QEChestMTAdapter
     {
         private Mod mod;
 
