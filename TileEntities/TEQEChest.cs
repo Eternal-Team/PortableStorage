@@ -95,7 +95,15 @@ namespace PortableStorage.TileEntities
             animState = reader.ReadInt32();
         }
 
-        public IList<Item> GetItems() => mod.GetModWorld<PSWorld>().GetItemStorage(frequency);
+       public  List<Item> GetItems() => mod.GetModWorld<PSWorld>().GetItemStorage(frequency);
+
+        public Item GetItem(int slot) => mod.GetModWorld<PSWorld>().GetItemStorage(frequency)[slot];
+
+        public void SetItem(int slot, Item value)
+        {
+            mod.GetModWorld<PSWorld>().GetItemStorage(frequency)[slot] = value;
+            Net.SyncQE();
+        }
 
         public ModTileEntity GetTileEntity() => this;
     }

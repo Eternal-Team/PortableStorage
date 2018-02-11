@@ -64,7 +64,7 @@ namespace PortableStorage.TileEntities
             frequency.colorRight = (Colors)reader.ReadInt32();
         }
 
-        public IList<ModFluid> GetFluids() => new List<ModFluid> {mod.GetModWorld<PSWorld>().GetFluidStorage(frequency)};
+        public List<ModFluid> GetFluids() => new List<ModFluid> {mod.GetModWorld<PSWorld>().GetFluidStorage(frequency)};
 
         public void SetFluid(ModFluid value, int slot = 0) => mod.GetModWorld<PSWorld>().SetFluidStorage(frequency, value);
 

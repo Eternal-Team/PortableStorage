@@ -1,14 +1,13 @@
+using PortableStorage.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using PortableStorage.UI;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
-using TheOneLibrary.Base;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.Storage;
 using TheOneLibrary.Utility;
@@ -19,7 +18,7 @@ namespace PortableStorage.Items
     public class AmmoBelt : BaseBag, IContainerItem
     {
         public Guid guid = Guid.NewGuid();
-        public IList<Item> Items = new List<Item>();
+        public List<Item> Items = new List<Item>();
 
         public override string Texture => PortableStorage.ItemTexturePath + "AmmoBelt";
 
@@ -135,7 +134,7 @@ namespace PortableStorage.Items
             }
         }
 
-        public override TagCompound Save() => new TagCompound {["Items"] = Items.Save(), ["GUID"] = guid.ToString()};
+        public override TagCompound Save() => new TagCompound { ["Items"] = Items.Save(), ["GUID"] = guid.ToString() };
 
         public override void Load(TagCompound tag)
         {
@@ -162,7 +161,15 @@ namespace PortableStorage.Items
             for (int i = 0; i < 27; i++) Items.Add(new Item());
         }
 
-        public IList<Item> GetItems() => Items;
+        public Item GetItem(int slot) => Items[slot];
+
+        public void SetItem(int slot, Item value)
+        {
+            Items[slot] = value;
+            NetUtility.SyncItem(item);
+        }
+
+        public List<Item> GetItems() => Items;
 
         public ModItem GetModItem() => this;
     }

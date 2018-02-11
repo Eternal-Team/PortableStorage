@@ -12,6 +12,7 @@ using Terraria.UI;
 using Terraria.UI.Chat;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.Storage;
+using TheOneLibrary.Utility;
 using static TheOneLibrary.Utility.Utility;
 
 namespace PortableStorage.Items
@@ -19,7 +20,7 @@ namespace PortableStorage.Items
     public class DevNull : BaseBag, IContainerItem
     {
         public Guid guid = Guid.NewGuid();
-        public IList<Item> Items = new List<Item>();
+        public List<Item> Items = new List<Item>();
 
         public int selectedIndex = -1;
 
@@ -195,7 +196,15 @@ namespace PortableStorage.Items
             for (int i = 0; i < 27; i++) Items.Add(new Item());
         }
 
-        public IList<Item> GetItems() => Items;
+        public Item GetItem(int slot) => Items[slot];
+
+        public void SetItem(int slot, Item value)
+        {
+            Items[slot] = value;
+            NetUtility.SyncItem(item);
+        }
+
+        public List<Item> GetItems() => Items;
 
         public ModItem GetModItem() => this;
     }

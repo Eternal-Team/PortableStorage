@@ -95,7 +95,7 @@ namespace PortableStorage.Items
             tooltips.Add(new TooltipLine(mod, "BagInfo", $"Use the bag, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it"));
         }
 
-        public override TagCompound Save() => new TagCompound {["Frequency"] = frequency, ["GUID"] = guid.ToString()};
+        public override TagCompound Save() => new TagCompound { ["Frequency"] = frequency, ["GUID"] = guid.ToString() };
 
         public override void Load(TagCompound tag)
         {
@@ -125,8 +125,16 @@ namespace PortableStorage.Items
             recipe.AddRecipe();
         }
 
-        public IList<Item> GetItems() => mod.GetModWorld<PSWorld>().GetItemStorage(frequency);
+        public Item GetItem(int slot) => mod.GetModWorld<PSWorld>().GetItemStorage(frequency)[slot];
+
+        public void SetItem(int slot, Item value)
+        {
+            mod.GetModWorld<PSWorld>().GetItemStorage(frequency)[slot] = value;
+            Net.SyncQE();
+        }
 
         public ModItem GetModItem() => this;
+
+        public List<Item> GetItems() => mod.GetModWorld<PSWorld>().GetItemStorage(frequency);
     }
 }
