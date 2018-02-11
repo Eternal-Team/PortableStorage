@@ -2,12 +2,12 @@
 
 namespace PortableStorage.Items
 {
-	public abstract class BaseBag : BaseItem
-	{
-		public override bool CloneNewInstances => true;
+    public abstract class BaseBag : BaseItem
+    {
+        public override bool CloneNewInstances => true;
 
-		public virtual void HandleUI()
-		{
-		}
-	}
+        public virtual void HandleUI()
+        {
+        }
+    }
 }
