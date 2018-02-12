@@ -102,6 +102,17 @@ namespace PortableStorage
 			GC.Collect();
 		}
 
+		public override void PostSetupContent()
+		{
+			Mod MechTransfer = ModLoader.GetMod("MechTransfer");
+
+			if (MechTransfer != null)
+			{
+				QEAdapter adapter = new QEAdapter(this);
+				MechTransfer.Call("RegisterAdapterReflection", adapter, new[] { TileType<Tiles.QEChest>() });
+			}
+		}
+
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(this);
@@ -113,11 +124,11 @@ namespace PortableStorage
 
 		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
-			int MouseTextIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
+			int HotbarIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Hotbar"));
 
-			if (MouseTextIndex != -1)
+			if (HotbarIndex != -1)
 			{
-				layers.Insert(MouseTextIndex, new LegacyGameInterfaceLayer(
+				layers.Insert(HotbarIndex, new LegacyGameInterfaceLayer(
 					"PortableStorage: UI",
 					delegate
 					{
