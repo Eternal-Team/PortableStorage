@@ -4,6 +4,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Global;
+using PortableStorage.Tiles;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -109,7 +110,7 @@ namespace PortableStorage
 			if (MechTransfer != null)
 			{
 				QEAdapter adapter = new QEAdapter(this);
-				MechTransfer.Call("RegisterAdapterReflection", adapter, new[] { TileType<Tiles.QEChest>() });
+				MechTransfer.Call("RegisterAdapterReflection", adapter, new[] {TileType<QEChest>()});
 			}
 		}
 

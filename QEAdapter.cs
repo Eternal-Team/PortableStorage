@@ -1,6 +1,6 @@
-﻿using PortableStorage.TileEntities;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using PortableStorage.TileEntities;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
