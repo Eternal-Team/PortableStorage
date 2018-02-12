@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.UI;
@@ -42,10 +43,12 @@ namespace PortableStorage.Items
 
         public override void SetDefaults()
         {
-            Items.Clear();
-            for (int i = 0; i < 27; i++) Items.Add(new Item());
+	        if (!Items.Any())
+	        {
+		        for (int i = 0; i < 27; i++) Items.Add(new Item());
+	        }
 
-            item.width = 40;
+			item.width = 40;
             item.height = 40;
             item.useTime = 5;
             item.useAnimation = 5;

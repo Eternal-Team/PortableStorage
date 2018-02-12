@@ -130,13 +130,13 @@ namespace PortableStorage.UI
             }
         }
 
-        public void Load(AmmoBelt belt)
+        public void Load(AmmoBelt value)
         {
-            ammoBelt = belt;
+            ammoBelt = value;
 
-            for (int i = 0; i < belt.GetItems().Count; i++)
+            for (int i = 0; i < ammoBelt.GetItems().Count; i++)
             {
-                UIContainerSlot slot = new UIContainerSlot(belt, i);
+                UIContainerSlot slot = new UIContainerSlot(ammoBelt, i);
                 slot.CanInteract += (item, mouse) => mouse.IsAir || mouse.ammo > 0;
                 gridItems.Add(slot);
             }

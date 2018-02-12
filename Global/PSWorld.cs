@@ -3,14 +3,22 @@ using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using TheOneLibrary.Base;
 using TheOneLibrary.Fluid;
 
-namespace PortableStorage
+namespace PortableStorage.Global
 {
     public class PSWorld : ModWorld
     {
+        [Null] public static PSWorld Instance;
+
         public Dictionary<Frequency, List<Item>> enderItems = new Dictionary<Frequency, List<Item>>();
         public Dictionary<Frequency, ModFluid> enderFluids = new Dictionary<Frequency, ModFluid>();
+
+        public override void Initialize()
+        {
+            Instance = this;
+        }
 
         public List<Item> GetItemStorage(Frequency frequency)
         {
@@ -19,7 +27,7 @@ namespace PortableStorage
                 List<Item> items = new List<Item>();
                 for (int i = 0; i < 27; i++) items.Add(new Item());
                 enderItems.Add(frequency, items);
-                Net.SyncQE();
+                Net.SyncQEItems();
             }
 
             return enderItems[frequency];
@@ -30,7 +38,7 @@ namespace PortableStorage
             if (!enderFluids.ContainsKey(frequency))
             {
                 enderFluids.Add(frequency, null);
-                Net.SyncQE();
+                Net.SyncQEFluids();
             }
 
             return enderFluids[frequency];
@@ -38,30 +46,28 @@ namespace PortableStorage
 
         public void SetFluidStorage(Frequency frequency, ModFluid value)
         {
-            if (!enderFluids.ContainsKey(frequency)) enderFluids.Add(frequency, null);
-            enderFluids[frequency] = value;
-
-            Net.SyncQE();
-        }
-
-        public override TagCompound Save()
-        {
-            TagCompound tag = new TagCompound();
-            tag.Add("Items", enderItems.Where(x => !x.Value.All(y => y.IsAir)).Select(x => new TagCompound {["Frequency"] = x.Key, ["Items"] = x.Value.Select(ItemIO.Save).ToList()}).ToList());
-            tag.Add("Fluids", enderFluids.Where(x => x.Value != null).Select(x => new TagCompound
+            if (!enderFluids.ContainsKey(frequency))
             {
-                ["Frequency"] = x.Key,
-                ["Fluid"] = new TagCompound
-                {
-                    ["Type"] = x.Value.Name,
-                    ["Volume"] = x.Value.volume
-                }
-            }).ToList());
+                enderFluids.Add(frequency, null);
+				Net.SyncQEFluids();
+			}
 
-            return tag;
+			enderFluids[frequency] = value;
         }
 
-        public override void Load(TagCompound tag)
+        public List<TagCompound> SaveItems() => enderItems.Where(x => !x.Value.All(y => y.IsAir)).Select(x => new TagCompound { ["Frequency"] = x.Key, ["Items"] = x.Value.Select(ItemIO.Save).ToList() }).ToList();
+
+        public List<TagCompound> SaveFluids() => enderFluids.Where(x => x.Value != null).Select(x => new TagCompound
+        {
+            ["Frequency"] = x.Key,
+            ["Fluid"] = new TagCompound
+            {
+                ["Type"] = x.Value.Name,
+                ["Volume"] = x.Value.volume
+            }
+        }).ToList();
+
+        public void LoadItems(TagCompound tag)
         {
             if (tag.ContainsKey("Items"))
             {
@@ -77,7 +83,10 @@ namespace PortableStorage
                     enderItems = tags.Select(x => new KeyValuePair<Frequency, List<Item>>(x.Get<Frequency>("Frequency"), x.GetList<Item>("Items").ToList())).ToDictionary(x => x.Key, x => x.Value);
                 }
             }
+        }
 
+        public void LoadFluids(TagCompound tag)
+        {
             if (tag.ContainsKey("KeysFluids") && tag.ContainsKey("ValuesFluids"))
             {
                 IList<Frequency> keysFluids = tag.GetList<Frequency>("KeysFluids");
@@ -95,6 +104,18 @@ namespace PortableStorage
                     return new KeyValuePair<Frequency, ModFluid>(x.Get<Frequency>("Frequency"), fluid);
                 }).ToDictionary(x => x.Key, x => x.Value);
             }
+        }
+
+        public override TagCompound Save() => new TagCompound
+        {
+            { "Items", SaveItems() },
+            { "Fluids", SaveFluids() }
+        };
+
+        public override void Load(TagCompound tag)
+        {
+            LoadItems(tag);
+            LoadFluids(tag);
         }
     }
 }

@@ -102,6 +102,8 @@ namespace PortableStorage.UI
             gridItems.ListPadding = 4;
             gridItems.OverflowHidden = true;
             panelMain.Append(gridItems);
+
+			Recalculate();
         }
 
         private void LootAllClick(UIMouseEvent evt, UIElement listeningElement)
@@ -149,10 +151,10 @@ namespace PortableStorage.UI
             }
         }
 
-        public void Load(Bag bag)
+        public void Load(Bag value)
         {
-            this.bag = bag;
-
+            bag = value;
+            
             for (int i = 0; i < bag.GetItems().Count; i++)
             {
                 UIContainerSlot slot = new UIContainerSlot(bag, i);

@@ -129,13 +129,13 @@ namespace PortableStorage.UI
             }
         }
 
-        public void Load(VacuumBag bag)
+        public void Load(VacuumBag value)
         {
-            vacuumBag = bag;
+            vacuumBag = value;
 
-            for (int i = 0; i < bag.GetItems().Count; i++)
+            for (int i = 0; i < vacuumBag.GetItems().Count; i++)
             {
-                UIContainerSlot slot = new UIContainerSlot(bag, i);
+                UIContainerSlot slot = new UIContainerSlot(vacuumBag, i);
                 gridItems.Add(slot);
             }
         }

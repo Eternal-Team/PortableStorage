@@ -33,6 +33,7 @@ namespace PortableStorage.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Bag");
+			Tooltip.SetDefault("Stores 54 stacks of items");
         }
 
         public override void SetDefaults()

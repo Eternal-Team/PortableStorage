@@ -1,4 +1,5 @@
-﻿using PortableStorage.Items;
+﻿using PortableStorage.Global;
+using PortableStorage.Items;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
@@ -111,14 +112,13 @@ namespace PortableStorage.UI
             }
         }
 
-        public void Load(QEBag bag)
+        public void Load(QEBag value)
         {
-            this.bag = bag;
+            bag = value;
 
-            for (int i = 0; i < PortableStorage.Instance.GetModWorld<PSWorld>().GetItemStorage(bag.frequency).Count; i++)
+            for (int i = 0; i < PSWorld.Instance.GetItemStorage(bag.frequency).Count; i++)
             {
                 UIContainerSlot slot = new UIContainerSlot(bag, i);
-                slot.OnInteract += Net.SyncQE;
                 gridItems.Add(slot);
             }
         }

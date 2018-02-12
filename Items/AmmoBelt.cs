@@ -33,7 +33,7 @@ namespace PortableStorage.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Ammo Belt");
-            Tooltip.SetDefault("Restocks your ammo slots!");
+            Tooltip.SetDefault("Stores 27 stacks of ammo, restocks your ammo slots");
         }
 
         public override void SetDefaults()
@@ -85,7 +85,7 @@ namespace PortableStorage.Items
             item.stack++;
 
             HandleUI();
-        }
+        } 
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {

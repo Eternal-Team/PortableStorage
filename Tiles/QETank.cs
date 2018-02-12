@@ -92,9 +92,6 @@ namespace PortableStorage.Tiles
 
                 fluidContainer.SetFluid(itemFluid);
                 qeTank.SetFluid(fluid);
-
-                NetUtility.SyncItem(fluidContainer.GetItem().item);
-                Net.SyncQE();
             }
             else // general click
             {
@@ -162,9 +159,6 @@ namespace PortableStorage.Tiles
 
                 fluidContainer.SetFluid(itemFluid);
                 qeTank.SetFluid(fluid);
-
-                NetUtility.SyncItem(fluidContainer.GetItem().item);
-                Net.SyncQE();
             }
         }
 

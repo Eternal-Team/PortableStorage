@@ -3,9 +3,8 @@ using PortableStorage.Items;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ModLoader;
-using static TheOneLibrary.Utility.Utility;
 
-namespace PortableStorage
+namespace PortableStorage.Global
 {
     public class PSPlayer : ModPlayer
     {
@@ -13,7 +12,7 @@ namespace PortableStorage
         {
             if (PortableStorage.bagKey.JustPressed)
             {
-                Item item = Accessory.FirstOrDefault(x => x.modItem is BaseBag);
+                Item item = TheOneLibrary.Utility.Utility.Accessory.FirstOrDefault(x => x.modItem is BaseBag);
 
                 if (item?.modItem is BaseBag)
                 {

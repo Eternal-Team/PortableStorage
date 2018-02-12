@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PortableStorage.Global;
 using PortableStorage.UI;
 using Terraria;
 using Terraria.ID;
@@ -33,7 +34,7 @@ namespace PortableStorage.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Quantum Entangled Bag");
-            Tooltip.SetDefault("Right-click on a Quantum Entangled Chest to link it");
+            Tooltip.SetDefault("Stores 27 stacks of items\nRight-click on a Quantum Entangled Chest to link it");
             ItemID.Sets.ItemNoGravity[item.type] = true;
         }
 
@@ -116,6 +117,7 @@ namespace PortableStorage.Items
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
+
             recipe = new ModRecipe(mod);
             recipe.AddIngredient(mod.ItemType<Bag>());
             recipe.AddIngredient(ItemID.TissueSample, 25);
@@ -125,16 +127,16 @@ namespace PortableStorage.Items
             recipe.AddRecipe();
         }
 
-        public Item GetItem(int slot) => mod.GetModWorld<PSWorld>().GetItemStorage(frequency)[slot];
+        public Item GetItem(int slot) => PSWorld.Instance.GetItemStorage(frequency)[slot];
 
         public void SetItem(int slot, Item value)
         {
-            mod.GetModWorld<PSWorld>().GetItemStorage(frequency)[slot] = value;
-            Net.SyncQE();
+            PSWorld.Instance.GetItemStorage(frequency)[slot] = value;
+            Net.SyncQEItems();
         }
 
         public ModItem GetModItem() => this;
 
-        public List<Item> GetItems() => mod.GetModWorld<PSWorld>().GetItemStorage(frequency);
+        public List<Item> GetItems() => PSWorld.Instance.GetItemStorage(frequency);
     }
 }

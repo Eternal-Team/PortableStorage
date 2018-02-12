@@ -38,7 +38,7 @@ namespace PortableStorage.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Vacuum Bag");
-            Tooltip.SetDefault("Right-click it to enable/disable vacuum mode\nSucks up items!");
+            Tooltip.SetDefault("Stores 27 stacks of items, sucks up items\nRight-click it to enable/disable vacuum mode");
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(5, 4));
         }
 

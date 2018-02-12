@@ -12,7 +12,7 @@ namespace PortableStorage.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Quantum Entangled Chest");
-            Tooltip.SetDefault("Right-click on the slots with gems to change frequency");
+            Tooltip.SetDefault("Stores 27 stacks of items\nRight-click on the slots with gems to change frequency");
         }
 
         public override void SetDefaults()
@@ -39,6 +39,14 @@ namespace PortableStorage.Items
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
-        }
+
+	        recipe = new ModRecipe(mod);
+	        recipe.AddIngredient(ItemID.Obsidian, 15);
+	        recipe.AddIngredient(ItemID.TissueSample, 25);
+	        recipe.AddIngredient(ItemID.CrimtaneBar, 5);
+	        recipe.AddTile(TileID.Anvils);
+	        recipe.SetResult(this);
+	        recipe.AddRecipe();
+		}
     }
 }

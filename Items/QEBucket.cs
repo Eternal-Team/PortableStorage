@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PortableStorage.Global;
 using PortableStorage.TileEntities;
 using ReLogic.Utilities;
 using Terraria;
@@ -31,7 +32,7 @@ namespace PortableStorage.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Quantum Entangled Bucket");
-            Tooltip.SetDefault("Right-click on a Quantum Entangled Tank to link it");
+            Tooltip.SetDefault("Stores 16L of fluid\nRight-click on a Quantum Entangled Tank to link it");
         }
 
         public override void SetDefaults()
@@ -151,11 +152,15 @@ namespace PortableStorage.Items
             recipe.AddRecipe();
         }
 
-        public List<ModFluid> GetFluids() => new List<ModFluid> { mod.GetModWorld<PSWorld>().GetFluidStorage(frequency) };
+        public List<ModFluid> GetFluids() => new List<ModFluid> { PSWorld.Instance.GetFluidStorage(frequency) };
 
-        public void SetFluid(ModFluid value, int slot = 0) => mod.GetModWorld<PSWorld>().SetFluidStorage(frequency, value);
+        public void SetFluid(ModFluid value, int slot = 0)
+        {
+            PSWorld.Instance.SetFluidStorage(frequency, value);
+            Net.SyncQEFluids();
+        }
 
-        public ModFluid GetFluid(int slot = 0) => mod.GetModWorld<PSWorld>().GetFluidStorage(frequency);
+        public ModFluid GetFluid(int slot = 0) => PSWorld.Instance.GetFluidStorage(frequency);
 
         public int GetFluidCapacity(int slot = 0) => TEQETank.MaxVolume;
 
