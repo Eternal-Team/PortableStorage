@@ -1,6 +1,6 @@
-﻿using PortableStorage.Tiles;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using PortableStorage.Tiles;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

@@ -4,12 +4,13 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using TheOneLibrary.Base.UI;
+using TheOneLibrary.Storage;
 using TheOneLibrary.UI.Elements;
 using TheOneLibrary.Utils;
 
 namespace PortableStorage.UI
 {
-	public class DevNullUI : BaseUI
+	public class DevNullUI : BaseUI, IContainerUI
 	{
 		public UIText textLabel = new UIText("/dev/null");
 
@@ -93,5 +94,7 @@ namespace PortableStorage.UI
 				gridItems.Add(slot);
 			}
 		}
+
+		public IContainer GetContainer() => devNull;
 	}
 }

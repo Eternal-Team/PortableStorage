@@ -4,12 +4,13 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
 using TheOneLibrary.Base.UI;
+using TheOneLibrary.Storage;
 using TheOneLibrary.UI.Elements;
 using TheOneLibrary.Utils;
 
 namespace PortableStorage.UI
 {
-	public class QEChestUI : BaseUI, ITileEntityUI
+	public class QEChestUI : BaseUI, ITileEntityUI, IContainerUI
 	{
 		public UIText textLabel = new UIText("Quantum Entangled Chest");
 		public UITextButton buttonClose = new UITextButton("X", 4);
@@ -63,5 +64,7 @@ namespace PortableStorage.UI
 		}
 
 		public void SetTileEntity(ModTileEntity tileEntity) => qeChest = (TEQEChest)tileEntity;
+
+		public IContainer GetContainer() => qeChest;
 	}
 }

@@ -6,12 +6,13 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.UI;
 using TheOneLibrary.Base.UI;
+using TheOneLibrary.Storage;
 using TheOneLibrary.UI.Elements;
 using TheOneLibrary.Utils;
 
 namespace PortableStorage.UI
 {
-	public class QEBagUI : BaseUI
+	public class QEBagUI : BaseUI, IContainerUI
 	{
 		public UIText textLabel = new UIText("Quantum Entangled Bag");
 
@@ -122,5 +123,7 @@ namespace PortableStorage.UI
 				gridItems.Add(slot);
 			}
 		}
+
+		public IContainer GetContainer() => bag;
 	}
 }

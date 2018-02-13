@@ -6,12 +6,13 @@ using Terraria.Localization;
 using Terraria.UI;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.Base.UI.Elements;
+using TheOneLibrary.Storage;
 using TheOneLibrary.UI.Elements;
 using TheOneLibrary.Utils;
 
 namespace PortableStorage.UI
 {
-	public class VacuumBagUI : BaseUI
+	public class VacuumBagUI : BaseUI, IContainerUI
 	{
 		public UIText textLabel = new UIText("Vacuum Bag");
 
@@ -139,5 +140,7 @@ namespace PortableStorage.UI
 				gridItems.Add(slot);
 			}
 		}
+
+		public IContainer GetContainer() => vacuumBag;
 	}
 }

@@ -6,12 +6,13 @@ using Terraria.Localization;
 using Terraria.UI;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.Base.UI.Elements;
+using TheOneLibrary.Storage;
 using TheOneLibrary.UI.Elements;
 using TheOneLibrary.Utils;
 
 namespace PortableStorage.UI
 {
-	public class BagUI : BaseUI
+	public class BagUI : BaseUI, IContainerUI
 	{
 		public UIText textLabel = new UIText("Bag");
 
@@ -161,5 +162,7 @@ namespace PortableStorage.UI
 				gridItems.Add(slot);
 			}
 		}
+
+		public IContainer GetContainer() => bag;
 	}
 }

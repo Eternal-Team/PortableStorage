@@ -6,12 +6,13 @@ using Terraria.Localization;
 using Terraria.UI;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.Base.UI.Elements;
+using TheOneLibrary.Storage;
 using TheOneLibrary.UI.Elements;
 using TheOneLibrary.Utils;
 
 namespace PortableStorage.UI
 {
-	public class AmmoBeltUI : BaseUI
+	public class AmmoBeltUI : BaseUI, IContainerUI
 	{
 		public UIText textLabel = new UIText("Ammo Belt");
 
@@ -141,5 +142,7 @@ namespace PortableStorage.UI
 				gridItems.Add(slot);
 			}
 		}
+
+		public IContainer GetContainer() => ammoBelt;
 	}
 }

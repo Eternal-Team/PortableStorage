@@ -4,6 +4,9 @@ using Terraria;
 using Terraria.GameInput;
 using Terraria.ModLoader;
 using Terraria.UI;
+using TheOneLibrary.Base.UI;
+using TheOneLibrary.Storage;
+using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Global
 {
@@ -13,7 +16,7 @@ namespace PortableStorage.Global
 		{
 			if (PortableStorage.bagKey.JustPressed)
 			{
-				Item item = TheOneLibrary.Utils.Utility.Accessory.FirstOrDefault(x => x.modItem is BaseBag);
+				Item item = Accessory.FirstOrDefault(x => x.modItem is BaseBag);
 
 				if (item?.modItem is BaseBag)
 				{
@@ -26,46 +29,31 @@ namespace PortableStorage.Global
 		public override bool ShiftClickSlot(Item[] inventory, int context, int slot)
 		{
 			if (context != ItemSlot.Context.InventoryItem && context != ItemSlot.Context.InventoryCoin && context != ItemSlot.Context.InventoryAmmo) return false;
-			//if (storageAccess.X < 0 || storageAccess.Y < 0)
-			//   {
-			//       return false;
-			//   }
-			//   Item item = inventory[slot];
-			//   if (item.favorited || item.IsAir)
-			//   {
-			//       return false;
-			//   }
-			//   int oldType = item.type;
-			//   int oldStack = item.stack;
-			//   if (StorageCrafting())
-			//   {
-			//       if (Main.netMode == 0)
-			//       {
-			//           GetCraftingAccess().TryDepositStation(item);
-			//       }
-			//       else
-			//       {
-			//           NetHelper.SendDepositStation(GetCraftingAccess().ID, item);
-			//           item.SetDefaults(0, true);
-			//       }
-			//   }
-			//   else
-			//   {
-			//       if (Main.netMode == 0)
-			//       {
-			//           GetStorageHeart().DepositItem(item);
-			//       }
-			//       else
-			//       {
-			//           NetHelper.SendDeposit(GetStorageHeart().ID, item);
-			//           item.SetDefaults(0, true);
-			//       }
-			//   }
-			//   if (item.type != oldType || item.stack != oldStack)
-			//   {
-			//       Main.PlaySound(7, -1, -1, 1, 1f, 0f);
-			//       StorageGUI.RefreshItems();
-			//   }
+
+			foreach (GUI gui in PortableStorage.Instance.BagUI.Values.Concat(PortableStorage.Instance.TEUI.Values))
+			{
+				if (gui.key is IContainerUI)
+				{
+					Item item = inventory[slot];
+					if (item.favorited || item.IsAir) return false;
+
+					IContainer container = ((IContainerUI)gui.key).GetContainer();
+
+					if (!HasSpace(container.GetItems(), item)) return false;
+
+					InsertItem(item, container.GetItems());
+
+					if (container is IContainerTile)
+					{
+						ModTileEntity te = ((IContainerTile)container).GetTileEntity();
+						SendTEUpdate(te.ID, te.Position);
+					}
+					else SyncItem(((IContainerItem)container).GetModItem().item);
+				}
+			}
+
+			Main.PlaySound(7);
+
 			return true;
 		}
 	}
