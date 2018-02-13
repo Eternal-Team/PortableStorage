@@ -10,7 +10,7 @@ using Terraria.ObjectData;
 using TheOneLibrary.Base;
 using TheOneLibrary.Fluid;
 using TheOneLibrary.Storage;
-using TheOneLibrary.Utility;
+using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Tiles
 {
@@ -46,7 +46,7 @@ namespace PortableStorage.Tiles
 
 			TEQETank qeTank = (TEQETank)TileEntity.ByID[ID];
 
-			Point16 topLeft = TheOneLibrary.Utility.Utility.TileEntityTopLeft(i, j);
+			Point16 topLeft = TileEntityTopLeft(i, j);
 			int realTileX = topLeft.X * 16;
 			int realTileY = topLeft.Y * 16;
 
@@ -59,7 +59,7 @@ namespace PortableStorage.Tiles
 				Main.LocalPlayer.noThrow = 2;
 				QEBucket bucket = (QEBucket)Main.LocalPlayer.HeldItem.modItem;
 				bucket.frequency = qeTank.frequency;
-				NetUtility.SyncItem(bucket.item);
+				SyncItem(bucket.item);
 			}
 			else if (Main.LocalPlayer.HeldItem.modItem is IFluidContainerItem) // insert fluid
 			{
@@ -72,7 +72,7 @@ namespace PortableStorage.Tiles
 				{
 					if (fluid == null)
 					{
-						fluid = TheOneLibrary.Utility.Utility.SetDefaults(itemFluid.type);
+						fluid = TheOneLibrary.Utils.Utility.SetDefaults(itemFluid.type);
 
 						int volume = Math.Min(itemFluid.volume, TEQETank.MaxVolume - fluid.volume);
 						fluid.volume += volume;
@@ -139,7 +139,7 @@ namespace PortableStorage.Tiles
 				{
 					if (itemFluid == null)
 					{
-						itemFluid = TheOneLibrary.Utility.Utility.SetDefaults(fluid.type);
+						itemFluid = TheOneLibrary.Utils.Utility.SetDefaults(fluid.type);
 
 						int volume = Math.Min(fluid.volume, capacity - itemFluid.volume);
 						itemFluid.volume += volume;

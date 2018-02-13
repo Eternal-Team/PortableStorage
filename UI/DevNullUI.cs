@@ -5,7 +5,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.UI.Elements;
-using TheOneLibrary.Utility;
+using TheOneLibrary.Utils;
 
 namespace PortableStorage.UI
 {

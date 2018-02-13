@@ -99,7 +99,7 @@ namespace PortableStorage.Global
 				enderFluids = tags.Select(x =>
 				{
 					TagCompound fluidTag = x.Get<TagCompound>("Fluid");
-					ModFluid fluid = TheOneLibrary.Utility.Utility.SetDefaults(fluidTag.GetString("Type"));
+					ModFluid fluid = TheOneLibrary.Utils.Utility.SetDefaults(fluidTag.GetString("Type"));
 					fluid.volume = fluidTag.GetInt("Volume");
 					return new KeyValuePair<Frequency, ModFluid>(x.Get<Frequency>("Frequency"), fluid);
 				}).ToDictionary(x => x.Key, x => x.Value);

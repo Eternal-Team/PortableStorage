@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using TheOneLibrary.Base;
 using TheOneLibrary.Storage;
-using TheOneLibrary.Utility;
+using TheOneLibrary.Utils;
 
 namespace PortableStorage.TileEntities
 {

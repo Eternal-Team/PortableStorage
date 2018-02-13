@@ -9,7 +9,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using TheOneLibrary.Base;
-using TheOneLibrary.Utility;
+using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Tiles
 {
@@ -41,7 +41,7 @@ namespace PortableStorage.Tiles
 
 			TEQEChest qeChest = (TEQEChest)TileEntity.ByID[ID];
 
-			Point16 topLeft = TheOneLibrary.Utility.Utility.TileEntityTopLeft(i, j);
+			Point16 topLeft = TileEntityTopLeft(i, j);
 			int realTileX = topLeft.X * 16;
 			int realTileY = topLeft.Y * 16;
 			Rectangle left = new Rectangle(realTileX + 2, realTileY + 4, 6, 10);
@@ -87,7 +87,7 @@ namespace PortableStorage.Tiles
 				Main.LocalPlayer.noThrow = 2;
 				QEBag bag = (QEBag)Main.LocalPlayer.HeldItem.modItem;
 				bag.frequency = qeChest.frequency;
-				NetUtility.SyncItem(bag.item);
+				SyncItem(bag.item);
 			}
 		}
 

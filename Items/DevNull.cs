@@ -1,10 +1,10 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using PortableStorage.UI;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,8 +13,7 @@ using Terraria.UI;
 using Terraria.UI.Chat;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.Storage;
-using TheOneLibrary.Utility;
-using static TheOneLibrary.Utility.Utility;
+using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Items
 {
@@ -75,7 +74,7 @@ namespace PortableStorage.Items
 		}
 
 		public override bool CanUseItem(Player player) => selectedIndex >= 0 && Items[selectedIndex].stack > 1;
-		
+
 		public void SetItem(int index)
 		{
 			if (index == -1)
@@ -150,18 +149,18 @@ namespace PortableStorage.Items
 			return true;
 		}
 
-		public override TagCompound Save() => new TagCompound { ["Items"] = Items.Save(), ["GUID"] = guid.ToString(), ["SelectedItem"] = selectedIndex };
+		public override TagCompound Save() => new TagCompound {["Items"] = Items.Save(), ["GUID"] = guid.ToString(), ["SelectedItem"] = selectedIndex};
 
 		public override void Load(TagCompound tag)
 		{
-			Items = TheOneLibrary.Utility.Utility.Load(tag);
+			Items = TheOneLibrary.Utils.Utility.Load(tag);
 			guid = tag.ContainsKey("GUID") && !string.IsNullOrEmpty((string)tag["GUID"]) ? Guid.Parse(tag.GetString("GUID")) : Guid.NewGuid();
 			SetItem(tag.GetInt("SelectedItem"));
 		}
 
 		public override void NetSend(BinaryWriter writer) => writer.Write(Items);
 
-		public override void NetRecieve(BinaryReader reader) => Items = TheOneLibrary.Utility.Utility.Read(reader);
+		public override void NetRecieve(BinaryReader reader) => Items = TheOneLibrary.Utils.Utility.Read(reader);
 
 		public override void AddRecipes()
 		{
@@ -183,7 +182,7 @@ namespace PortableStorage.Items
 		public void SetItem(int slot, Item value)
 		{
 			Items[slot] = value;
-			NetUtility.SyncItem(item);
+			SyncItem(item);
 		}
 
 		public List<Item> GetItems() => Items;

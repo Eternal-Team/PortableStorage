@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using TheOneLibrary.Fluid;
 using TheOneLibrary.Storage;
-using static TheOneLibrary.Utility.Utility;
+using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Items
 {
@@ -92,7 +92,7 @@ namespace PortableStorage.Items
 				{
 					Main.PlaySound(19, (int)player.position.X, (int)player.position.Y);
 
-					if (fluid == null) fluid = TheOneLibrary.Utility.Utility.SetDefaults(tile.liquidType());
+					if (fluid == null) fluid = TheOneLibrary.Utils.Utility.SetDefaults(tile.liquidType());
 
 					int drain = Math.Min(tile.liquid, TEQETank.MaxVolume - fluid.volume);
 					fluid.volume += drain;

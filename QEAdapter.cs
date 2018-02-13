@@ -4,7 +4,7 @@ using PortableStorage.TileEntities;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
-using TheOneLibrary.Utility;
+using TheOneLibrary.Utils;
 
 namespace PortableStorage
 {

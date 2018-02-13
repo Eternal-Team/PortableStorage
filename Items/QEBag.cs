@@ -12,7 +12,7 @@ using Terraria.ModLoader.IO;
 using Terraria.UI;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.Storage;
-using static TheOneLibrary.Utility.Utility;
+using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Items
 {

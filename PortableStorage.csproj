@@ -74,6 +74,7 @@
     <Compile Include="Global\PSTile.cs" />
     <Compile Include="Items\DevNull.cs" />
     <Compile Include="Items\BaseBag.cs" />
+    <Compile Include="Items\DockingStation.cs" />
     <Compile Include="Items\QEBucket.cs" />
     <Compile Include="Items\QETank.cs" />
     <Compile Include="Items\VacuumBag.cs" />
@@ -87,7 +88,9 @@
     <Compile Include="Global\PSItem.cs" />
     <Compile Include="Global\PSWorld.cs" />
     <Compile Include="QEAdapter.cs" />
+    <Compile Include="TileEntities\TEDockingStation.cs" />
     <Compile Include="TileEntities\TEQETank.cs" />
+    <Compile Include="Tiles\DockingStation.cs" />
     <Compile Include="Tiles\QETank.cs" />
     <Compile Include="Tiles\QEChest.cs" />
     <Compile Include="TileEntities\TEQEChest.cs" />

@@ -7,7 +7,7 @@ using Terraria.UI;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.Base.UI.Elements;
 using TheOneLibrary.UI.Elements;
-using TheOneLibrary.Utility;
+using TheOneLibrary.Utils;
 
 namespace PortableStorage.UI
 {
@@ -97,7 +97,7 @@ namespace PortableStorage.UI
 		{
 			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
 			{
-				TheOneLibrary.Utility.Utility.LootAll(vacuumBag);
+				TheOneLibrary.Utils.Utility.LootAll(vacuumBag);
 				Recipe.FindRecipes();
 			}
 		}
@@ -106,7 +106,7 @@ namespace PortableStorage.UI
 		{
 			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
 			{
-				TheOneLibrary.Utility.Utility.DepositAll(vacuumBag);
+				TheOneLibrary.Utils.Utility.DepositAll(vacuumBag);
 				Recipe.FindRecipes();
 			}
 		}
@@ -115,7 +115,7 @@ namespace PortableStorage.UI
 		{
 			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
 			{
-				TheOneLibrary.Utility.Utility.Restock(vacuumBag);
+				TheOneLibrary.Utils.Utility.Restock(vacuumBag);
 				Recipe.FindRecipes();
 			}
 		}
@@ -124,7 +124,7 @@ namespace PortableStorage.UI
 		{
 			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
 			{
-				TheOneLibrary.Utility.Utility.QuickStack(vacuumBag);
+				TheOneLibrary.Utils.Utility.QuickStack(vacuumBag);
 				Recipe.FindRecipes();
 			}
 		}

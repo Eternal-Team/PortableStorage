@@ -13,8 +13,7 @@ using Terraria.ModLoader.IO;
 using Terraria.UI;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.Storage;
-using TheOneLibrary.Utility;
-using static TheOneLibrary.Utility.Utility;
+using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Items
 {
@@ -114,7 +113,7 @@ namespace PortableStorage.Items
 
 		public override void Load(TagCompound tag)
 		{
-			Items = TheOneLibrary.Utility.Utility.Load(tag);
+			Items = TheOneLibrary.Utils.Utility.Load(tag);
 			guid = tag.ContainsKey("GUID") && !string.IsNullOrEmpty((string)tag["GUID"]) ? Guid.Parse(tag.GetString("GUID")) : Guid.NewGuid();
 			active = tag.GetBool("Active");
 		}
@@ -143,7 +142,7 @@ namespace PortableStorage.Items
 		public void SetItem(int slot, Item value)
 		{
 			Items[slot] = value;
-			NetUtility.SyncItem(item);
+			SyncItem(item);
 		}
 
 		public List<Item> GetItems() => Items;
