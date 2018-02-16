@@ -1,13 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Global;
 using PortableStorage.Tiles;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
@@ -110,7 +110,7 @@ namespace PortableStorage
 			if (MechTransfer != null)
 			{
 				QEAdapter adapter = new QEAdapter(this);
-				MechTransfer.Call("RegisterAdapterReflection", adapter, new[] {TileType<QEChest>()});
+				MechTransfer.Call("RegisterAdapterReflection", adapter, new[] { TileType<QEChest>() });
 			}
 		}
 
@@ -140,6 +140,15 @@ namespace PortableStorage
 					},
 					InterfaceScaleType.UI)
 				);
+			}
+		}
+		
+		public override void PostDrawInterface(SpriteBatch spriteBatch)
+		{
+			for (int i = 0; i < TEUI.Count; i++)
+			{
+				KeyValuePair<ModTileEntity, GUI> pair = TEUI.ElementAt(i);
+				pair.Key.HandleUIFar();
 			}
 		}
 
@@ -173,20 +182,12 @@ namespace PortableStorage
 
 		public static void SyncQEItemsReceive(BinaryReader reader, int sender)
 		{
-			if (Main.netMode == NetmodeID.Server)
-			{
-				PSWorld.Instance.LoadItems(TagIO.Read(reader));
-				NetMessage.BroadcastChatMessage(NetworkText.FromLiteral("synced"), Color.Red);
-			}
+			if (Main.netMode == NetmodeID.Server) PSWorld.Instance.LoadItems(TagIO.Read(reader));
 		}
 
 		public static void SyncQEFluidsReceive(BinaryReader reader, int sender)
 		{
-			if (Main.netMode == NetmodeID.Server)
-			{
-				PSWorld.Instance.LoadFluids(TagIO.Read(reader));
-				NetMessage.BroadcastChatMessage(NetworkText.FromLiteral("synced"), Color.Red);
-			}
+			if (Main.netMode == NetmodeID.Server) PSWorld.Instance.LoadFluids(TagIO.Read(reader));
 		}
 
 		public static void SyncQEItems()

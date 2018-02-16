@@ -30,6 +30,8 @@ namespace PortableStorage.Global
 		{
 			if (context != ItemSlot.Context.InventoryItem && context != ItemSlot.Context.InventoryCoin && context != ItemSlot.Context.InventoryAmmo) return false;
 
+			if (!PortableStorage.Instance.BagUI.Values.Concat(PortableStorage.Instance.TEUI.Values).Any()) return false;
+
 			foreach (GUI gui in PortableStorage.Instance.BagUI.Values.Concat(PortableStorage.Instance.TEUI.Values))
 			{
 				if (gui.key is IContainerUI)
