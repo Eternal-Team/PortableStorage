@@ -65,6 +65,8 @@ namespace PortableStorage.UI
 
 		public void SetTileEntity(ModTileEntity tileEntity) => qeChest = (TEQEChest)tileEntity;
 
+		public void SetContainer(IContainer container) => qeChest = (TEQEChest)container;
+
 		public IContainer GetContainer() => qeChest;
 	}
 }

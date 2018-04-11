@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using PortableStorage.Global;
+﻿using PortableStorage.Global;
 using PortableStorage.Tiles;
+using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -80,6 +80,8 @@ namespace PortableStorage.TileEntities
 
 		public override void NetSend(BinaryWriter writer, bool lightSend)
 		{
+			ErrorLogger.Log("sent update: " + Main.LocalPlayer.name);
+
 			writer.Write((int)frequency.colorLeft);
 			writer.Write((int)frequency.colorMiddle);
 			writer.Write((int)frequency.colorRight);
@@ -89,6 +91,8 @@ namespace PortableStorage.TileEntities
 
 		public override void NetReceive(BinaryReader reader, bool lightReceive)
 		{
+			ErrorLogger.Log("received update: " + Main.LocalPlayer.name);
+
 			frequency.colorLeft = (Colors)reader.ReadInt32();
 			frequency.colorMiddle = (Colors)reader.ReadInt32();
 			frequency.colorRight = (Colors)reader.ReadInt32();
@@ -96,15 +100,13 @@ namespace PortableStorage.TileEntities
 			animState = reader.ReadInt32();
 		}
 
-		public List<Item> GetItems() => PSWorld.Instance.GetItemStorage(frequency);
+		public List<Item> GetItems() => PSWorld.Instance.GetItems(frequency);
 
-		public Item GetItem(int slot) => PSWorld.Instance.GetItemStorage(frequency)[slot];
+		public Item GetItem(int slot) => PSWorld.Instance.GetItems(frequency)[slot];
 
-		public void SetItem(int slot, Item value)
-		{
-			PSWorld.Instance.GetItemStorage(frequency)[slot] = value;
-			Net.SyncQEItems();
-		}
+		public void SetItem(int slot, Item value) => PSWorld.Instance.GetItems(frequency)[slot] = value;
+
+		public void Sync(int slot) => Net.SendQEItem(frequency, slot);
 
 		public ModTileEntity GetTileEntity() => this;
 	}

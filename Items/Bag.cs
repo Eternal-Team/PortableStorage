@@ -1,8 +1,9 @@
+using Microsoft.Xna.Framework;
+using PortableStorage.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using PortableStorage.UI;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -18,6 +19,7 @@ namespace PortableStorage.Items
 	{
 		public Guid guid = Guid.NewGuid();
 		public List<Item> Items = new List<Item>();
+		public Vector2? UIPosition;
 
 		public override string Texture => PortableStorage.ItemTexturePath + "Bag";
 
@@ -26,6 +28,7 @@ namespace PortableStorage.Items
 			Bag clone = (Bag)base.Clone(item);
 			clone.Items = Items;
 			clone.guid = guid;
+			clone.UIPosition = UIPosition;
 			return clone;
 		}
 
@@ -58,11 +61,12 @@ namespace PortableStorage.Items
 			if (!PortableStorage.Instance.BagUI.ContainsKey(guid))
 			{
 				BagUI ui = new BagUI();
+				ui.SetContainer(this);
 				UserInterface userInterface = new UserInterface();
 				ui.Activate();
 				userInterface.SetState(ui);
 				ui.visible = true;
-				ui.Load(this);
+				ui.Load();
 				PortableStorage.Instance.BagUI.Add(guid, new GUI(ui, userInterface));
 			}
 			else PortableStorage.Instance.BagUI.Remove(guid);
@@ -91,7 +95,7 @@ namespace PortableStorage.Items
 			tooltips.Add(new TooltipLine(mod, "BagInfo", $"Use the bag, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it"));
 		}
 
-		public override TagCompound Save() => new TagCompound {["Items"] = Items.Save(), ["GUID"] = guid.ToString()};
+		public override TagCompound Save() => new TagCompound { ["Items"] = Items.Save(), ["GUID"] = guid.ToString() };
 
 		public override void Load(TagCompound tag)
 		{
@@ -120,11 +124,9 @@ namespace PortableStorage.Items
 
 		public Item GetItem(int slot) => Items[slot];
 
-		public void SetItem(int slot, Item value)
-		{
-			Items[slot] = value;
-			SyncItem(item);
-		}
+		public void SetItem(int slot, Item value) => Items[slot] = value;
+
+		public void Sync(int slot) => SyncItem(item);
 
 		public List<Item> GetItems() => Items;
 

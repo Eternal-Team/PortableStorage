@@ -1,6 +1,6 @@
-﻿using System;
+﻿using PortableStorage.TileEntities;
+using System;
 using System.Collections.Generic;
-using PortableStorage.TileEntities;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -26,10 +26,12 @@ namespace PortableStorage
 
 			bool injectedPartial = false;
 
+			List<Item> items = qeChest.GetItems();
 			if (item.maxStack > 1)
 			{
-				foreach (var i in qeChest.GetItems())
+				for (int index = 0; index < items.Count; index++)
 				{
+					Item i = items[index];
 					if (item.IsTheSameAs(i) && i.stack < i.maxStack)
 					{
 						int spaceLeft = i.maxStack - i.stack;
@@ -37,27 +39,28 @@ namespace PortableStorage
 						{
 							i.stack += item.stack;
 							item.stack = 0;
-							HandleItemChange();
+							HandleItemChange(qeChest.frequency, index);
 							return true;
 						}
 
 						item.stack -= spaceLeft;
 						i.stack = i.maxStack;
-						HandleItemChange();
+						HandleItemChange(qeChest.frequency, index);
 						injectedPartial = true;
 					}
 				}
 			}
 
-			foreach (var i in qeChest.GetItems())
+			for (int index = 0; index < items.Count; index++)
 			{
+				var i = items[index];
 				if (i.IsAir)
 				{
 					i.SetDefaults(item.type);
 					i.prefix = item.prefix;
 					i.stack = item.stack;
 					item.stack = 0;
-					HandleItemChange();
+					HandleItemChange(qeChest.frequency, index);
 					return true;
 				}
 			}
@@ -88,12 +91,10 @@ namespace PortableStorage
 
 			Item item = qeChest.GetItem((int)slot);
 			item.stack -= amount;
+			if (item.stack <= 0) item.TurnToAir();
 			qeChest.SetItem((int)slot, item);
 		}
 
-		private void HandleItemChange()
-		{
-			Net.SyncQEItems();
-		}
+		private void HandleItemChange(Frequency frequency, int slot) => Net.SendQEItem(frequency, slot);
 	}
 }

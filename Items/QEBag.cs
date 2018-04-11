@@ -20,6 +20,7 @@ namespace PortableStorage.Items
 	{
 		public Guid guid = Guid.NewGuid();
 		public Frequency frequency;
+		public Vector2? UIPosition;
 
 		public override string Texture => PortableStorage.ItemTexturePath + "QEBag";
 
@@ -28,6 +29,7 @@ namespace PortableStorage.Items
 			QEBag clone = (QEBag)base.Clone(item);
 			clone.frequency = frequency;
 			clone.guid = guid;
+			clone.UIPosition = UIPosition;
 			return clone;
 		}
 
@@ -56,11 +58,12 @@ namespace PortableStorage.Items
 			if (!PortableStorage.Instance.BagUI.ContainsKey(guid))
 			{
 				QEBagUI ui = new QEBagUI();
+				ui.SetContainer(this);
 				UserInterface userInterface = new UserInterface();
 				ui.Activate();
 				userInterface.SetState(ui);
 				ui.visible = true;
-				ui.Load(this);
+				ui.Load();
 				PortableStorage.Instance.BagUI.Add(guid, new GUI(ui, userInterface));
 			}
 			else PortableStorage.Instance.BagUI.Remove(guid);
@@ -127,16 +130,14 @@ namespace PortableStorage.Items
 			recipe.AddRecipe();
 		}
 
-		public Item GetItem(int slot) => PSWorld.Instance.GetItemStorage(frequency)[slot];
+		public Item GetItem(int slot) => PSWorld.Instance.GetItems(frequency)[slot];
 
-		public void SetItem(int slot, Item value)
-		{
-			PSWorld.Instance.GetItemStorage(frequency)[slot] = value;
-			Net.SyncQEItems();
-		}
+		public void SetItem(int slot, Item value) => PSWorld.Instance.GetItems(frequency)[slot] = value;
+
+		public void Sync(int slot) => Net.SendQEItem(frequency, slot);
 
 		public ModItem GetModItem() => this;
 
-		public List<Item> GetItems() => PSWorld.Instance.GetItemStorage(frequency);
+		public List<Item> GetItems() => PSWorld.Instance.GetItems(frequency);
 	}
 }

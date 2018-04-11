@@ -1,4 +1,5 @@
-﻿using PortableStorage.Items;
+﻿using Microsoft.Xna.Framework;
+using PortableStorage.Items;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
@@ -26,13 +27,19 @@ namespace PortableStorage.UI
 
 		public UIGrid gridItems = new UIGrid(9);
 
-		public AmmoBelt ammoBelt;
+		public IContainer ammoBelt;
 
 		public override void OnInitialize()
 		{
 			panelMain.Width.Pixels = 408;
 			panelMain.Height.Pixels = 172;
-			panelMain.Center();
+			Vector2? position = ((AmmoBelt)((IContainerItem)ammoBelt).GetModItem()).UIPosition;
+			if (position.HasValue)
+			{
+				panelMain.Left.Set(position.Value.X, 0f);
+				panelMain.Top.Set(position.Value.Y, 0f);
+			}
+			else panelMain.Center();
 			panelMain.SetPadding(0);
 			panelMain.BackgroundColor = PanelColor;
 			panelMain.OnMouseDown += DragStart;
@@ -81,7 +88,7 @@ namespace PortableStorage.UI
 			buttonClose.Top.Pixels = 8;
 			buttonClose.OnClick += (evt, element) =>
 			{
-				PortableStorage.Instance.BagUI.Remove(ammoBelt.guid);
+				PortableStorage.Instance.BagUI.Remove(((AmmoBelt)((IContainerItem)ammoBelt).GetModItem()).guid);
 				Main.PlaySound(SoundID.Item59.WithVolume(0.5f));
 			};
 			panelMain.Append(buttonClose);
@@ -131,10 +138,8 @@ namespace PortableStorage.UI
 			}
 		}
 
-		public void Load(AmmoBelt value)
+		public void Load()
 		{
-			ammoBelt = value;
-
 			for (int i = 0; i < ammoBelt.GetItems().Count; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(ammoBelt, i);
@@ -142,6 +147,8 @@ namespace PortableStorage.UI
 				gridItems.Add(slot);
 			}
 		}
+
+		public void SetContainer(IContainer container) => ammoBelt = container;
 
 		public IContainer GetContainer() => ammoBelt;
 	}

@@ -1,11 +1,9 @@
 using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.Global;
 using PortableStorage.Tiles;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -142,7 +140,7 @@ namespace PortableStorage
 				);
 			}
 		}
-		
+
 		public override void PostDrawInterface(SpriteBatch spriteBatch)
 		{
 			for (int i = 0; i < TEUI.Count; i++)
@@ -155,67 +153,6 @@ namespace PortableStorage
 		public override void HandlePacket(BinaryReader reader, int whoAmI)
 		{
 			Net.HandlePacket(reader, whoAmI);
-		}
-	}
-
-	public static class Net
-	{
-		internal enum MessageType : byte
-		{
-			SyncQEItems,
-			SyncQEFluids
-		}
-
-		public static void HandlePacket(BinaryReader reader, int sender)
-		{
-			MessageType type = (MessageType)reader.ReadByte();
-			switch (type)
-			{
-				case MessageType.SyncQEItems:
-					SyncQEItemsReceive(reader, sender);
-					break;
-				case MessageType.SyncQEFluids:
-					SyncQEFluidsReceive(reader, sender);
-					break;
-			}
-		}
-
-		public static void SyncQEItemsReceive(BinaryReader reader, int sender)
-		{
-			if (Main.netMode == NetmodeID.Server) PSWorld.Instance.LoadItems(TagIO.Read(reader));
-		}
-
-		public static void SyncQEFluidsReceive(BinaryReader reader, int sender)
-		{
-			if (Main.netMode == NetmodeID.Server) PSWorld.Instance.LoadFluids(TagIO.Read(reader));
-		}
-
-		public static void SyncQEItems()
-		{
-			if (Main.netMode == NetmodeID.MultiplayerClient)
-			{
-				ModPacket packet = PortableStorage.Instance.GetPacket();
-				packet.Write((byte)MessageType.SyncQEItems);
-				TagIO.Write(new TagCompound
-				{
-					{"Items", PSWorld.Instance.SaveItems()}
-				}, packet);
-				packet.Send();
-			}
-		}
-
-		public static void SyncQEFluids()
-		{
-			if (Main.netMode == NetmodeID.MultiplayerClient)
-			{
-				ModPacket packet = PortableStorage.Instance.GetPacket();
-				packet.Write((byte)MessageType.SyncQEFluids);
-				TagIO.Write(new TagCompound
-				{
-					{"Fluids", PSWorld.Instance.SaveFluids()}
-				}, packet);
-				packet.Send();
-			}
 		}
 	}
 }

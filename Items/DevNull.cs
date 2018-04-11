@@ -21,6 +21,7 @@ namespace PortableStorage.Items
 	{
 		public Guid guid = Guid.NewGuid();
 		public List<Item> Items = new List<Item>();
+		public Vector2? UIPosition;
 
 		public int selectedIndex = -1;
 
@@ -31,12 +32,16 @@ namespace PortableStorage.Items
 			DevNull clone = (DevNull)base.Clone(item);
 			clone.Items = Items;
 			clone.guid = guid;
+			clone.UIPosition = UIPosition;
 			return clone;
 		}
 
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("/dev/null");
+			Tooltip.SetDefault("Can only store items that place tiles" +
+			                   "\nWill automatically pick them up and void them when there's more than max stack of them" +
+			                   "\nCan be used to place tiles when an item has been selected in the UI via rightclicking");
 		}
 
 		public override void SetDefaults()
@@ -61,11 +66,12 @@ namespace PortableStorage.Items
 			if (!PortableStorage.Instance.BagUI.ContainsKey(guid))
 			{
 				DevNullUI ui = new DevNullUI();
+				ui.SetContainer(this);
 				UserInterface userInterface = new UserInterface();
 				ui.Activate();
 				userInterface.SetState(ui);
 				ui.visible = true;
-				ui.Load(this);
+				ui.Load();
 				PortableStorage.Instance.BagUI.Add(guid, new GUI(ui, userInterface));
 			}
 			else PortableStorage.Instance.BagUI.Remove(guid);
@@ -104,11 +110,6 @@ namespace PortableStorage.Items
 			item.stack++;
 
 			HandleUI();
-		}
-
-		public override void ModifyTooltips(List<TooltipLine> tooltips)
-		{
-			tooltips.Add(new TooltipLine(mod, "BagInfo", $"Use the bag, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it"));
 		}
 
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
@@ -179,11 +180,9 @@ namespace PortableStorage.Items
 
 		public Item GetItem(int slot) => Items[slot];
 
-		public void SetItem(int slot, Item value)
-		{
-			Items[slot] = value;
-			SyncItem(item);
-		}
+		public void SetItem(int slot, Item value) => Items[slot] = value;
+
+		public void Sync(int slot) => SyncItem(item);
 
 		public List<Item> GetItems() => Items;
 

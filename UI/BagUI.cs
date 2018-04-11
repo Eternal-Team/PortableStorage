@@ -1,4 +1,5 @@
-﻿using PortableStorage.Items;
+﻿using Microsoft.Xna.Framework;
+using PortableStorage.Items;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
@@ -28,13 +29,19 @@ namespace PortableStorage.UI
 
 		public UIGrid gridItems = new UIGrid(9);
 
-		public Bag bag;
+		public IContainer bag;
 
 		public override void OnInitialize()
 		{
 			panelMain.Width.Pixels = 408;
 			panelMain.Height.Pixels = 308;
-			panelMain.Center();
+			Vector2? position = ((Bag)((IContainerItem)bag).GetModItem()).UIPosition;
+			if (position.HasValue)
+			{
+				panelMain.Left.Set(position.Value.X, 0f);
+				panelMain.Top.Set(position.Value.Y, 0f);
+			}
+			else panelMain.Center();
 			panelMain.SetPadding(0);
 			panelMain.BackgroundColor = PanelColor;
 			panelMain.OnMouseDown += DragStart;
@@ -91,7 +98,7 @@ namespace PortableStorage.UI
 			buttonClose.Top.Pixels = 8;
 			buttonClose.OnClick += (evt, element) =>
 			{
-				PortableStorage.Instance.BagUI.Remove(bag.guid);
+				PortableStorage.Instance.BagUI.Remove(((Bag)((IContainerItem)bag).GetModItem()).guid);
 				Main.PlaySound(SoundID.Item59.WithVolume(0.5f));
 			};
 			panelMain.Append(buttonClose);
@@ -152,16 +159,16 @@ namespace PortableStorage.UI
 			}
 		}
 
-		public void Load(Bag value)
+		public override void Load()
 		{
-			bag = value;
-
 			for (int i = 0; i < bag.GetItems().Count; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(bag, i);
 				gridItems.Add(slot);
 			}
 		}
+
+		public void SetContainer(IContainer container) => bag = container;
 
 		public IContainer GetContainer() => bag;
 	}

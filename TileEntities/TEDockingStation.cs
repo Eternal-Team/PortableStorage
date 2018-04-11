@@ -59,6 +59,8 @@ namespace PortableStorage.TileEntities
 
 		public void SetItem(int slot, Item value) => ((IContainerItem)Bag.modItem).SetItem(slot, value);
 
+		public void Sync(int slot) => ((IContainerItem)Bag.modItem).Sync(slot);
+
 		public ModTileEntity GetTileEntity() => this;
 	}
 }

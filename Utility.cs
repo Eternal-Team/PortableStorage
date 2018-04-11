@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.ID;
 
 namespace PortableStorage
 {
-	public enum Colors
+	public enum Colors : byte
 	{
 		White,
 		Red,

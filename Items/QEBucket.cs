@@ -152,17 +152,15 @@ namespace PortableStorage.Items
 			recipe.AddRecipe();
 		}
 
-		public List<ModFluid> GetFluids() => new List<ModFluid> {PSWorld.Instance.GetFluidStorage(frequency)};
+		public List<ModFluid> GetFluids() => new List<ModFluid> {PSWorld.Instance.GetFluid(frequency)};
 
-		public void SetFluid(ModFluid value, int slot = 0)
-		{
-			PSWorld.Instance.SetFluidStorage(frequency, value);
-			Net.SyncQEFluids();
-		}
+		public void SetFluid(ModFluid value, int slot = 0) => PSWorld.Instance.SetFluid(frequency, value);
 
-		public ModFluid GetFluid(int slot = 0) => PSWorld.Instance.GetFluidStorage(frequency);
+		public ModFluid GetFluid(int slot = 0) => PSWorld.Instance.GetFluid(frequency);
 
 		public int GetFluidCapacity(int slot = 0) => TEQETank.MaxVolume;
+
+		public void Sync(int slot = 0) => Net.SendQEFluid(frequency);
 
 		public ModItem GetItem() => this;
 	}

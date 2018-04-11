@@ -1,10 +1,17 @@
-﻿using PortableStorage.Global;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using PortableStorage.Global;
 using PortableStorage.Items;
+using PortableStorage.TileEntities;
+using System;
 using Terraria;
+using Terraria.GameContent.Achievements;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader;
 using Terraria.UI;
+using Terraria.UI.Chat;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.Storage;
 using TheOneLibrary.UI.Elements;
@@ -25,13 +32,19 @@ namespace PortableStorage.UI
 
 		public UIGrid gridItems = new UIGrid(9);
 
-		public QEBag bag;
+		public IContainer bag;
 
 		public override void OnInitialize()
 		{
 			panelMain.Width.Pixels = 408;
 			panelMain.Height.Pixels = 172;
-			panelMain.Center();
+			Vector2? position = ((QEBag)((IContainerItem)bag).GetModItem()).UIPosition;
+			if (position.HasValue)
+			{
+				panelMain.Left.Set(position.Value.X, 0f);
+				panelMain.Top.Set(position.Value.Y, 0f);
+			}
+			else panelMain.Center();
 			panelMain.SetPadding(0);
 			panelMain.BackgroundColor = PanelColor;
 			panelMain.OnMouseDown += DragStart;
@@ -72,7 +85,7 @@ namespace PortableStorage.UI
 			buttonClose.Top.Pixels = 8;
 			buttonClose.OnClick += (evt, element) =>
 			{
-				PortableStorage.Instance.BagUI.Remove(bag.guid);
+				PortableStorage.Instance.BagUI.Remove(((QEBag)((IContainerItem)bag).GetModItem()).guid);
 				Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
 			};
 			panelMain.Append(buttonClose);
@@ -113,16 +126,16 @@ namespace PortableStorage.UI
 			}
 		}
 
-		public void Load(QEBag value)
+		public override void Load()
 		{
-			bag = value;
-
-			for (int i = 0; i < PSWorld.Instance.GetItemStorage(bag.frequency).Count; i++)
+			for (int i = 0; i < bag.GetItems().Count; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(bag, i);
 				gridItems.Add(slot);
 			}
 		}
+
+		public void SetContainer(IContainer container) => bag = container;
 
 		public IContainer GetContainer() => bag;
 	}

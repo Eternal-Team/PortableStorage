@@ -81,7 +81,7 @@ namespace PortableStorage.Tiles
 					float scale = 1f;
 					if (width > 20 || height > 20) scale = width > height ? 20f / width : 20f / height;
 					scale *= Item.scale;
-					Color colorLight = Lighting.GetColor(i, j); // todo: use this in windmill and other stuff
+					Color colorLight = Lighting.GetColor(i, j);
 					Color color = colorLight;
 					float scale2 = 1f;
 					ItemSlot.GetItemLight(ref color, ref scale2, Item);

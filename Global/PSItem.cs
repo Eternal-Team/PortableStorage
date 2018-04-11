@@ -1,7 +1,8 @@
-﻿using System;
+﻿using PortableStorage.Items;
+using System;
 using System.Linq;
-using PortableStorage.Items;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using static TheOneLibrary.Utils.Utility;
 
@@ -26,7 +27,7 @@ namespace PortableStorage.Global
 				return false;
 			}
 
-			if (vacuumBagAcc != null && vacuumBagAcc.active)
+			if (vacuumBagAcc != null && vacuumBagAcc.active && item.type != ItemID.Heart && item.type != ItemID.Star)
 			{
 				InsertItem(item, vacuumBagAcc.Items.ToList());
 
@@ -34,7 +35,7 @@ namespace PortableStorage.Global
 
 				return false;
 			}
-			if (vacuumBag != null && vacuumBag.active)
+			if (vacuumBag != null && vacuumBag.active && item.type != ItemID.Heart && item.type != ItemID.Star)
 			{
 				InsertItem(item, vacuumBag.Items.ToList());
 

@@ -1,10 +1,10 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using PortableStorage.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.UI;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -22,6 +22,7 @@ namespace PortableStorage.Items
 		public bool active;
 		public Guid guid = Guid.NewGuid();
 		public List<Item> Items = new List<Item>();
+		public Vector2? UIPosition;
 
 		public override string Texture => PortableStorage.ItemTexturePath + "VacuumBagActive";
 
@@ -31,6 +32,7 @@ namespace PortableStorage.Items
 			clone.Items = Items;
 			clone.guid = guid;
 			clone.active = active;
+			clone.UIPosition = UIPosition;
 			return clone;
 		}
 
@@ -64,11 +66,12 @@ namespace PortableStorage.Items
 			if (!PortableStorage.Instance.BagUI.ContainsKey(guid))
 			{
 				VacuumBagUI ui = new VacuumBagUI();
+				ui.SetContainer(this);
 				UserInterface userInterface = new UserInterface();
 				ui.Activate();
 				userInterface.SetState(ui);
 				ui.visible = true;
-				ui.Load(this);
+				ui.Load();
 				PortableStorage.Instance.BagUI.Add(guid, new GUI(ui, userInterface));
 			}
 			else PortableStorage.Instance.BagUI.Remove(guid);
@@ -109,7 +112,7 @@ namespace PortableStorage.Items
 			return false;
 		}
 
-		public override TagCompound Save() => new TagCompound {["Items"] = Items.Save(), ["GUID"] = guid.ToString(), ["Active"] = active};
+		public override TagCompound Save() => new TagCompound { ["Items"] = Items.Save(), ["GUID"] = guid.ToString(), ["Active"] = active };
 
 		public override void Load(TagCompound tag)
 		{
@@ -144,6 +147,8 @@ namespace PortableStorage.Items
 			Items[slot] = value;
 			SyncItem(item);
 		}
+
+		public void Sync(int slot) => SyncItem(item);
 
 		public List<Item> GetItems() => Items;
 

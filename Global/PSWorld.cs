@@ -20,42 +20,31 @@ namespace PortableStorage.Global
 			Instance = this;
 		}
 
-		public List<Item> GetItemStorage(Frequency frequency)
+		public void EnsureFrequencyExists(Frequency frequency, bool fluid = false)
 		{
-			if (!enderItems.ContainsKey(frequency))
-			{
-				List<Item> items = new List<Item>();
-				for (int i = 0; i < 27; i++) items.Add(new Item());
-				enderItems.Add(frequency, items);
-				Net.SyncQEItems();
-			}
+			if (fluid && !enderFluids.ContainsKey(frequency)) enderFluids.Add(frequency, null);
+			else if (!fluid && !enderItems.ContainsKey(frequency)) enderItems.Add(frequency, Enumerable.Repeat(new Item(), 27).ToList());
+		}
 
+		public List<Item> GetItems(Frequency frequency)
+		{
+			EnsureFrequencyExists(frequency);
 			return enderItems[frequency];
 		}
 
-		public ModFluid GetFluidStorage(Frequency frequency)
+		public ModFluid GetFluid(Frequency frequency)
 		{
-			if (!enderFluids.ContainsKey(frequency))
-			{
-				enderFluids.Add(frequency, null);
-				Net.SyncQEFluids();
-			}
-
+			EnsureFrequencyExists(frequency, true);
 			return enderFluids[frequency];
 		}
 
-		public void SetFluidStorage(Frequency frequency, ModFluid value)
+		public void SetFluid(Frequency frequency, ModFluid value)
 		{
-			if (!enderFluids.ContainsKey(frequency))
-			{
-				enderFluids.Add(frequency, null);
-				Net.SyncQEFluids();
-			}
-
+			EnsureFrequencyExists(frequency,true);
 			enderFluids[frequency] = value;
 		}
-
-		public List<TagCompound> SaveItems() => enderItems.Where(x => !x.Value.All(y => y.IsAir)).Select(x => new TagCompound {["Frequency"] = x.Key, ["Items"] = x.Value.Select(ItemIO.Save).ToList()}).ToList();
+		
+		public List<TagCompound> SaveItems() => enderItems.Where(x => !x.Value.All(y => y.IsAir)).Select(x => new TagCompound { ["Frequency"] = x.Key, ["Items"] = x.Value.Select(ItemIO.Save).ToList() }).ToList();
 
 		public List<TagCompound> SaveFluids() => enderFluids.Where(x => x.Value != null).Select(x => new TagCompound
 		{

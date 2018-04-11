@@ -34,12 +34,12 @@ namespace PortableStorage.Global
 
 			foreach (GUI gui in PortableStorage.Instance.BagUI.Values.Concat(PortableStorage.Instance.TEUI.Values))
 			{
-				if (gui.key is IContainerUI)
+				if (gui.ui is IContainerUI)
 				{
 					Item item = inventory[slot];
 					if (item.favorited || item.IsAir) return false;
 
-					IContainer container = ((IContainerUI)gui.key).GetContainer();
+					IContainer container = ((IContainerUI)gui.ui).GetContainer();
 
 					if (!HasSpace(container.GetItems(), item)) return false;
 
