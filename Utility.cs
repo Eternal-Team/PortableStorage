@@ -60,5 +60,14 @@ namespace PortableStorage
 				default: return existing;
 			}
 		}
+
+		public static void Write(this BinaryWriter writer, Frequency frequency)
+		{
+			writer.Write((byte)frequency.colorLeft);
+			writer.Write((byte)frequency.colorMiddle);
+			writer.Write((byte)frequency.colorRight);
+		}
+
+		public static Frequency ReadFrequency(this BinaryReader reader) => new Frequency((Colors)reader.ReadByte(), (Colors)reader.ReadByte(), (Colors)reader.ReadByte());
 	}
 }

@@ -1,9 +1,9 @@
-using Microsoft.Xna.Framework;
-using PortableStorage.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Xna.Framework;
+using PortableStorage.UI;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -76,7 +76,7 @@ namespace PortableStorage.Items
 
 		public override bool UseItem(Player player)
 		{
-			HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
 
 			return true;
 		}
@@ -87,7 +87,7 @@ namespace PortableStorage.Items
 		{
 			item.stack++;
 
-			HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -95,7 +95,7 @@ namespace PortableStorage.Items
 			tooltips.Add(new TooltipLine(mod, "BagInfo", $"Use the bag, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it"));
 		}
 
-		public override TagCompound Save() => new TagCompound { ["Items"] = Items.Save(), ["GUID"] = guid.ToString() };
+		public override TagCompound Save() => new TagCompound {["Items"] = Items.Save(), ["GUID"] = guid.ToString()};
 
 		public override void Load(TagCompound tag)
 		{

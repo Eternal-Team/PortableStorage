@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
@@ -40,11 +41,11 @@ namespace PortableStorage.Global
 
 		public void SetFluid(Frequency frequency, ModFluid value)
 		{
-			EnsureFrequencyExists(frequency,true);
+			EnsureFrequencyExists(frequency, true);
 			enderFluids[frequency] = value;
 		}
-		
-		public List<TagCompound> SaveItems() => enderItems.Where(x => !x.Value.All(y => y.IsAir)).Select(x => new TagCompound { ["Frequency"] = x.Key, ["Items"] = x.Value.Select(ItemIO.Save).ToList() }).ToList();
+
+		public List<TagCompound> SaveItems() => enderItems.Where(x => !x.Value.All(y => y.IsAir)).Select(x => new TagCompound {["Frequency"] = x.Key, ["Items"] = x.Value.Select(ItemIO.Save).ToList()}).ToList();
 
 		public List<TagCompound> SaveFluids() => enderFluids.Where(x => x.Value != null).Select(x => new TagCompound
 		{
@@ -106,5 +107,9 @@ namespace PortableStorage.Global
 			LoadItems(tag);
 			LoadFluids(tag);
 		}
+
+		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
+
+		public override void NetReceive(BinaryReader reader) => Load(TagIO.Read(reader));
 	}
 }

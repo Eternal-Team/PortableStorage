@@ -40,6 +40,7 @@ namespace PortableStorage.UI
 				panelMain.Top.Set(position.Value.Y, 0f);
 			}
 			else panelMain.Center();
+
 			panelMain.SetPadding(0);
 			panelMain.BackgroundColor = PanelColor;
 			panelMain.OnMouseDown += DragStart;
@@ -104,7 +105,7 @@ namespace PortableStorage.UI
 
 		private void LootAllClick(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
 			{
 				TheOneLibrary.Utils.Utility.LootAll(ammoBelt);
 				Recipe.FindRecipes();
@@ -113,7 +114,7 @@ namespace PortableStorage.UI
 
 		private void DepositAllClick(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
 			{
 				TheOneLibrary.Utils.Utility.DepositAll(ammoBelt, item => item.ammo > 0);
 				Recipe.FindRecipes();
@@ -122,7 +123,7 @@ namespace PortableStorage.UI
 
 		private void QuickRestack(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
 			{
 				TheOneLibrary.Utils.Utility.QuickRestack(ammoBelt);
 				Recipe.FindRecipes();
@@ -131,14 +132,14 @@ namespace PortableStorage.UI
 
 		private void QuickStackClick(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
 			{
 				TheOneLibrary.Utils.Utility.QuickStack(ammoBelt);
 				Recipe.FindRecipes();
 			}
 		}
 
-		public void Load()
+		public override void Load()
 		{
 			for (int i = 0; i < ammoBelt.GetItems().Count; i++)
 			{

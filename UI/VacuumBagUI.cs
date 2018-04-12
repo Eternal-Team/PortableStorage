@@ -39,6 +39,7 @@ namespace PortableStorage.UI
 				panelMain.Top.Set(position.Value.Y, 0f);
 			}
 			else panelMain.Center();
+
 			panelMain.SetPadding(0);
 			panelMain.BackgroundColor = PanelColor;
 			panelMain.OnMouseDown += DragStart;

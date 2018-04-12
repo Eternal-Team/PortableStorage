@@ -1,17 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.Global;
 using PortableStorage.Items;
-using PortableStorage.TileEntities;
-using System;
 using Terraria;
-using Terraria.GameContent.Achievements;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
-using Terraria.ModLoader;
 using Terraria.UI;
-using Terraria.UI.Chat;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.Storage;
 using TheOneLibrary.UI.Elements;
@@ -45,6 +38,7 @@ namespace PortableStorage.UI
 				panelMain.Top.Set(position.Value.Y, 0f);
 			}
 			else panelMain.Center();
+
 			panelMain.SetPadding(0);
 			panelMain.BackgroundColor = PanelColor;
 			panelMain.OnMouseDown += DragStart;

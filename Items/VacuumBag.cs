@@ -1,10 +1,10 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using PortableStorage.UI;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -81,7 +81,7 @@ namespace PortableStorage.Items
 
 		public override bool UseItem(Player player)
 		{
-			HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
 
 			return true;
 		}
@@ -112,7 +112,7 @@ namespace PortableStorage.Items
 			return false;
 		}
 
-		public override TagCompound Save() => new TagCompound { ["Items"] = Items.Save(), ["GUID"] = guid.ToString(), ["Active"] = active };
+		public override TagCompound Save() => new TagCompound {["Items"] = Items.Save(), ["GUID"] = guid.ToString(), ["Active"] = active};
 
 		public override void Load(TagCompound tag)
 		{

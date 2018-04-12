@@ -43,14 +43,7 @@ namespace PortableStorage.Global
 
 					if (!HasSpace(container.GetItems(), item)) return false;
 
-					InsertItem(item, container.GetItems());
-
-					if (container is IContainerTile)
-					{
-						ModTileEntity te = ((IContainerTile)container).GetTileEntity();
-						SendTEUpdate(te.ID, te.Position);
-					}
-					else SyncItem(((IContainerItem)container).GetModItem().item);
+					foreach (int i in InsertItem(item, container.GetItems())) container.Sync(i);
 				}
 			}
 

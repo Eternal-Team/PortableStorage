@@ -73,7 +73,7 @@ namespace PortableStorage.Items
 
 		public override bool UseItem(Player player)
 		{
-			HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
 
 			return true;
 		}
@@ -84,7 +84,7 @@ namespace PortableStorage.Items
 		{
 			item.stack++;
 
-			HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
 		}
 
 		public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)

@@ -91,7 +91,10 @@ namespace PortableStorage.Tiles
 				}
 
 				fluidContainer.SetFluid(itemFluid);
+				fluidContainer.Sync();
+
 				qeTank.SetFluid(fluid);
+				Net.SendQEFluid(qeTank.frequency);
 			}
 			else // general click
 			{
@@ -114,9 +117,11 @@ namespace PortableStorage.Tiles
 					handleFrequency = true;
 				}
 
-				if (handleFrequency) qeTank.frequency = frequency;
-
-				qeTank.SendUpdate();
+				if (handleFrequency)
+				{
+					qeTank.frequency = frequency;
+					Net.SendTEData(qeTank);
+				}
 			}
 		}
 
@@ -158,7 +163,10 @@ namespace PortableStorage.Tiles
 				}
 
 				fluidContainer.SetFluid(itemFluid);
+				fluidContainer.Sync();
+
 				qeTank.SetFluid(fluid);
+				Net.SendQEFluid(qeTank.frequency);
 			}
 		}
 

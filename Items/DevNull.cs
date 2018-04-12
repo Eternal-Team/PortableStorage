@@ -109,7 +109,7 @@ namespace PortableStorage.Items
 		{
 			item.stack++;
 
-			HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
 		}
 
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
@@ -131,6 +131,7 @@ namespace PortableStorage.Items
 					if (width > height) drawScale = availableWidth / width;
 					else drawScale = availableWidth / height;
 				}
+
 				drawScale *= scale;
 				Vector2 vector = new Vector2(40, 40) * scale;
 				Vector2 position2 = position + vector / 2f - rect.Size() * drawScale / 2f;
@@ -141,6 +142,7 @@ namespace PortableStorage.Items
 					spriteBatch.Draw(itemTexture, position2, rect, selectedItem.GetAlpha(newColor), 0f, origin, drawScale * pulseScale, SpriteEffects.None, 0f);
 					if (selectedItem.color != Color.Transparent) spriteBatch.Draw(itemTexture, position2, rect, selectedItem.GetColor(Color.White), 0f, origin, drawScale * pulseScale, SpriteEffects.None, 0f);
 				}
+
 				ItemLoader.PostDrawInInventory(selectedItem, spriteBatch, position2, rect, selectedItem.GetAlpha(newColor), selectedItem.GetColor(Color.White), origin, drawScale * pulseScale);
 				if (ItemID.Sets.TrapSigned[selectedItem.type]) spriteBatch.Draw(Main.wireTexture, position + new Vector2(40f, 40f) * scale, new Rectangle(4, 58, 8, 8), Color.White, 0f, new Vector2(4f), 1f, SpriteEffects.None, 0f);
 				if (selectedItem.stack > 1) ChatManager.DrawColorCodedStringWithShadow(spriteBatch, Main.fontItemStack, selectedItem.stack.ToSI("F0") /*.TrimEnd('.', '0')*/, position + new Vector2(10f, 26f) * scale, Color.White, 0f, Vector2.Zero, new Vector2(scale));

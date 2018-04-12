@@ -27,31 +27,16 @@ namespace PortableStorage.TileEntities
 			return -1;
 		}
 
-		// bug: doesn't get run in MP
-		public override void Update()
-		{
-			this.HandleUIFar();
-		}
-
 		public override TagCompound Save() => new TagCompound
 		{
 			["Bag"] = ItemIO.Save(Bag)
 		};
 
-		public override void Load(TagCompound tag)
-		{
-			Bag = tag.Get<Item>("Bag");
-		}
+		public override void Load(TagCompound tag) => Bag = tag.Get<Item>("Bag");
 
-		public override void NetSend(BinaryWriter writer, bool lightSend)
-		{
-			writer.WriteItem(Bag);
-		}
+		public override void NetSend(BinaryWriter writer, bool lightSend) => writer.WriteItem(Bag);
 
-		public override void NetReceive(BinaryReader reader, bool lightReceive)
-		{
-			Bag = reader.ReadItem();
-		}
+		public override void NetReceive(BinaryReader reader, bool lightReceive) => Bag = reader.ReadItem();
 
 		public List<Item> GetItems() => ((IContainerItem)Bag.modItem).GetItems();
 

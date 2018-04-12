@@ -1,9 +1,9 @@
-using Microsoft.Xna.Framework;
-using PortableStorage.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Xna.Framework;
+using PortableStorage.UI;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -76,7 +76,7 @@ namespace PortableStorage.Items
 
 		public override bool UseItem(Player player)
 		{
-			HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
 
 			return true;
 		}
@@ -87,7 +87,7 @@ namespace PortableStorage.Items
 		{
 			item.stack++;
 
-			HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -97,20 +97,18 @@ namespace PortableStorage.Items
 
 		public override void UpdateInventory(Player player)
 		{
-			List<Item> list = player.inventory.Where((x, i) => i >= 54 && i <= 57).ToList();
-
-			if (list.Select(x => x.type).Any(x => Items.Select(y => y.type).Contains(x)))
+			if (Ammo.Select(x => x.type).Any(x => Items.Select(y => y.type).Contains(x)))
 			{
 				for (int i = 0; i < Items.Count; i++)
 				{
-					Item ammo = list.FirstOrDefault(x => x.type == Items[i].type);
+					Item ammo = Ammo.FirstOrDefault(x => x.type == Items[i].type);
 					if (ammo != null)
 					{
 						int count = Math.Min(Items[i].stack, ammo.maxStack - ammo.stack);
 						ammo.stack += count;
 						Items[i].stack -= count;
 						if (Items[i].stack <= 0) Items[i].TurnToAir();
-						SyncItem(item);
+						Sync();
 					}
 				}
 			}
@@ -118,26 +116,24 @@ namespace PortableStorage.Items
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			List<Item> list = player.inventory.Where((x, i) => i >= 54 && i <= 57).ToList();
-
-			if (list.Select(x => x.type).Any(x => Items.Select(y => y.type).Contains(x)))
+			if (Ammo.Select(x => x.type).Any(x => Items.Select(y => y.type).Contains(x)))
 			{
 				for (int i = 0; i < Items.Count; i++)
 				{
-					Item ammo = list.FirstOrDefault(x => x.type == Items[i].type);
+					Item ammo = Ammo.FirstOrDefault(x => x.type == Items[i].type);
 					if (ammo != null)
 					{
 						int count = Math.Min(Items[i].stack, ammo.maxStack - ammo.stack);
 						ammo.stack += count;
 						Items[i].stack -= count;
 						if (Items[i].stack <= 0) Items[i].TurnToAir();
-						SyncItem(item);
+						Sync();
 					}
 				}
 			}
 		}
 
-		public override TagCompound Save() => new TagCompound { ["Items"] = Items.Save(), ["GUID"] = guid.ToString() };
+		public override TagCompound Save() => new TagCompound {["Items"] = Items.Save(), ["GUID"] = guid.ToString()};
 
 		public override void Load(TagCompound tag)
 		{
@@ -168,7 +164,7 @@ namespace PortableStorage.Items
 
 		public void SetItem(int slot, Item value) => Items[slot] = value;
 
-		public void Sync(int slot) => SyncItem(item);
+		public void Sync(int slot = 0) => SyncItem(item);
 
 		public List<Item> GetItems() => Items;
 

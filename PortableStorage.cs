@@ -1,9 +1,9 @@
-using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.Tiles;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Xna.Framework.Graphics;
+using PortableStorage.Tiles;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -43,15 +43,7 @@ namespace PortableStorage
 
 		[Null] public static ModHotKey bagKey;
 
-		public PortableStorage()
-		{
-			Properties = new ModProperties
-			{
-				Autoload = true,
-				AutoloadGores = true,
-				AutoloadSounds = true
-			};
-		}
+		public LegacyGameInterfaceLayer InventoryLayer;
 
 		public override void PreSaveAndQuit()
 		{
@@ -69,28 +61,41 @@ namespace PortableStorage
 
 			if (!Main.dedServ)
 			{
-				lootAll = ModLoader.GetTexture(UITexturePath + "LootAll");
-				depositAll = ModLoader.GetTexture(UITexturePath + "DepositAll");
+				LoadTextures();
 
-				restack = new Texture2D[2];
-				restack[0] = ModLoader.GetTexture(UITexturePath + "Restack_0");
-				restack[1] = ModLoader.GetTexture(UITexturePath + "Restack_1");
-
-				restock = ModLoader.GetTexture(UITexturePath + "Restock");
-
-				vacuumBagOn = ModLoader.GetTexture(ItemTexturePath + "VacuumBagActive");
-				vacuumBagOff = ModLoader.GetTexture(ItemTexturePath + "VacuumBagInactive");
-
-				ringBig = ModLoader.GetTexture(ItemTexturePath + "RingBig");
-				ringSmall = ModLoader.GetTexture(ItemTexturePath + "RingSmall");
-
-				gemsMiddle = new Texture2D[3];
-				gemsSide = new Texture2D[3];
-				for (int i = 0; i < 3; i++)
+				InventoryLayer = new LegacyGameInterfaceLayer("PortableStorage: UI", delegate
 				{
-					gemsMiddle[i] = ModLoader.GetTexture(TileTexturePath + "GemMiddle" + i);
-					gemsSide[i] = ModLoader.GetTexture(TileTexturePath + "GemSide" + i);
-				}
+					BagUI.Values.Draw();
+					TEUI.Values.Draw();
+
+					return true;
+				}, InterfaceScaleType.UI);
+			}
+		}
+
+		public void LoadTextures()
+		{
+			lootAll = ModLoader.GetTexture(UITexturePath + "LootAll");
+			depositAll = ModLoader.GetTexture(UITexturePath + "DepositAll");
+
+			restack = new Texture2D[2];
+			restack[0] = ModLoader.GetTexture(UITexturePath + "Restack_0");
+			restack[1] = ModLoader.GetTexture(UITexturePath + "Restack_1");
+
+			restock = ModLoader.GetTexture(UITexturePath + "Restock");
+
+			vacuumBagOn = ModLoader.GetTexture(ItemTexturePath + "VacuumBagActive");
+			vacuumBagOff = ModLoader.GetTexture(ItemTexturePath + "VacuumBagInactive");
+
+			ringBig = ModLoader.GetTexture(ItemTexturePath + "RingBig");
+			ringSmall = ModLoader.GetTexture(ItemTexturePath + "RingSmall");
+
+			gemsMiddle = new Texture2D[3];
+			gemsSide = new Texture2D[3];
+			for (int i = 0; i < 3; i++)
+			{
+				gemsMiddle[i] = ModLoader.GetTexture(TileTexturePath + "GemMiddle" + i);
+				gemsSide[i] = ModLoader.GetTexture(TileTexturePath + "GemSide" + i);
 			}
 		}
 
@@ -108,7 +113,7 @@ namespace PortableStorage
 			if (MechTransfer != null)
 			{
 				QEAdapter adapter = new QEAdapter(this);
-				MechTransfer.Call("RegisterAdapterReflection", adapter, new[] { TileType<QEChest>() });
+				MechTransfer.Call("RegisterAdapterReflection", adapter, new[] {TileType<QEChest>()});
 			}
 		}
 
@@ -125,20 +130,7 @@ namespace PortableStorage
 		{
 			int HotbarIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Hotbar"));
 
-			if (HotbarIndex != -1)
-			{
-				layers.Insert(HotbarIndex, new LegacyGameInterfaceLayer(
-					"PortableStorage: UI",
-					delegate
-					{
-						BagUI.Values.Draw();
-						TEUI.Values.Draw();
-
-						return true;
-					},
-					InterfaceScaleType.UI)
-				);
-			}
+			if (HotbarIndex != -1) layers.Insert(HotbarIndex, InventoryLayer);
 		}
 
 		public override void PostDrawInterface(SpriteBatch spriteBatch)

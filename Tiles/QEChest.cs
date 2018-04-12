@@ -25,10 +25,11 @@ namespace PortableStorage.Tiles
 			Main.tileLavaDeath[Type] = false;
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
 			TileObjectData.newTile.Origin = new Point16(0, 1);
-			TileObjectData.newTile.CoordinateHeights = new[] { 16, 16 };
+			TileObjectData.newTile.CoordinateHeights = new[] {16, 16};
 			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<TEQEChest>().Hook_AfterPlacement, -1, 0, false);
 			TileObjectData.addTile(Type);
 			disableSmartCursor = true;
+
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Quantum Entangled Chest");
 			AddMapEntry(Color.Purple, name);
@@ -38,8 +39,6 @@ namespace PortableStorage.Tiles
 		{
 			int ID = mod.GetID<TEQEChest>(i, j);
 			if (ID == -1) return;
-
-			ErrorLogger.Log("Called on: " + (Main.netMode == NetmodeID.MultiplayerClient ? "Client - " + Main.LocalPlayer.name : "Server"));
 
 			TEQEChest qeChest = (TEQEChest)TileEntity.ByID[ID];
 
@@ -55,34 +54,31 @@ namespace PortableStorage.Tiles
 				Frequency frequency = qeChest.frequency;
 				bool handleFrequency = false;
 
-				if (left.Contains(Main.MouseWorld) && qeChest.animState == 0)
+				if (left.Contains(Main.MouseWorld))
 				{
 					frequency.colorLeft = Utility.ColorFromItem(frequency.colorLeft);
 					handleFrequency = true;
 				}
-				else if (middle.Contains(Main.MouseWorld) && qeChest.animState == 0)
+				else if (middle.Contains(Main.MouseWorld))
 				{
 					frequency.colorMiddle = Utility.ColorFromItem(frequency.colorMiddle);
 					handleFrequency = true;
 				}
-				else if (right.Contains(Main.MouseWorld) && qeChest.animState == 0)
+				else if (right.Contains(Main.MouseWorld))
 				{
 					frequency.colorRight = Utility.ColorFromItem(frequency.colorRight);
 					handleFrequency = true;
 				}
 				else
 				{
-					qeChest.opened = !qeChest.opened;
 					PortableStorage.Instance.HandleUI<QEChestUI>(ID);
 
 					Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
 				}
-				if (handleFrequency)
-				{
-					qeChest.frequency = frequency;
-				}
 
-				qeChest.SendUpdate();
+				if (handleFrequency) qeChest.frequency = frequency;
+
+				Net.SendTEData(qeChest);
 			}
 			else
 			{
@@ -114,24 +110,9 @@ namespace PortableStorage.Tiles
 
 				TEQEChest qeChest = (TEQEChest)TileEntity.ByID[ID];
 
-				switch (qeChest.animState)
-				{
-					case 0:
-						spriteBatch.Draw(PortableStorage.gemsSide[0], position + new Vector2(5, 9), new Rectangle(6 * (int)qeChest.frequency.colorLeft, 0, 6, 10), Color.White, 0f, new Vector2(3, 5), 1f, SpriteEffects.None, 0f);
-						spriteBatch.Draw(PortableStorage.gemsMiddle[0], position + new Vector2(12, 4), new Rectangle(8 * (int)qeChest.frequency.colorMiddle, 0, 8, 10), Color.White);
-						spriteBatch.Draw(PortableStorage.gemsSide[0], position + new Vector2(24, 4), new Rectangle(6 * (int)qeChest.frequency.colorRight, 0, 6, 10), Color.White, 0f, Vector2.Zero, Vector2.One, SpriteEffects.FlipHorizontally, 0f);
-						break;
-					case 1:
-						spriteBatch.Draw(PortableStorage.gemsSide[1], position + new Vector2(2, 4), new Rectangle(8 * (int)qeChest.frequency.colorLeft, 0, 8, 4), Color.White);
-						spriteBatch.Draw(PortableStorage.gemsMiddle[1], position + new Vector2(14, 4), new Rectangle(4 * (int)qeChest.frequency.colorMiddle, 0, 4, 4), Color.White);
-						spriteBatch.Draw(PortableStorage.gemsSide[1], position + new Vector2(22, 4), new Rectangle(8 * (int)qeChest.frequency.colorRight, 0, 8, 4), Color.White, 0f, Vector2.Zero, Vector2.One, SpriteEffects.FlipHorizontally, 0f);
-						break;
-					case 2:
-						spriteBatch.Draw(PortableStorage.gemsSide[2], position + new Vector2(4, 4), new Rectangle(6 * (int)qeChest.frequency.colorLeft, 0, 6, 2), Color.White);
-						spriteBatch.Draw(PortableStorage.gemsMiddle[2], position + new Vector2(14, 4), new Rectangle(4 * (int)qeChest.frequency.colorMiddle, 0, 4, 2), Color.White);
-						spriteBatch.Draw(PortableStorage.gemsSide[2], position + new Vector2(22, 4), new Rectangle(6 * (int)qeChest.frequency.colorRight, 0, 6, 2), Color.White, 0f, Vector2.Zero, Vector2.One, SpriteEffects.FlipHorizontally, 0f);
-						break;
-				}
+				spriteBatch.Draw(PortableStorage.gemsSide[0], position + new Vector2(5, 9), new Rectangle(6 * (int)qeChest.frequency.colorLeft, 0, 6, 10), Color.White, 0f, new Vector2(3, 5), 1f, SpriteEffects.None, 0f);
+				spriteBatch.Draw(PortableStorage.gemsMiddle[0], position + new Vector2(12, 4), new Rectangle(8 * (int)qeChest.frequency.colorMiddle, 0, 8, 10), Color.White);
+				spriteBatch.Draw(PortableStorage.gemsSide[0], position + new Vector2(24, 4), new Rectangle(6 * (int)qeChest.frequency.colorRight, 0, 6, 10), Color.White, 0f, Vector2.Zero, Vector2.One, SpriteEffects.FlipHorizontally, 0f);
 			}
 		}
 

@@ -1,6 +1,6 @@
-﻿using PortableStorage.Items;
-using System;
+﻿using System;
 using System.Linq;
+using PortableStorage.Items;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -27,17 +27,20 @@ namespace PortableStorage.Global
 				return false;
 			}
 
-			if (vacuumBagAcc != null && vacuumBagAcc.active && item.type != ItemID.Heart && item.type != ItemID.Star)
+			if (vacuumBagAcc != null && vacuumBagAcc.active && item.type != ItemID.Heart && item.type != ItemID.Star && !item.IsCoin())
 			{
-				InsertItem(item, vacuumBagAcc.Items.ToList());
+				foreach (int i in InsertItem(item, vacuumBagAcc.Items)) ;
+				Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.05f));
 
 				SyncItem(vacuumBagAcc.item);
 
 				return false;
 			}
-			if (vacuumBag != null && vacuumBag.active && item.type != ItemID.Heart && item.type != ItemID.Star)
+
+			if (vacuumBag != null && vacuumBag.active && item.type != ItemID.Heart && item.type != ItemID.Star && !item.IsCoin())
 			{
-				InsertItem(item, vacuumBag.Items.ToList());
+				foreach (int i in InsertItem(item, vacuumBag.Items)) ;
+				Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.05f));
 
 				SyncItem(vacuumBag.item);
 

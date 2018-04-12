@@ -1,6 +1,6 @@
-﻿using PortableStorage.TileEntities;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using PortableStorage.TileEntities;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -76,10 +76,7 @@ namespace PortableStorage
 			TEQEChest qeChest = (TEQEChest)TileEntity.ByID[id];
 
 			int slot = 0;
-			foreach (var item in qeChest.GetItems())
-			{
-				yield return Tuple.Create(item, (object)slot++);
-			}
+			foreach (var item in qeChest.GetItems()) yield return Tuple.Create(item, (object)slot++);
 		}
 
 		public void TakeItem(int x, int y, object slot, int amount)
@@ -92,9 +89,10 @@ namespace PortableStorage
 			Item item = qeChest.GetItem((int)slot);
 			item.stack -= amount;
 			if (item.stack <= 0) item.TurnToAir();
-			qeChest.SetItem((int)slot, item);
+			HandleItemChange(qeChest.frequency, (int)slot);
+			//qeChest.SetItem((int)slot, item);
 		}
 
-		private void HandleItemChange(Frequency frequency, int slot) => Net.SendQEItem(frequency, slot);
+		private static void HandleItemChange(Frequency frequency, int slot) => Net.SendQEItem(frequency, slot);
 	}
 }
