@@ -1,4 +1,5 @@
-﻿using PortableStorage.TileEntities;
+﻿using Microsoft.Xna.Framework;
+using PortableStorage.TileEntities;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
@@ -22,7 +23,13 @@ namespace PortableStorage.UI
 		{
 			panelMain.Width.Pixels = 408;
 			panelMain.Height.Pixels = 172;
-			panelMain.Center();
+			Vector2? position = qeChest.UIPosition;
+			if (position.HasValue)
+			{
+				panelMain.Left.Set(position.Value.X, 0f);
+				panelMain.Top.Set(position.Value.Y, 0f);
+			}
+			else panelMain.Center();
 			panelMain.SetPadding(0);
 			panelMain.BackgroundColor = PanelColor;
 			panelMain.OnMouseDown += DragStart;
@@ -60,6 +67,11 @@ namespace PortableStorage.UI
 				UIContainerSlot slot = new UIContainerSlot(qeChest, i);
 				gridItems.Add(slot);
 			}
+		}
+
+		public override void Unload()
+		{
+			qeChest.UIPosition = panelMain.GetDimensions().Position();
 		}
 
 		public void SetTileEntity(ModTileEntity tileEntity) => qeChest = (TEQEChest)tileEntity;

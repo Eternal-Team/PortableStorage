@@ -18,9 +18,7 @@ namespace PortableStorage.Items
 {
 	public class QEBag : BaseBag, IContainerItem
 	{
-		public Guid guid = Guid.NewGuid();
 		public Frequency frequency;
-		public Vector2? UIPosition;
 
 		public override string Texture => PortableStorage.ItemTexturePath + "QEBag";
 
@@ -28,8 +26,7 @@ namespace PortableStorage.Items
 		{
 			QEBag clone = (QEBag)base.Clone(item);
 			clone.frequency = frequency;
-			clone.guid = guid;
-			clone.UIPosition = UIPosition;
+			clone.gui = gui;
 			return clone;
 		}
 
@@ -42,6 +39,15 @@ namespace PortableStorage.Items
 
 		public override void SetDefaults()
 		{
+			QEBagUI ui = new QEBagUI();
+			ui.SetContainer(this);
+			UserInterface userInterface = new UserInterface();
+			ui.Activate();
+			userInterface.SetState(ui);
+			ui.visible = true;
+			ui.Load();
+			gui = new GUI(ui, userInterface);
+
 			item.width = 32;
 			item.height = 34;
 			item.useTime = 5;
@@ -52,25 +58,7 @@ namespace PortableStorage.Items
 			item.rare = 9;
 			item.accessory = true;
 		}
-
-		public override void HandleUI()
-		{
-			if (!PortableStorage.Instance.BagUI.ContainsKey(guid))
-			{
-				QEBagUI ui = new QEBagUI();
-				ui.SetContainer(this);
-				UserInterface userInterface = new UserInterface();
-				ui.Activate();
-				userInterface.SetState(ui);
-				ui.visible = true;
-				ui.Load();
-				PortableStorage.Instance.BagUI.Add(guid, new GUI(ui, userInterface));
-			}
-			else PortableStorage.Instance.BagUI.Remove(guid);
-
-			Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
-		}
-
+		
 		public override bool UseItem(Player player)
 		{
 			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
@@ -98,15 +86,28 @@ namespace PortableStorage.Items
 		{
 			tooltips.Add(new TooltipLine(mod, "BagInfo", $"Use the bag, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it"));
 		}
-
-		public override TagCompound Save() => new TagCompound {["Frequency"] = frequency, ["GUID"] = guid.ToString()};
+		
+		public override TagCompound Save()
+		{
+			TagCompound tag = new TagCompound();
+			tag["Frequency"] = frequency;
+			if (gui != null) tag["UIPosition"] = gui.ui.panelMain.GetDimensions().Position();
+			return tag;
+		}
 
 		public override void Load(TagCompound tag)
 		{
 			frequency = tag.Get<Frequency>("Frequency");
-			guid = tag.ContainsKey("GUID") && !string.IsNullOrEmpty((string)tag["GUID"]) ? Guid.Parse(tag.GetString("GUID")) : Guid.NewGuid();
-		}
 
+			if (tag.ContainsKey("UIPosition"))
+			{
+				Vector2 vector = tag.Get<Vector2>("UIPosition");
+				gui.ui.panelMain.Left.Set(vector.X, 0f);
+				gui.ui.panelMain.Top.Set(vector.Y, 0f);
+				gui.ui.panelMain.Recalculate();
+			}
+		}
+		
 		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
 
 		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));

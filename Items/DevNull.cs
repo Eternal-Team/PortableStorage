@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.UI;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -19,9 +18,8 @@ namespace PortableStorage.Items
 {
 	public class DevNull : BaseBag, IContainerItem
 	{
-		public Guid guid = Guid.NewGuid();
 		public List<Item> Items = new List<Item>();
-		public Vector2? UIPosition;
+		public GUI gui;
 
 		public int selectedIndex = -1;
 
@@ -31,8 +29,7 @@ namespace PortableStorage.Items
 		{
 			DevNull clone = (DevNull)base.Clone(item);
 			clone.Items = Items;
-			clone.guid = guid;
-			clone.UIPosition = UIPosition;
+			clone.gui = gui;
 			return clone;
 		}
 
@@ -40,8 +37,8 @@ namespace PortableStorage.Items
 		{
 			DisplayName.SetDefault("/dev/null");
 			Tooltip.SetDefault("Can only store items that place tiles" +
-			                   "\nWill automatically pick them up and void them when there's more than max stack of them" +
-			                   "\nCan be used to place tiles when an item has been selected in the UI via rightclicking");
+							   "\nWill automatically pick them up and void them when there's more than max stack of them" +
+							   "\nCan be used to place tiles when an item has been selected in the UI via rightclicking");
 		}
 
 		public override void SetDefaults()
@@ -51,6 +48,15 @@ namespace PortableStorage.Items
 				for (int i = 0; i < 7; i++) Items.Add(new Item());
 			}
 
+			DevNullUI ui = new DevNullUI();
+			ui.SetContainer(this);
+			UserInterface userInterface = new UserInterface();
+			ui.Activate();
+			userInterface.SetState(ui);
+			ui.visible = true;
+			ui.Load();
+			gui = new GUI(ui, userInterface);
+
 			item.width = 40;
 			item.height = 40;
 			item.useTime = 5;
@@ -59,24 +65,6 @@ namespace PortableStorage.Items
 			item.rare = 1;
 			item.autoReuse = true;
 			item.useTurn = true;
-		}
-
-		public override void HandleUI()
-		{
-			if (!PortableStorage.Instance.BagUI.ContainsKey(guid))
-			{
-				DevNullUI ui = new DevNullUI();
-				ui.SetContainer(this);
-				UserInterface userInterface = new UserInterface();
-				ui.Activate();
-				userInterface.SetState(ui);
-				ui.visible = true;
-				ui.Load();
-				PortableStorage.Instance.BagUI.Add(guid, new GUI(ui, userInterface));
-			}
-			else PortableStorage.Instance.BagUI.Remove(guid);
-
-			Main.PlaySound(SoundID.Item59);
 		}
 
 		public override bool CanUseItem(Player player) => selectedIndex >= 0 && Items[selectedIndex].stack > 1;
@@ -135,7 +123,6 @@ namespace PortableStorage.Items
 				drawScale *= scale;
 				Vector2 vector = new Vector2(40, 40) * scale;
 				Vector2 position2 = position + vector / 2f - rect.Size() * drawScale / 2f;
-				//Vector2 origin = rect.Size() * (pulseScale / 2f - 0.5f);
 
 				if (ItemLoader.PreDrawInInventory(selectedItem, spriteBatch, position2, rect, selectedItem.GetAlpha(newColor), selectedItem.GetColor(Color.White), origin, drawScale * pulseScale))
 				{
@@ -145,20 +132,34 @@ namespace PortableStorage.Items
 
 				ItemLoader.PostDrawInInventory(selectedItem, spriteBatch, position2, rect, selectedItem.GetAlpha(newColor), selectedItem.GetColor(Color.White), origin, drawScale * pulseScale);
 				if (ItemID.Sets.TrapSigned[selectedItem.type]) spriteBatch.Draw(Main.wireTexture, position + new Vector2(40f, 40f) * scale, new Rectangle(4, 58, 8, 8), Color.White, 0f, new Vector2(4f), 1f, SpriteEffects.None, 0f);
-				if (selectedItem.stack > 1) ChatManager.DrawColorCodedStringWithShadow(spriteBatch, Main.fontItemStack, selectedItem.stack.ToSI("F0") /*.TrimEnd('.', '0')*/, position + new Vector2(10f, 26f) * scale, Color.White, 0f, Vector2.Zero, new Vector2(scale));
+				if (selectedItem.stack > 1) ChatManager.DrawColorCodedStringWithShadow(spriteBatch, Main.fontItemStack, selectedItem.stack.ToSI("F0"), position + new Vector2(10f, 26f) * scale, Color.White, 0f, Vector2.Zero, new Vector2(scale));
 				return false;
 			}
 
 			return true;
 		}
 
-		public override TagCompound Save() => new TagCompound {["Items"] = Items.Save(), ["GUID"] = guid.ToString(), ["SelectedItem"] = selectedIndex};
+		public override TagCompound Save()
+		{
+			TagCompound tag = new TagCompound();
+			tag["Items"] = Items.Save();
+			tag["SelectedItem"] = selectedIndex;
+			if (gui != null) tag["UIPosition"] = gui.ui.panelMain.GetDimensions().Position();
+			return tag;
+		}
 
 		public override void Load(TagCompound tag)
 		{
 			Items = TheOneLibrary.Utils.Utility.Load(tag);
-			guid = tag.ContainsKey("GUID") && !string.IsNullOrEmpty((string)tag["GUID"]) ? Guid.Parse(tag.GetString("GUID")) : Guid.NewGuid();
-			SetItem(tag.GetInt("SelectedItem"));
+			selectedIndex = tag.GetInt("SelectedItem");
+
+			if (tag.ContainsKey("UIPosition"))
+			{
+				Vector2 vector = tag.Get<Vector2>("UIPosition");
+				gui.ui.panelMain.Left.Set(vector.X, 0f);
+				gui.ui.panelMain.Top.Set(vector.Y, 0f);
+				gui.ui.panelMain.Recalculate();
+			}
 		}
 
 		public override void NetSend(BinaryWriter writer) => writer.Write(Items);

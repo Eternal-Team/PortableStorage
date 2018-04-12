@@ -10,13 +10,14 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using TheOneLibrary.Base.Items;
 using TheOneLibrary.Fluid;
 using TheOneLibrary.Storage;
 using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Items
 {
-	public class QEBucket : BaseBag, IFluidContainerItem
+	public class QEBucket : BaseItem, IFluidContainerItem
 	{
 		public Frequency frequency;
 

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,9 +16,7 @@ namespace PortableStorage.Items
 {
 	public class Bag : BaseBag, IContainerItem
 	{
-		public Guid guid = Guid.NewGuid();
 		public List<Item> Items = new List<Item>();
-		public Vector2? UIPosition;
 
 		public override string Texture => PortableStorage.ItemTexturePath + "Bag";
 
@@ -27,8 +24,7 @@ namespace PortableStorage.Items
 		{
 			Bag clone = (Bag)base.Clone(item);
 			clone.Items = Items;
-			clone.guid = guid;
-			clone.UIPosition = UIPosition;
+			clone.gui = gui;
 			return clone;
 		}
 
@@ -45,6 +41,15 @@ namespace PortableStorage.Items
 				for (int i = 0; i < 54; i++) Items.Add(new Item());
 			}
 
+			BagUI ui = new BagUI();
+			ui.SetContainer(this);
+			UserInterface userInterface = new UserInterface();
+			ui.Activate();
+			userInterface.SetState(ui);
+			ui.visible = true;
+			ui.Load();
+			gui = new GUI(ui, userInterface);
+
 			item.width = 32;
 			item.height = 34;
 			item.useTime = 5;
@@ -54,24 +59,6 @@ namespace PortableStorage.Items
 			item.value = GetItemValue(ItemID.Leather) * 10;
 			item.rare = 0;
 			item.accessory = true;
-		}
-
-		public override void HandleUI()
-		{
-			if (!PortableStorage.Instance.BagUI.ContainsKey(guid))
-			{
-				BagUI ui = new BagUI();
-				ui.SetContainer(this);
-				UserInterface userInterface = new UserInterface();
-				ui.Activate();
-				userInterface.SetState(ui);
-				ui.visible = true;
-				ui.Load();
-				PortableStorage.Instance.BagUI.Add(guid, new GUI(ui, userInterface));
-			}
-			else PortableStorage.Instance.BagUI.Remove(guid);
-
-			Main.PlaySound(SoundID.Item59);
 		}
 
 		public override bool UseItem(Player player)
@@ -95,12 +82,24 @@ namespace PortableStorage.Items
 			tooltips.Add(new TooltipLine(mod, "BagInfo", $"Use the bag, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it"));
 		}
 
-		public override TagCompound Save() => new TagCompound {["Items"] = Items.Save(), ["GUID"] = guid.ToString()};
+		public override TagCompound Save()
+		{
+			TagCompound tag = new TagCompound();
+			tag["Items"] = Items.Save();
+			if (gui != null) tag["UIPosition"] = gui.ui.panelMain.GetDimensions().Position();
+			return tag;
+		}
 
 		public override void Load(TagCompound tag)
 		{
 			Items = TheOneLibrary.Utils.Utility.Load(tag);
-			guid = tag.ContainsKey("GUID") && !string.IsNullOrEmpty((string)tag["GUID"]) ? Guid.Parse(tag.GetString("GUID")) : Guid.NewGuid();
+			if (tag.ContainsKey("UIPosition"))
+			{
+				Vector2 vector = tag.Get<Vector2>("UIPosition");
+				gui.ui.panelMain.Left.Set(vector.X, 0f);
+				gui.ui.panelMain.Top.Set(vector.Y, 0f);
+				gui.ui.panelMain.Recalculate();
+			}
 		}
 
 		public override void NetSend(BinaryWriter writer) => writer.Write(Items);

@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using Microsoft.Xna.Framework;
 using PortableStorage.Global;
 using PortableStorage.Tiles;
+using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -17,6 +18,7 @@ namespace PortableStorage.TileEntities
 		public override bool ValidTile(Tile tile) => tile.type == mod.TileType<QEChest>() && tile.TopLeft();
 
 		public Frequency frequency;
+		public Vector2? UIPosition;
 
 		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
 		{
@@ -28,14 +30,18 @@ namespace PortableStorage.TileEntities
 			return -1;
 		}
 
-		public override TagCompound Save() => new TagCompound
+		public override TagCompound Save()
 		{
-			["Frequency"] = frequency
-		};
+			TagCompound tag = new TagCompound();
+			tag["Frequency"] = frequency;
+			if (UIPosition.HasValue) tag["UIPosition"] = UIPosition;
+			return tag;
+		}
 
 		public override void Load(TagCompound tag)
 		{
 			frequency = tag.Get<Frequency>("Frequency");
+			UIPosition = tag.ContainsKey("UIPosition") ? new Vector2?(tag.Get<Vector2>("UIPosititon")) : null;
 		}
 
 		public override void NetSend(BinaryWriter writer, bool lightSend) => writer.Write(frequency);

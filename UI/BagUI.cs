@@ -35,14 +35,7 @@ namespace PortableStorage.UI
 		{
 			panelMain.Width.Pixels = 408;
 			panelMain.Height.Pixels = 308;
-			Vector2? position = ((Bag)((IContainerItem)bag).GetModItem()).UIPosition;
-			if (position.HasValue)
-			{
-				panelMain.Left.Set(position.Value.X, 0f);
-				panelMain.Top.Set(position.Value.Y, 0f);
-			}
-			else panelMain.Center();
-
+			panelMain.Center();
 			panelMain.SetPadding(0);
 			panelMain.BackgroundColor = PanelColor;
 			panelMain.OnMouseDown += DragStart;
@@ -99,7 +92,7 @@ namespace PortableStorage.UI
 			buttonClose.Top.Pixels = 8;
 			buttonClose.OnClick += (evt, element) =>
 			{
-				PortableStorage.Instance.BagUI.Remove(((Bag)((IContainerItem)bag).GetModItem()).guid);
+				PortableStorage.Instance.BagUI.Remove((Bag)(IContainerItem)bag);
 				Main.PlaySound(SoundID.Item59.WithVolume(0.5f));
 			};
 			panelMain.Append(buttonClose);

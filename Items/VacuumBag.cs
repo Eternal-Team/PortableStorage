@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.UI;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -20,9 +19,8 @@ namespace PortableStorage.Items
 	public class VacuumBag : BaseBag, IContainerItem
 	{
 		public bool active;
-		public Guid guid = Guid.NewGuid();
 		public List<Item> Items = new List<Item>();
-		public Vector2? UIPosition;
+		public GUI gui;
 
 		public override string Texture => PortableStorage.ItemTexturePath + "VacuumBagActive";
 
@@ -30,9 +28,8 @@ namespace PortableStorage.Items
 		{
 			VacuumBag clone = (VacuumBag)base.Clone(item);
 			clone.Items = Items;
-			clone.guid = guid;
 			clone.active = active;
-			clone.UIPosition = UIPosition;
+			clone.gui = gui;
 			return clone;
 		}
 
@@ -50,6 +47,15 @@ namespace PortableStorage.Items
 				for (int i = 0; i < 27; i++) Items.Add(new Item());
 			}
 
+			VacuumBagUI ui = new VacuumBagUI();
+			ui.SetContainer(this);
+			UserInterface userInterface = new UserInterface();
+			ui.Activate();
+			userInterface.SetState(ui);
+			ui.visible = true;
+			ui.Load();
+			gui = new GUI(ui, userInterface);
+
 			item.width = 36;
 			item.height = 40;
 			item.useTime = 5;
@@ -59,24 +65,6 @@ namespace PortableStorage.Items
 			item.value = GetItemValue(ItemID.Leather) * 10;
 			item.rare = 1;
 			item.accessory = true;
-		}
-
-		public override void HandleUI()
-		{
-			if (!PortableStorage.Instance.BagUI.ContainsKey(guid))
-			{
-				VacuumBagUI ui = new VacuumBagUI();
-				ui.SetContainer(this);
-				UserInterface userInterface = new UserInterface();
-				ui.Activate();
-				userInterface.SetState(ui);
-				ui.visible = true;
-				ui.Load();
-				PortableStorage.Instance.BagUI.Add(guid, new GUI(ui, userInterface));
-			}
-			else PortableStorage.Instance.BagUI.Remove(guid);
-
-			Main.PlaySound(SoundID.Item59);
 		}
 
 		public override bool UseItem(Player player)
@@ -112,13 +100,27 @@ namespace PortableStorage.Items
 			return false;
 		}
 
-		public override TagCompound Save() => new TagCompound {["Items"] = Items.Save(), ["GUID"] = guid.ToString(), ["Active"] = active};
+		public override TagCompound Save()
+		{
+			TagCompound tag = new TagCompound();
+			tag["Items"] = Items.Save();
+			tag["Active"] = active;
+			if (gui != null) tag["UIPosition"] = gui.ui.panelMain.GetDimensions().Position();
+			return tag;
+		}
 
 		public override void Load(TagCompound tag)
 		{
 			Items = TheOneLibrary.Utils.Utility.Load(tag);
-			guid = tag.ContainsKey("GUID") && !string.IsNullOrEmpty((string)tag["GUID"]) ? Guid.Parse(tag.GetString("GUID")) : Guid.NewGuid();
 			active = tag.GetBool("Active");
+
+			if (tag.ContainsKey("UIPosition"))
+			{
+				Vector2 vector = tag.Get<Vector2>("UIPosition");
+				gui.ui.panelMain.Left.Set(vector.X, 0f);
+				gui.ui.panelMain.Top.Set(vector.Y, 0f);
+				gui.ui.panelMain.Recalculate();
+			}
 		}
 
 		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);

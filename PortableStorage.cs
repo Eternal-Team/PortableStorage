@@ -18,8 +18,8 @@ namespace PortableStorage
 	public class PortableStorage : Mod
 	{
 		public static PortableStorage Instance;
-
-		public Dictionary<Guid, GUI> BagUI = new Dictionary<Guid, GUI>();
+		
+		public Dictionary<ModItem, GUI> BagUI = new Dictionary<ModItem, GUI>();
 		[UI("TileEntity")] public Dictionary<ModTileEntity, GUI> TEUI = new Dictionary<ModTileEntity, GUI>();
 
 		public const string TexturePath = "PortableStorage/Textures/";

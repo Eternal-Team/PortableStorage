@@ -25,13 +25,7 @@ namespace PortableStorage.UI
 		{
 			panelMain.Width.Pixels = 320;
 			panelMain.Height.Pixels = 84;
-			Vector2? position = ((DevNull)((IContainerItem)devNull).GetModItem()).UIPosition;
-			if (position.HasValue)
-			{
-				panelMain.Left.Set(position.Value.X, 0f);
-				panelMain.Top.Set(position.Value.Y, 0f);
-			}
-			else panelMain.Center();
+panelMain.Center();
 
 			panelMain.SetPadding(0);
 			panelMain.BackgroundColor = PanelColor;
@@ -49,7 +43,7 @@ namespace PortableStorage.UI
 			buttonClose.Top.Pixels = 8;
 			buttonClose.OnClick += (evt, element) =>
 			{
-				PortableStorage.Instance.BagUI.Remove(((DevNull)((IContainerItem)devNull).GetModItem()).guid);
+				PortableStorage.Instance.BagUI.Remove((DevNull)(IContainerItem)devNull);
 				Main.PlaySound(SoundID.Item59.WithVolume(0.5f));
 			};
 			panelMain.Append(buttonClose);
@@ -101,7 +95,7 @@ namespace PortableStorage.UI
 				gridItems.Add(slot);
 			}
 		}
-
+		
 		public void SetContainer(IContainer container) => devNull = container;
 
 		public IContainer GetContainer() => devNull;
