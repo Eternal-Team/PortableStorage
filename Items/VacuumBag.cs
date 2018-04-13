@@ -1,26 +1,22 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.UI;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using PortableStorage.UI;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.UI;
-using TheOneLibrary.Base.UI;
-using TheOneLibrary.Storage;
 using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Items
 {
-	public class VacuumBag : BaseBag, IContainerItem
+	public class VacuumBag : BaseBag
 	{
 		public bool active;
 		public List<Item> Items = new List<Item>();
-		public GUI gui;
 
 		public override string Texture => PortableStorage.ItemTexturePath + "VacuumBagActive";
 
@@ -47,14 +43,7 @@ namespace PortableStorage.Items
 				for (int i = 0; i < 27; i++) Items.Add(new Item());
 			}
 
-			VacuumBagUI ui = new VacuumBagUI();
-			ui.SetContainer(this);
-			UserInterface userInterface = new UserInterface();
-			ui.Activate();
-			userInterface.SetState(ui);
-			ui.visible = true;
-			ui.Load();
-			gui = new GUI(ui, userInterface);
+			SetupUI<VacuumBagUI>();
 
 			item.width = 36;
 			item.height = 40;
@@ -114,7 +103,7 @@ namespace PortableStorage.Items
 			Items = TheOneLibrary.Utils.Utility.Load(tag);
 			active = tag.GetBool("Active");
 
-			if (tag.ContainsKey("UIPosition"))
+			if (gui != null && tag.ContainsKey("UIPosition"))
 			{
 				Vector2 vector = tag.Get<Vector2>("UIPosition");
 				gui.ui.panelMain.Left.Set(vector.X, 0f);
@@ -142,18 +131,18 @@ namespace PortableStorage.Items
 			for (int i = 0; i < 27; i++) Items.Add(new Item());
 		}
 
-		public Item GetItem(int slot) => Items[slot];
+		public override Item GetItem(int slot) => Items[slot];
 
-		public void SetItem(int slot, Item value)
+		public override void SetItem(int slot, Item value)
 		{
 			Items[slot] = value;
 			SyncItem(item);
 		}
 
-		public void Sync(int slot) => SyncItem(item);
+		public override void Sync(int slot) => SyncItem(item);
 
-		public List<Item> GetItems() => Items;
+		public override List<Item> GetItems() => Items;
 
-		public ModItem GetModItem() => this;
+		public override ModItem GetModItem() => this;
 	}
 }

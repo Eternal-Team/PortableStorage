@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using PortableStorage.TileEntities;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -19,17 +20,20 @@ namespace PortableStorage.UI
 
 		public TEQEChest qeChest;
 
+		public UIColor[] colorFrequency = new UIColor[3];
+
 		public override void OnInitialize()
 		{
 			panelMain.Width.Pixels = 408;
 			panelMain.Height.Pixels = 172;
+			panelMain.Center();
 			Vector2? position = qeChest.UIPosition;
 			if (position.HasValue)
 			{
 				panelMain.Left.Set(position.Value.X, 0f);
 				panelMain.Top.Set(position.Value.Y, 0f);
 			}
-			else panelMain.Center();
+
 			panelMain.SetPadding(0);
 			panelMain.BackgroundColor = PanelColor;
 			panelMain.OnMouseDown += DragStart;
@@ -39,6 +43,16 @@ namespace PortableStorage.UI
 			textLabel.HAlign = 0.5f;
 			textLabel.Top.Pixels = 8;
 			panelMain.Append(textLabel);
+
+			for (int i = 0; i < colorFrequency.Length; i++)
+			{
+				colorFrequency[i] = new UIColor(Color.White);
+				colorFrequency[i].Width.Pixels = 16;
+				colorFrequency[i].Height.Pixels = 16;
+				colorFrequency[i].Left.Set(-52f - i * 20f, 1f);
+				colorFrequency[i].Top.Pixels = 12;
+				panelMain.Append(colorFrequency[i]);
+			}
 
 			buttonClose.Width.Pixels = 24;
 			buttonClose.Height.Pixels = 24;
@@ -62,6 +76,7 @@ namespace PortableStorage.UI
 
 		public override void Load()
 		{
+			gridItems.Clear();
 			for (int i = 0; i < qeChest.GetItems().Count; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(qeChest, i);
@@ -72,6 +87,13 @@ namespace PortableStorage.UI
 		public override void Unload()
 		{
 			qeChest.UIPosition = panelMain.GetDimensions().Position();
+		}
+
+		public override void Update(GameTime gameTime)
+		{
+			for (int i = 0; i < colorFrequency.Length; i++) colorFrequency[2 - i].color = typeof(Color).GetValue<Color>(Enum.GetName(typeof(Colors), qeChest.frequency.Colors[i]));
+
+			base.Update(gameTime);
 		}
 
 		public void SetTileEntity(ModTileEntity tileEntity) => qeChest = (TEQEChest)tileEntity;

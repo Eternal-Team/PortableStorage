@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
@@ -9,14 +8,11 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.UI;
-using TheOneLibrary.Base.UI;
-using TheOneLibrary.Storage;
 using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Items
 {
-	public class QEBag : BaseBag, IContainerItem
+	public class QEBag : BaseBag
 	{
 		public Frequency frequency;
 
@@ -39,14 +35,7 @@ namespace PortableStorage.Items
 
 		public override void SetDefaults()
 		{
-			QEBagUI ui = new QEBagUI();
-			ui.SetContainer(this);
-			UserInterface userInterface = new UserInterface();
-			ui.Activate();
-			userInterface.SetState(ui);
-			ui.visible = true;
-			ui.Load();
-			gui = new GUI(ui, userInterface);
+			SetupUI<QEBagUI>();
 
 			item.width = 32;
 			item.height = 34;
@@ -58,10 +47,10 @@ namespace PortableStorage.Items
 			item.rare = 9;
 			item.accessory = true;
 		}
-		
+
 		public override bool UseItem(Player player)
 		{
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
 
 			return true;
 		}
@@ -72,7 +61,7 @@ namespace PortableStorage.Items
 		{
 			item.stack++;
 
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
 		}
 
 		public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
@@ -86,7 +75,7 @@ namespace PortableStorage.Items
 		{
 			tooltips.Add(new TooltipLine(mod, "BagInfo", $"Use the bag, right-click it or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it"));
 		}
-		
+
 		public override TagCompound Save()
 		{
 			TagCompound tag = new TagCompound();
@@ -99,7 +88,7 @@ namespace PortableStorage.Items
 		{
 			frequency = tag.Get<Frequency>("Frequency");
 
-			if (tag.ContainsKey("UIPosition"))
+			if (gui != null && tag.ContainsKey("UIPosition"))
 			{
 				Vector2 vector = tag.Get<Vector2>("UIPosition");
 				gui.ui.panelMain.Left.Set(vector.X, 0f);
@@ -107,7 +96,7 @@ namespace PortableStorage.Items
 				gui.ui.panelMain.Recalculate();
 			}
 		}
-		
+
 		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
 
 		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));
@@ -131,14 +120,14 @@ namespace PortableStorage.Items
 			recipe.AddRecipe();
 		}
 
-		public Item GetItem(int slot) => PSWorld.Instance.GetItems(frequency)[slot];
+		public override Item GetItem(int slot) => PSWorld.Instance.GetItems(frequency)[slot];
 
-		public void SetItem(int slot, Item value) => PSWorld.Instance.GetItems(frequency)[slot] = value;
+		public override void SetItem(int slot, Item value) => PSWorld.Instance.GetItems(frequency)[slot] = value;
 
-		public void Sync(int slot) => Net.SendQEItem(frequency, slot);
+		public override void Sync(int slot = 0) => Net.SendQEItem(frequency, slot);
 
-		public ModItem GetModItem() => this;
+		public override ModItem GetModItem() => this;
 
-		public List<Item> GetItems() => PSWorld.Instance.GetItems(frequency);
+		public override List<Item> GetItems() => PSWorld.Instance.GetItems(frequency);
 	}
 }

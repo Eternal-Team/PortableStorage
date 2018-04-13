@@ -1,25 +1,22 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.UI;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using PortableStorage.UI;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
 using Terraria.UI.Chat;
-using TheOneLibrary.Base.UI;
-using TheOneLibrary.Storage;
 using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Items
 {
-	public class DevNull : BaseBag, IContainerItem
+	public class DevNull : BaseBag
 	{
 		public List<Item> Items = new List<Item>();
-		public GUI gui;
 
 		public int selectedIndex = -1;
 
@@ -37,8 +34,8 @@ namespace PortableStorage.Items
 		{
 			DisplayName.SetDefault("/dev/null");
 			Tooltip.SetDefault("Can only store items that place tiles" +
-							   "\nWill automatically pick them up and void them when there's more than max stack of them" +
-							   "\nCan be used to place tiles when an item has been selected in the UI via rightclicking");
+			                   "\nWill automatically pick them up and void them when there's more than max stack of them" +
+			                   "\nCan be used to place tiles when an item has been selected in the UI via rightclicking");
 		}
 
 		public override void SetDefaults()
@@ -48,14 +45,7 @@ namespace PortableStorage.Items
 				for (int i = 0; i < 7; i++) Items.Add(new Item());
 			}
 
-			DevNullUI ui = new DevNullUI();
-			ui.SetContainer(this);
-			UserInterface userInterface = new UserInterface();
-			ui.Activate();
-			userInterface.SetState(ui);
-			ui.visible = true;
-			ui.Load();
-			gui = new GUI(ui, userInterface);
+			SetupUI<DevNullUI>();
 
 			item.width = 40;
 			item.height = 40;
@@ -153,7 +143,7 @@ namespace PortableStorage.Items
 			Items = TheOneLibrary.Utils.Utility.Load(tag);
 			selectedIndex = tag.GetInt("SelectedItem");
 
-			if (tag.ContainsKey("UIPosition"))
+			if (gui != null && tag.ContainsKey("UIPosition"))
 			{
 				Vector2 vector = tag.Get<Vector2>("UIPosition");
 				gui.ui.panelMain.Left.Set(vector.X, 0f);
@@ -181,14 +171,14 @@ namespace PortableStorage.Items
 			for (int i = 0; i < 7; i++) Items.Add(new Item());
 		}
 
-		public Item GetItem(int slot) => Items[slot];
+		public override Item GetItem(int slot) => Items[slot];
 
-		public void SetItem(int slot, Item value) => Items[slot] = value;
+		public override void SetItem(int slot, Item value) => Items[slot] = value;
 
-		public void Sync(int slot) => SyncItem(item);
+		public override void Sync(int slot) => SyncItem(item);
 
-		public List<Item> GetItems() => Items;
+		public override List<Item> GetItems() => Items;
 
-		public ModItem GetModItem() => this;
+		public override ModItem GetModItem() => this;
 	}
 }

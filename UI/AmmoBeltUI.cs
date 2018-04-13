@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using PortableStorage.Items;
+﻿using PortableStorage.Items;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
@@ -33,7 +32,7 @@ namespace PortableStorage.UI
 		{
 			panelMain.Width.Pixels = 408;
 			panelMain.Height.Pixels = 172;
-panelMain.Center();
+			panelMain.Center();
 
 			panelMain.SetPadding(0);
 			panelMain.BackgroundColor = PanelColor;
@@ -135,6 +134,7 @@ panelMain.Center();
 
 		public override void Load()
 		{
+			gridItems.Clear();
 			for (int i = 0; i < ammoBelt.GetItems().Count; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(ammoBelt, i);
@@ -142,7 +142,7 @@ panelMain.Center();
 				gridItems.Add(slot);
 			}
 		}
-		
+
 		public void SetContainer(IContainer container) => ammoBelt = container;
 
 		public IContainer GetContainer() => ammoBelt;

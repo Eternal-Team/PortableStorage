@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using System.IO;
+using Microsoft.Xna.Framework;
 using PortableStorage.Global;
 using PortableStorage.Tiles;
-using System.Collections.Generic;
-using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -34,14 +34,14 @@ namespace PortableStorage.TileEntities
 		{
 			TagCompound tag = new TagCompound();
 			tag["Frequency"] = frequency;
-			if (UIPosition.HasValue) tag["UIPosition"] = UIPosition;
+			if (UIPosition != null) tag["UIPosition"] = UIPosition.Value;
 			return tag;
 		}
 
 		public override void Load(TagCompound tag)
 		{
 			frequency = tag.Get<Frequency>("Frequency");
-			UIPosition = tag.ContainsKey("UIPosition") ? new Vector2?(tag.Get<Vector2>("UIPosititon")) : null;
+			UIPosition = tag.ContainsKey("UIPosition") ? new Vector2?(tag.Get<Vector2>("UIPosition")) : null;
 		}
 
 		public override void NetSend(BinaryWriter writer, bool lightSend) => writer.Write(frequency);

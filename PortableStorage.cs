@@ -18,7 +18,7 @@ namespace PortableStorage
 	public class PortableStorage : Mod
 	{
 		public static PortableStorage Instance;
-		
+
 		public Dictionary<ModItem, GUI> BagUI = new Dictionary<ModItem, GUI>();
 		[UI("TileEntity")] public Dictionary<ModTileEntity, GUI> TEUI = new Dictionary<ModTileEntity, GUI>();
 
@@ -130,7 +130,7 @@ namespace PortableStorage
 		{
 			int HotbarIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Hotbar"));
 
-			if (HotbarIndex != -1) layers.Insert(HotbarIndex, InventoryLayer);
+			if (HotbarIndex != -1) layers.Insert(HotbarIndex + 1, InventoryLayer);
 		}
 
 		public override void PostDrawInterface(SpriteBatch spriteBatch)
@@ -142,9 +142,6 @@ namespace PortableStorage
 			}
 		}
 
-		public override void HandlePacket(BinaryReader reader, int whoAmI)
-		{
-			Net.HandlePacket(reader, whoAmI);
-		}
+		public override void HandlePacket(BinaryReader reader, int whoAmI) => Net.HandlePacket(reader, whoAmI);
 	}
 }

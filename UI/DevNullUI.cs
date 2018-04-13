@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 using PortableStorage.Items;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -25,7 +24,7 @@ namespace PortableStorage.UI
 		{
 			panelMain.Width.Pixels = 320;
 			panelMain.Height.Pixels = 84;
-panelMain.Center();
+			panelMain.Center();
 
 			panelMain.SetPadding(0);
 			panelMain.BackgroundColor = PanelColor;
@@ -60,6 +59,7 @@ panelMain.Center();
 		public override void Load()
 		{
 			DevNull devNull = (DevNull)((IContainerItem)this.devNull).GetModItem();
+			gridItems.Clear();
 			for (int i = 0; i < devNull.GetItems().Count; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(devNull, i);
@@ -95,7 +95,7 @@ panelMain.Center();
 				gridItems.Add(slot);
 			}
 		}
-		
+
 		public void SetContainer(IContainer container) => devNull = container;
 
 		public IContainer GetContainer() => devNull;

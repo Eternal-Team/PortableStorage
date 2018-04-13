@@ -97,7 +97,7 @@ namespace PortableStorage.UI
 
 		private void LootAllClick(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
 			{
 				TheOneLibrary.Utils.Utility.LootAll(vacuumBag);
 				Recipe.FindRecipes();
@@ -106,7 +106,7 @@ namespace PortableStorage.UI
 
 		private void DepositAllClick(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
 			{
 				TheOneLibrary.Utils.Utility.DepositAll(vacuumBag);
 				Recipe.FindRecipes();
@@ -115,7 +115,7 @@ namespace PortableStorage.UI
 
 		private void Restock(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
 			{
 				TheOneLibrary.Utils.Utility.Restock(vacuumBag);
 				Recipe.FindRecipes();
@@ -124,7 +124,7 @@ namespace PortableStorage.UI
 
 		private void QuickStackClick(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
 			{
 				TheOneLibrary.Utils.Utility.QuickStack(vacuumBag);
 				Recipe.FindRecipes();
@@ -133,6 +133,7 @@ namespace PortableStorage.UI
 
 		public override void Load()
 		{
+			gridItems.Clear();
 			for (int i = 0; i < vacuumBag.GetItems().Count; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(vacuumBag, i);

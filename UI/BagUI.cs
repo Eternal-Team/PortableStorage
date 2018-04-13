@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using PortableStorage.Items;
+﻿using PortableStorage.Items;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
@@ -110,7 +109,7 @@ namespace PortableStorage.UI
 
 		private void LootAllClick(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
 			{
 				TheOneLibrary.Utils.Utility.LootAll(bag);
 				Recipe.FindRecipes();
@@ -119,7 +118,7 @@ namespace PortableStorage.UI
 
 		private void DepositAllClick(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
 			{
 				TheOneLibrary.Utils.Utility.DepositAll(bag);
 				Recipe.FindRecipes();
@@ -128,7 +127,7 @@ namespace PortableStorage.UI
 
 		private void Restock(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
 			{
 				TheOneLibrary.Utils.Utility.Restock(bag);
 				Recipe.FindRecipes();
@@ -137,7 +136,7 @@ namespace PortableStorage.UI
 
 		private void QuickRestack(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
 			{
 				TheOneLibrary.Utils.Utility.QuickRestack(bag);
 				Recipe.FindRecipes();
@@ -146,7 +145,7 @@ namespace PortableStorage.UI
 
 		private void QuickStack(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
 			{
 				TheOneLibrary.Utils.Utility.QuickStack(bag);
 				Recipe.FindRecipes();
@@ -155,6 +154,7 @@ namespace PortableStorage.UI
 
 		public override void Load()
 		{
+			gridItems.Clear();
 			for (int i = 0; i < bag.GetItems().Count; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(bag, i);

@@ -18,6 +18,8 @@ namespace PortableStorage
 
 	public struct Frequency
 	{
+		public Colors[] Colors => new[] {colorLeft, colorMiddle, colorRight};
+
 		public Colors colorLeft;
 		public Colors colorMiddle;
 		public Colors colorRight;

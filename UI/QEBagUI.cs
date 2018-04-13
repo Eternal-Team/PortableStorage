@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using PortableStorage.Items;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -25,14 +26,15 @@ namespace PortableStorage.UI
 
 		public UIGrid gridItems = new UIGrid(9);
 
+		public UIColor[] colorFrequency = new UIColor[3];
+
 		public IContainer bag;
 
 		public override void OnInitialize()
 		{
 			panelMain.Width.Pixels = 408;
 			panelMain.Height.Pixels = 172;
-panelMain.Center();
-
+			panelMain.Center();
 			panelMain.SetPadding(0);
 			panelMain.BackgroundColor = PanelColor;
 			panelMain.OnMouseDown += DragStart;
@@ -67,13 +69,23 @@ panelMain.Center();
 			buttonRestock.OnClick += Restock;
 			panelMain.Append(buttonRestock);
 
+			for (int i = 0; i < colorFrequency.Length; i++)
+			{
+				colorFrequency[i] = new UIColor(Color.White);
+				colorFrequency[i].Width.Pixels = 16;
+				colorFrequency[i].Height.Pixels = 16;
+				colorFrequency[i].Left.Set(-52f - i * 20f, 1f);
+				colorFrequency[i].Top.Pixels = 12;
+				panelMain.Append(colorFrequency[i]);
+			}
+
 			buttonClose.Width.Pixels = 24;
 			buttonClose.Height.Pixels = 24;
 			buttonClose.Left.Set(-28, 1);
 			buttonClose.Top.Pixels = 8;
 			buttonClose.OnClick += (evt, element) =>
 			{
-				PortableStorage.Instance.BagUI.Remove((QEBag)(IContainerItem)bag);
+				PortableStorage.Instance.BagUI.Remove((QEBag)bag);
 				Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
 			};
 			panelMain.Append(buttonClose);
@@ -89,7 +101,7 @@ panelMain.Center();
 
 		private void LootAllClick(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
 			{
 				TheOneLibrary.Utils.Utility.LootAll(bag);
 				Recipe.FindRecipes();
@@ -98,7 +110,7 @@ panelMain.Center();
 
 		private void DepositAllClick(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
 			{
 				TheOneLibrary.Utils.Utility.DepositAll(bag);
 				Recipe.FindRecipes();
@@ -107,7 +119,7 @@ panelMain.Center();
 
 		private void Restock(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (Main.player[Main.myPlayer].chest == -1 && Main.npcShop == 0)
+			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
 			{
 				TheOneLibrary.Utils.Utility.Restock(bag);
 				Recipe.FindRecipes();
@@ -116,13 +128,21 @@ panelMain.Center();
 
 		public override void Load()
 		{
-			for (int i = 0; i < bag.GetItems().Count; i++)
+			gridItems.Clear();
+			for (int i = 0; i < 27; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(bag, i);
 				gridItems.Add(slot);
 			}
 		}
-		
+
+		public override void Update(GameTime gameTime)
+		{
+			for (int i = 0; i < colorFrequency.Length; i++) colorFrequency[2 - i].color = typeof(Color).GetValue<Color>(Enum.GetName(typeof(Colors), ((QEBag)(IContainerItem)bag).frequency.Colors[i]));
+
+			base.Update(gameTime);
+		}
+
 		public void SetContainer(IContainer container) => bag = container;
 
 		public IContainer GetContainer() => bag;
