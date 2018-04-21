@@ -40,7 +40,7 @@ namespace PortableStorage.Items
 
 			SetupUI<BagUI>();
 
-			item.width = 32;
+			item.width = 26;
 			item.height = 34;
 			item.useTime = 5;
 			item.useAnimation = 5;

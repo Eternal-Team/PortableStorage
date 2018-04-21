@@ -124,7 +124,7 @@
     <Reference Include="System" />
     <Reference Include="Terraria, Version=1.3.5.1, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Terraria [Beta]\Terraria.exe</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Terraria [Modded]\Terraria.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +159,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"C:\Program Files (x86)\Steam\steamapps\common\Terraria [Beta]\tModLoaderServer.exe" -build "$(ProjectDir)\" -eac "$(TargetPath)"</PostBuildEvent>
+    <PostBuildEvent>"C:\Program Files (x86)\Steam\steamapps\common\Terraria [Modded]\tModLoaderServer.exe" -build "$(ProjectDir)\" -eac "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

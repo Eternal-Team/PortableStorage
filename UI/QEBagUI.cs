@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using PortableStorage.Items;
 using Terraria;
@@ -85,7 +86,8 @@ namespace PortableStorage.UI
 			buttonClose.Top.Pixels = 8;
 			buttonClose.OnClick += (evt, element) =>
 			{
-				PortableStorage.Instance.BagUI.Remove((QEBag)bag);
+				PortableStorage.Instance.BagUI.Remove(PortableStorage.Instance.BagUI.First(kvp => kvp.Value.ui == this).Key);
+
 				Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
 			};
 			panelMain.Append(buttonClose);
@@ -138,7 +140,7 @@ namespace PortableStorage.UI
 
 		public override void Update(GameTime gameTime)
 		{
-			for (int i = 0; i < colorFrequency.Length; i++) colorFrequency[2 - i].color = typeof(Color).GetValue<Color>(Enum.GetName(typeof(Colors), ((QEBag)(IContainerItem)bag).frequency.Colors[i]));
+			for (int i = 0; i < colorFrequency.Length; i++) colorFrequency[2 - i].color = typeof(Color).GetValue<Color>(Enum.GetName(typeof(Colors), ((QEBag)bag).frequency.Colors[i]));
 
 			base.Update(gameTime);
 		}

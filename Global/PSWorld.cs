@@ -24,7 +24,12 @@ namespace PortableStorage.Global
 		public void EnsureFrequencyExists(Frequency frequency, bool fluid = false)
 		{
 			if (fluid && !enderFluids.ContainsKey(frequency)) enderFluids.Add(frequency, null);
-			else if (!fluid && !enderItems.ContainsKey(frequency)) enderItems.Add(frequency, Enumerable.Repeat(new Item(), 27).ToList());
+			else if (!fluid && !enderItems.ContainsKey(frequency))
+			{
+				List<Item> items = new List<Item>();
+				for (int i = 0; i < 27; i++) items.Add(new Item());
+				enderItems.Add(frequency, items);
+			}
 		}
 
 		public List<Item> GetItems(Frequency frequency)
