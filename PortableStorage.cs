@@ -1,9 +1,9 @@
+using Microsoft.Xna.Framework.Graphics;
+using PortableStorage.Tiles;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.Tiles;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -63,13 +63,7 @@ namespace PortableStorage
 			{
 				LoadTextures();
 
-				InventoryLayer = new LegacyGameInterfaceLayer("PortableStorage: UI", delegate
-				{
-					BagUI.Values.Draw();
-					TEUI.Values.Draw();
-
-					return true;
-				}, InterfaceScaleType.UI);
+				InventoryLayer = new LegacyGameInterfaceLayer("PortableStorage: UI", () => BagUI.Values.Draw() && TEUI.Values.Draw(), InterfaceScaleType.UI);
 			}
 		}
 
@@ -113,7 +107,7 @@ namespace PortableStorage
 			if (MechTransfer != null)
 			{
 				QEAdapter adapter = new QEAdapter(this);
-				MechTransfer.Call("RegisterAdapterReflection", adapter, new[] {TileType<QEChest>()});
+				MechTransfer.Call("RegisterAdapterReflection", adapter, new[] { TileType<QEChest>() });
 			}
 		}
 

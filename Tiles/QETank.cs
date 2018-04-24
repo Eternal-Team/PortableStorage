@@ -120,7 +120,7 @@ namespace PortableStorage.Tiles
 				if (handleFrequency)
 				{
 					qeTank.frequency = frequency;
-					Net.SendTEData(qeTank);
+					SendTEData(qeTank);
 				}
 			}
 		}

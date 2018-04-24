@@ -78,7 +78,7 @@ namespace PortableStorage.Tiles
 
 				if (handleFrequency) qeChest.frequency = frequency;
 
-				Net.SendTEData(qeChest);
+				SendTEData(qeChest);
 			}
 			else
 			{

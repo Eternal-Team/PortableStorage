@@ -15,8 +15,7 @@ namespace PortableStorage
 		internal enum MessageType : byte
 		{
 			SyncQEItem,
-			SyncQEFluid,
-			SyncTEData
+			SyncQEFluid
 		}
 
 		public static void HandlePacket(BinaryReader reader, int sender)
@@ -30,33 +29,10 @@ namespace PortableStorage
 				case MessageType.SyncQEFluid:
 					ReceiveQEFluid(reader, sender);
 					break;
-				case MessageType.SyncTEData:
-					ReceiveTEData(reader, sender);
-					break;
 			}
 		}
 
-		public static void ReceiveTEData(BinaryReader reader, int sender)
-		{
-			int ID = reader.ReadInt32();
-			ModTileEntity tileEntity = (ModTileEntity)TileEntity.ByID[ID];
-
-			tileEntity.NetReceive(reader, false);
-
-			if (Main.netMode == NetmodeID.Server) SendTEData(tileEntity, sender);
-		}
-
-		public static void SendTEData(ModTileEntity tileEntity, int excludedPlayer = -1)
-		{
-			if (Main.netMode == NetmodeID.SinglePlayer) return;
-
-			ModPacket packet = PortableStorage.Instance.GetPacket();
-			packet.Write((byte)MessageType.SyncTEData);
-			packet.Write(tileEntity.ID);
-			tileEntity.NetSend(packet, false);
-			packet.Send(ignoreClient: excludedPlayer);
-		}
-
+	
 		#region Items
 		public static void ReceiveQEItem(BinaryReader reader, int sender)
 		{

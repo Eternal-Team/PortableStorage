@@ -48,7 +48,7 @@ namespace PortableStorage.Tiles
 				p.inventory[p.selectedItem] = dockingStation.Bag;
 				dockingStation.Bag = temp;
 
-				Net.SendTEData(dockingStation);
+				SendTEData(dockingStation);
 			}
 		}
 
