@@ -37,7 +37,7 @@ namespace PortableStorage.UI
 			panelMain.Height.Pixels = 172;
 			panelMain.Center();
 			panelMain.SetPadding(0);
-			panelMain.BackgroundColor = PanelColor;
+			panelMain.BackgroundColor = TheOneLibrary.Utils.Utility.PanelColor;
 			panelMain.OnMouseDown += DragStart;
 			panelMain.OnMouseUp += DragEnd;
 			Append(panelMain);
