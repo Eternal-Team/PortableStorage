@@ -18,7 +18,7 @@ namespace PortableStorage.Items
 		public bool active;
 		public List<Item> Items = new List<Item>();
 
-		public override string Texture => PortableStorage.ItemTexturePath + "VacuumBagActive";
+		public override string Texture => PortableStorage.Textures.ItemPath + "VacuumBagActive";
 
 		public override ModItem Clone(Item item)
 		{
@@ -84,7 +84,7 @@ namespace PortableStorage.Items
 			posY += up ? -0.08f : 0.08f;
 			if (posY <= -2) up = false;
 			else if (posY >= 2) up = true;
-			spriteBatch.Draw(active ? PortableStorage.vacuumBagOn : PortableStorage.vacuumBagOff, position + new Vector2(0, posY), frame, drawColor, 0f, origin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(active ? PortableStorage.Textures.vacuumBagOn : PortableStorage.Textures.vacuumBagOff, position + new Vector2(0, posY), frame, drawColor, 0f, origin, scale, SpriteEffects.None, 0f);
 
 			return false;
 		}

@@ -7,7 +7,7 @@ namespace PortableStorage.Items
 {
 	public class QETank : BaseItem
 	{
-		public override string Texture => PortableStorage.ItemTexturePath + "QETank";
+		public override string Texture => PortableStorage.Textures.ItemPath + "QETank";
 
 		public override void SetStaticDefaults()
 		{

@@ -20,7 +20,7 @@ namespace PortableStorage.Items
 
 		public int selectedIndex = -1;
 
-		public override string Texture => PortableStorage.ItemTexturePath + "DevNull";
+		public override string Texture => PortableStorage.Textures.ItemPath + "DevNull";
 
 		public override ModItem Clone(Item item)
 		{

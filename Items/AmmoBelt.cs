@@ -16,7 +16,7 @@ namespace PortableStorage.Items
 	{
 		public List<Item> Items = new List<Item>();
 
-		public override string Texture => PortableStorage.ItemTexturePath + "AmmoBelt";
+		public override string Texture => PortableStorage.Textures.ItemPath + "AmmoBelt";
 
 		public override ModItem Clone(Item item)
 		{

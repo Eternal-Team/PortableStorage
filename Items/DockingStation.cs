@@ -6,7 +6,7 @@ namespace PortableStorage.Items
 {
 	public class DockingStation : BaseItem
 	{
-		public override string Texture => PortableStorage.ItemTexturePath + "DockingStation";
+		public override string Texture => PortableStorage.Textures.ItemPath + "DockingStation";
 
 		public override void SetStaticDefaults()
 		{

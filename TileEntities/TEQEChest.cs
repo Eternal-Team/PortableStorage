@@ -3,11 +3,14 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using PortableStorage.Global;
 using PortableStorage.Tiles;
+using PortableStorage.UI;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria.UI;
 using TheOneLibrary.Base;
+using TheOneLibrary.Base.UI;
 using TheOneLibrary.Storage;
 using TheOneLibrary.Utils;
 
@@ -17,8 +20,22 @@ namespace PortableStorage.TileEntities
 	{
 		public override bool ValidTile(Tile tile) => tile.type == mod.TileType<QEChest>() && tile.TopLeft();
 
+		public GUI<QEChestUI> gui;
+
 		public Frequency frequency;
-		public Vector2? UIPosition;
+
+		public TEQEChest()
+		{
+			if (Main.netMode != NetmodeID.Server)
+			{
+				QEChestUI ui = new QEChestUI();
+				ui.SetContainer(this);
+				UserInterface userInterface = new UserInterface();
+				ui.Activate();
+				userInterface.SetState(ui);
+				gui = new GUI<QEChestUI>(ui, userInterface);
+			}
+		}
 
 		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
 		{
@@ -34,14 +51,21 @@ namespace PortableStorage.TileEntities
 		{
 			TagCompound tag = new TagCompound();
 			tag["Frequency"] = frequency;
-			if (UIPosition != null) tag["UIPosition"] = UIPosition.Value;
+			if (gui != null) tag["UIPosition"] = gui.ui.panelMain.GetDimensions().Position();
 			return tag;
 		}
 
 		public override void Load(TagCompound tag)
 		{
 			frequency = tag.Get<Frequency>("Frequency");
-			UIPosition = tag.ContainsKey("UIPosition") ? new Vector2?(tag.Get<Vector2>("UIPosition")) : null;
+
+			if (gui != null && tag.ContainsKey("UIPosition"))
+			{
+				Vector2 vector = tag.Get<Vector2>("UIPosition");
+				gui.ui.panelMain.Left.Set(vector.X, 0f);
+				gui.ui.panelMain.Top.Set(vector.Y, 0f);
+				gui.ui.panelMain.Recalculate();
+			}
 		}
 
 		public override void NetSend(BinaryWriter writer, bool lightSend) => writer.Write(frequency);

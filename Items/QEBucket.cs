@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Global;
 using PortableStorage.TileEntities;
 using ReLogic.Utilities;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -21,7 +21,7 @@ namespace PortableStorage.Items
 	{
 		public Frequency frequency;
 
-		public override string Texture => PortableStorage.ItemTexturePath + "QEBucket";
+		public override string Texture => PortableStorage.Textures.ItemPath + "QEBucket";
 
 		public override ModItem Clone(Item item)
 		{
@@ -38,8 +38,8 @@ namespace PortableStorage.Items
 
 		public override void SetDefaults()
 		{
-			item.width = 32;
-			item.height = 34;
+			item.width = 30;
+			item.height = 28;
 			item.useStyle = 1;
 			item.useTurn = true;
 			item.useAnimation = 15;
@@ -119,12 +119,22 @@ namespace PortableStorage.Items
 
 		public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			spriteBatch.Draw(PortableStorage.ringBig, position + new Vector2(4, 16) * scale, new Rectangle(0, 4 * (int)frequency.colorLeft, 22, 4), Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-			spriteBatch.Draw(PortableStorage.ringBig, position + new Vector2(4, 20) * scale, new Rectangle(0, 4 * (int)frequency.colorMiddle, 22, 4), Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-			spriteBatch.Draw(PortableStorage.ringSmall, position + new Vector2(6, 24) * scale, new Rectangle(0, 4 * (int)frequency.colorRight, 18, 4), Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PortableStorage.Textures.ringBig, position + new Vector2(4, 14) * scale, new Rectangle(0, 4 * (int)frequency.colorLeft, 22, 4), Color.White, 0f, origin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PortableStorage.Textures.ringBig, position + new Vector2(4, 18) * scale, new Rectangle(0, 4 * (int)frequency.colorMiddle, 22, 4), Color.White, 0f, origin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PortableStorage.Textures.ringSmall, position + new Vector2(6, 22) * scale, new Rectangle(0, 4 * (int)frequency.colorRight, 18, 4), Color.White, 0f, origin, scale, SpriteEffects.None, 0f);
 		}
 
-		public override TagCompound Save() => new TagCompound {["Frequency"] = frequency};
+		public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
+		{
+			Vector2 position = item.position - Main.screenPosition;
+			Vector2 origin = new Vector2(15, 16);
+
+			spriteBatch.Draw(PortableStorage.Textures.ringBig, position + origin, new Rectangle(0, 4 * (int)frequency.colorLeft, 22, 4), alphaColor, rotation, origin - new Vector2(4, 16), scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PortableStorage.Textures.ringBig, position + origin, new Rectangle(0, 4 * (int)frequency.colorMiddle, 22, 4), alphaColor, rotation, origin - new Vector2(4, 20), scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PortableStorage.Textures.ringSmall, position + origin, new Rectangle(0, 4 * (int)frequency.colorRight, 18, 4), alphaColor, rotation, origin - new Vector2(6, 24), scale, SpriteEffects.None, 0f);
+		}
+
+		public override TagCompound Save() => new TagCompound { ["Frequency"] = frequency };
 
 		public override void Load(TagCompound tag)
 		{
@@ -153,7 +163,7 @@ namespace PortableStorage.Items
 			recipe.AddRecipe();
 		}
 
-		public List<ModFluid> GetFluids() => new List<ModFluid> {PSWorld.Instance.GetFluid(frequency)};
+		public List<ModFluid> GetFluids() => new List<ModFluid> { PSWorld.Instance.GetFluid(frequency) };
 
 		public void SetFluid(ModFluid value, int slot = 0) => PSWorld.Instance.SetFluid(frequency, value);
 

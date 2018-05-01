@@ -9,13 +9,14 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using TheOneLibrary.Base;
+using TheOneLibrary.Base.UI;
 using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Tiles
 {
 	public class QEChest : BaseTile
 	{
-		public override string Texture => PortableStorage.TileTexturePath + "QEChest";
+		public override string Texture => PortableStorage.Textures.TilePath + "QEChest";
 
 		public override void SetDefaults()
 		{
@@ -71,7 +72,17 @@ namespace PortableStorage.Tiles
 				}
 				else
 				{
-					PortableStorage.Instance.HandleUI<QEChestUI>(ID);
+					GUI<QEChestUI> gui = qeChest.gui;
+					if (!PortableStorage.Instance.TEUI.ContainsValue(gui))
+					{
+						gui.ui.Load();
+						PortableStorage.Instance.TEUI.Add(qeChest, gui);
+					}
+					else
+					{
+						gui.ui.Unload();
+						PortableStorage.Instance.TEUI.Remove(qeChest);
+					}
 
 					Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
 				}
@@ -88,7 +99,7 @@ namespace PortableStorage.Tiles
 				SyncItem(bag.item);
 			}
 		}
-
+		
 		public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref Color drawColor, ref int nextSpecialDrawIndex)
 		{
 			Main.specX[nextSpecialDrawIndex] = i;
@@ -110,9 +121,9 @@ namespace PortableStorage.Tiles
 
 				TEQEChest qeChest = (TEQEChest)TileEntity.ByID[ID];
 
-				spriteBatch.Draw(PortableStorage.gemsSide[0], position + new Vector2(5, 9), new Rectangle(6 * (int)qeChest.frequency.colorLeft, 0, 6, 10), Color.White, 0f, new Vector2(3, 5), 1f, SpriteEffects.None, 0f);
-				spriteBatch.Draw(PortableStorage.gemsMiddle[0], position + new Vector2(12, 4), new Rectangle(8 * (int)qeChest.frequency.colorMiddle, 0, 8, 10), Color.White);
-				spriteBatch.Draw(PortableStorage.gemsSide[0], position + new Vector2(24, 4), new Rectangle(6 * (int)qeChest.frequency.colorRight, 0, 6, 10), Color.White, 0f, Vector2.Zero, Vector2.One, SpriteEffects.FlipHorizontally, 0f);
+				spriteBatch.Draw(PortableStorage.Textures.gemsSide[0], position + new Vector2(5, 9), new Rectangle(6 * (int)qeChest.frequency.colorLeft, 0, 6, 10), Color.White, 0f, new Vector2(3, 5), 1f, SpriteEffects.None, 0f);
+				spriteBatch.Draw(PortableStorage.Textures.gemsMiddle[0], position + new Vector2(12, 4), new Rectangle(8 * (int)qeChest.frequency.colorMiddle, 0, 8, 10), Color.White);
+				spriteBatch.Draw(PortableStorage.Textures.gemsSide[0], position + new Vector2(24, 4), new Rectangle(6 * (int)qeChest.frequency.colorRight, 0, 6, 10), Color.White, 0f, Vector2.Zero, Vector2.One, SpriteEffects.FlipHorizontally, 0f);
 			}
 		}
 

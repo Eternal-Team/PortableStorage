@@ -3,31 +3,13 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
-using Terraria.UI;
-using TheOneLibrary.Base.UI;
-using TheOneLibrary.Base.UI.Elements;
-using TheOneLibrary.Storage;
 using TheOneLibrary.UI.Elements;
 using TheOneLibrary.Utils;
 
 namespace PortableStorage.UI
 {
-	public class AmmoBeltUI : BaseUI, IContainerUI
+	public class AmmoBeltUI : BaseBagUI
 	{
-		public UIText textLabel = new UIText("Ammo Belt");
-
-		public UIHoverButton buttonQuickStack = new UIHoverButton(Main.chestStackTexture);
-		public UIHoverButton buttonQuickRestack = new UIHoverButton(PortableStorage.restack);
-
-		public UIButton buttonLootAll = new UIButton(PortableStorage.lootAll);
-		public UIButton buttonDepositAll = new UIButton(PortableStorage.depositAll);
-
-		public UITextButton buttonClose = new UITextButton("X", 4);
-
-		public UIGrid gridItems = new UIGrid(9);
-
-		public IContainer ammoBelt;
-
 		public override void OnInitialize()
 		{
 			panelMain.Width.Pixels = 408;
@@ -40,6 +22,7 @@ namespace PortableStorage.UI
 			panelMain.OnMouseUp += DragEnd;
 			Append(panelMain);
 
+			textLabel = new UIText("Ammo Belt");
 			textLabel.HAlign = 0.5f;
 			textLabel.Top.Pixels = 8;
 			panelMain.Append(textLabel);
@@ -49,7 +32,7 @@ namespace PortableStorage.UI
 			buttonQuickStack.Left.Pixels = 8;
 			buttonQuickStack.Top.Pixels = 8;
 			buttonQuickStack.HoverText += () => Language.GetTextValue("GameUI.QuickStackToNearby");
-			buttonQuickStack.OnClick += QuickStackClick;
+			buttonQuickStack.OnClick += QuickStack;
 			panelMain.Append(buttonQuickStack);
 
 			buttonQuickRestack.Width.Pixels = 24;
@@ -65,7 +48,7 @@ namespace PortableStorage.UI
 			buttonLootAll.Left.Pixels = 72;
 			buttonLootAll.Top.Pixels = 8;
 			buttonLootAll.HoverText += () => Language.GetTextValue("LegacyInterface.29");
-			buttonLootAll.OnClick += LootAllClick;
+			buttonLootAll.OnClick += LootAll;
 			panelMain.Append(buttonLootAll);
 
 			buttonDepositAll.Width.Pixels = 24;
@@ -73,7 +56,7 @@ namespace PortableStorage.UI
 			buttonDepositAll.Left.Pixels = 104;
 			buttonDepositAll.Top.Pixels = 8;
 			buttonDepositAll.HoverText += () => Language.GetTextValue("LegacyInterface.30");
-			buttonDepositAll.OnClick += DepositAllClick;
+			buttonDepositAll.OnClick += DepositAll;
 			panelMain.Append(buttonDepositAll);
 
 			buttonClose.Width.Pixels = 24;
@@ -82,11 +65,12 @@ namespace PortableStorage.UI
 			buttonClose.Top.Pixels = 8;
 			buttonClose.OnClick += (evt, element) =>
 			{
-				PortableStorage.Instance.BagUI.Remove((AmmoBelt)(IContainerItem)ammoBelt);
+				PortableStorage.Instance.BagUI.Remove((AmmoBelt)bag);
 				Main.PlaySound(SoundID.Item59.WithVolume(0.5f));
 			};
 			panelMain.Append(buttonClose);
 
+			gridItems = new UIGrid<UIContainerSlot>(9);
 			gridItems.Width.Set(-16, 1);
 			gridItems.Height.Set(-44, 1);
 			gridItems.Left.Pixels = 8;
@@ -96,55 +80,15 @@ namespace PortableStorage.UI
 			panelMain.Append(gridItems);
 		}
 
-		private void LootAllClick(UIMouseEvent evt, UIElement listeningElement)
-		{
-			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
-			{
-				TheOneLibrary.Utils.Utility.LootAll(ammoBelt);
-				Recipe.FindRecipes();
-			}
-		}
-
-		private void DepositAllClick(UIMouseEvent evt, UIElement listeningElement)
-		{
-			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
-			{
-				TheOneLibrary.Utils.Utility.DepositAll(ammoBelt, item => item.ammo > 0);
-				Recipe.FindRecipes();
-			}
-		}
-
-		private void QuickRestack(UIMouseEvent evt, UIElement listeningElement)
-		{
-			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
-			{
-				TheOneLibrary.Utils.Utility.QuickRestack(ammoBelt);
-				Recipe.FindRecipes();
-			}
-		}
-
-		private void QuickStackClick(UIMouseEvent evt, UIElement listeningElement)
-		{
-			if (Main.LocalPlayer.chest == -1 && Main.npcShop == 0)
-			{
-				TheOneLibrary.Utils.Utility.QuickStack(ammoBelt);
-				Recipe.FindRecipes();
-			}
-		}
-
 		public override void Load()
 		{
 			gridItems.Clear();
-			for (int i = 0; i < ammoBelt.GetItems().Count; i++)
+			for (int i = 0; i < bag.GetItems().Count; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(ammoBelt, i);
+				UIContainerSlot slot = new UIContainerSlot(bag, i);
 				slot.CanInteract += (item, mouse) => mouse.IsAir || mouse.ammo > 0;
 				gridItems.Add(slot);
 			}
 		}
-
-		public void SetContainer(IContainer container) => ammoBelt = container;
-
-		public IContainer GetContainer() => ammoBelt;
 	}
 }

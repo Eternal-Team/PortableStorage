@@ -1,9 +1,9 @@
-using System.Collections.Generic;
-using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Global;
 using PortableStorage.UI;
+using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -16,7 +16,7 @@ namespace PortableStorage.Items
 	{
 		public Frequency frequency;
 
-		public override string Texture => PortableStorage.ItemTexturePath + "QEBag";
+		public override string Texture => PortableStorage.Textures.ItemPath + "QEBag";
 
 		public override ModItem Clone(Item item)
 		{
@@ -64,11 +64,29 @@ namespace PortableStorage.Items
 			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
 		}
 
+		private int angle;
+		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
+		{
+			rotation = (MathHelper.Pi / 180f) * angle;
+			if (++angle >= 360) angle = 0;
+			return true;
+		}
+
 		public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			spriteBatch.Draw(PortableStorage.gemsSide[0], position + new Vector2(2, 12) * scale, new Rectangle(6 * (int)frequency.colorLeft, 0, 6, 10), Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-			spriteBatch.Draw(PortableStorage.gemsMiddle[0], position + new Vector2(12, 12) * scale, new Rectangle(8 * (int)frequency.colorMiddle, 0, 8, 10), Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-			spriteBatch.Draw(PortableStorage.gemsSide[0], position + new Vector2(24, 12) * scale, new Rectangle(6 * (int)frequency.colorRight, 0, 6, 10), Color.White, 0f, Vector2.Zero, scale, SpriteEffects.FlipHorizontally, 0f);
+			spriteBatch.Draw(PortableStorage.Textures.gemsSide[0], position + new Vector2(2, 12) * scale, new Rectangle(6 * (int)frequency.colorLeft, 0, 6, 10), Color.White, 0f, origin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PortableStorage.Textures.gemsMiddle[0], position + new Vector2(12, 12) * scale, new Rectangle(8 * (int)frequency.colorMiddle, 0, 8, 10), Color.White, 0f, origin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PortableStorage.Textures.gemsSide[0], position + new Vector2(24, 12) * scale, new Rectangle(6 * (int)frequency.colorRight, 0, 6, 10), Color.White, 0f, origin, scale, SpriteEffects.FlipHorizontally, 0f);
+		}
+
+		public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
+		{
+			Vector2 position = item.position - Main.screenPosition;
+			Vector2 origin = new Vector2(16, 19);
+
+			spriteBatch.Draw(PortableStorage.Textures.gemsSide[0], position + origin, new Rectangle(6 * (int)frequency.colorLeft, 0, 6, 10), alphaColor, rotation, origin - new Vector2(2, 14), scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PortableStorage.Textures.gemsMiddle[0], position + origin, new Rectangle(8 * (int)frequency.colorMiddle, 0, 8, 10), alphaColor, rotation, origin - new Vector2(12, 14), scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PortableStorage.Textures.gemsSide[0], position + origin, new Rectangle(6 * (int)frequency.colorRight, 0, 6, 10), alphaColor, rotation, origin - new Vector2(24, 14), scale, SpriteEffects.FlipHorizontally, 0f);
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)

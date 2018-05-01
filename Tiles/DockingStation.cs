@@ -14,7 +14,7 @@ namespace PortableStorage.Tiles
 {
 	public class DockingStation : BaseTile
 	{
-		public override string Texture => PortableStorage.TileTexturePath + "DockingStation";
+		public override string Texture => PortableStorage.Textures.TilePath + "DockingStation";
 
 		public override void SetDefaults()
 		{

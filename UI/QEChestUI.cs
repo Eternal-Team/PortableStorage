@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using PortableStorage.TileEntities;
+﻿using PortableStorage.TileEntities;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
@@ -14,12 +12,11 @@ namespace PortableStorage.UI
 {
 	public class QEChestUI : BaseUI, ITileEntityUI, IContainerUI
 	{
-		public UIText textLabel = new UIText("Quantum Entangled Chest");
-		public UITextButton buttonClose = new UITextButton("X", 4);
-		public UIGrid gridItems = new UIGrid(9);
-
 		public TEQEChest qeChest;
 
+		public UIText textLabel = new UIText("Quantum Entangled Chest");
+		public UITextButton buttonClose = new UITextButton("X", 4);
+		public UIGrid<UIContainerSlot> gridItems = new UIGrid<UIContainerSlot>(9);
 		public UIColor[] colorFrequency = new UIColor[3];
 
 		public override void OnInitialize()
@@ -27,13 +24,6 @@ namespace PortableStorage.UI
 			panelMain.Width.Pixels = 408;
 			panelMain.Height.Pixels = 172;
 			panelMain.Center();
-			Vector2? position = qeChest.UIPosition;
-			if (position.HasValue)
-			{
-				panelMain.Left.Set(position.Value.X, 0f);
-				panelMain.Top.Set(position.Value.Y, 0f);
-			}
-
 			panelMain.SetPadding(0);
 			panelMain.BackgroundColor = TheOneLibrary.Utils.Utility.PanelColor;
 			panelMain.OnMouseDown += DragStart;
@@ -46,7 +36,9 @@ namespace PortableStorage.UI
 
 			for (int i = 0; i < colorFrequency.Length; i++)
 			{
-				colorFrequency[i] = new UIColor(Color.White);
+				colorFrequency[i] = new UIColor(null);
+				int i1 = i;
+				colorFrequency[i].GetColor += () => qeChest.frequency.Colors[2 - i1].ToColor();
 				colorFrequency[i].Width.Pixels = 16;
 				colorFrequency[i].Height.Pixels = 16;
 				colorFrequency[i].Left.Set(-52f - i * 20f, 1f);
@@ -82,18 +74,6 @@ namespace PortableStorage.UI
 				UIContainerSlot slot = new UIContainerSlot(qeChest, i);
 				gridItems.Add(slot);
 			}
-		}
-
-		public override void Unload()
-		{
-			qeChest.UIPosition = panelMain.GetDimensions().Position();
-		}
-
-		public override void Update(GameTime gameTime)
-		{
-			for (int i = 0; i < colorFrequency.Length; i++) colorFrequency[2 - i].color = typeof(Color).GetValue<Color>(Enum.GetName(typeof(Colors), qeChest.frequency.Colors[i]));
-
-			base.Update(gameTime);
 		}
 
 		public void SetTileEntity(ModTileEntity tileEntity) => qeChest = (TEQEChest)tileEntity;

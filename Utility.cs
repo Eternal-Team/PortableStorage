@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
+using TheOneLibrary.Utils;
 
 namespace PortableStorage
 {
@@ -19,16 +22,15 @@ namespace PortableStorage
 	public struct Frequency
 	{
 		public Colors[] Colors => new[] {colorLeft, colorMiddle, colorRight};
-
 		public Colors colorLeft;
 		public Colors colorMiddle;
 		public Colors colorRight;
 
-		public Frequency(Colors colorLeft, Colors colorMiddle, Colors colorRight)
+		public Frequency(Colors left, Colors middle, Colors right)
 		{
-			this.colorLeft = colorLeft;
-			this.colorMiddle = colorMiddle;
-			this.colorRight = colorRight;
+			colorLeft = left;
+			colorMiddle = middle;
+			colorRight = right;
 		}
 
 		public override string ToString() => $"{colorLeft} {colorMiddle} {colorRight}";
@@ -71,5 +73,7 @@ namespace PortableStorage
 		}
 
 		public static Frequency ReadFrequency(this BinaryReader reader) => new Frequency((Colors)reader.ReadByte(), (Colors)reader.ReadByte(), (Colors)reader.ReadByte());
+
+		public static Color ToColor(this Colors color) => typeof(Color).GetValue<Color>(Enum.GetName(typeof(Colors), color));
 	}
 }

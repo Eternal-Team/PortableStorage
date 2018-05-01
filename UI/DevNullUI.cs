@@ -3,23 +3,13 @@ using PortableStorage.Items;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
-using TheOneLibrary.Base.UI;
-using TheOneLibrary.Storage;
 using TheOneLibrary.UI.Elements;
 using TheOneLibrary.Utils;
 
 namespace PortableStorage.UI
 {
-	public class DevNullUI : BaseUI, IContainerUI
+	public class DevNullUI : BaseBagUI
 	{
-		public UIText textLabel = new UIText("/dev/null");
-
-		public UITextButton buttonClose = new UITextButton("X", 4);
-
-		public UIGrid gridItems = new UIGrid(7);
-
-		public IContainer devNull;
-
 		public override void OnInitialize()
 		{
 			panelMain.Width.Pixels = 320;
@@ -32,6 +22,7 @@ namespace PortableStorage.UI
 			panelMain.OnMouseUp += DragEnd;
 			Append(panelMain);
 
+			textLabel = new UIText("/dev/null");
 			textLabel.HAlign = 0.5f;
 			textLabel.Top.Pixels = 8;
 			panelMain.Append(textLabel);
@@ -42,11 +33,12 @@ namespace PortableStorage.UI
 			buttonClose.Top.Pixels = 8;
 			buttonClose.OnClick += (evt, element) =>
 			{
-				PortableStorage.Instance.BagUI.Remove((DevNull)(IContainerItem)devNull);
+				PortableStorage.Instance.BagUI.Remove((DevNull)bag);
 				Main.PlaySound(SoundID.Item59.WithVolume(0.5f));
 			};
 			panelMain.Append(buttonClose);
 
+			gridItems = new UIGrid<UIContainerSlot>(7);
 			gridItems.Width.Set(-16, 1);
 			gridItems.Height.Set(-44, 1);
 			gridItems.Left.Pixels = 8;
@@ -58,7 +50,7 @@ namespace PortableStorage.UI
 
 		public override void Load()
 		{
-			DevNull devNull = (DevNull)((IContainerItem)this.devNull).GetModItem();
+			DevNull devNull = (DevNull)bag;
 			gridItems.Clear();
 			for (int i = 0; i < devNull.GetItems().Count; i++)
 			{
@@ -79,7 +71,7 @@ namespace PortableStorage.UI
 						{
 							devNull.SetItem(slot.slot);
 
-							gridItems.items.ForEach(x => ((UIContainerSlot)x).backgroundTexture = Main.inventoryBackTexture);
+							gridItems.items.ForEach(x => x.backgroundTexture = Main.inventoryBackTexture);
 							slot.backgroundTexture = Main.inventoryBack15Texture;
 						}
 					}
@@ -89,15 +81,11 @@ namespace PortableStorage.UI
 					if (slot.Item.IsAir)
 					{
 						devNull.SetItem(-1);
-						gridItems.items.ForEach(x => ((UIContainerSlot)x).backgroundTexture = Main.inventoryBackTexture);
+						gridItems.items.ForEach(x => x.backgroundTexture = Main.inventoryBackTexture);
 					}
 				};
 				gridItems.Add(slot);
 			}
 		}
-
-		public void SetContainer(IContainer container) => devNull = container;
-
-		public IContainer GetContainer() => devNull;
 	}
 }

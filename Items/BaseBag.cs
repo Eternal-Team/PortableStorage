@@ -27,8 +27,7 @@ namespace PortableStorage.Items
 				UserInterface userInterface = new UserInterface();
 				ui.Activate();
 				userInterface.SetState(ui);
-				ui.visible = true;
-				gui = new GUI(ui, userInterface);
+				gui = new GUI<T>(ui, userInterface);
 			}
 		}
 

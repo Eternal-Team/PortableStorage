@@ -7,7 +7,7 @@ namespace PortableStorage.Items
 {
 	public class QEChest : BaseItem
 	{
-		public override string Texture => PortableStorage.ItemTexturePath + "QEChest";
+		public override string Texture => PortableStorage.Textures.ItemPath + "QEChest";
 
 		public override void SetStaticDefaults()
 		{

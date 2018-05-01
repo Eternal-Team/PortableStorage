@@ -2,7 +2,6 @@
 using System.Linq;
 using PortableStorage.Global;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -32,7 +31,6 @@ namespace PortableStorage
 			}
 		}
 
-	
 		#region Items
 		public static void ReceiveQEItem(BinaryReader reader, int sender)
 		{

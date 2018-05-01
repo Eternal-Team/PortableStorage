@@ -18,7 +18,7 @@ namespace PortableStorage.Tiles
 	[BucketDisablePickup]
 	public class QETank : BaseTile
 	{
-		public override string Texture => PortableStorage.TileTexturePath + "QETank";
+		public override string Texture => PortableStorage.Textures.TilePath + "QETank";
 
 		public override void SetDefaults()
 		{
@@ -169,7 +169,7 @@ namespace PortableStorage.Tiles
 				Net.SendQEFluid(qeTank.frequency);
 			}
 		}
-
+		
 		public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
 		{
 			int ID = mod.GetID<TEQETank>(i, j);
@@ -213,9 +213,9 @@ namespace PortableStorage.Tiles
 
 				TEQETank qeTank = (TEQETank)TileEntity.ByID[ID];
 
-				spriteBatch.Draw(PortableStorage.gemsMiddle[1], position + new Vector2(2, 2), new Rectangle(4 * (int)qeTank.frequency.colorLeft, 0, 4, 4), Color.White);
-				spriteBatch.Draw(PortableStorage.gemsMiddle[1], position + new Vector2(14, 27), new Rectangle(4 * (int)qeTank.frequency.colorMiddle, 0, 4, 4), Color.White);
-				spriteBatch.Draw(PortableStorage.gemsMiddle[1], position + new Vector2(26, 2), new Rectangle(4 * (int)qeTank.frequency.colorRight, 0, 4, 4), Color.White);
+				spriteBatch.Draw(PortableStorage.Textures.gemsMiddle[1], position + new Vector2(2, 2), new Rectangle(4 * (int)qeTank.frequency.colorLeft, 0, 4, 4), Color.White);
+				spriteBatch.Draw(PortableStorage.Textures.gemsMiddle[1], position + new Vector2(14, 27), new Rectangle(4 * (int)qeTank.frequency.colorMiddle, 0, 4, 4), Color.White);
+				spriteBatch.Draw(PortableStorage.Textures.gemsMiddle[1], position + new Vector2(26, 2), new Rectangle(4 * (int)qeTank.frequency.colorRight, 0, 4, 4), Color.White);
 			}
 		}
 

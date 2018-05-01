@@ -95,6 +95,7 @@
     <Compile Include="Tiles\QETank.cs" />
     <Compile Include="Tiles\QEChest.cs" />
     <Compile Include="TileEntities\TEQEChest.cs" />
+    <Compile Include="UI\BaseBagUI.cs" />
     <Compile Include="UI\DevNullUI.cs" />
     <Compile Include="UI\VacuumBagUI.cs" />
     <Compile Include="UI\AmmoBeltUI.cs" />
