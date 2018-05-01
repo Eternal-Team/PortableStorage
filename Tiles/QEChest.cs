@@ -99,7 +99,7 @@ namespace PortableStorage.Tiles
 				SyncItem(bag.item);
 			}
 		}
-		
+
 		public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref Color drawColor, ref int nextSpecialDrawIndex)
 		{
 			Main.specX[nextSpecialDrawIndex] = i;

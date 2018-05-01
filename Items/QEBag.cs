@@ -1,9 +1,9 @@
+using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Global;
 using PortableStorage.UI;
-using System.Collections.Generic;
-using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -62,14 +62,6 @@ namespace PortableStorage.Items
 			item.stack++;
 
 			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
-		}
-
-		private int angle;
-		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
-		{
-			rotation = (MathHelper.Pi / 180f) * angle;
-			if (++angle >= 360) angle = 0;
-			return true;
 		}
 
 		public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)

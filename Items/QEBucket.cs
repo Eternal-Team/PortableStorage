@@ -1,11 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Global;
 using PortableStorage.TileEntities;
 using ReLogic.Utilities;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -134,7 +134,7 @@ namespace PortableStorage.Items
 			spriteBatch.Draw(PortableStorage.Textures.ringSmall, position + origin, new Rectangle(0, 4 * (int)frequency.colorRight, 18, 4), alphaColor, rotation, origin - new Vector2(6, 24), scale, SpriteEffects.None, 0f);
 		}
 
-		public override TagCompound Save() => new TagCompound { ["Frequency"] = frequency };
+		public override TagCompound Save() => new TagCompound {["Frequency"] = frequency};
 
 		public override void Load(TagCompound tag)
 		{
@@ -163,7 +163,7 @@ namespace PortableStorage.Items
 			recipe.AddRecipe();
 		}
 
-		public List<ModFluid> GetFluids() => new List<ModFluid> { PSWorld.Instance.GetFluid(frequency) };
+		public List<ModFluid> GetFluids() => new List<ModFluid> {PSWorld.Instance.GetFluid(frequency)};
 
 		public void SetFluid(ModFluid value, int slot = 0) => PSWorld.Instance.SetFluid(frequency, value);
 

@@ -14,8 +14,7 @@ using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Tiles
 {
-	[BucketDisablePlacement]
-	[BucketDisablePickup]
+	[BucketDisablePlacement, BucketDisablePickup]
 	public class QETank : BaseTile
 	{
 		public override string Texture => PortableStorage.Textures.TilePath + "QETank";
@@ -169,7 +168,7 @@ namespace PortableStorage.Tiles
 				Net.SendQEFluid(qeTank.frequency);
 			}
 		}
-		
+
 		public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
 		{
 			int ID = mod.GetID<TEQETank>(i, j);

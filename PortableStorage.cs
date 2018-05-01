@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,22 +14,9 @@ using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage
 {
-	[Serializable]
-	[AttributeUsage(AttributeTargets.Field)]
-	public class PathAttribute : Attribute
-	{
-		public string Name;
-		public int Count;
-
-		public PathAttribute(string name, int count = 0)
-		{
-			Name = name;
-			Count = count;
-		}
-	}
-
 	public class PortableStorage : Mod
 	{
+		[Texture]
 		public struct Textures
 		{
 			public const string Path = "PortableStorage/Textures/";
@@ -38,19 +24,16 @@ namespace PortableStorage
 			public const string ItemPath = Path + "Items/";
 			public const string UIPath = Path + "UI/";
 
-			[Null] [Path("GemMiddle", 3)] public static Texture2D[] gemsMiddle;
-			[Null] [Path("GemSide", 3)] public static Texture2D[] gemsSide;
-
-			[Null] public static Texture2D ringBig;
-			[Null] public static Texture2D ringSmall;
-
-			[Null] public static Texture2D vacuumBagOn;
-			[Null] public static Texture2D vacuumBagOff;
-
-			[Null] public static Texture2D lootAll;
-			[Null] public static Texture2D depositAll;
-			[Null] public static Texture2D[] restack;
-			[Null] public static Texture2D restock;
+			[Null, Texture(TilePath + "GemMiddle", 3)] public static Texture2D[] gemsMiddle;
+			[Null, Texture(TilePath + "GemSide", 3)] public static Texture2D[] gemsSide;
+			[Null, Texture(ItemPath + "RingBig")] public static Texture2D ringBig;
+			[Null, Texture(ItemPath + "RingSmall")] public static Texture2D ringSmall;
+			[Null, Texture(ItemPath + "VacuumBagActive")] public static Texture2D vacuumBagOn;
+			[Null, Texture(ItemPath + "VacuumBagInactive")] public static Texture2D vacuumBagOff;
+			[Null, Texture(UIPath + "Restack", 2)] public static Texture2D[] restack;
+			[Null, Texture(UIPath + "LootAll")] public static Texture2D lootAll;
+			[Null, Texture(UIPath + "DepositAll")] public static Texture2D depositAll;
+			[Null, Texture(UIPath + "Restock")] public static Texture2D restock;
 		}
 
 		[Null] public static PortableStorage Instance;
@@ -61,12 +44,6 @@ namespace PortableStorage
 		[Null] public static ModHotKey bagKey;
 
 		public LegacyGameInterfaceLayer InventoryLayer;
-
-		public override void PreSaveAndQuit()
-		{
-			BagUI.Clear();
-			TEUI.Clear();
-		}
 
 		public override void Load()
 		{
@@ -84,37 +61,15 @@ namespace PortableStorage
 			}
 		}
 
-		public void LoadTextures()
-		{
-			Textures.lootAll = ModLoader.GetTexture(Textures.UIPath + "LootAll");
-			Textures.depositAll = ModLoader.GetTexture(Textures.UIPath + "DepositAll");
-
-			Textures.restack = new Texture2D[2];
-			Textures.restack[0] = ModLoader.GetTexture(Textures.UIPath + "Restack_0");
-			Textures.restack[1] = ModLoader.GetTexture(Textures.UIPath + "Restack_1");
-
-			Textures.restock = ModLoader.GetTexture(Textures.UIPath + "Restock");
-
-			Textures.vacuumBagOn = ModLoader.GetTexture(Textures.ItemPath + "VacuumBagActive");
-			Textures.vacuumBagOff = ModLoader.GetTexture(Textures.ItemPath + "VacuumBagInactive");
-
-			Textures.ringBig = ModLoader.GetTexture(Textures.ItemPath + "RingBig");
-			Textures.ringSmall = ModLoader.GetTexture(Textures.ItemPath + "RingSmall");
-
-			Textures.gemsMiddle = new Texture2D[3];
-			Textures.gemsSide = new Texture2D[3];
-			for (int i = 0; i < 3; i++)
-			{
-				Textures.gemsMiddle[i] = ModLoader.GetTexture(Textures.TilePath + "GemMiddle_" + i);
-				Textures.gemsSide[i] = ModLoader.GetTexture(Textures.TilePath + "GemSide_" + i);
-			}
-		}
-
 		public override void Unload()
 		{
 			UnloadNullableTypes();
+		}
 
-			GC.Collect();
+		public override void PreSaveAndQuit()
+		{
+			BagUI.Clear();
+			TEUI.Clear();
 		}
 
 		public override void PostSetupContent()
