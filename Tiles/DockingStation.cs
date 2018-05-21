@@ -35,11 +35,8 @@ namespace PortableStorage.Tiles
 
 		public override void RightClick(int i, int j)
 		{
-			int ID = mod.GetID<TEDockingStation>(i, j);
-			if (ID == -1) return;
-
-			TEDockingStation dockingStation = (TEDockingStation)TileEntity.ByID[ID];
-
+			TEDockingStation dockingStation = mod.GetTileEntity<TEDockingStation>(i, j);
+			if (dockingStation == null) return;
 			Player p = Main.LocalPlayer;
 
 			if (p.inventory[p.selectedItem].modItem is BaseBag || dockingStation.Bag.modItem is BaseBag)
@@ -61,16 +58,14 @@ namespace PortableStorage.Tiles
 
 		public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
 		{
-			int ID = mod.GetID<TEDockingStation>(i, j);
-			if (ID == -1) return;
+			TEDockingStation dockingStation = mod.GetTileEntity<TEDockingStation>(i, j);
+			if (dockingStation == null) return;
 
 			Tile tile = Main.tile[i, j];
 			if (tile.TopLeft())
 			{
 				Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
 				if (Main.drawToScreen) zero = Vector2.Zero;
-
-				TEDockingStation dockingStation = (TEDockingStation)TileEntity.ByID[ID];
 
 				Item Item = dockingStation.Bag;
 

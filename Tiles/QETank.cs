@@ -40,10 +40,8 @@ namespace PortableStorage.Tiles
 
 		public override void RightClickCont(int i, int j)
 		{
-			int ID = mod.GetID<TEQETank>(i, j);
-			if (ID == -1) return;
-
-			TEQETank qeTank = (TEQETank)TileEntity.ByID[ID];
+			TEQETank qeTank = mod.GetTileEntity<TEQETank>(i, j);
+			if (qeTank == null) return;
 
 			Point16 topLeft = TileEntityTopLeft(i, j);
 			int realTileX = topLeft.X * 16;
@@ -126,10 +124,8 @@ namespace PortableStorage.Tiles
 
 		public override void LeftClickCont(int i, int j)
 		{
-			int ID = mod.GetID<TEQETank>(i, j);
-			if (ID == -1) return;
-
-			TEQETank qeTank = (TEQETank)TileEntity.ByID[ID];
+			TEQETank qeTank = mod.GetTileEntity<TEQETank>(i, j);
+			if (qeTank == null) return;
 
 			if (Main.LocalPlayer.HeldItem.modItem is IFluidContainerItem) // extract fluid
 			{

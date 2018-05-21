@@ -16,7 +16,6 @@ namespace PortableStorage
 {
 	public class PortableStorage : Mod
 	{
-		[Texture]
 		public struct Textures
 		{
 			public const string Path = "PortableStorage/Textures/";
@@ -24,23 +23,22 @@ namespace PortableStorage
 			public const string ItemPath = Path + "Items/";
 			public const string UIPath = Path + "UI/";
 
-			[Null, Texture(TilePath + "GemMiddle", 3)] public static Texture2D[] gemsMiddle;
-			[Null, Texture(TilePath + "GemSide", 3)] public static Texture2D[] gemsSide;
-			[Null, Texture(ItemPath + "RingBig")] public static Texture2D ringBig;
-			[Null, Texture(ItemPath + "RingSmall")] public static Texture2D ringSmall;
-			[Null, Texture(ItemPath + "VacuumBagActive")] public static Texture2D vacuumBagOn;
-			[Null, Texture(ItemPath + "VacuumBagInactive")] public static Texture2D vacuumBagOff;
-			[Null, Texture(UIPath + "Restack", 2)] public static Texture2D[] restack;
-			[Null, Texture(UIPath + "LootAll")] public static Texture2D lootAll;
-			[Null, Texture(UIPath + "DepositAll")] public static Texture2D depositAll;
-			[Null, Texture(UIPath + "Restock")] public static Texture2D restock;
+			[Texture(TilePath + "GemMiddle", 3)] public static Texture2D[] gemsMiddle;
+			[Texture(TilePath + "GemSide", 3)] public static Texture2D[] gemsSide;
+			[Texture(ItemPath + "RingBig")] public static Texture2D ringBig;
+			[Texture(ItemPath + "RingSmall")] public static Texture2D ringSmall;
+			[Texture(ItemPath + "VacuumBagActive")] public static Texture2D vacuumBagOn;
+			[Texture(ItemPath + "VacuumBagInactive")] public static Texture2D vacuumBagOff;
+			[Texture(UIPath + "Restack", 2)] public static Texture2D[] restack;
+			[Texture(UIPath + "LootAll")] public static Texture2D lootAll;
+			[Texture(UIPath + "DepositAll")] public static Texture2D depositAll;
+			[Texture(UIPath + "Restock")] public static Texture2D restock;
 		}
 
-		[Null] public static PortableStorage Instance;
+		public static PortableStorage Instance;
+		public static ModHotKey bagKey;
 
 		public GUIs UIs = new GUIs("Vanilla: Hotbar");
-
-		[Null] public static ModHotKey bagKey;
 
 		public override void Load()
 		{
@@ -51,11 +49,6 @@ namespace PortableStorage
 			TagSerializer.AddSerializer(new FreqSerializer());
 
 			if (!Main.dedServ) LoadTextures();
-		}
-
-		public override void Unload()
-		{
-			UnloadNullableTypes();
 		}
 
 		public override void PreSaveAndQuit()

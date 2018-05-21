@@ -1,6 +1,4 @@
 ﻿using PortableStorage.Items;
-using Terraria;
-using Terraria.ID;
 using Terraria.Localization;
 using TheOneLibrary.Base.UI.Elements;
 using TheOneLibrary.UI.Elements;
@@ -10,6 +8,11 @@ namespace PortableStorage.UI
 {
 	public class BagUI : BaseBagUI
 	{
+		public BagUI()
+		{
+			gridItems = new UIGrid<UIContainerSlot>(9);
+		}
+
 		public override void OnInitialize()
 		{
 			panelMain.Width.Pixels = 408;
@@ -68,14 +71,9 @@ namespace PortableStorage.UI
 			buttonClose.Height.Pixels = 24;
 			buttonClose.Left.Set(-28, 1);
 			buttonClose.Top.Pixels = 8;
-			buttonClose.OnClick += (evt, element) =>
-			{
-				PortableStorage.Instance.UIs.dict.Remove((Bag)bag);
-				Main.PlaySound(SoundID.Item59.WithVolume(0.5f));
-			};
+			buttonClose.OnClick += (evt, element) => ((Bag)bag).CloseUI();
 			panelMain.Append(buttonClose);
 
-			gridItems = new UIGrid<UIContainerSlot>(9);
 			gridItems.Width.Set(-16, 1);
 			gridItems.Height.Set(-44, 1);
 			gridItems.Left.Pixels = 8;

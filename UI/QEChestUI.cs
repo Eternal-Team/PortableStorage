@@ -1,7 +1,5 @@
 ﻿using PortableStorage.TileEntities;
-using Terraria;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
 using Terraria.ModLoader;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.Storage;
@@ -48,11 +46,7 @@ namespace PortableStorage.UI
 			buttonClose.Height.Pixels = 24;
 			buttonClose.Left.Set(-28, 1);
 			buttonClose.Top.Pixels = 8;
-			buttonClose.OnClick += (evt, element) =>
-			{
-				qeChest.CloseUI();
-				Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
-			};
+			buttonClose.OnClick += (evt, element) => qeChest.CloseUI();
 			panelMain.Append(buttonClose);
 
 			gridItems.Width.Set(-16, 1);
@@ -64,19 +58,18 @@ namespace PortableStorage.UI
 			panelMain.Append(gridItems);
 		}
 
-		public override void Load()
+		public void SetTileEntity(ModTileEntity tileEntity) => qeChest = (TEQEChest)tileEntity;
+
+		public void SetContainer(IContainer container)
 		{
-			gridItems.Clear();
+			qeChest = (TEQEChest)container;
+
 			for (int i = 0; i < qeChest.GetItems().Count; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(qeChest, i);
 				gridItems.Add(slot);
 			}
 		}
-
-		public void SetTileEntity(ModTileEntity tileEntity) => qeChest = (TEQEChest)tileEntity;
-
-		public void SetContainer(IContainer container) => qeChest = (TEQEChest)container;
 
 		public IContainer GetContainer() => qeChest;
 	}

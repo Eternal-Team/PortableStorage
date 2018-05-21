@@ -16,21 +16,15 @@ namespace PortableStorage.Global
 		{
 			if (PortableStorage.bagKey.JustPressed)
 			{
-				Item item = Accessory.FirstOrDefault(x => x.modItem is BaseBag);
-
-				if (item?.modItem is BaseBag)
-				{
-					BaseBag bag = (BaseBag)item.modItem;
-					bag.HandleUI();
-				}
+				Item item = player.Accessory().FirstOrDefault(x => x.modItem is BaseBag);
+				(item?.modItem as BaseBag)?.HandleUI();
 			}
 		}
 
 		public override bool ShiftClickSlot(Item[] inventory, int context, int slot)
 		{
 			if (context != ItemSlot.Context.InventoryItem && context != ItemSlot.Context.InventoryCoin && context != ItemSlot.Context.InventoryAmmo) return false;
-
-			if (!PortableStorage.Instance.UIs.dict.Values.Concat(PortableStorage.Instance.UIs.dict.Values).Any()) return false;
+			if (!PortableStorage.Instance.UIs.dict.Any()) return false;
 
 			foreach (GUI gui in PortableStorage.Instance.UIs.dict.Values)
 			{

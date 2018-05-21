@@ -37,7 +37,7 @@ namespace PortableStorage.Items
 			DisplayName.SetDefault("/dev/null");
 			Tooltip.SetDefault("Can only store items that place tiles" +
 			                   "\nWill automatically pick them up and void them when there's more than max stack of them" +
-			                   "\nCan be used to place tiles when an item has been selected in the UI via rightclicking");
+			                   "\nCan be used to place tiles when an item has been selected in the UI by clicking on it while holding RightShift");
 		}
 
 		public override void SetDefaults()
@@ -97,6 +97,7 @@ namespace PortableStorage.Items
 			if (selectedIndex >= 0)
 			{
 				Item selectedItem = Items[selectedIndex];
+				if (selectedItem.IsAir) return true;
 				Texture2D itemTexture = Main.itemTexture[selectedItem.type];
 				Rectangle rect = Main.itemAnimations[selectedItem.type] != null ? Main.itemAnimations[selectedItem.type].GetFrame(itemTexture) : itemTexture.Frame();
 				Color newColor = Color.White;
@@ -177,7 +178,7 @@ namespace PortableStorage.Items
 
 		public override void SetItem(int slot, Item value) => Items[slot] = value;
 
-		public override void Sync(int slot) => SyncItem(item);
+		public override void Sync(int slot = 0) => SyncItem(item);
 
 		public override List<Item> GetItems() => Items;
 

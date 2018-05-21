@@ -77,11 +77,11 @@ namespace PortableStorage.Items
 
 		public override void UpdateInventory(Player player)
 		{
-			if (Items.Any(x => !x.IsAir) && Ammo.Select(x => x.type).Any(x => Items.Select(y => y.type).Contains(x)))
+			if (Items.Any(x => !x.IsAir) && player.Ammo().Select(x => x.type).Any(x => Items.Select(y => y.type).Contains(x)))
 			{
 				for (int i = 0; i < Items.Count; i++)
 				{
-					Item ammo = Ammo.FirstOrDefault(x => x.type == Items[i].type);
+					Item ammo = player.Ammo().FirstOrDefault(x => x.type == Items[i].type);
 					if (ammo != null)
 					{
 						int count = Math.Min(Items[i].stack, ammo.maxStack - ammo.stack);
@@ -99,11 +99,11 @@ namespace PortableStorage.Items
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			if (Items.Any(x => !x.IsAir) && Ammo.Select(x => x.type).Any(x => Items.Select(y => y.type).Contains(x)))
+			if (Items.Any(x => !x.IsAir) && player.Ammo().Select(x => x.type).Any(x => Items.Select(y => y.type).Contains(x)))
 			{
 				for (int i = 0; i < Items.Count; i++)
 				{
-					Item ammo = Ammo.FirstOrDefault(x => x.type == Items[i].type);
+					Item ammo = player.Ammo().FirstOrDefault(x => x.type == Items[i].type);
 					if (ammo != null)
 					{
 						int count = Math.Min(Items[i].stack, ammo.maxStack - ammo.stack);

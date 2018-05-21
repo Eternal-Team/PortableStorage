@@ -50,7 +50,6 @@ namespace PortableStorage.Items
 			item.accessory = true;
 		}
 
-		//SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f)
 		public override bool UseItem(Player player)
 		{
 			if (player.whoAmI == Main.LocalPlayer.whoAmI) this.HandleUI();

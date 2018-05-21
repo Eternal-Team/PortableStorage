@@ -68,17 +68,16 @@ namespace PortableStorage.UI
 			}
 		}
 
-		public override void Load()
+		public void SetContainer(IContainer container)
 		{
-			gridItems.Clear();
+			bag = container;
+
 			for (int i = 0; i < bag.GetItems().Count; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(bag, i);
 				gridItems.Add(slot);
 			}
 		}
-
-		public void SetContainer(IContainer container) => bag = container;
 
 		public IContainer GetContainer() => bag;
 	}

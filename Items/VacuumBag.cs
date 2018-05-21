@@ -78,8 +78,8 @@ namespace PortableStorage.Items
 			tooltips.Add(new TooltipLine(mod, "BagInfo", $"Use the bag or press [c/83fcec:{GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it"));
 		}
 
-		public float posY;
-		public bool up;
+		public static float posY;
+		public static bool up;
 
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
@@ -141,7 +141,7 @@ namespace PortableStorage.Items
 			SyncItem(item);
 		}
 
-		public override void Sync(int slot) => SyncItem(item);
+		public override void Sync(int slot = 0) => SyncItem(item);
 
 		public override List<Item> GetItems() => Items;
 

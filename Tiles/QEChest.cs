@@ -36,10 +36,8 @@ namespace PortableStorage.Tiles
 
 		public override void RightClick(int i, int j)
 		{
-			int ID = mod.GetID<TEQEChest>(i, j);
-			if (ID == -1) return;
-
-			TEQEChest qeChest = (TEQEChest)TileEntity.ByID[ID];
+			TEQEChest qeChest = mod.GetTileEntity<TEQEChest>(i, j);
+			if (qeChest == null) return;
 
 			Point16 topLeft = TileEntityTopLeft(i, j);
 			int realTileX = topLeft.X * 16;
@@ -97,8 +95,8 @@ namespace PortableStorage.Tiles
 
 		public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
 		{
-			int ID = mod.GetID<TEQEChest>(i, j);
-			if (ID == -1) return;
+			TEQEChest qeChest = mod.GetTileEntity<TEQEChest>(i, j);
+			if (qeChest == null) return;
 
 			Tile tile = Main.tile[i, j];
 			if (tile.TopLeft())
@@ -106,8 +104,6 @@ namespace PortableStorage.Tiles
 				Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
 				if (Main.drawToScreen) zero = Vector2.Zero;
 				Vector2 position = new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero;
-
-				TEQEChest qeChest = (TEQEChest)TileEntity.ByID[ID];
 
 				spriteBatch.Draw(PortableStorage.Textures.gemsSide[0], position + new Vector2(5, 9), new Rectangle(6 * (int)qeChest.frequency.colorLeft, 0, 6, 10), Color.White, 0f, new Vector2(3, 5), 1f, SpriteEffects.None, 0f);
 				spriteBatch.Draw(PortableStorage.Textures.gemsMiddle[0], position + new Vector2(12, 4), new Rectangle(8 * (int)qeChest.frequency.colorMiddle, 0, 8, 10), Color.White);
@@ -117,8 +113,8 @@ namespace PortableStorage.Tiles
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-			TEQEChest chest = mod.GetTileEntity<TEQEChest>(i, j);
-			chest?.CloseUI();
+			TEQEChest qeChest = mod.GetTileEntity<TEQEChest>(i, j);
+			qeChest?.CloseUI();
 
 			Item.NewItem(i * 16, j * 16, 32, 32, mod.ItemType<Items.QEChest>());
 			mod.GetTileEntity<TEQEChest>().Kill(i, j);

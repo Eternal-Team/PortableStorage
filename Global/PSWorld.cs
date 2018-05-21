@@ -4,19 +4,18 @@ using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using TheOneLibrary.Base;
 using TheOneLibrary.Fluid;
 
 namespace PortableStorage.Global
 {
 	public class PSWorld : ModWorld
 	{
-		[Null] public static PSWorld Instance;
+		public static PSWorld Instance;
 
 		public Dictionary<Frequency, List<Item>> enderItems = new Dictionary<Frequency, List<Item>>();
 		public Dictionary<Frequency, ModFluid> enderFluids = new Dictionary<Frequency, ModFluid>();
 
-		public override void Initialize()
+		public PSWorld()
 		{
 			Instance = this;
 		}
@@ -55,11 +54,7 @@ namespace PortableStorage.Global
 		public List<TagCompound> SaveFluids() => enderFluids.Where(x => x.Value != null).Select(x => new TagCompound
 		{
 			["Frequency"] = x.Key,
-			["Fluid"] = new TagCompound
-			{
-				["Type"] = x.Value.Name,
-				["Volume"] = x.Value.volume
-			}
+			["Fluid"] = x.Value
 		}).ToList();
 
 		public void LoadItems(TagCompound tag)
@@ -91,13 +86,20 @@ namespace PortableStorage.Global
 			else if (tag.ContainsKey("Fluids"))
 			{
 				List<TagCompound> tags = tag.GetList<TagCompound>("Fluids").ToList();
-				enderFluids = tags.Select(x =>
+				try
 				{
-					TagCompound fluidTag = x.Get<TagCompound>("Fluid");
-					ModFluid fluid = TheOneLibrary.Utils.Utility.SetDefaults(fluidTag.GetString("Type"));
-					fluid.volume = fluidTag.GetInt("Volume");
-					return new KeyValuePair<Frequency, ModFluid>(x.Get<Frequency>("Frequency"), fluid);
-				}).ToDictionary(x => x.Key, x => x.Value);
+					enderFluids = tags.Select(x => new KeyValuePair<Frequency, ModFluid>(x.Get<Frequency>("Frequency"), x.Get<ModFluid>("Fluid"))).ToDictionary(x => x.Key, x => x.Value);
+				}
+				catch
+				{
+					enderFluids = tags.Select(x =>
+					{
+						TagCompound fluidTag = x.Get<TagCompound>("Fluid");
+						ModFluid fluid = TheOneLibrary.Utils.Utility.SetDefaults(fluidTag.GetString("Type"));
+						fluid.volume = fluidTag.GetInt("Volume");
+						return new KeyValuePair<Frequency, ModFluid>(x.Get<Frequency>("Frequency"), fluid);
+					}).ToDictionary(x => x.Key, x => x.Value);
+				}
 			}
 		}
 
