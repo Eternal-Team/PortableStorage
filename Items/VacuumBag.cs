@@ -9,6 +9,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using TheOneLibrary.Base.UI;
 using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Items
@@ -17,6 +18,7 @@ namespace PortableStorage.Items
 	{
 		public bool active;
 		public List<Item> Items = new List<Item>();
+		public GUI<VacuumBagUI> gui;
 
 		public override string Texture => PortableStorage.Textures.ItemPath + "VacuumBagActive";
 
@@ -43,7 +45,7 @@ namespace PortableStorage.Items
 				for (int i = 0; i < 27; i++) Items.Add(new Item());
 			}
 
-			SetupUI<VacuumBagUI>();
+			if (Main.netMode != NetmodeID.Server) gui = SetupGUI<VacuumBagUI>(this);
 
 			item.width = 36;
 			item.height = 40;
@@ -58,7 +60,7 @@ namespace PortableStorage.Items
 
 		public override bool UseItem(Player player)
 		{
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) this.HandleUI();
 
 			return true;
 		}

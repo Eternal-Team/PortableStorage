@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Tiles;
 using Terraria;
@@ -38,12 +38,9 @@ namespace PortableStorage
 
 		[Null] public static PortableStorage Instance;
 
-		public Dictionary<ModItem, GUI> BagUI = new Dictionary<ModItem, GUI>();
-		[UI("TileEntity")] public Dictionary<ModTileEntity, GUI> TEUI = new Dictionary<ModTileEntity, GUI>();
+		public GUIs UIs = new GUIs("Vanilla: Hotbar");
 
 		[Null] public static ModHotKey bagKey;
-
-		public LegacyGameInterfaceLayer InventoryLayer;
 
 		public override void Load()
 		{
@@ -53,12 +50,7 @@ namespace PortableStorage
 
 			TagSerializer.AddSerializer(new FreqSerializer());
 
-			if (!Main.dedServ)
-			{
-				LoadTextures();
-
-				InventoryLayer = new LegacyGameInterfaceLayer("PortableStorage: UI", () => BagUI.Values.Draw() && TEUI.Values.Draw(), InterfaceScaleType.UI);
-			}
+			if (!Main.dedServ) LoadTextures();
 		}
 
 		public override void Unload()
@@ -68,8 +60,7 @@ namespace PortableStorage
 
 		public override void PreSaveAndQuit()
 		{
-			BagUI.Clear();
-			TEUI.Clear();
+			UIs.Clear();
 		}
 
 		public override void PostSetupContent()
@@ -79,7 +70,7 @@ namespace PortableStorage
 			if (MechTransfer != null)
 			{
 				QEAdapter adapter = new QEAdapter(this);
-				MechTransfer.Call("RegisterAdapterReflection", adapter, new[] {TileType<QEChest>()});
+				MechTransfer.Call("RegisterAdapterReflection", adapter, new[] { TileType<QEChest>() });
 			}
 		}
 
@@ -92,16 +83,14 @@ namespace PortableStorage
 			recipe.AddRecipe();
 		}
 
-		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
+		public override void UpdateUI(GameTime gameTime)
 		{
-			int HotbarIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Hotbar"));
-
-			if (HotbarIndex != -1) layers.Insert(HotbarIndex + 1, InventoryLayer);
+			UIs.HandleUIsFar();
 		}
 
-		public override void PostDrawInterface(SpriteBatch spriteBatch)
+		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
-			for (int i = 0; i < TEUI.Count; i++) TEUI.ElementAt(i).Value.Draw();
+			UIs.Draw(layers);
 		}
 
 		public override void HandlePacket(BinaryReader reader, int whoAmI) => Net.HandlePacket(reader, whoAmI);

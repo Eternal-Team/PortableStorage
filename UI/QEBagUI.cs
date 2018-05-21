@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using PortableStorage.Items;
+﻿using PortableStorage.Items;
 using Terraria;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
+using TheOneLibrary.Base.UI.Elements;
 using TheOneLibrary.UI.Elements;
 using TheOneLibrary.Utils;
 
@@ -22,7 +21,7 @@ namespace PortableStorage.UI
 			panelMain.OnMouseUp += DragEnd;
 			Append(panelMain);
 
-			textLabel = new UIText("Quantum Entangled Bag");
+			textLabel = new UIText(() => "Quantum Entangled Bag");
 			textLabel.HAlign = 0.5f;
 			textLabel.Top.Pixels = 8;
 			panelMain.Append(textLabel);
@@ -69,7 +68,7 @@ namespace PortableStorage.UI
 			buttonClose.Top.Pixels = 8;
 			buttonClose.OnClick += (evt, element) =>
 			{
-				PortableStorage.Instance.BagUI.Remove(PortableStorage.Instance.BagUI.First(kvp => kvp.Value.ui == this).Key);
+				PortableStorage.Instance.UIs.dict.Remove((QEBag)bag);
 
 				Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
 			};

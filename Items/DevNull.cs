@@ -10,6 +10,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
 using Terraria.UI.Chat;
+using TheOneLibrary.Base.UI;
 using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Items
@@ -17,6 +18,7 @@ namespace PortableStorage.Items
 	public class DevNull : BaseBag
 	{
 		public List<Item> Items = new List<Item>();
+		public GUI<DevNullUI> gui;
 
 		public int selectedIndex = -1;
 
@@ -45,7 +47,7 @@ namespace PortableStorage.Items
 				for (int i = 0; i < 7; i++) Items.Add(new Item());
 			}
 
-			SetupUI<DevNullUI>();
+			if (Main.netMode != NetmodeID.Server) gui = SetupGUI<DevNullUI>(this);
 
 			item.width = 40;
 			item.height = 40;
@@ -87,7 +89,7 @@ namespace PortableStorage.Items
 		{
 			item.stack++;
 
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) this.HandleUI();
 		}
 
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)

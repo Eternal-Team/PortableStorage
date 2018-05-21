@@ -50,7 +50,7 @@ namespace PortableStorage.UI
 			buttonClose.Top.Pixels = 8;
 			buttonClose.OnClick += (evt, element) =>
 			{
-				PortableStorage.Instance.CloseUI(qeChest.ID);
+				qeChest.CloseUI();
 				Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
 			};
 			panelMain.Append(buttonClose);

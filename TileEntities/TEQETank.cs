@@ -41,7 +41,7 @@ namespace PortableStorage.TileEntities
 
 		public override void NetReceive(BinaryReader reader, bool lightReceive) => frequency = reader.ReadFrequency();
 
-		public List<ModFluid> GetFluids() => new List<ModFluid> {PSWorld.Instance.GetFluid(frequency)};
+		public List<ModFluid> GetFluids() => new List<ModFluid> { PSWorld.Instance.GetFluid(frequency) };
 
 		public void SetFluid(ModFluid value, int slot = 0) => PSWorld.Instance.SetFluid(frequency, value);
 

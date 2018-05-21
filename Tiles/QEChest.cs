@@ -2,14 +2,12 @@
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Items;
 using PortableStorage.TileEntities;
-using PortableStorage.UI;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using TheOneLibrary.Base;
-using TheOneLibrary.Base.UI;
 using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Tiles
@@ -26,7 +24,7 @@ namespace PortableStorage.Tiles
 			Main.tileLavaDeath[Type] = false;
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
 			TileObjectData.newTile.Origin = new Point16(0, 1);
-			TileObjectData.newTile.CoordinateHeights = new[] {16, 16};
+			TileObjectData.newTile.CoordinateHeights = new[] { 16, 16 };
 			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<TEQEChest>().Hook_AfterPlacement, -1, 0, false);
 			TileObjectData.addTile(Type);
 			disableSmartCursor = true;
@@ -72,17 +70,7 @@ namespace PortableStorage.Tiles
 				}
 				else
 				{
-					GUI<QEChestUI> gui = qeChest.gui;
-					if (!PortableStorage.Instance.TEUI.ContainsValue(gui))
-					{
-						gui.ui.Load();
-						PortableStorage.Instance.TEUI.Add(qeChest, gui);
-					}
-					else
-					{
-						gui.ui.Unload();
-						PortableStorage.Instance.TEUI.Remove(qeChest);
-					}
+					qeChest.HandleUI();
 
 					Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
 				}
@@ -129,8 +117,8 @@ namespace PortableStorage.Tiles
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-			int ID = mod.GetID<TEQEChest>(i, j);
-			if (ID != -1) PortableStorage.Instance.CloseUI(ID);
+			TEQEChest chest = mod.GetTileEntity<TEQEChest>(i, j);
+			chest?.CloseUI();
 
 			Item.NewItem(i * 16, j * 16, 32, 32, mod.ItemType<Items.QEChest>());
 			mod.GetTileEntity<TEQEChest>().Kill(i, j);

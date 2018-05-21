@@ -8,6 +8,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using TheOneLibrary.Base.UI;
 using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Items
@@ -15,6 +16,7 @@ namespace PortableStorage.Items
 	public class AmmoBelt : BaseBag
 	{
 		public List<Item> Items = new List<Item>();
+		public GUI<AmmoBeltUI> gui;
 
 		public override string Texture => PortableStorage.Textures.ItemPath + "AmmoBelt";
 
@@ -39,7 +41,7 @@ namespace PortableStorage.Items
 				for (int i = 0; i < 27; i++) Items.Add(new Item());
 			}
 
-			SetupUI<AmmoBeltUI>();
+			if (Main.netMode != NetmodeID.Server) gui = SetupGUI<AmmoBeltUI>(this);
 
 			item.width = 30;
 			item.height = 14;
@@ -54,7 +56,7 @@ namespace PortableStorage.Items
 
 		public override bool UseItem(Player player)
 		{
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) this.HandleUI();
 
 			return true;
 		}
@@ -65,7 +67,7 @@ namespace PortableStorage.Items
 		{
 			item.stack++;
 
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) this.HandleUI();
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -75,7 +77,7 @@ namespace PortableStorage.Items
 
 		public override void UpdateInventory(Player player)
 		{
-			if (Ammo.Select(x => x.type).Any(x => Items.Select(y => y.type).Contains(x)))
+			if (Items.Any(x => !x.IsAir) && Ammo.Select(x => x.type).Any(x => Items.Select(y => y.type).Contains(x)))
 			{
 				for (int i = 0; i < Items.Count; i++)
 				{
@@ -83,10 +85,13 @@ namespace PortableStorage.Items
 					if (ammo != null)
 					{
 						int count = Math.Min(Items[i].stack, ammo.maxStack - ammo.stack);
-						ammo.stack += count;
-						Items[i].stack -= count;
-						if (Items[i].stack <= 0) Items[i].TurnToAir();
-						Sync();
+						if (count > 0)
+						{
+							ammo.stack += count;
+							Items[i].stack -= count;
+							if (Items[i].stack <= 0) Items[i].TurnToAir();
+							Sync();
+						}
 					}
 				}
 			}
@@ -94,7 +99,7 @@ namespace PortableStorage.Items
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			if (Ammo.Select(x => x.type).Any(x => Items.Select(y => y.type).Contains(x)))
+			if (Items.Any(x => !x.IsAir) && Ammo.Select(x => x.type).Any(x => Items.Select(y => y.type).Contains(x)))
 			{
 				for (int i = 0; i < Items.Count; i++)
 				{
@@ -102,10 +107,13 @@ namespace PortableStorage.Items
 					if (ammo != null)
 					{
 						int count = Math.Min(Items[i].stack, ammo.maxStack - ammo.stack);
-						ammo.stack += count;
-						Items[i].stack -= count;
-						if (Items[i].stack <= 0) Items[i].TurnToAir();
-						Sync();
+						if (count > 0)
+						{
+							ammo.stack += count;
+							Items[i].stack -= count;
+							if (Items[i].stack <= 0) Items[i].TurnToAir();
+							Sync();
+						}
 					}
 				}
 			}

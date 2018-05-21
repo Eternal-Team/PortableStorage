@@ -1,8 +1,8 @@
 ﻿using PortableStorage.Items;
 using Terraria;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
+using TheOneLibrary.Base.UI.Elements;
 using TheOneLibrary.UI.Elements;
 using TheOneLibrary.Utils;
 
@@ -19,7 +19,7 @@ namespace PortableStorage.UI
 			panelMain.OnMouseUp += DragEnd;
 			Append(panelMain);
 
-			textLabel = new UIText("Ammo Belt");
+			textLabel = new UIText(() => "Ammo Belt");
 			textLabel.HAlign = 0.5f;
 			textLabel.Top.Pixels = 8;
 			panelMain.Append(textLabel);
@@ -62,7 +62,7 @@ namespace PortableStorage.UI
 			buttonClose.Top.Pixels = 8;
 			buttonClose.OnClick += (evt, element) =>
 			{
-				PortableStorage.Instance.BagUI.Remove((AmmoBelt)bag);
+				PortableStorage.Instance.UIs.dict.Remove((AmmoBelt)bag);
 				Main.PlaySound(SoundID.Item59.WithVolume(0.5f));
 			};
 			panelMain.Append(buttonClose);

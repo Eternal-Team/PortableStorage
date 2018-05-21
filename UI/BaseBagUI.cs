@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.GameContent.UI.Elements;
+﻿using Terraria;
 using Terraria.UI;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.Base.UI.Elements;
@@ -11,7 +9,7 @@ namespace PortableStorage.UI
 {
 	public class BaseBagUI : BaseUI, IContainerUI
 	{
-		public UIText textLabel; /*= new UIText("Quantum Entangled Bag");*/
+		public UIText textLabel;
 
 		public UIHoverButton buttonQuickStack = new UIHoverButton(Main.chestStackTexture);
 		public UIHoverButton buttonQuickRestack = new UIHoverButton(PortableStorage.Textures.restack);
@@ -21,7 +19,7 @@ namespace PortableStorage.UI
 
 		public UITextButton buttonClose = new UITextButton("X", 4);
 
-		public UIGrid<UIContainerSlot> gridItems; /*= new UIGrid<UIContainerSlot>(9);*/
+		public UIGrid<UIContainerSlot> gridItems;
 
 		public IContainer bag;
 
@@ -78,13 +76,6 @@ namespace PortableStorage.UI
 				UIContainerSlot slot = new UIContainerSlot(bag, i);
 				gridItems.Add(slot);
 			}
-		}
-
-		public override void Update(GameTime gameTime)
-		{
-			//for (int i = 0; i < colorFrequency.Length; i++) colorFrequency[2 - i].color.Value = typeof(Color).GetValue<Color>(Enum.GetName(typeof(Colors), ((QEBag)bag).frequency.Colors[i]));
-
-			base.Update(gameTime);
 		}
 
 		public void SetContainer(IContainer container) => bag = container;

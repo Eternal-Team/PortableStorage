@@ -50,7 +50,7 @@ namespace PortableStorage.Global
 			enderFluids[frequency] = value;
 		}
 
-		public List<TagCompound> SaveItems() => enderItems.Where(x => !x.Value.All(y => y.IsAir)).Select(x => new TagCompound {["Frequency"] = x.Key, ["Items"] = x.Value.Select(ItemIO.Save).ToList()}).ToList();
+		public List<TagCompound> SaveItems() => enderItems.Where(x => !x.Value.All(y => y.IsAir)).Select(x => new TagCompound { ["Frequency"] = x.Key, ["Items"] = x.Value.Select(ItemIO.Save).ToList() }).ToList();
 
 		public List<TagCompound> SaveFluids() => enderFluids.Where(x => x.Value != null).Select(x => new TagCompound
 		{
@@ -103,8 +103,8 @@ namespace PortableStorage.Global
 
 		public override TagCompound Save() => new TagCompound
 		{
-			{"Items", SaveItems()},
-			{"Fluids", SaveFluids()}
+			{ "Items", SaveItems() },
+			{ "Fluids", SaveFluids() }
 		};
 
 		public override void Load(TagCompound tag)

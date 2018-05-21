@@ -8,7 +8,6 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.UI;
 using TheOneLibrary.Base;
 using TheOneLibrary.Base.UI;
 using TheOneLibrary.Storage;
@@ -21,20 +20,11 @@ namespace PortableStorage.TileEntities
 		public override bool ValidTile(Tile tile) => tile.type == mod.TileType<QEChest>() && tile.TopLeft();
 
 		public GUI<QEChestUI> gui;
-
 		public Frequency frequency;
 
 		public TEQEChest()
 		{
-			if (Main.netMode != NetmodeID.Server)
-			{
-				QEChestUI ui = new QEChestUI();
-				ui.SetContainer(this);
-				UserInterface userInterface = new UserInterface();
-				ui.Activate();
-				userInterface.SetState(ui);
-				gui = new GUI<QEChestUI>(ui, userInterface);
-			}
+			if (Main.netMode != NetmodeID.Server) gui = TheOneLibrary.Utils.Utility.SetupGUI<QEChestUI>(this);
 		}
 
 		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)

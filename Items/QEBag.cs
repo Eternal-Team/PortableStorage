@@ -8,6 +8,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using TheOneLibrary.Base.UI;
 using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Items
@@ -15,6 +16,7 @@ namespace PortableStorage.Items
 	public class QEBag : BaseBag
 	{
 		public Frequency frequency;
+		public GUI<QEBagUI> gui;
 
 		public override string Texture => PortableStorage.Textures.ItemPath + "QEBag";
 
@@ -35,7 +37,7 @@ namespace PortableStorage.Items
 
 		public override void SetDefaults()
 		{
-			SetupUI<QEBagUI>();
+			if (Main.netMode != NetmodeID.Server) gui = SetupGUI<QEBagUI>(this);
 
 			item.width = 32;
 			item.height = 34;
@@ -48,9 +50,10 @@ namespace PortableStorage.Items
 			item.accessory = true;
 		}
 
+		//SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f)
 		public override bool UseItem(Player player)
 		{
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) this.HandleUI();
 
 			return true;
 		}
@@ -61,7 +64,7 @@ namespace PortableStorage.Items
 		{
 			item.stack++;
 
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) this.HandleUI();
 		}
 
 		public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)

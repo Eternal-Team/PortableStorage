@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using TheOneLibrary.Base.UI;
 using static TheOneLibrary.Utils.Utility;
 
 namespace PortableStorage.Items
@@ -14,6 +15,7 @@ namespace PortableStorage.Items
 	public class Bag : BaseBag
 	{
 		public List<Item> Items = new List<Item>();
+		public GUI<BagUI> gui;
 
 		public override string Texture => PortableStorage.Textures.ItemPath + "Bag";
 
@@ -38,7 +40,7 @@ namespace PortableStorage.Items
 				for (int i = 0; i < 54; i++) Items.Add(new Item());
 			}
 
-			SetupUI<BagUI>();
+			if (Main.netMode != NetmodeID.Server) gui = SetupGUI<BagUI>(this);
 
 			item.width = 26;
 			item.height = 34;
@@ -53,7 +55,7 @@ namespace PortableStorage.Items
 
 		public override bool UseItem(Player player)
 		{
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) this.HandleUI();
 
 			return true;
 		}
@@ -64,7 +66,7 @@ namespace PortableStorage.Items
 		{
 			item.stack++;
 
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) this.HandleUI();
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
