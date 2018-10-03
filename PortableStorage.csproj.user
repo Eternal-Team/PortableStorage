@@ -1,29 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <StartAction>Program</StartAction>
-    <StartProgram>C:\Program Files %28x86%29\Steam\steamapps\common\Terraria [Modded]\Terraria.exe</StartProgram>
-    <StartWorkingDirectory>C:\Program Files %28x86%29\Steam\steamapps\common\Terraria [Modded]</StartWorkingDirectory>
-    <StartArguments>-skipselect</StartArguments>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ProjectView>ProjectFiles</ProjectView>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <StartProgram>C:\Program Files %28x86%29\Steam\steamapps\common\Terraria Modded\Terraria.exe</StartProgram>
-    <StartWorkingDirectory>C:\Program Files %28x86%29\Steam\steamapps\common\Terraria Modded</StartWorkingDirectory>
-    <StartArguments>-skipselect</StartArguments>
-    <StartAction>Program</StartAction>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Server|AnyCPU'">
-    <StartProgram>C:\Program Files %28x86%29\Steam\steamapps\common\Terraria Modded\tModLoaderServer.exe</StartProgram>
-    <StartWorkingDirectory>C:\Program Files %28x86%29\Steam\steamapps\common\Terraria Modded</StartWorkingDirectory>
-    <StartAction>Program</StartAction>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Server|x86'">
-    <StartProgram>C:\Program Files %28x86%29\Steam\steamapps\common\Terraria Modded\Terraria.exe</StartProgram>
-    <StartWorkingDirectory>C:\Program Files %28x86%29\Steam\steamapps\common\Terraria Modded</StartWorkingDirectory>
-    <StartArguments>-skipselect</StartArguments>
-    <StartAction>Program</StartAction>
+    <StartProgram>C:\Program Files %28x86%29\Steam\steamapps\content\app_105600\depot_105601\tModLoader.exe</StartProgram>
+    <StartWorkingDirectory>C:\Program Files %28x86%29\Steam\steamapps\content\app_105600\depot_105601</StartWorkingDirectory>
+    <StartArguments>-skipselect Itorius:TestWorld</StartArguments>
   </PropertyGroup>
 </Project>

@@ -1,11 +1,11 @@
-author = Eternal Team
-version = 1.2
+﻿author = Itorius & team
+version = 2.0
 displayName = Portable Storage
 homepage = http://forums.terraria.org/index.php?threads/itorius-mods.42289/
-hideCode = true
-hideResources = true
+hideCode = false
+hideResources = false
 includeSource = false
-buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
+buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, .git\*, .editorconfig, .gitignore, *.sln, *.md
 includePDB = true
 languageVersion = 6
-modReferences = TheOneLibrary
+modReferences = BaseLibrary, ContainerLibrary
