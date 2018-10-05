@@ -3,7 +3,6 @@ using ContainerLibrary.Content;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Utility = BaseLibrary.Utility.Utility;
 
 namespace PortableStorage.Items.Bags
 {
@@ -16,12 +15,14 @@ namespace PortableStorage.Items.Bags
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Bag");
+			DisplayName.SetDefault("Storagemaster's Bag");
 			Tooltip.SetDefault("Stores 54 stacks of items");
 		}
 
 		public override void SetDefaults()
 		{
+			base.SetDefaults();
+
 			item.width = 26;
 			item.height = 34;
 			item.useTime = 5;
@@ -35,8 +36,7 @@ namespace PortableStorage.Items.Bags
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			base.ModifyTooltips(tooltips);
-			tooltips.Add(new TooltipLine(mod, "BagInfo", $"Use the bag, right-click it or press [c/83fcec:{Utility.GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it"));
+			//tooltips.Add(new TooltipLine(mod, "BagInfo", $"Use the bag, right-click it or press [c/83fcec:{Utility.GetHotkeyValue(mod.Name + ": Open Bag")}] while having it in an accessory slot to open it"));
 		}
 
 		public override TagCompound Save() => new TagCompound

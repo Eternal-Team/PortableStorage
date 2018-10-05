@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using BaseLibrary.Items;
-using BaseLibrary.Utility;
 using ContainerLibrary.Content;
 using Terraria;
 using Terraria.Audio;
@@ -15,9 +13,10 @@ namespace PortableStorage.Items.Bags
 		public override bool CloneNewInstances => true;
 
 		public ItemStackHandler handler;
+		public int ID => item.stringColor;
 
-		public static LegacySoundStyle OpenSound { get; set; } = SoundID.Item1;
-		public static LegacySoundStyle CloseSound { get; set; } = SoundID.Item1;
+		public virtual LegacySoundStyle OpenSound => SoundID.Item1;
+		public virtual LegacySoundStyle CloseSound => SoundID.Item1;
 
 		public override ModItem Clone()
 		{
@@ -26,14 +25,17 @@ namespace PortableStorage.Items.Bags
 			return clone;
 		}
 
-		public override void ModifyTooltips(List<TooltipLine> tooltips)
+		public override void SetDefaults()
 		{
-			tooltips.Add(new TooltipLine(mod, "nane", handler.stacks.Where((x, i) => !x.IsAir).Select((x, i) => $"[{i}: {x.ToString()}]").Aggregate("\n")));
+			item.stringColor = PortableStorage.Instance.BagID++;
 		}
 
 		public override bool UseItem(Player player)
 		{
-			//if (player.whoAmI == Main.LocalPlayer.whoAmI) this.HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI)
+			{
+				PortableStorage.Instance.BagUI.UI.HandleBag(this);
+			}
 
 			return true;
 		}
@@ -43,13 +45,6 @@ namespace PortableStorage.Items.Bags
 		public override void RightClick(Player player)
 		{
 			item.stack++;
-
-			for (int count = 0; count < 5; count++)
-			{
-				Item i = new Item();
-				i.SetDefaults(Main.rand.Next(0, ItemLoader.ItemCount));
-				handler.InsertItem(Main.rand.Next(handler.GetSlots()), i);
-			}
 
 			//if (player.whoAmI == Main.LocalPlayer.whoAmI) this.HandleUI();
 		}

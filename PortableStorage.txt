@@ -1,4 +1,25 @@
-Lock bag in slot when having it open
+Back-end improvements
+
+multiple normal bag tiers (18/36/54)
+
+more fluid containers
+
+Potion Belt/Bag
+
+split ammo bags into multiple ones
+-> master ammo bag
+
+visuals for bags in accessry slots
+
+visuals for vacuum bag
+
+dev/null/ improvements
+
+coin bag/wallet
+
+tooltip streamlining
+
+Can be easily done - lock bag in slot when having it open?
 
 Save UIPosition on player
 
