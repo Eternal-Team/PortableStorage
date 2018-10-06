@@ -59,9 +59,9 @@
     <Compile Include="Items\BaseBag.cs" />
     <Compile Include="PortableStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\AllBagsUI.cs" />
     <Compile Include="UI\BagUI.cs" />
-    <Compile Include="UI\BaseBagUI.cs" />
+    <Compile Include="UI\BagPanel.cs" />
+    <Compile Include="UI\BaseBagPanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="build.txt" />

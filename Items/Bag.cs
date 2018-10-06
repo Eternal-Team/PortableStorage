@@ -10,7 +10,7 @@ namespace PortableStorage.Items.Bags
 	{
 		public Bag()
 		{
-			handler = new ItemStackHandler(54);
+			handler = new ItemHandler(54);
 		}
 
 		public override void SetStaticDefaults()

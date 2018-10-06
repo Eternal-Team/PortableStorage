@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using BaseLibrary.Items;
 using ContainerLibrary.Content;
+using PortableStorage.UI;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -12,8 +13,10 @@ namespace PortableStorage.Items.Bags
 	{
 		public override bool CloneNewInstances => true;
 
-		public ItemStackHandler handler;
+		public ItemHandler handler;
 		public int ID => item.stringColor;
+
+		public BaseBagPanel UI => PortableStorage.Instance.BagUI.UI.Elements.OfType<BaseBagPanel>().FirstOrDefault(x => x.bag.ID == ID);
 
 		public virtual LegacySoundStyle OpenSound => SoundID.Item1;
 		public virtual LegacySoundStyle CloseSound => SoundID.Item1;
@@ -21,21 +24,24 @@ namespace PortableStorage.Items.Bags
 		public override ModItem Clone()
 		{
 			BaseBag clone = (BaseBag)base.Clone();
-			clone.handler = new ItemStackHandler(handler.stacks.Select(x => x.Clone()).ToList());
+			clone.handler = new ItemHandler(handler.stacks.Select(x => x.Clone()).ToList());
 			return clone;
 		}
 
 		public override void SetDefaults()
 		{
 			item.stringColor = PortableStorage.Instance.BagID++;
+			item.useTime = 5;
+			item.useAnimation = 5;
+			item.noUseGraphic = true;
+			item.useStyle = 1;
+			item.rare = 0;
+			item.accessory = true;
 		}
 
 		public override bool UseItem(Player player)
 		{
-			if (player.whoAmI == Main.LocalPlayer.whoAmI)
-			{
-				PortableStorage.Instance.BagUI.UI.HandleBag(this);
-			}
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.BagUI.UI.HandleBag(this);
 
 			return true;
 		}
@@ -46,7 +52,7 @@ namespace PortableStorage.Items.Bags
 		{
 			item.stack++;
 
-			//if (player.whoAmI == Main.LocalPlayer.whoAmI) this.HandleUI();
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.BagUI.UI.HandleBag(this);
 		}
 	}
 }

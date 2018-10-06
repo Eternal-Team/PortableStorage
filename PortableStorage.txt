@@ -1,6 +1,6 @@
 Back-end improvements
 
-multiple normal bag tiers (18/36/54)
+multiple normal bag tiers (18 Adventurer's /36 Reinforced /54 Storagemaster's)
 
 more fluid containers
 
