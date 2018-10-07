@@ -2,18 +2,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ContainerLibrary.Content;
+using PortableStorage.Items.Bags;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace PortableStorage.Items.Bags
+namespace PortableStorage.Items.NormalBags
 {
-	public class Bag : BaseBag
+	public class AdventurerBag : BaseBag
 	{
-		public Bag()
+		public AdventurerBag()
 		{
-			handler = new ItemHandler(54);
+			handler = new ItemHandler(18);
 			handler.OnContentsChanged += (handler, slot) =>
 			{
 				if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -31,8 +32,8 @@ namespace PortableStorage.Items.Bags
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Storagemaster's Bag");
-			Tooltip.SetDefault("Stores 54 stacks of items");
+			DisplayName.SetDefault("Adventurer's Bag");
+			Tooltip.SetDefault("Stores 18 stacks of items");
 		}
 
 		public override void SetDefaults()
@@ -41,13 +42,7 @@ namespace PortableStorage.Items.Bags
 
 			item.width = 26;
 			item.height = 34;
-			item.useTime = 5;
-			item.useAnimation = 5;
-			item.noUseGraphic = true;
-			item.useStyle = 1;
-			//item.value = TheOneLibrary.Utils.Utility.GetItemValue(ItemID.Leather) * 10;
-			item.rare = 0;
-			item.accessory = true;
+			item.rare = 1;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -63,13 +58,6 @@ namespace PortableStorage.Items.Bags
 		public override void Load(TagCompound tag)
 		{
 			handler.Load(tag.GetCompound("Items"));
-			//if (gui != null && tag.ContainsKey("UIPosition"))
-			//{
-			//    Vector2 vector = tag.Get<Vector2>("UIPosition");
-			//    gui.ui.panelMain.Left.Set(vector.X, 0f);
-			//    gui.ui.panelMain.Top.Set(vector.Y, 0f);
-			//    gui.ui.panelMain.Recalculate();
-			//}
 		}
 
 		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);

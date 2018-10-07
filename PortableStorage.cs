@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BaseLibrary.UI;
 using BaseLibrary.Utility;
 using Microsoft.Xna.Framework;
@@ -33,6 +34,15 @@ namespace PortableStorage
 		public override void Unload()
 		{
 			Utility.UnloadNullableTypes();
+		}
+
+		public override void PostAddRecipes()
+		{
+			foreach (ModItem item in this.GetValue<Dictionary<string, ModItem>>("items").Values)
+			{
+				Recipe recipe = Main.recipe.FirstOrDefault(x => x.createItem.type == item.item.type);
+				if (recipe != null) item.item.value = recipe.requiredItem.Sum(x => x.value);
+			}
 		}
 
 		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)

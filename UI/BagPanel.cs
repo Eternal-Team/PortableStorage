@@ -1,43 +1,45 @@
 ﻿using BaseLibrary.UI.Elements;
 using BaseLibrary.Utility;
+using Terraria;
+using Language = Terraria.Localization.Language;
 
 namespace PortableStorage.UI
 {
-	public class BagPanel : BaseBagPanel
-	{
-		public override void OnInitialize()
-		{
-			Width = (408, 0);
-			Height = (308, 0);
-			this.Center();
-			SetPadding(0);
-			OnPostDraw += DragUpdate;
-			OnMouseDown += DragStart;
-			OnMouseUp += DragEnd;
+    public class BagPanel : BaseBagPanel
+    {
+        public override void OnInitialize()
+        {
+            Width = (408, 0);
+            Height = (40 + bag.handler.Slots / 9 * 44, 0);
+            this.Center();
+            SetPadding(0);
+            OnPostDraw += DragUpdate;
+            OnMouseDown += DragStart;
+            OnMouseUp += DragEnd;
 
-			textLabel = new UIText("Bag")
-			{
-				Top = (8, 0),
-				HAlign = 0.5f
-			};
-			Append(textLabel);
+            textLabel = new UIText(bag.DisplayName.GetTranslation(Language.ActiveCulture))
+            {
+                Top = (8, 0),
+                HAlign = 0.5f
+            };
+            Append(textLabel);
 
-			gridItems = new UIGrid<UIContainerSlot>(9)
-			{
-				Width = (-16, 1),
-				Height = (-44, 1),
-				Left = (8, 0),
-				Top = (36, 0),
-				OverflowHidden = true,
-				ListPadding = 4f
-			};
-			Append(gridItems);
+            gridItems = new UIGrid<UIContainerSlot>(9)
+            {
+                Width = (-16, 1),
+                Height = (-44, 1),
+                Left = (8, 0),
+                Top = (36, 0),
+                OverflowHidden = true,
+                ListPadding = 4f
+            };
+            Append(gridItems);
 
-			for (int i = 0; i < bag.handler.stacks.Count; i++)
-			{
-				UIContainerSlot slot = new UIContainerSlot(bag.handler, i);
-				gridItems.Add(slot);
-			}
-		}
-	}
+            for (int i = 0; i < bag.handler.stacks.Count; i++)
+            {
+                UIContainerSlot slot = new UIContainerSlot(bag.handler, i);
+                gridItems.Add(slot);
+            }
+        }
+    }
 }
