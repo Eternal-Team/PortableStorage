@@ -23,6 +23,8 @@ namespace PortableStorage
 		{
 			Instance = this;
 
+			this.LoadTextures();
+
 			BagUI = Utility.SetupGUI<BagUI>();
 			BagUI.Visible = true;
 

@@ -15,8 +15,6 @@ coin bag/wallet
 
 tooltip streamlining
 
-Can be easily done - lock bag in slot when having it open?
-
 Save UIPosition on player
 
 fix sound in UI

@@ -55,6 +55,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Items\NormalBags\BaseNormalBag.cs" />
     <Compile Include="Items\NormalBags\ReinforcedBag.cs" />
     <Compile Include="Items\NormalBags\AdventurerBag.cs" />
     <Compile Include="Items\NormalBags\StoragemasterBag.cs" />
