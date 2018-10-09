@@ -3,6 +3,7 @@ using System.Linq;
 using BaseLibrary.UI;
 using BaseLibrary.Utility;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using PortableStorage.Items.Bags;
 using PortableStorage.UI;
 using Terraria;
@@ -19,18 +20,25 @@ namespace PortableStorage
 
 		public GUI<BagUI> BagUI;
 
+		public static ModHotKey HotkeyBag;
+
 		public override void Load()
 		{
 			Instance = this;
 
-			this.LoadTextures();
-
-			BagUI = Utility.SetupGUI<BagUI>();
-			BagUI.Visible = true;
-
 			On.Terraria.UI.UIElement.GetElementAt += UIElement_GetElementAt;
 			ItemSlot.Handle_1 += ItemSlot_Handle;
 			ItemSlot.LeftClick_1 += ItemSlot_LeftClick;
+
+			HotkeyBag = this.Register("Open Bag", Keys.B);
+
+			if (!Main.dedServ)
+			{
+				this.LoadTextures();
+
+				BagUI = Utility.SetupGUI<BagUI>();
+				BagUI.Visible = true;
+			}
 		}
 
 		public override void Unload()

@@ -4,7 +4,7 @@ using ContainerLibrary;
 
 namespace PortableStorage.UI
 {
-	public class BagPanel : BaseBagPanel
+	public class TheBlackHolePanel : BaseBagPanel
 	{
 		public override void OnInitialize()
 		{

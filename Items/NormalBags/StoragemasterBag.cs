@@ -12,7 +12,7 @@ namespace PortableStorage.Items.NormalBags
 		{
 			base.SetDefaults();
 
-			item.rare = 3;
+			item.rare = 5;
 		}
 
 		public override void AddRecipes()

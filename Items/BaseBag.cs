@@ -1,6 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using BaseLibrary.Items;
-using ContainerLibrary.Content;
+using ContainerLibrary;
 using PortableStorage.UI;
 using Terraria;
 using Terraria.Audio;
@@ -18,6 +19,7 @@ namespace PortableStorage.Items.Bags
 
 		public BaseBagPanel UI => PortableStorage.Instance.BagUI.UI.Elements.OfType<BaseBagPanel>().FirstOrDefault(x => x.bag.ID == ID);
 
+		public virtual Type UIType { get; }
 		public virtual LegacySoundStyle OpenSound => SoundID.Item1;
 		public virtual LegacySoundStyle CloseSound => SoundID.Item1;
 

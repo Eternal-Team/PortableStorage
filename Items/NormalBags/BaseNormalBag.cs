@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ContainerLibrary.Content;
-using Microsoft.Xna.Framework;
+using ContainerLibrary;
 using PortableStorage.Items.Bags;
+using PortableStorage.UI;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.NormalBags
@@ -14,6 +14,7 @@ namespace PortableStorage.Items.NormalBags
 	public abstract class BaseNormalBag : BaseBag
 	{
 		public override string Texture => "PortableStorage/Textures/Items/Bag";
+		public override Type UIType => typeof(BagPanel);
 
 		public virtual int SlotCount { get; }
 		public new virtual string Name { get; }
@@ -21,7 +22,7 @@ namespace PortableStorage.Items.NormalBags
 		public BaseNormalBag()
 		{
 			handler = new ItemHandler(SlotCount);
-			handler.OnContentsChanged += (handler, slot) =>
+			handler.OnContentsChanged += slot =>
 			{
 				if (Main.netMode == NetmodeID.MultiplayerClient)
 				{
@@ -35,7 +36,7 @@ namespace PortableStorage.Items.NormalBags
 				}
 			};
 		}
-		
+
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault($"{Name} Bag");

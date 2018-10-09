@@ -1,5 +1,6 @@
 ﻿using BaseLibrary.UI.Elements;
 using BaseLibrary.Utility;
+using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Items.Bags;
