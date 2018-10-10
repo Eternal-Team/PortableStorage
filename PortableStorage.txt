@@ -3,14 +3,16 @@ more fluid containers
 Potion Belt
 
 split ammo bags into multiple ones (Resupply/Substite ammo slots)
--> Arrow Quiver
--> Explosion-proof container 
--> Magazine
+-> Arrow Quiver (Arrow)
+-> Fire-proof container (Rocket, Gel, Flare, StyngerBolt) 
+-> Magazine (Bullet)
+-> Wallet (Coin)
+-> The Perfect Solution (Solution)
+-> Dart Holder (Dart)
+-> Ammo Pounch (FallenStar, Sand, Snowball, CandyCorn, JackOLantern, Stake)
     -> Master Ammo Pouch
 
 visuals for bags in accessory slots
-
-The Black Hole suction effect (render The Black Hole sprite and decrease the scale of the item to 0)
 
 dev/null/ improvements
 
@@ -19,5 +21,3 @@ Wallet
 tooltip streamlining
 
 Save UIPosition on player
-
-fix sound in UI

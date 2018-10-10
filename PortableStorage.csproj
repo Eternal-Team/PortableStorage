@@ -57,6 +57,14 @@
   <ItemGroup>
     <Compile Include="Global\PSItem.cs" />
     <Compile Include="Global\PSPlayer.cs" />
+    <Compile Include="Items\AmmoBags\MasterAmmoPounch.cs" />
+    <Compile Include="Items\AmmoBags\AmmoPounch.cs" />
+    <Compile Include="Items\AmmoBags\DartHolder.cs" />
+    <Compile Include="Items\AmmoBags\ThePerfectSolution.cs" />
+    <Compile Include="Items\AmmoBags\Wallet.cs" />
+    <Compile Include="Items\AmmoBags\Magazine.cs" />
+    <Compile Include="Items\AmmoBags\FireProofContainer.cs" />
+    <Compile Include="Items\AmmoBags\ArrowQuiver.cs" />
     <Compile Include="Items\NormalBags\BaseNormalBag.cs" />
     <Compile Include="Items\NormalBags\ReinforcedBag.cs" />
     <Compile Include="Items\NormalBags\AdventurerBag.cs" />
@@ -88,9 +96,7 @@
     <None Include="packages.config" />
     <None Include="PortableStorage.json" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Items\AmmoBags\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>"C:\Program Files (x86)\Steam\steamapps\content\app_105600\depot_105601\tModLoaderServer.exe" -build "$(ProjectDir)\" -eac "$(TargetPath)"</PostBuildEvent>
