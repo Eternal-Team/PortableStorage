@@ -6,6 +6,7 @@ using BaseLibrary.Utility;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PortableStorage.Global;
 using PortableStorage.Items.Bags;
 using PortableStorage.UI;
 using Terraria;
@@ -17,14 +18,11 @@ namespace PortableStorage.Items
 {
 	public class TheBlackHole : BaseBag
 	{
-		[PathOverride("PortableStorage/Textures/Items/TheBlackHole")]
-		public new static Texture2D Texture { get; set; }
-
 		public override Type UIType => typeof(TheBlackHolePanel);
 
 		public bool active;
 		private float angle;
-		private const float angleDecrement = 0.02617994F;
+		private const float angleDecrement = 0.05235988F;
 		private Vector2 origin = new Vector2(30);
 		private const int maxRange = 160;
 
@@ -76,10 +74,28 @@ namespace PortableStorage.Items
 
 		public void Update(Player player)
 		{
-			List<Item> nearbyItems = Main.item.Where(item => Vector2.Distance(item.Center, player.position) <= maxRange).ToList();
-			foreach (Item nearbyItem in nearbyItems)
+			for (int i = 0; i < Main.item.Length; i++)
 			{
-				if (nearbyItem.scale > 0f) nearbyItem.scale -= 0.01f;
+				Item item = Main.item[i];
+				if (item == null || item.IsAir) continue;
+
+				PSItem globalItem = item.GetGlobalItem<PSItem>();
+
+				if (Vector2.Distance(item.Center, player.Center) <= maxRange) globalItem.markedForSuction = true;
+				else
+				{
+					globalItem.scale = 1f;
+					globalItem.angle = 0f;
+				}
+
+				if (globalItem.scale <= 0f)
+				{
+					for (int j = 0; j < handler.Slots; j++)
+					{
+						item = handler.InsertItem(j, item);
+						if (item.IsAir || !item.active) break;
+					}
+				}
 			}
 		}
 
@@ -107,12 +123,14 @@ namespace PortableStorage.Items
 
 		public override TagCompound Save() => new TagCompound
 		{
-			["Items"] = handler.Save()
+			["Items"] = handler.Save(),
+			["Active"] = active
 		};
 
 		public override void Load(TagCompound tag)
 		{
 			handler.Load(tag.GetCompound("Items"));
+			active = tag.GetBool("Active");
 		}
 
 		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
