@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using BaseLibrary.Utility;
 using ContainerLibrary;
 using PortableStorage.Items.Bags;
 using PortableStorage.UI;
@@ -13,7 +14,7 @@ namespace PortableStorage.Items
 {
 	public class Wallet : BaseBag
 	{
-		public override Type UIType => typeof(TheBlackHolePanel);
+		public override Type UIType => typeof(WalletPanel);
 
 		public Wallet()
 		{
@@ -31,12 +32,13 @@ namespace PortableStorage.Items
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
+			handler.IsItemValid += (slot, item) => item.IsCoin();
 		}
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("The Black Hole");
-			Tooltip.SetDefault($"Stores {handler.Slots} stacks of items");
+			DisplayName.SetDefault("Wallet");
+			Tooltip.SetDefault($"Stores {handler.Slots} stacks of coins");
 		}
 
 		public override void SetDefaults()

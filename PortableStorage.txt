@@ -1,22 +1,20 @@
+clear UIs on presaveandquit
+
 more fluid containers
 
 Potion Belt
 
 split ammo bags into multiple ones (Resupply/Substite ammo slots)
--> Arrow Quiver (Arrow)
--> Fire-proof container (Rocket, Gel, Flare, StyngerBolt) 
--> Magazine (Bullet)
--> Wallet (Coin)
--> The Perfect Solution (Solution)
--> Dart Holder (Dart)
--> Ammo Pounch (FallenStar, Sand, Snowball, CandyCorn, JackOLantern, Stake)
     -> Master Ammo Pouch
+
+Wallet -> 12 references to CoinsCount
+
+filter on The Black Hole?
+The Black Hole sync visuals
 
 visuals for bags in accessory slots
 
 dev/null/ improvements
-
-Wallet
 
 tooltip streamlining
 

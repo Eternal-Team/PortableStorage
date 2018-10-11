@@ -15,6 +15,8 @@ namespace PortableStorage.Items
 	{
 		public override Type UIType => typeof(TheBlackHolePanel);
 
+		public static readonly List<int> ammoTypes = new List<int> { AmmoID.Rocket, AmmoID.Gel, AmmoID.Flare, AmmoID.StyngerBolt, AmmoID.JackOLantern };
+
 		public FireProofContainer()
 		{
 			handler = new ItemHandler(27);
@@ -31,12 +33,13 @@ namespace PortableStorage.Items
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
+			handler.IsItemValid += (slot, item) => ammoTypes.Contains(item.ammo);
 		}
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("The Black Hole");
-			Tooltip.SetDefault($"Stores {handler.Slots} stacks of items");
+			DisplayName.SetDefault("Fire-proof Container");
+			Tooltip.SetDefault($"Stores {handler.Slots} stacks of explosive or flameable ammo");
 		}
 
 		public override void SetDefaults()

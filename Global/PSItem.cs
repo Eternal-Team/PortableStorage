@@ -8,6 +8,7 @@ namespace PortableStorage.Global
 	public class PSItem : GlobalItem
 	{
 		public override bool InstancePerEntity => true;
+		public override bool CloneNewInstances => true;
 
 		#region Constant fields
 		private const float angleDecrement = 0.06981317f;
@@ -21,56 +22,14 @@ namespace PortableStorage.Global
 		public float scale = 1f;
 		#endregion
 
-		public override GlobalItem Clone(Item item, Item itemClone)
-		{
-			PSItem clone = (PSItem)base.Clone(item, itemClone);
-			clone.angle = angle;
-			clone.scale = scale;
-			return clone;
-		}
-
-		/*
 		public override bool OnPickup(Item item, Player player)
 		{
-		    //VacuumBag vacuumBagAcc = (VacuumBag)player.Accessory().FirstOrDefault(x => x.modItem is VacuumBag && HasSpace(((VacuumBag)x.modItem).Items.ToList(), item))?.modItem;
-		    //VacuumBag vacuumBag = (VacuumBag)player.inventory.FirstOrDefault(x => x.modItem is VacuumBag && HasSpace(((VacuumBag)x.modItem).Items.ToList(), item))?.modItem;
-		    //DevNull devNull = (DevNull)player.inventory.FirstOrDefault(x => x.modItem is DevNull && ((DevNull)x.modItem).Items.Any(y => y.type == item.type))?.modItem;
+			markedForSuction = false;
+			scale = 1f;
+			angle = 0f;
 
-		    //if (devNull != null)
-		    //{
-		    // Item insert = devNull.Items.First(x => !x.IsAir && x.type == item.type);
-		    // int count = Math.Min(insert.maxStack - insert.stack, item.stack);
-		    // insert.stack += count;
-
-		    // devNull.Sync();
-		    // SyncItem(devNull.item);
-
-		    // return false;
-		    //}
-
-		    //if (vacuumBagAcc != null && vacuumBagAcc.active && item.type != ItemID.Heart && item.type != ItemID.Star && !item.IsCoin())
-		    //{
-		    // foreach (int i in InsertItem(item, vacuumBagAcc.Items))
-		    //  Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.05f));
-
-		    // vacuumBagAcc.Sync();
-
-		    // return false;
-		    //}
-
-		    //if (vacuumBag != null && vacuumBag.active && item.type != ItemID.Heart && item.type != ItemID.Star && !item.IsCoin())
-		    //{
-		    // foreach (int i in InsertItem(item, vacuumBag.Items))
-		    //  Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.05f));
-
-		    // vacuumBag.Sync();
-
-		    // return false;
-		    //}
-
-		    return true;
+			return base.OnPickup(item, player);
 		}
-		*/
 
 		public override bool PreDrawInWorld(Item item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
 		{
@@ -82,8 +41,7 @@ namespace PortableStorage.Global
 				if (this.scale > 0f) this.scale -= scaleDecrement;
 
 				scale *= this.scale;
-
-				spriteBatch.Draw(Main.extraTexture[50], new Vector2(item.position.X - Main.screenPosition.X + item.width * 0.5f, item.position.Y - Main.screenPosition.Y + item.height - Main.itemTexture[item.type].Height * 0.5f + 2f), null, Color.White, angle + rotation, origin, this.scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(Main.extraTexture[50], Main.itemAnimationsRegistered.Contains(item.type) ? new Vector2(item.position.X - Main.screenPosition.X + item.width * 0.5f, item.position.Y - Main.screenPosition.Y + item.height - Main.itemTexture[item.type].Height * 0.5f / Main.itemAnimations[item.type].FrameCount + 2f) : new Vector2(item.position.X - Main.screenPosition.X + item.width * 0.5f, item.position.Y - Main.screenPosition.Y + item.height - Main.itemTexture[item.type].Height * 0.5f + 2f), null, Color.White, angle + rotation, origin, this.scale, SpriteEffects.None, 0f);
 			}
 
 			#region old

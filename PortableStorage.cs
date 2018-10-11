@@ -55,6 +55,11 @@ namespace PortableStorage
 			}
 		}
 
+		public override void PreSaveAndQuit()
+		{
+			BagUI.UI.Elements.Clear();
+		}
+
 		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
 			int InventoryIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));

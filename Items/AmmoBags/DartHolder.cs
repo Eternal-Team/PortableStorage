@@ -31,12 +31,13 @@ namespace PortableStorage.Items
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
+			handler.IsItemValid += (slot, item) => item.ammo == AmmoID.Dart;
 		}
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("The Black Hole");
-			Tooltip.SetDefault($"Stores {handler.Slots} stacks of items");
+			DisplayName.SetDefault("Dart Holder");
+			Tooltip.SetDefault($"Stores {handler.Slots} stacks of darts");
 		}
 
 		public override void SetDefaults()

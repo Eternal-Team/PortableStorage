@@ -76,8 +76,8 @@ namespace PortableStorage.Items
 		{
 			for (int i = 0; i < Main.item.Length; i++)
 			{
-				Item item = Main.item[i];
-				if (item == null || item.IsAir) continue;
+				ref Item item = ref Main.item[i];
+				if (item == null || item.IsAir || !handler.stacks.HasSpace(item)) continue;
 
 				PSItem globalItem = item.GetGlobalItem<PSItem>();
 
@@ -90,11 +90,70 @@ namespace PortableStorage.Items
 
 				if (globalItem.scale <= 0f)
 				{
-					for (int j = 0; j < handler.Slots; j++)
+					if (!ItemLoader.OnPickup(item, player)) item = new Item();
+					else if (ItemID.Sets.NebulaPickup[item.type])
 					{
-						item = handler.InsertItem(j, item);
-						if (item.IsAir || !item.active) break;
+						int buffType = item.buffType;
+						item = new Item();
+
+						if (Main.netMode == 1) NetMessage.SendData(MessageID.NebulaLevelupRequest, -1, -1, null, player.whoAmI, buffType, player.Center.X, player.Center.Y);
+						else player.NebulaLevelup(buffType);
 					}
+					else if (item.type == 58 || item.type == 1734 || item.type == 1867)
+					{
+						player.statLife += 20;
+						if (Main.myPlayer == player.whoAmI) player.HealEffect(20);
+						if (player.statLife > player.statLifeMax2) player.statLife = player.statLifeMax2;
+
+						item = new Item();
+					}
+					else if (item.type == 184 || item.type == 1735 || item.type == 1868)
+					{
+						player.statMana += 100;
+						if (Main.myPlayer == player.whoAmI) player.ManaEffect(100);
+						if (player.statMana > player.statManaMax2) player.statMana = player.statManaMax2;
+
+						item = new Item();
+					}
+					else if (item.IsCoin())
+					{
+						long addedCoins = Utils.CoinsCount(out bool itemOverflow, new[] { item }) + Utils.CoinsCount(out bool handlerOverflow, handler.stacks.ToArray());
+						if (addedCoins < Utils.MaxCoins)
+						{
+							handler.stacks.Where(x => x.IsCoin()).ForEach(x => x.TurnToAir());
+
+							List<Item> coins = Utils.CoinsSplit(addedCoins).Select((x, index) =>
+							{
+								Item coin = new Item();
+								coin.SetDefaults(ItemID.CopperCoin + index);
+								coin.stack = x;
+								return coin;
+							}).ToList();
+							for (int c = 0; c < coins.Count; c++)
+							{
+								Item coin = coins[c];
+								for (int j = 0; j < handler.Slots; j++)
+								{
+									coin = handler.InsertItem(j, coin);
+
+									if (coin.IsAir || !coin.active) break;
+								}
+							}
+						}
+
+						item = new Item();
+					}
+					else
+					{
+						for (int j = 0; j < handler.Slots; j++)
+						{
+							item = handler.InsertItem(j, item);
+
+							if (item.IsAir || !item.active) break;
+						}
+					}
+
+					if (Main.netMode == 1) NetMessage.SendData(MessageID.SyncItem, -1, -1, null, i);
 				}
 			}
 		}

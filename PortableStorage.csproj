@@ -76,6 +76,7 @@
     <Compile Include="UI\BagUI.cs" />
     <Compile Include="UI\BagPanel.cs" />
     <Compile Include="UI\BaseBagPanel.cs" />
+    <Compile Include="UI\WalletPanel.cs" />
     <Compile Include="UI\TheBlackHolePanel.cs" />
   </ItemGroup>
   <ItemGroup>

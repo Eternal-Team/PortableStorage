@@ -27,6 +27,9 @@ namespace PortableStorage.Items.Bags
 		{
 			BaseBag clone = (BaseBag)base.Clone();
 			clone.handler = new ItemHandler(handler.stacks.Select(x => x.Clone()).ToList());
+			clone.handler.IsItemValid = (Func<int, Item, bool>)handler.IsItemValid.Clone();
+			clone.handler.GetSlotLimit = (Func<int, int>)handler.GetSlotLimit.Clone();
+			clone.handler.OnContentsChanged = (Action<int>)handler.OnContentsChanged.Clone();
 			return clone;
 		}
 
