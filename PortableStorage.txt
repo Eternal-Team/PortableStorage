@@ -1,13 +1,9 @@
-clear UIs on presaveandquit
-
 more fluid containers
 
 Potion Belt
 
 split ammo bags into multiple ones (Resupply/Substite ammo slots)
     -> Master Ammo Pouch
-
-Wallet -> 12 references to CoinsCount
 
 filter on The Black Hole?
 The Black Hole sync visuals
