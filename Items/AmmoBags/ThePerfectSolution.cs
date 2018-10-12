@@ -11,8 +11,8 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items
 {
-	public class ThePerfectSolution : BaseBag
-	{
+	public class ThePerfectSolution : BaseAmmoBag
+    {
 		public override Type UIType => typeof(TheBlackHolePanel);
 
 		public ThePerfectSolution()

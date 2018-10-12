@@ -11,8 +11,8 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items
 {
-	public class ArrowQuiver : BaseBag
-	{
+	public class ArrowQuiver : BaseAmmoBag
+    {
 		public override Type UIType => typeof(TheBlackHolePanel);
 
 		public ArrowQuiver()

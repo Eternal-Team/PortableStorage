@@ -11,8 +11,8 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items
 {
-	public class FireProofContainer : BaseBag
-	{
+	public class FireProofContainer : BaseAmmoBag
+    {
 		public override Type UIType => typeof(TheBlackHolePanel);
 
 		public static readonly List<int> ammoTypes = new List<int> { AmmoID.Rocket, AmmoID.Gel, AmmoID.Flare, AmmoID.StyngerBolt, AmmoID.JackOLantern };

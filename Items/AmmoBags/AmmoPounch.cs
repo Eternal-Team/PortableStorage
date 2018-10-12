@@ -9,9 +9,9 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader.IO;
 
-namespace PortableStorage.Items
+namespace PortableStorage.Items.Bags
 {
-	public class AmmoPounch : BaseBag
+	public class AmmoPounch : BaseAmmoBag
 	{
 		public override Type UIType => typeof(TheBlackHolePanel);
 

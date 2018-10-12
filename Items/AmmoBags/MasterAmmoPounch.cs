@@ -11,8 +11,8 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items
 {
-	public class MasterAmmoPounch : BaseBag
-	{
+	public class MasterAmmoPounch : BaseAmmoBag
+    {
 		public override Type UIType => typeof(TheBlackHolePanel);
 
 		public MasterAmmoPounch()
@@ -31,12 +31,13 @@ namespace PortableStorage.Items
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
+			handler.IsItemValid += (slot, item) => item.ammo > 0;
 		}
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("The Black Hole");
-			Tooltip.SetDefault($"Stores {handler.Slots} stacks of items");
+			DisplayName.SetDefault("Master Ammo Pounch");
+			Tooltip.SetDefault($"Stores {handler.Slots} stacks of ammo");
 		}
 
 		public override void SetDefaults()

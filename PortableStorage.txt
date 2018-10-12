@@ -1,17 +1,20 @@
-more fluid containers
-
 Potion Belt
-
-split ammo bags into multiple ones (Resupply/Substite ammo slots)
-    -> Master Ammo Pouch
 
 filter on The Black Hole?
 The Black Hole sync visuals
 
-visuals for bags in accessory slots
+possible custom bag slot?
+visuals for it?
 
 dev/null/ improvements
 
-tooltip streamlining
 
 Save UIPosition on player
+
+escape to close bag ui?
+
+tooltip
+    display different ammo types that go into bags
+    streamlining
+
+more fluid containers

@@ -11,8 +11,8 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items
 {
-	public class Magazine : BaseBag
-	{
+	public class Magazine : BaseAmmoBag
+    {
 		public override Type UIType => typeof(TheBlackHolePanel);
 
 		public Magazine()

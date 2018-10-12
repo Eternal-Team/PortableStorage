@@ -11,7 +11,7 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items
 {
-	public class Wallet : BaseBag
+	public class Wallet : BaseAmmoBag
 	{
 		public override Type UIType => typeof(WalletPanel);
 
