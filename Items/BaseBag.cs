@@ -41,7 +41,6 @@ namespace PortableStorage.Items.Bags
 			item.noUseGraphic = true;
 			item.useStyle = 1;
 			item.rare = 0;
-			item.accessory = true;
 		}
 
 		public override bool UseItem(Player player)

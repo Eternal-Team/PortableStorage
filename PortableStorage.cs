@@ -117,7 +117,7 @@ namespace PortableStorage
 			long piggyCount = Utils.CoinsCount(out bool _, player.bank.item);
 			long safeCount = Utils.CoinsCount(out bool _, player.bank2.item);
 			long defendersCount = Utils.CoinsCount(out bool _, player.bank3.item);
-			long walletCount = player.inventory.OfType<Wallet>().Sum(wallet => wallet.handler.stacks.CountCoins(out bool _));
+			long walletCount = player.inventory.OfType<Wallet>().Sum(wallet => wallet.handler.stacks.CountCoins());
 
 			long combined = Utils.CoinsCombineStacks(out bool _, piggyCount, safeCount, defendersCount, walletCount);
 			if (combined > 0L)
@@ -138,7 +138,7 @@ namespace PortableStorage
 			long piggyCount = Utils.CoinsCount(out bool _, self.bank.item);
 			long safeCount = Utils.CoinsCount(out bool _, self.bank2.item);
 			long defendersCount = Utils.CoinsCount(out bool _, self.bank3.item);
-			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.handler.stacks.CountCoins(out bool _));
+			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.handler.stacks.CountCoins());
 
 			long combined = Utils.CoinsCombineStacks(out bool _, inventoryCount, piggyCount, safeCount, defendersCount, walletCount);
 
@@ -222,7 +222,7 @@ namespace PortableStorage
 			long piggyCount = Utils.CoinsCount(out bool _, self.bank.item);
 			long safeCount = Utils.CoinsCount(out bool _, self.bank2.item);
 			long defendersCount = Utils.CoinsCount(out bool _, self.bank3.item);
-			long walletCount = self.inventory.Where(x => x.modItem is Wallet).Sum(x => ((Wallet)x.modItem).handler.stacks.CountCoins(out bool _));
+			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.handler.stacks.CountCoins());
 			long combined = Utils.CoinsCombineStacks(out bool _, inventoryCount, piggyCount, safeCount, defendersCount, walletCount);
 
 			return combined >= price;

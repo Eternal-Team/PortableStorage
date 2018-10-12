@@ -77,7 +77,7 @@ namespace PortableStorage.Items
 			for (int i = 0; i < Main.item.Length; i++)
 			{
 				ref Item item = ref Main.item[i];
-				if (item == null || item.IsAir || !handler.stacks.HasSpace(item)) continue;
+				if (item == null || item.IsAir || item.IsCoin() || !handler.stacks.HasSpace(item)) continue;
 
 				PSItem globalItem = item.GetGlobalItem<PSItem>();
 
@@ -117,7 +117,7 @@ namespace PortableStorage.Items
 					}
 					else if (item.IsCoin())
 					{
-						long addedCoins = Utils.CoinsCount(out bool itemOverflow, new[] { item }) + Utils.CoinsCount(out bool handlerOverflow, handler.stacks.ToArray());
+						long addedCoins = Utils.CoinsCount(out bool _, new[] { item }) + Utils.CoinsCount(out bool _, handler.stacks.ToArray());
 						if (addedCoins < Utils.MaxCoins)
 						{
 							handler.stacks.Where(x => x.IsCoin()).ForEach(x => x.TurnToAir());

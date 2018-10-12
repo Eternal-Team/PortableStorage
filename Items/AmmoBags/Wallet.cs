@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using BaseLibrary.Utility;
 using ContainerLibrary;
 using PortableStorage.Items.Bags;
 using PortableStorage.UI;
@@ -18,7 +17,7 @@ namespace PortableStorage.Items
 
 		public Wallet()
 		{
-			handler = new ItemHandler(27);
+			handler = new ItemHandler(4);
 			handler.OnContentsChanged += slot =>
 			{
 				if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -32,13 +31,14 @@ namespace PortableStorage.Items
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
-			handler.IsItemValid += (slot, item) => item.IsCoin();
+			handler.IsItemValid += (slot, item) => item.type == ItemID.PlatinumCoin - slot;
+			handler.GetSlotLimit += slot => int.MaxValue;
 		}
 
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Wallet");
-			Tooltip.SetDefault($"Stores {handler.Slots} stacks of coins");
+			Tooltip.SetDefault("Stores coins\nIt is seemingly bottomless");
 		}
 
 		public override void SetDefaults()

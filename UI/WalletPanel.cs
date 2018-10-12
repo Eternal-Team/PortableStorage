@@ -8,8 +8,8 @@ namespace PortableStorage.UI
 	{
 		public override void OnInitialize()
 		{
-			Width = (408, 0);
-			Height = (40 + bag.handler.Slots / 9 * 44, 0);
+			Width = (188, 0);
+			Height = (84, 0);
 			this.Center();
 			SetPadding(0);
 			OnPostDraw += DragUpdate;
