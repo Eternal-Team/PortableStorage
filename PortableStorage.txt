@@ -8,13 +8,11 @@ visuals for it?
 
 dev/null/ improvements
 
-
 Save UIPosition on player
 
 escape to close bag ui?
 
 tooltip
-    display different ammo types that go into bags
     streamlining
 
 more fluid containers

@@ -16,6 +16,7 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
 using Terraria.UI.Gamepad;
+using static BaseLibrary.BaseLibrary;
 using ItemSlot = On.Terraria.UI.ItemSlot;
 using Player = On.Terraria.Player;
 
@@ -25,10 +26,14 @@ namespace PortableStorage
 	{
 		public static PortableStorage Instance;
 		public int BagID;
+		public static int timer;
 
 		public GUI<BagUI> BagUI;
 
 		public static ModHotKey HotkeyBag;
+
+		public static Dictionary<string, List<int>> ammoTypes;
+		public static Dictionary<string, int> tooltipIndexes;
 
 		public override void Load()
 		{
@@ -43,7 +48,7 @@ namespace PortableStorage
 			Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
 			Player.HasAmmo += Player_HasAmmo;
 			Player.PickAmmo += Player_PickAmmo;
-			
+
 			HotkeyBag = this.Register("Open Bag", Keys.B);
 
 			if (!Main.dedServ)
@@ -58,6 +63,27 @@ namespace PortableStorage
 		public override void Unload()
 		{
 			Utility.UnloadNullableTypes();
+		}
+
+		public override void PostSetupContent()
+		{
+			List<int> miscTypes = new List<int> { AmmoID.FallenStar, AmmoID.Sand, AmmoID.Snowball, AmmoID.CandyCorn, AmmoID.Stake };
+			List<int> flameableTypes = new List<int> { AmmoID.Rocket, AmmoID.Gel, AmmoID.Flare, AmmoID.StyngerBolt, AmmoID.JackOLantern };
+
+			ammoTypes = new Dictionary<string, List<int>>
+			{
+				["Misc"] = itemsCache.Where(item => miscTypes.Contains(item.ammo)).Select(item => item.type).ToList(),
+				["Arrow"] = itemsCache.Where(item => item.ammo == AmmoID.Arrow).Select(item => item.type).ToList(),
+				["Dart"] = itemsCache.Where(item => item.ammo == AmmoID.Dart).Select(item => item.type).ToList(),
+				["Flameable"] = itemsCache.Where(item => flameableTypes.Contains(item.ammo)).Select(item => item.type).ToList(),
+				["Bullet"] = itemsCache.Where(item => item.ammo == AmmoID.Bullet).Select(x => x.type).ToList(),
+				["Solution"] = itemsCache.Where(item => item.ammo == AmmoID.Solution).Select(item => item.type).ToList(),
+				["Coin"] = itemsCache.Where(item => item.ammo == AmmoID.Coin).Select(item => item.type).ToList(),
+				["All"] = itemsCache.Where(item => item.ammo > 0).Select(item => item.type).ToList()
+			};
+
+			tooltipIndexes = new Dictionary<string, int>();
+			foreach (var ammoType in ammoTypes) tooltipIndexes.Add(ammoType.Key, 0);
 		}
 
 		public override void PostAddRecipes()
@@ -79,6 +105,20 @@ namespace PortableStorage
 			int InventoryIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
 
 			if (BagUI != null && InventoryIndex != -1) layers.Insert(InventoryIndex + 1, BagUI.InterfaceLayer);
+		}
+
+		public override void UpdateUI(GameTime gameTime)
+		{
+			if (++timer > 60)
+			{
+				timer = 0;
+				for (int i = 0; i < tooltipIndexes.Count; i++)
+				{
+					string key = tooltipIndexes.Keys.ElementAt(i);
+					tooltipIndexes[key]++;
+					if (tooltipIndexes[key] > ammoTypes[key].Count - 1) tooltipIndexes[key] = 0;
+				}
+			}
 		}
 	}
 

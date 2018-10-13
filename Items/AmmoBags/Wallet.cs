@@ -13,6 +13,7 @@ namespace PortableStorage.Items.Bags
 	public class Wallet : BaseAmmoBag
 	{
 		public override Type UIType => typeof(WalletPanel);
+		public override string AmmoType => "Coin";
 
 		public Wallet()
 		{
