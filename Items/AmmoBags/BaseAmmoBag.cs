@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BaseLibrary.Utility;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
+using PortableStorage.UI;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -11,6 +13,7 @@ namespace PortableStorage.Items.Bags
 {
 	public abstract class BaseAmmoBag : BaseBag
 	{
+		public override Type UIType => typeof(AmmoBagPanel);
 		public virtual string AmmoType => null;
 
 		public static readonly string colorAmmoHighlight = new Color(193, 102, 79).ColorToHex();

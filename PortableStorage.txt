@@ -1,5 +1,3 @@
-Potion Belt
-
 filter on The Black Hole?
 The Black Hole sync visuals
 
@@ -9,10 +7,5 @@ visuals for it?
 dev/null/ improvements
 
 Save UIPosition on player
-
-escape to close bag ui?
-
-tooltip
-    streamlining
 
 more fluid containers

@@ -7,7 +7,6 @@ namespace PortableStorage.Items.Bags
 {
 	public class DartHolder : BaseAmmoBag
 	{
-		public override Type UIType => typeof(TheBlackHolePanel);
 		public override string AmmoType => "Dart";
 
 		public override void SetStaticDefaults()

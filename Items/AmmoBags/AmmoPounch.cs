@@ -7,7 +7,6 @@ namespace PortableStorage.Items.Bags
 {
 	public class AmmoPounch : BaseAmmoBag
 	{
-		public override Type UIType => typeof(TheBlackHolePanel);
 		public override string AmmoType => "Misc";
 
 		public override void SetStaticDefaults()

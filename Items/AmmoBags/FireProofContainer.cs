@@ -7,7 +7,6 @@ namespace PortableStorage.Items.Bags
 {
 	public class FireProofContainer : BaseAmmoBag
 	{
-		public override Type UIType => typeof(TheBlackHolePanel);
 		public override string AmmoType => "Flameable";
 
 		public override void SetStaticDefaults()

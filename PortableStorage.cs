@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using BaseLibrary.UI;
+﻿using BaseLibrary.UI;
 using BaseLibrary.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PortableStorage.Items.Bags;
 using PortableStorage.UI;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent.UI;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -25,7 +26,8 @@ namespace PortableStorage
 	public partial class PortableStorage : Mod
 	{
 		public static PortableStorage Instance;
-		public int BagID;
+
+		public static int BagID;
 		public static int timer;
 
 		public GUI<BagUI> BagUI;
@@ -48,6 +50,9 @@ namespace PortableStorage
 			Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
 			Player.HasAmmo += Player_HasAmmo;
 			Player.PickAmmo += Player_PickAmmo;
+			Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
+			Player.QuickMana += Player_QuickMana;
+			Player.QuickBuff += Player_QuickBuff;
 
 			HotkeyBag = this.Register("Open Bag", Keys.B);
 
@@ -468,15 +473,7 @@ namespace PortableStorage
 			if (item.type > 0 && item.stack > 0)
 			{
 				Texture2D texture2D3 = Main.itemTexture[item.type];
-				Rectangle rectangle2;
-				if (Main.itemAnimations[item.type] != null)
-				{
-					rectangle2 = Main.itemAnimations[item.type].GetFrame(texture2D3);
-				}
-				else
-				{
-					rectangle2 = texture2D3.Frame(1, 1, 0, 0);
-				}
+				Rectangle rectangle2 = Main.itemAnimations[item.type] != null ? Main.itemAnimations[item.type].GetFrame(texture2D3) : texture2D3.Frame();
 
 				Color newColor = color;
 				float num8 = 1f;
@@ -484,14 +481,8 @@ namespace PortableStorage
 				float num9 = 1f;
 				if (rectangle2.Width > 32 || rectangle2.Height > 32)
 				{
-					if (rectangle2.Width > rectangle2.Height)
-					{
-						num9 = 32f / rectangle2.Width;
-					}
-					else
-					{
-						num9 = 32f / rectangle2.Height;
-					}
+					if (rectangle2.Width > rectangle2.Height) num9 = 32f / rectangle2.Width;
+					else num9 = 32f / rectangle2.Height;
 				}
 
 				num9 *= inventoryScale;
@@ -1026,6 +1017,169 @@ namespace PortableStorage
 						item.TurnToAir();
 					}
 				}
+			}
+		}
+
+		private Item Player_QuickHeal_GetItemToUse(Player.orig_QuickHeal_GetItemToUse orig, Terraria.Player self)
+		{
+			int lostHealth = self.statLifeMax2 - self.statLife;
+			Item result = null;
+			int healtGain = -self.statLifeMax2;
+
+			foreach (Item item in self.inventory.OfType<PotionBelt>().SelectMany(x => x.handler.stacks).Concat(self.inventory))
+			{
+				if (item.stack > 0 && item.type > 0 && item.potion && item.healLife > 0 && ItemLoader.CanUseItem(item, self))
+				{
+					int healWaste = self.GetHealLife(item, true) - lostHealth;
+					if (healtGain < 0)
+					{
+						if (healWaste > healtGain)
+						{
+							result = item;
+							healtGain = healWaste;
+						}
+					}
+					else if (healWaste < healtGain && healWaste >= 0)
+					{
+						result = item;
+						healtGain = healWaste;
+					}
+				}
+			}
+
+			return result;
+		}
+
+		private void Player_QuickMana(Player.orig_QuickMana orig, Terraria.Player self)
+		{
+			if (self.noItems || self.statMana == self.statManaMax2) return;
+
+			foreach (Item item in self.inventory.OfType<PotionBelt>().SelectMany(x => x.handler.stacks).Concat(self.inventory))
+			{
+				if (item.stack > 0 && item.type > 0 && item.healMana > 0 && (self.potionDelay == 0 || !item.potion) && ItemLoader.CanUseItem(item, self))
+				{
+					Main.PlaySound(item.UseSound, self.position);
+					if (item.potion)
+					{
+						if (item.type == ItemID.RestorationPotion)
+						{
+							self.potionDelay = self.restorationDelayTime;
+							self.AddBuff(BuffID.PotionSickness, self.potionDelay);
+						}
+						else
+						{
+							self.potionDelay = self.potionDelayTime;
+							self.AddBuff(BuffID.PotionSickness, self.potionDelay);
+						}
+					}
+
+					ItemLoader.UseItem(item, self);
+					int healLife = self.GetHealLife(item, true);
+					int healMana = self.GetHealMana(item, true);
+					self.statLife += healLife;
+					self.statMana += healMana;
+					if (self.statLife > self.statLifeMax2) self.statLife = self.statLifeMax2;
+					if (self.statMana > self.statManaMax2) self.statMana = self.statManaMax2;
+					if (healLife > 0 && Main.myPlayer == self.whoAmI) self.HealEffect(healLife);
+					if (healMana > 0)
+					{
+						self.AddBuff(BuffID.ManaSickness, Terraria.Player.manaSickTime);
+						if (Main.myPlayer == self.whoAmI) self.ManaEffect(healMana);
+					}
+
+					if (ItemLoader.ConsumeItem(item, self)) item.stack--;
+					if (item.stack <= 0) item.TurnToAir();
+
+					Recipe.FindRecipes();
+					return;
+				}
+			}
+		}
+
+		private void Player_QuickBuff(Player.orig_QuickBuff orig, Terraria.Player self)
+		{
+			if (self.noItems) return;
+
+			LegacySoundStyle sound = null;
+
+			foreach (Item item in self.inventory.OfType<PotionBelt>().SelectMany(x => x.handler.stacks).Concat(self.inventory))
+			{
+				if (self.CountBuffs() == 22) return;
+				if (item.stack > 0 && item.type > 0 && item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph)
+				{
+					int buffType = item.buffType;
+					bool canUseItem = ItemLoader.CanUseItem(item, self);
+					for (int j = 0; j < self.buffType.Length; j++)
+					{
+						if (buffType == BuffID.FairyBlue && (self.buffType[j] == buffType || self.buffType[j] == BuffID.FairyRed || self.buffType[j] == BuffID.FairyGreen))
+						{
+							canUseItem = false;
+							break;
+						}
+
+						if (self.buffType[j] == buffType)
+						{
+							canUseItem = false;
+							break;
+						}
+
+						if (Main.meleeBuff[buffType] && Main.meleeBuff[self.buffType[j]])
+						{
+							canUseItem = false;
+							break;
+						}
+					}
+
+					if (Main.lightPet[item.buffType] || Main.vanityPet[item.buffType])
+					{
+						for (int k = 0; k < self.buffType.Length; k++)
+						{
+							if (Main.lightPet[self.buffType[k]] && Main.lightPet[item.buffType]) canUseItem = false;
+							if (Main.vanityPet[self.buffType[k]] && Main.vanityPet[item.buffType]) canUseItem = false;
+						}
+					}
+
+					if (item.mana > 0 && canUseItem)
+					{
+						if (self.statMana >= (int)(item.mana * self.manaCost))
+						{
+							self.manaRegenDelay = (int)self.maxRegenDelay;
+							self.statMana -= (int)(item.mana * self.manaCost);
+						}
+						else canUseItem = false;
+					}
+
+					if (self.whoAmI == Main.myPlayer && item.type == ItemID.Carrot && !Main.cEd) canUseItem = false;
+
+					if (buffType == BuffID.FairyBlue)
+					{
+						buffType = Main.rand.Next(3);
+						if (buffType == 0) buffType = BuffID.FairyBlue;
+						if (buffType == 1) buffType = BuffID.FairyRed;
+						if (buffType == 2) buffType = BuffID.FairyBlue;
+					}
+
+					if (canUseItem)
+					{
+						ItemLoader.UseItem(item, self);
+						sound = item.UseSound;
+						int buffTime = item.buffTime;
+						if (buffTime == 0) buffTime = 3600;
+
+						self.AddBuff(buffType, buffTime);
+						if (item.consumable)
+						{
+							if (ItemLoader.ConsumeItem(item, self)) item.stack--;
+							if (item.stack <= 0) item.TurnToAir();
+						}
+					}
+				}
+			}
+
+			if (sound != null)
+			{
+				Main.PlaySound(sound, self.position);
+				Recipe.FindRecipes();
 			}
 		}
 	}

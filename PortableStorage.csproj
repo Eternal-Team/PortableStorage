@@ -73,12 +73,15 @@
     <Compile Include="Items\NormalBags\AdventurerBag.cs" />
     <Compile Include="Items\NormalBags\StoragemasterBag.cs" />
     <Compile Include="Items\BaseBag.cs" />
+    <Compile Include="Items\PotionBelt.cs" />
     <Compile Include="Items\TheBlackHole.cs" />
     <Compile Include="PortableStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\AmmoBagPanel.cs" />
     <Compile Include="UI\BagUI.cs" />
     <Compile Include="UI\BagPanel.cs" />
     <Compile Include="UI\BaseBagPanel.cs" />
+    <Compile Include="UI\PotionBeltPanel.cs" />
     <Compile Include="UI\WalletPanel.cs" />
     <Compile Include="UI\TheBlackHolePanel.cs" />
   </ItemGroup>

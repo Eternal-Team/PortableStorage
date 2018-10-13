@@ -7,7 +7,6 @@ namespace PortableStorage.Items.Bags
 {
 	public class ArrowQuiver : BaseAmmoBag
 	{
-		public override Type UIType => typeof(TheBlackHolePanel);
 		public override string AmmoType => "Arrow";
 
 		public override void SetStaticDefaults()

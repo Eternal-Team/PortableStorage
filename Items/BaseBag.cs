@@ -35,7 +35,7 @@ namespace PortableStorage.Items.Bags
 
 		public override void SetDefaults()
 		{
-			item.stringColor = PortableStorage.Instance.BagID++;
+			item.stringColor = PortableStorage.BagID++;
 			item.useTime = 5;
 			item.useAnimation = 5;
 			item.noUseGraphic = true;
