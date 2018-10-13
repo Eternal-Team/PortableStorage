@@ -7,14 +7,13 @@ using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Global;
-using PortableStorage.Items.Bags;
 using PortableStorage.UI;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace PortableStorage.Items
+namespace PortableStorage.Items.Bags
 {
 	public class TheBlackHole : BaseBag
 	{

@@ -2,7 +2,6 @@
 using BaseLibrary.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.Items;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

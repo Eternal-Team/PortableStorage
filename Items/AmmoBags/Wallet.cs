@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ContainerLibrary;
-using PortableStorage.Items.Bags;
 using PortableStorage.UI;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader.IO;
 
-namespace PortableStorage.Items
+namespace PortableStorage.Items.Bags
 {
 	public class Wallet : BaseAmmoBag
 	{

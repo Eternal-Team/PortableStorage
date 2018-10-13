@@ -1,7 +1,7 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace PortableStorage.Items.NormalBags
+namespace PortableStorage.Items.Bags
 {
 	public class ReinforcedBag : BaseNormalBag
 	{

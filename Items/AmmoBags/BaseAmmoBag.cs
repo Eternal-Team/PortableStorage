@@ -1,6 +1,6 @@
 ﻿namespace PortableStorage.Items.Bags
 {
-    public abstract class BaseAmmoBag : BaseBag
-    {
-    }
+	public abstract class BaseAmmoBag : BaseBag
+	{
+	}
 }
