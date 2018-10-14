@@ -1,6 +1,7 @@
 ﻿using BaseLibrary.UI.Elements;
 using BaseLibrary.Utility;
 using ContainerLibrary;
+using Microsoft.Xna.Framework;
 
 namespace PortableStorage.UI.Bags
 {
@@ -19,6 +20,16 @@ namespace PortableStorage.UI.Bags
 				HAlign = 0.5f
 			};
 			Append(textLabel);
+
+			buttonClose = new UITextButton("X", 0f)
+			{
+				Size = new Vector2(20),
+				Left = (-28, 1),
+				Top = (8, 0),
+				RenderPanel = false
+			};
+			buttonClose.OnClick += (evt, element) => PortableStorage.Instance.BagUI.UI.CloseBag(bag);
+			Append(buttonClose);
 
 			gridItems = new UIGrid<UIContainerSlot>(9)
 			{

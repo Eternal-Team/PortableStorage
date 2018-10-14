@@ -143,7 +143,7 @@ namespace PortableStorage
 			if (self is BagUI ui)
 			{
 				UIElement uIElement = null;
-				for (int i = ui.Elements.Count - 1; i >= 0; i--)
+				for (int i = 0; i < ui.Elements.Count; i++)
 				{
 					if (ui.Elements[i].ContainsPoint(point)) uIElement = ui.Elements[i];
 				}
