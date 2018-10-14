@@ -5,7 +5,7 @@ using System.Linq;
 using BaseLibrary.Utility;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
-using PortableStorage.UI;
+using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ID;

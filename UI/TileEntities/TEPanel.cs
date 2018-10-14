@@ -2,21 +2,21 @@
 using BaseLibrary.Utility;
 using ContainerLibrary;
 
-namespace PortableStorage.UI
+namespace PortableStorage.UI.TileEntities
 {
-	public class WalletPanel : BaseBagPanel
+	public class TEPanel : BaseTEPanel
 	{
 		public override void OnInitialize()
 		{
-			Width = (188, 0);
-			Height = (84, 0);
+			Width = (408, 0);
+			Height = (172, 0);
 			this.Center();
 			SetPadding(0);
 			OnPostDraw += DragUpdate;
 			OnMouseDown += DragStart;
 			OnMouseUp += DragEnd;
 
-			textLabel = new UIText(bag.DisplayName.TextFromTranslation())
+			textLabel = new UIText( /*bag.DisplayName.TextFromTranslation()*/"Quantum Entangled Chest")
 			{
 				Top = (8, 0),
 				HAlign = 0.5f
@@ -34,11 +34,11 @@ namespace PortableStorage.UI
 			};
 			Append(gridItems);
 
-			for (int i = 0; i < bag.handler.stacks.Count; i++)
-			{
-				UIContainerSlot slot = new UIContainerSlot(bag.handler, i);
-				gridItems.Add(slot);
-			}
+			//for (int i = 0; i < bag.handler.stacks.Count; i++)
+			//{
+			//	UIContainerSlot slot = new UIContainerSlot(bag.handler, i);
+			//	gridItems.Add(slot);
+			//}
 		}
 	}
 }

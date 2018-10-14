@@ -1,11 +1,13 @@
-filter on The Black Hole?
-The Black Hole sync visuals
+DraggableUIPanel
 
-possible custom bag slot?
-visuals for it?
-
-more fluid containers
+UI stays open when throwing a bag
 
 QE stuff
 
+more fluid containers
+
 recipes
+action buttons (restock...)
+
+possible custom bag slot?
+visuals for it?

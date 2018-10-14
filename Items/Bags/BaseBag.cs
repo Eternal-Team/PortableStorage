@@ -3,7 +3,7 @@ using System.Linq;
 using BaseLibrary.Items;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
-using PortableStorage.UI;
+using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -19,7 +19,7 @@ namespace PortableStorage.Items.Bags
 		public int ID => item.stringColor;
 
 		public BaseBagPanel UI => PortableStorage.Instance.BagUI.UI.Elements.OfType<BaseBagPanel>().FirstOrDefault(x => x.bag.ID == ID);
-		public Vector2 UIPosition = -Vector2.One;
+		public Vector2? UIPosition;
 
 		public virtual Type UIType { get; }
 		public virtual LegacySoundStyle OpenSound => SoundID.Item1;

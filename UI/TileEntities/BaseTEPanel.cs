@@ -3,17 +3,18 @@ using BaseLibrary.Utility;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.Items.Bags;
+using PortableStorage.TileEntities;
 using Terraria;
 using Terraria.UI;
 
-namespace PortableStorage.UI
+namespace PortableStorage.UI.TileEntities
 {
-	public class BaseBagPanel : UIPanel
+	public class BaseTEPanel : UIPanel
 	{
-		public BaseBag bag;
+		public BasePSTE te;
 
 		public UIText textLabel;
+		public UITextButton buttonClose;
 		public UIGrid<UIContainerSlot> gridItems;
 
 		#region Dragging

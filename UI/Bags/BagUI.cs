@@ -1,10 +1,9 @@
 ﻿using System;
-using Microsoft.Xna.Framework;
 using PortableStorage.Items.Bags;
 using Terraria;
 using TheOneLibrary.Base.UI;
 
-namespace PortableStorage.UI
+namespace PortableStorage.UI.Bags
 {
 	public class BagUI : BaseUI
 	{
@@ -30,10 +29,10 @@ namespace PortableStorage.UI
 			BaseBagPanel bagUI = (BaseBagPanel)Activator.CreateInstance(bag.UIType);
 			bagUI.bag = bag;
 			bagUI.Activate();
-			if (bag.UIPosition != -Vector2.One)
+			if (bag.UIPosition != null)
 			{
 				bagUI.HAlign = bagUI.VAlign = 0f;
-				bagUI.Position = bag.UIPosition;
+				bagUI.Position = bag.UIPosition.Value;
 			}
 
 			Append(bagUI);

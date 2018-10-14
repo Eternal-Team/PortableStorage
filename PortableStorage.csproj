@@ -77,16 +77,23 @@
     <Compile Include="Items\Bags\DevNull.cs" />
     <Compile Include="Items\Bags\PotionBelt.cs" />
     <Compile Include="Items\Bags\TheBlackHole.cs" />
+    <Compile Include="Items\ItemQEChest.cs" />
     <Compile Include="PortableStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\DevNullPanel.cs" />
-    <Compile Include="UI\AmmoBagPanel.cs" />
-    <Compile Include="UI\BagUI.cs" />
-    <Compile Include="UI\BagPanel.cs" />
-    <Compile Include="UI\BaseBagPanel.cs" />
-    <Compile Include="UI\PotionBeltPanel.cs" />
-    <Compile Include="UI\WalletPanel.cs" />
-    <Compile Include="UI\TheBlackHolePanel.cs" />
+    <Compile Include="TileEntities\BasePSTE.cs" />
+    <Compile Include="TileEntities\TEQEChest.cs" />
+    <Compile Include="Tiles\TileQEChest.cs" />
+    <Compile Include="UI\Bags\DevNullPanel.cs" />
+    <Compile Include="UI\Bags\AmmoBagPanel.cs" />
+    <Compile Include="UI\Bags\BagUI.cs" />
+    <Compile Include="UI\Bags\BagPanel.cs" />
+    <Compile Include="UI\Bags\BaseBagPanel.cs" />
+    <Compile Include="UI\Bags\PotionBeltPanel.cs" />
+    <Compile Include="UI\Bags\WalletPanel.cs" />
+    <Compile Include="UI\Bags\TheBlackHolePanel.cs" />
+    <Compile Include="UI\TileEntities\TEPanel.cs" />
+    <Compile Include="UI\TileEntities\BagUI.cs" />
+    <Compile Include="UI\TileEntities\BaseTEPanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="build.txt" />

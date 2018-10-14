@@ -2,7 +2,7 @@
 using BaseLibrary.Utility;
 using ContainerLibrary;
 using PortableStorage.Items.Bags;
-using PortableStorage.UI;
+using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ID;

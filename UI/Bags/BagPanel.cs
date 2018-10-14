@@ -2,9 +2,9 @@
 using BaseLibrary.Utility;
 using ContainerLibrary;
 
-namespace PortableStorage.UI
+namespace PortableStorage.UI.Bags
 {
-	public class AmmoBagPanel : BaseBagPanel
+	public class BagPanel : BaseBagPanel
 	{
 		public override void OnInitialize()
 		{

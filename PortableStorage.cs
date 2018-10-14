@@ -6,7 +6,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PortableStorage.Items.Bags;
-using PortableStorage.UI;
+using PortableStorage.UI.Bags;
+using PortableStorage.UI.TileEntities;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.UI;
@@ -31,6 +32,7 @@ namespace PortableStorage
 		public static int timer;
 
 		public GUI<BagUI> BagUI;
+		public GUI<TEUI> TEUI;
 
 		public static ModHotKey HotkeyBag;
 
@@ -62,6 +64,9 @@ namespace PortableStorage
 
 				BagUI = Utility.SetupGUI<BagUI>();
 				BagUI.Visible = true;
+
+				TEUI = Utility.SetupGUI<TEUI>();
+				TEUI.Visible = true;
 			}
 		}
 
@@ -107,9 +112,13 @@ namespace PortableStorage
 
 		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
-			int InventoryIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
+			int HotbarIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Hotbar"));
 
-			if (BagUI != null && InventoryIndex != -1) layers.Insert(InventoryIndex + 1, BagUI.InterfaceLayer);
+			if (HotbarIndex != -1)
+			{
+				if (BagUI != null) layers.Insert(HotbarIndex + 1, BagUI.InterfaceLayer);
+				if (TEUI != null) layers.Insert(HotbarIndex + 1, TEUI.InterfaceLayer);
+			}
 		}
 
 		public override void UpdateUI(GameTime gameTime)

@@ -1,15 +1,15 @@
 ﻿using BaseLibrary.UI.Elements;
 using BaseLibrary.Utility;
 using ContainerLibrary;
+using Microsoft.Xna.Framework;
 
-namespace PortableStorage.UI
+namespace PortableStorage.UI.Bags
 {
-	public class PotionBeltPanel : BaseBagPanel
+	public class TheBlackHolePanel : BaseBagPanel
 	{
 		public override void OnInitialize()
 		{
-			Width = (408, 0);
-			Height = (40 + bag.handler.Slots / 9 * 44, 0);
+			Size = new Vector2(408, 172);
 			this.Center();
 			SetPadding(0);
 			OnPostDraw += DragUpdate;
@@ -23,12 +23,20 @@ namespace PortableStorage.UI
 			};
 			Append(textLabel);
 
+			buttonClose = new UITextButton("X", 0f)
+			{
+				Size = new Vector2(20),
+				Left = (-28, 1),
+				Top = (8, 0),
+				RenderPanel = false
+			};
+			Append(buttonClose);
+
 			gridItems = new UIGrid<UIContainerSlot>(9)
 			{
 				Width = (-16, 1),
 				Height = (-44, 1),
-				Left = (8, 0),
-				Top = (36, 0),
+				Position = new Vector2(8, 36),
 				OverflowHidden = true,
 				ListPadding = 4f
 			};

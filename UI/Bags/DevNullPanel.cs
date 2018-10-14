@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using PortableStorage.Items.Bags;
 using Terraria;
 
-namespace PortableStorage.UI
+namespace PortableStorage.UI.Bags
 {
 	public class DevNullPanel : BaseBagPanel
 	{
