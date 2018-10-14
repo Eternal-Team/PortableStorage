@@ -4,8 +4,8 @@ The Black Hole sync visuals
 possible custom bag slot?
 visuals for it?
 
-dev/null/ improvements
-
-Save UIPosition on player
+per instance position saving
 
 more fluid containers
+
+QE stuff

@@ -1,18 +1,16 @@
-﻿using System;
-using System.IO;
-using PortableStorage.UI;
+﻿using System.IO;
 using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public class AmmoPounch : BaseAmmoBag
+	public class ThePerfectSolution : BaseAmmoBag
 	{
-		public override string AmmoType => "Misc";
+		public override string AmmoType => "Solution";
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Ammo Pounch");
-			Tooltip.SetDefault($"Stores {handler.Slots} stacks of misc. ammo");
+			DisplayName.SetDefault("The Perfect Solution");
+			Tooltip.SetDefault($"Stores {handler.Slots} stacks of solutions");
 		}
 
 		public override void SetDefaults()

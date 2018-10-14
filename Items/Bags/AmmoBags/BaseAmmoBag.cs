@@ -34,7 +34,7 @@ namespace PortableStorage.Items.Bags
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
-			handler.IsItemValid += (slot, item) => PortableStorage.ammoTypes[AmmoType].Contains(item.type);
+			handler.IsItemValid += (handler, slot, item) => PortableStorage.ammoTypes[AmmoType].Contains(item.type);
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)

@@ -19,11 +19,12 @@ namespace PortableStorage.Items.Bags
 	{
 		public override Type UIType => typeof(TheBlackHolePanel);
 
+		private const float angleDecrement = 0.05235988F;
+		private static readonly Vector2 origin = new Vector2(30);
+		private const int maxRange = 160;
+
 		public bool active;
 		private float angle;
-		private const float angleDecrement = 0.05235988F;
-		private Vector2 origin = new Vector2(30);
-		private const int maxRange = 160;
 
 		public TheBlackHole()
 		{
@@ -83,6 +84,7 @@ namespace PortableStorage.Items.Bags
 				if (Vector2.Distance(item.Center, player.Center) <= maxRange) globalItem.markedForSuction = true;
 				else
 				{
+					globalItem.markedForSuction = false;
 					globalItem.scale = 1f;
 					globalItem.angle = 0f;
 				}
@@ -163,7 +165,7 @@ namespace PortableStorage.Items.Bags
 			scale *= 32f / 60f;
 			float scaleMultiplier = (float)Math.Sin(angle).Remap(-1f, 1f, 0.4f, 1f);
 
-			spriteBatch.Draw(Main.extraTexture[50], position + this.origin * scale, null, Color.White, angle, origin + this.origin, scale * scaleMultiplier, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.extraTexture[50], position + TheBlackHole.origin * scale, null, Color.White, angle, origin + TheBlackHole.origin, scale * scaleMultiplier, SpriteEffects.None, 0f);
 
 			return false;
 		}

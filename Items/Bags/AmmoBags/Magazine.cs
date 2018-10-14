@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using PortableStorage.UI;
+﻿using System.IO;
 using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags

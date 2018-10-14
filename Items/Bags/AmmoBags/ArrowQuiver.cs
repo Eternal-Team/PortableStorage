@@ -1,18 +1,16 @@
-﻿using System;
-using System.IO;
-using PortableStorage.UI;
+﻿using System.IO;
 using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public class FireProofContainer : BaseAmmoBag
+	public class ArrowQuiver : BaseAmmoBag
 	{
-		public override string AmmoType => "Flameable";
+		public override string AmmoType => "Arrow";
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Fire-proof Container");
-			Tooltip.SetDefault($"Stores {handler.Slots} stacks of explosive or flameable ammo");
+			DisplayName.SetDefault("Arrow Quiver");
+			Tooltip.SetDefault($"Stores {handler.Slots} stacks of arrows");
 		}
 
 		public override void SetDefaults()

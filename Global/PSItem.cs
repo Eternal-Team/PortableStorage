@@ -15,8 +15,8 @@ namespace PortableStorage.Global
 		public override bool CloneNewInstances => true;
 
 		#region Constant fields
-		private const float angleDecrement = 0.06981317f;
-		private const float scaleDecrement = 0.015f;
+		public const float angleDecrement = 0.06981317f;
+		public const float scaleDecrement = 0.015f;
 		private static readonly Vector2 origin = new Vector2(30);
 		#endregion
 
@@ -58,8 +58,6 @@ namespace PortableStorage.Global
 		{
 			if (markedForSuction)
 			{
-				markedForSuction = false;
-
 				if ((angle -= angleDecrement) < 0f) angle = MathHelper.TwoPi;
 				if (this.scale > 0f) this.scale -= scaleDecrement;
 

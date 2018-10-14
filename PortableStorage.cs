@@ -1,12 +1,12 @@
-﻿using BaseLibrary.UI;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BaseLibrary.UI;
 using BaseLibrary.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PortableStorage.Items.Bags;
 using PortableStorage.UI;
-using System.Collections.Generic;
-using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.UI;

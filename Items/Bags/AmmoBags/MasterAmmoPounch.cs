@@ -1,18 +1,16 @@
-﻿using System;
-using System.IO;
-using PortableStorage.UI;
+﻿using System.IO;
 using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public class DartHolder : BaseAmmoBag
+	public class MasterAmmoPounch : BaseAmmoBag
 	{
-		public override string AmmoType => "Dart";
+		public override string AmmoType => "All";
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Dart Holder");
-			Tooltip.SetDefault($"Stores {handler.Slots} stacks of darts");
+			DisplayName.SetDefault("Master Ammo Pounch");
+			Tooltip.SetDefault($"Stores {handler.Slots} stacks of ammo");
 		}
 
 		public override void SetDefaults()
