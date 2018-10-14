@@ -12,9 +12,6 @@ namespace PortableStorage.UI.TileEntities
 			Height = (172, 0);
 			this.Center();
 			SetPadding(0);
-			OnPostDraw += DragUpdate;
-			OnMouseDown += DragStart;
-			OnMouseUp += DragEnd;
 
 			textLabel = new UIText( /*bag.DisplayName.TextFromTranslation()*/"Quantum Entangled Chest")
 			{

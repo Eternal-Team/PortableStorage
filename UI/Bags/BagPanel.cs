@@ -12,9 +12,6 @@ namespace PortableStorage.UI.Bags
 			Height = (40 + bag.handler.Slots / 9 * 44, 0);
 			this.Center();
 			SetPadding(0);
-			OnPostDraw += DragUpdate;
-			OnMouseDown += DragStart;
-			OnMouseUp += DragEnd;
 
 			textLabel = new UIText(bag.DisplayName.TextFromTranslation())
 			{

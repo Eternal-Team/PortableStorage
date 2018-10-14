@@ -12,9 +12,6 @@ namespace PortableStorage.UI.Bags
 			Size = new Vector2(408, 172);
 			this.Center();
 			SetPadding(0);
-			OnPostDraw += DragUpdate;
-			OnMouseDown += DragStart;
-			OnMouseUp += DragEnd;
 
 			textLabel = new UIText(bag.DisplayName.TextFromTranslation())
 			{

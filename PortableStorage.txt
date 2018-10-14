@@ -1,4 +1,6 @@
-DraggableUIPanel
+close buttons in UIs
+
+dragging doesn't prefer topmost panel
 
 UI stays open when throwing a bag
 
