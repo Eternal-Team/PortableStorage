@@ -4,8 +4,8 @@ The Black Hole sync visuals
 possible custom bag slot?
 visuals for it?
 
-per instance position saving
-
 more fluid containers
 
 QE stuff
+
+recipes

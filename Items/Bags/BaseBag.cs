@@ -2,6 +2,7 @@
 using System.Linq;
 using BaseLibrary.Items;
 using ContainerLibrary;
+using Microsoft.Xna.Framework;
 using PortableStorage.UI;
 using Terraria;
 using Terraria.Audio;
@@ -18,6 +19,7 @@ namespace PortableStorage.Items.Bags
 		public int ID => item.stringColor;
 
 		public BaseBagPanel UI => PortableStorage.Instance.BagUI.UI.Elements.OfType<BaseBagPanel>().FirstOrDefault(x => x.bag.ID == ID);
+		public Vector2 UIPosition = -Vector2.One;
 
 		public virtual Type UIType { get; }
 		public virtual LegacySoundStyle OpenSound => SoundID.Item1;
@@ -30,6 +32,7 @@ namespace PortableStorage.Items.Bags
 			clone.handler.IsItemValid = (Func<ItemHandler, int, Item, bool>)handler.IsItemValid.Clone();
 			clone.handler.GetSlotLimit = (Func<int, int>)handler.GetSlotLimit.Clone();
 			clone.handler.OnContentsChanged = (Action<int>)handler.OnContentsChanged.Clone();
+			clone.UIPosition = UIPosition;
 			return clone;
 		}
 

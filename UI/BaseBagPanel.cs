@@ -16,14 +16,6 @@ namespace PortableStorage.UI
 		public UIText textLabel;
 		public UIGrid<UIContainerSlot> gridItems;
 
-		//public UIHoverButton buttonQuickStack = new UIHoverButton(Main.chestStackTexture);
-		//public UIHoverButton buttonQuickRestack = new UIHoverButton(ModLoader.GetTexture(PortableStorage.Textures.UIPath + "Restack_0"), ModLoader.GetTexture(PortableStorage.Textures.UIPath + "Restack_1"));
-		//public UIButton buttonLootAll = new UIButton(ModLoader.GetTexture(PortableStorage.Textures.UIPath + "LootAll"));
-		//public UIButton buttonDepositAll = new UIButton(ModLoader.GetTexture(PortableStorage.Textures.UIPath + "DepositAll"));
-		//public UIButton buttonRestock = new UIButton(ModLoader.GetTexture(PortableStorage.Textures.UIPath + "Restock"));
-
-		//public UITextButton buttonClose = new UITextButton("X", 4);
-
 		#region Dragging
 		private Vector2 offset;
 		private bool dragging;

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using Microsoft.Xna.Framework;
 using PortableStorage.Items.Bags;
 using Terraria;
 using TheOneLibrary.Base.UI;
@@ -14,13 +14,14 @@ namespace PortableStorage.UI
 
 		public void HandleBag(BaseBag bag)
 		{
-			if (Elements.OfType<BaseBagPanel>().Any(x => x.bag.ID == bag.ID)) CloseBag(bag);
+			if (bag.UI != null) CloseBag(bag);
 			else OpenBag(bag);
 		}
 
 		public void CloseBag(BaseBag bag)
 		{
-			Elements.RemoveAll(x => x is BaseBagPanel panel && panel.bag.ID == bag.ID);
+			bag.UIPosition = bag.UI.Position;
+			Elements.Remove(bag.UI);
 			Main.PlaySound(bag.CloseSound);
 		}
 
@@ -29,6 +30,12 @@ namespace PortableStorage.UI
 			BaseBagPanel bagUI = (BaseBagPanel)Activator.CreateInstance(bag.UIType);
 			bagUI.bag = bag;
 			bagUI.Activate();
+			if (bag.UIPosition != -Vector2.One)
+			{
+				bagUI.HAlign = bagUI.VAlign = 0f;
+				bagUI.Position = bag.UIPosition;
+			}
+
 			Append(bagUI);
 			Main.PlaySound(bag.OpenSound);
 		}
