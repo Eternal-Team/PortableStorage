@@ -1,11 +1,14 @@
 ﻿using System;
 using PortableStorage.Items.Bags;
+using PortableStorage.TileEntities;
+using PortableStorage.UI.Bags;
+using PortableStorage.UI.TileEntities;
 using Terraria;
 using TheOneLibrary.Base.UI;
 
-namespace PortableStorage.UI.Bags
+namespace PortableStorage.UI
 {
-	public class BagUI : BaseUI
+	public class PanelUI : BaseUI
 	{
 		public override void OnInitialize()
 		{
@@ -37,6 +40,34 @@ namespace PortableStorage.UI.Bags
 
 			Append(bagUI);
 			Main.PlaySound(bag.OpenSound);
+		}
+
+		public void HandleTE(BasePSTE te)
+		{
+			if (te.UI != null) CloseTE(te);
+			else OpenTE(te);
+		}
+
+		public void CloseTE(BasePSTE te)
+		{
+			te.UIPosition = te.UI.Position;
+			Elements.Remove(te.UI);
+			Main.PlaySound(te.CloseSound);
+		}
+
+		public void OpenTE(BasePSTE te)
+		{
+			BaseTEPanel teUI = (BaseTEPanel)Activator.CreateInstance(te.UIType);
+			teUI.te = te;
+			teUI.Activate();
+			if (te.UIPosition != null)
+			{
+				teUI.HAlign = teUI.VAlign = 0f;
+				teUI.Position = te.UIPosition.Value;
+			}
+
+			Append(teUI);
+			Main.PlaySound(te.OpenSound);
 		}
 	}
 }

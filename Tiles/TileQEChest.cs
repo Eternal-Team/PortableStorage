@@ -36,7 +36,7 @@ namespace PortableStorage.Tiles
 			TEQEChest qeChest = mod.GetTileEntity<TEQEChest>(i, j);
 			if (qeChest == null) return;
 
-			PortableStorage.Instance.TEUI.UI.HandleTE(qeChest);
+			PortableStorage.Instance.PanelUI.UI.HandleTE(qeChest);
 
 			//Point16 topLeft = TileEntityTopLeft(i, j);
 			//int realTileX = topLeft.X * 16;

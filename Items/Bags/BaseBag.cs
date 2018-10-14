@@ -18,7 +18,7 @@ namespace PortableStorage.Items.Bags
 		public ItemHandler handler;
 		public int ID => item.stringColor;
 
-		public BaseBagPanel UI => PortableStorage.Instance.BagUI.UI.Elements.OfType<BaseBagPanel>().FirstOrDefault(x => x.bag.ID == ID);
+		public BaseBagPanel UI => PortableStorage.Instance.PanelUI.UI.Elements.OfType<BaseBagPanel>().FirstOrDefault(x => x.bag.ID == ID);
 		public Vector2? UIPosition;
 
 		public virtual Type UIType { get; }
@@ -48,7 +48,7 @@ namespace PortableStorage.Items.Bags
 
 		public override bool UseItem(Player player)
 		{
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.BagUI.UI.HandleBag(this);
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.PanelUI.UI.HandleBag(this);
 
 			return true;
 		}
@@ -59,7 +59,7 @@ namespace PortableStorage.Items.Bags
 		{
 			item.stack++;
 
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.BagUI.UI.HandleBag(this);
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.PanelUI.UI.HandleBag(this);
 		}
 	}
 }

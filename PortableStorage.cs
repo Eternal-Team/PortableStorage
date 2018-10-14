@@ -6,8 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PortableStorage.Items.Bags;
-using PortableStorage.UI.Bags;
-using PortableStorage.UI.TileEntities;
+using PortableStorage.UI;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.UI;
@@ -31,8 +30,7 @@ namespace PortableStorage
 		public static int BagID;
 		public static int timer;
 
-		public GUI<BagUI> BagUI;
-		public GUI<TEUI> TEUI;
+		public GUI<PanelUI> PanelUI;
 
 		public static ModHotKey HotkeyBag;
 
@@ -55,6 +53,7 @@ namespace PortableStorage
 			Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
 			Player.QuickMana += Player_QuickMana;
 			Player.QuickBuff += Player_QuickBuff;
+			Player.DropSelectedItem += Player_DropSelectedItem;
 
 			HotkeyBag = this.Register("Open Bag", Keys.B);
 
@@ -62,11 +61,8 @@ namespace PortableStorage
 			{
 				this.LoadTextures();
 
-				BagUI = Utility.SetupGUI<BagUI>();
-				BagUI.Visible = true;
-
-				TEUI = Utility.SetupGUI<TEUI>();
-				TEUI.Visible = true;
+				PanelUI = Utility.SetupGUI<PanelUI>();
+				PanelUI.Visible = true;
 			}
 		}
 
@@ -107,18 +103,14 @@ namespace PortableStorage
 
 		public override void PreSaveAndQuit()
 		{
-			BagUI.UI.Elements.Clear();
+			PanelUI.UI.Elements.Clear();
 		}
 
 		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
 			int HotbarIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Hotbar"));
 
-			if (HotbarIndex != -1)
-			{
-				if (BagUI != null) layers.Insert(HotbarIndex + 1, BagUI.InterfaceLayer);
-				if (TEUI != null) layers.Insert(HotbarIndex + 1, TEUI.InterfaceLayer);
-			}
+			if (HotbarIndex != -1 && PanelUI != null) layers.Insert(HotbarIndex + 1, PanelUI.InterfaceLayer);
 		}
 
 		public override void UpdateUI(GameTime gameTime)
@@ -140,7 +132,7 @@ namespace PortableStorage
 	{
 		private UIElement UIElement_GetElementAt(On.Terraria.UI.UIElement.orig_GetElementAt orig, UIElement self, Vector2 point)
 		{
-			if (self is BagUI ui)
+			if (self is PanelUI ui)
 			{
 				UIElement uIElement = null;
 				for (int i = 0; i < ui.Elements.Count; i++)
@@ -157,7 +149,7 @@ namespace PortableStorage
 
 		private void ItemSlot_LeftClick(ItemSlot.orig_LeftClick_ItemArray_int_int orig, Item[] inv, int context, int slot)
 		{
-			if (inv[slot].modItem is BaseBag bag && bag.UI != null) BagUI.UI.CloseBag(bag);
+			if (inv[slot].modItem is BaseBag bag && bag.UI != null) PanelUI.UI.CloseBag(bag);
 
 			orig(inv, context, slot);
 		}
@@ -654,6 +646,13 @@ namespace PortableStorage
 			{
 				UILinkPointNavigator.SetPosition(num, position + vector * 0.75f);
 			}
+		}
+
+		private void Player_DropSelectedItem(Player.orig_DropSelectedItem orig, Terraria.Player self)
+		{
+			if (self.inventory[self.selectedItem].modItem is BaseBag bag && bag.UI != null) PanelUI.UI.CloseBag(bag);
+
+			orig(self);
 		}
 
 		private bool Player_BuyItem(Player.orig_BuyItem orig, Terraria.Player self, int price, int customCurrency)

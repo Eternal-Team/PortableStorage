@@ -85,14 +85,13 @@
     <Compile Include="Tiles\TileQEChest.cs" />
     <Compile Include="UI\Bags\DevNullPanel.cs" />
     <Compile Include="UI\Bags\AmmoBagPanel.cs" />
-    <Compile Include="UI\Bags\BagUI.cs" />
+    <Compile Include="UI\PanelUI.cs" />
     <Compile Include="UI\Bags\BagPanel.cs" />
     <Compile Include="UI\Bags\BaseBagPanel.cs" />
     <Compile Include="UI\Bags\PotionBeltPanel.cs" />
     <Compile Include="UI\Bags\WalletPanel.cs" />
     <Compile Include="UI\Bags\TheBlackHolePanel.cs" />
     <Compile Include="UI\TileEntities\TEPanel.cs" />
-    <Compile Include="UI\TileEntities\BagUI.cs" />
     <Compile Include="UI\TileEntities\BaseTEPanel.cs" />
   </ItemGroup>
   <ItemGroup>

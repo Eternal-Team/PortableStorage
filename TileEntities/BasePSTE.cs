@@ -10,7 +10,7 @@ namespace PortableStorage.TileEntities
 {
 	public abstract class BasePSTE : BaseTE
 	{
-		public BaseTEPanel UI => PortableStorage.Instance.TEUI.UI.Elements.OfType<BaseTEPanel>().FirstOrDefault(x => x.te.ID == ID);
+		public BaseTEPanel UI => PortableStorage.Instance.PanelUI.UI.Elements.OfType<BaseTEPanel>().FirstOrDefault(x => x.te.ID == ID);
 		public Vector2? UIPosition;
 
 		public virtual Type UIType => null;

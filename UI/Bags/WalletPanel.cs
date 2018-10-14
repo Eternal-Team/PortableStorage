@@ -28,7 +28,7 @@ namespace PortableStorage.UI.Bags
 				Top = (8, 0),
 				RenderPanel = false
 			};
-			buttonClose.OnClick += (evt, element) => PortableStorage.Instance.BagUI.UI.CloseBag(bag);
+			buttonClose.OnClick += (evt, element) => PortableStorage.Instance.PanelUI.UI.CloseBag(bag);
 			Append(buttonClose);
 
 			gridItems = new UIGrid<UIContainerSlot>(9)
