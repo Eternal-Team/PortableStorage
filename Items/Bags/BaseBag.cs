@@ -28,11 +28,7 @@ namespace PortableStorage.Items.Bags
 		public override ModItem Clone()
 		{
 			BaseBag clone = (BaseBag)base.Clone();
-			clone.handler = new ItemHandler(handler.stacks.Select(x => x.Clone()).ToList());
-			clone.handler.IsItemValid = (Func<ItemHandler, int, Item, bool>)handler.IsItemValid.Clone();
-			clone.handler.GetSlotLimit = (Func<int, int>)handler.GetSlotLimit.Clone();
-			clone.handler.OnContentsChanged = (Action<int>)handler.OnContentsChanged.Clone();
-			clone.UIPosition = UIPosition;
+			clone.handler = handler.Clone();
 			return clone;
 		}
 
