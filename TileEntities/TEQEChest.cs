@@ -1,35 +1,51 @@
 ﻿using System;
+using System.Linq;
+using ContainerLibrary;
+using PortableStorage.Global;
 using PortableStorage.Tiles;
 using PortableStorage.UI.TileEntities;
-using Terraria.ModLoader.IO;
 
 namespace PortableStorage.TileEntities
 {
 	public class TEQEChest : BasePSTE
 	{
 		public override Type TileType => typeof(TileQEChest);
-		public override Type UIType => typeof(TEPanel);
+		public override Type UIType => typeof(QEChestPanel);
 
-		public override TagCompound Save()
+		public QEChestPanel UI => PortableStorage.Instance.PanelUI.UI.Elements.OfType<QEChestPanel>().FirstOrDefault(x => x.te.ID == ID);
+
+		public bool hovered;
+		public float scale;
+
+		public Colors[] frequency = { Colors.White, Colors.White, Colors.White };
+
+		public ItemHandler Handler
 		{
-			TagCompound tag = new TagCompound();
-			//tag["Frequency"] = frequency;
-			//if (gui != null) tag["UIPosition"] = gui.ui.panelMain.GetDimensions().Position();
-			return tag;
+			get
+			{
+				if (PSWorld.Instance.qeItemHandlers.ContainsKey(frequency)) return PSWorld.Instance.qeItemHandlers[frequency];
+
+				ItemHandler temp = PSWorld.baseItemHandler.Clone();
+				PSWorld.Instance.qeItemHandlers.Add(frequency, temp);
+				return temp;
+			}
 		}
 
-		public override void Load(TagCompound tag)
+		public override void Update()
 		{
-			//frequency = tag.Get<Frequency>("Frequency");
-
-			//if (gui != null && tag.ContainsKey("UIPosition"))
-			//{
-			//	Vector2 vector = tag.Get<Vector2>("UIPosition");
-			//	gui.ui.panelMain.Left.Set(vector.X, 0f);
-			//	gui.ui.panelMain.Top.Set(vector.Y, 0f);
-			//	gui.ui.panelMain.Recalculate();
-			//}
+			if (!hovered && scale > 0f) scale -= 0.025f;
+			else if (hovered && scale < 1f) scale += 0.025f;
 		}
+
+		//public override TagCompound Save() => new TagCompound
+		//{
+		//	["Frequency"] = frequency.Value
+		//};
+
+		//public override void Load(TagCompound tag)
+		//{
+		//	frequency = new Ref<Color>(tag.Get<Color>("Frequency"));
+		//}
 
 		//public override void NetSend(BinaryWriter writer, bool lightSend) => writer.Write(frequency);
 

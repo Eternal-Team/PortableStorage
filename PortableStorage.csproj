@@ -57,9 +57,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Global\Colors.cs" />
     <Compile Include="Global\PSItem.cs" />
     <Compile Include="Global\PSPlayer.cs" />
     <Compile Include="Global\PSTile.cs" />
+    <Compile Include="Global\PSWorld.cs" />
+    <Compile Include="Global\Utility.cs" />
     <Compile Include="Items\Bags\AmmoBags\BaseAmmoBag.cs" />
     <Compile Include="Items\Bags\AmmoBags\MasterAmmoPounch.cs" />
     <Compile Include="Items\Bags\AmmoBags\AmmoPounch.cs" />
@@ -91,7 +94,7 @@
     <Compile Include="UI\Bags\PotionBeltPanel.cs" />
     <Compile Include="UI\Bags\WalletPanel.cs" />
     <Compile Include="UI\Bags\TheBlackHolePanel.cs" />
-    <Compile Include="UI\TileEntities\TEPanel.cs" />
+    <Compile Include="UI\TileEntities\QEChestPanel.cs" />
     <Compile Include="UI\TileEntities\BaseTEPanel.cs" />
   </ItemGroup>
   <ItemGroup>
