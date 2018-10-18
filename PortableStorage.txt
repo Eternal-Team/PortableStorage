@@ -1,4 +1,4 @@
-QE stuff
+priority system for QE chest freq selection drawing
 
 more fluid containers
 

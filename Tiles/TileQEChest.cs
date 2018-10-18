@@ -2,6 +2,7 @@
 using BaseLibrary.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PortableStorage.Global;
 using PortableStorage.Items;
 using PortableStorage.TileEntities;
 using Terraria;
@@ -43,52 +44,6 @@ namespace PortableStorage.Tiles
 			if (qeChest == null) return;
 
 			PortableStorage.Instance.PanelUI.UI.HandleTE(qeChest);
-
-			//Point16 topLeft = TileEntityTopLeft(i, j);
-			//int realTileX = topLeft.X * 16;
-			//int realTileY = topLeft.Y * 16;
-			//Rectangle left = new Rectangle(realTileX + 2, realTileY + 4, 6, 10);
-			//Rectangle middle = new Rectangle(realTileX + 12, realTileY + 4, 8, 10);
-			//Rectangle right = new Rectangle(realTileX + 24, realTileY + 4, 6, 10);
-
-			//if (Main.LocalPlayer.HeldItem.type != mod.ItemType<QEBag>())
-			//{
-			//	Frequency frequency = qeChest.frequency;
-			//	bool handleFrequency = false;
-
-			//	if (left.Contains(Main.MouseWorld))
-			//	{
-			//		frequency.colorLeft = Main.LocalPlayer.GetHeldItem().ColorFromItem(frequency.colorLeft);
-			//		handleFrequency = true;
-			//	}
-			//	else if (middle.Contains(Main.MouseWorld))
-			//	{
-			//		frequency.colorMiddle = Main.LocalPlayer.GetHeldItem().ColorFromItem(frequency.colorMiddle);
-			//		handleFrequency = true;
-			//	}
-			//	else if (right.Contains(Main.MouseWorld))
-			//	{
-			//		frequency.colorRight = Main.LocalPlayer.GetHeldItem().ColorFromItem(frequency.colorRight);
-			//		handleFrequency = true;
-			//	}
-			//	else
-			//	{
-			//		qeChest.HandleUI();
-
-			//		Main.PlaySound(SoundID.DD2_EtherianPortalOpen.WithVolume(0.5f));
-			//	}
-
-			//	if (handleFrequency) qeChest.frequency = frequency;
-
-			//	SendTEData(qeChest);
-			//}
-			//else
-			//{
-			//	Main.LocalPlayer.noThrow = 2;
-			//	QEBag bag = (QEBag)Main.LocalPlayer.HeldItem.modItem;
-			//	bag.frequency = qeChest.frequency;
-			//	SyncItem(bag.item);
-			//}
 		}
 
 		public const float MaxAngle = 0.8726646f;
@@ -102,18 +57,37 @@ namespace PortableStorage.Tiles
 
 			Vector2 position = new Point16(i + 1, j + 1).ToScreenCoordinates();
 
-			qeChest.hovered = new Rectangle(i * 16, j * 16, 32, 32).Contains(Main.MouseWorld) || qeChest.hovered && Main.MouseScreen.IsInCircularSector(position - new Vector2(Main.offScreenRange), Radius, -MaxAngle, MaxAngle);
+			qeChest.hovered = new Rectangle(i * 16, j * 16, 32, 32).Contains(Main.MouseWorld);
+			qeChest.inScreen = Main.MouseScreen.IsInCircularSector(position - new Vector2(Main.offScreenRange), Radius, -MaxAngle, MaxAngle) && Main.mouseY <= position.Y - Main.offScreenRange;
+
+			if (!qeChest.inScreen && !qeChest.hovered && qeChest.scale > 0f) qeChest.scale -= 0.05f;
+			else if (qeChest.scale < 1f) qeChest.scale += 0.05f;
 
 			if (qeChest.scale < 0f) return true;
 
 			spriteBatch.Draw(QEChest_Glow, position, null, Color.Purple, -MathHelper.PiOver2, new Vector2(10, 48), qeChest.scale, SpriteEffects.None, 0f);
 
+			float scale = qeChest.scale * 1.5f;
+
 			for (int k = -1; k <= 1; k++)
 			{
-				spriteBatch.Draw(QEChest_Gems, position + new Vector2(0, -42 * qeChest.scale).RotatedBy(AngleStep * k), new Rectangle(8 * (int)qeChest.frequency[k + 1], 0, 8, 10), Color.White, AngleStep * k, new Vector2(4, 5), 1.5f * qeChest.scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(QEChest_Gems, position + new Vector2(0, -42 * qeChest.scale).RotatedBy(AngleStep * k), new Rectangle(8 * (int)qeChest.frequency[k + 1], 0, 8, 10), Color.White, AngleStep * k, new Vector2(4, 5), scale, SpriteEffects.None, 0f);
+
+				Vector2 origin = position - new Vector2(Main.offScreenRange) - new Vector2(0, 42 * qeChest.scale).RotatedBy(AngleStep * k);
+
+				Vector2 p1 = new Vector2(-4, -5).RotatedBy(AngleStep * k) * scale + origin;
+				Vector2 p2 = new Vector2(4, -5).RotatedBy(AngleStep * k) * scale + origin;
+				Vector2 p3 = new Vector2(4, 5).RotatedBy(AngleStep * k) * scale + origin;
+				Vector2 p4 = new Vector2(-4, 5).RotatedBy(AngleStep * k) * scale + origin;
+
+				if (Main.mouseRight && Main.MouseScreen.IsInPolygon4(p1, p2, p3, p4))
+				{
+					qeChest.frequency[k + 1] = Main.LocalPlayer.GetHeldItem().ColorFromItem(qeChest.frequency[k + 1]);
+					qeChest.UI?.Repopulate();
+				}
 			}
 
-			return base.PreDraw(i, j, spriteBatch);
+			return true;
 		}
 
 		//public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref Color drawColor, ref int nextSpecialDrawIndex)
@@ -145,7 +119,7 @@ namespace PortableStorage.Tiles
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
 			TEQEChest qeChest = mod.GetTileEntity<TEQEChest>(i, j);
-			PortableStorage.Instance.PanelUI.UI.HandleTE(qeChest);
+			PortableStorage.Instance.PanelUI.UI.CloseTE(qeChest);
 
 			Item.NewItem(i * 16, j * 16, 32, 32, mod.ItemType<ItemQEChest>());
 			qeChest.Kill(i, j);

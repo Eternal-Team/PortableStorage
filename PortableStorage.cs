@@ -5,21 +5,26 @@ using BaseLibrary.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using PortableStorage.Global;
 using PortableStorage.Items.Bags;
+using PortableStorage.TileEntities;
 using PortableStorage.UI;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.GameContent.UI;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Terraria.UI;
 using Terraria.UI.Chat;
 using Terraria.UI.Gamepad;
 using static BaseLibrary.BaseLibrary;
 using ItemSlot = On.Terraria.UI.ItemSlot;
 using Player = On.Terraria.Player;
+using Utility = BaseLibrary.Utility.Utility;
 
 namespace PortableStorage
 {
@@ -40,6 +45,8 @@ namespace PortableStorage
 		public override void Load()
 		{
 			Instance = this;
+
+			TagSerializer.AddSerializer(new FrequencySerializer());
 
 			On.Terraria.UI.UIElement.GetElementAt += UIElement_GetElementAt;
 			ItemSlot.LeftClick_ItemArray_int_int += ItemSlot_LeftClick;
@@ -115,6 +122,13 @@ namespace PortableStorage
 
 		public override void UpdateUI(GameTime gameTime)
 		{
+			if (TileEntity.ByID.Values.OfType<TEQEChest>().Any(x => x.inScreen && !x.hovered))
+			{
+				Main.LocalPlayer.mouseInterface = true;
+				Main.LocalPlayer.showItemIcon = false;
+				Main.ItemIconCacheUpdate(0);
+			}
+
 			if (++timer > 60)
 			{
 				timer = 0;

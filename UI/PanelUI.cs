@@ -50,6 +50,8 @@ namespace PortableStorage.UI
 
 		public void CloseTE(BasePSTE te)
 		{
+			if (te.UI == null) return;
+
 			te.UIPosition = te.UI.Position;
 			Elements.Remove(te.UI);
 			Main.PlaySound(te.CloseSound);

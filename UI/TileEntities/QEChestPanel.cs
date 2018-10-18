@@ -12,7 +12,7 @@ namespace PortableStorage.UI.TileEntities
 		public override void OnInitialize()
 		{
 			Width = (408, 0);
-			Height = (256, 0);
+			Height = (172, 0);
 			this.Center();
 			SetPadding(0);
 

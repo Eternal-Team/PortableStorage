@@ -10,8 +10,8 @@ namespace PortableStorage.Global
 	{
 		public static PSWorld Instance;
 
-		public Dictionary<Colors[], ItemHandler> qeItemHandlers;
-		public Dictionary<Colors[], FluidHandler> qeFluidHandlers;
+		public Dictionary<Frequency, ItemHandler> qeItemHandlers;
+		public Dictionary<Frequency, FluidHandler> qeFluidHandlers;
 		public static ItemHandler baseItemHandler;
 		public static FluidHandler baseFluidHandler;
 
@@ -22,28 +22,28 @@ namespace PortableStorage.Global
 			baseItemHandler = new ItemHandler(27);
 			baseFluidHandler = new FluidHandler();
 
-			qeItemHandlers = new Dictionary<Colors[], ItemHandler>();
-			qeFluidHandlers = new Dictionary<Colors[], FluidHandler>();
+			qeItemHandlers = new Dictionary<Frequency, ItemHandler>();
+			qeFluidHandlers = new Dictionary<Frequency, FluidHandler>();
 		}
 
 		public override TagCompound Save() => new TagCompound
 		{
 			["QEItems"] = qeItemHandlers.Select(x => new TagCompound
 			{
-				["Frequency"] = x.Key.Select(color => (int)color).ToList(),
+				["Frequency"] = x.Key,
 				["Items"] = x.Value.Save()
 			}).ToList(),
 			["QEFluids"] = qeFluidHandlers.Select(x => new TagCompound
 			{
-				["Frequency"] = x.Key.Select(color => (int)color).ToList(),
+				["Frequency"] = x.Key,
 				["Fluid"] = x.Value.Save()
 			}).ToList()
 		};
 
 		public override void Load(TagCompound tag)
 		{
-			foreach (TagCompound compound in tag.GetList<TagCompound>("QEItems")) qeItemHandlers.Add(compound.GetList<int>("Frequency").Select(x => (Colors)x).ToArray(), baseItemHandler.Clone().Load(compound.GetCompound("Items")));
-			foreach (TagCompound compound in tag.GetList<TagCompound>("QEFluids")) qeFluidHandlers.Add(compound.GetList<int>("Frequency").Select(x => (Colors)x).ToArray(), baseFluidHandler.Clone().Load(compound.GetCompound("Fluids")));
+			foreach (TagCompound compound in tag.GetList<TagCompound>("QEItems")) qeItemHandlers.Add(compound.Get<Frequency>("Frequency"), baseItemHandler.Clone().Load(compound.GetCompound("Items")));
+			foreach (TagCompound compound in tag.GetList<TagCompound>("QEFluids")) qeFluidHandlers.Add(compound.Get<Frequency>("Frequency"), baseFluidHandler.Clone().Load(compound.GetCompound("Fluids")));
 		}
 	}
 }

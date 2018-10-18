@@ -84,6 +84,7 @@
     <Compile Include="PortableStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TileEntities\BasePSTE.cs" />
+    <Compile Include="Global\Frequency.cs" />
     <Compile Include="TileEntities\TEQEChest.cs" />
     <Compile Include="Tiles\TileQEChest.cs" />
     <Compile Include="UI\Bags\DevNullPanel.cs" />
