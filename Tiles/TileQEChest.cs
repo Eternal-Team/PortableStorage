@@ -9,6 +9,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using Utility = BaseLibrary.Utility.Utility;
 
 namespace PortableStorage.Tiles
 {
@@ -49,7 +50,9 @@ namespace PortableStorage.Tiles
 		public const float MaxAngle = 0.8726646f;
 		public const float AngleStep = 0.5235988f;
 		public const float Radius = 56f;
+		public static Matrix translation = Matrix.CreateTranslation(-0.5f, -0.5f, 0f);
 
+		// return false, move to PostDrawTiles?
 		public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
 		{
 			TEQEChest qeChest = mod.GetTileEntity<TEQEChest>(i, j);
@@ -58,29 +61,24 @@ namespace PortableStorage.Tiles
 			Vector2 position = new Point16(i + 1, j + 1).ToScreenCoordinates();
 
 			qeChest.hovered = new Rectangle(i * 16, j * 16, 32, 32).Contains(Main.MouseWorld);
-			qeChest.inScreen = Main.MouseScreen.IsInCircularSector(position - new Vector2(Main.offScreenRange), Radius, -MaxAngle, MaxAngle) && Main.mouseY <= position.Y - Main.offScreenRange;
+			qeChest.inScreen = Main.MouseScreen.IsInCircularSector(position, Radius, -MaxAngle, MaxAngle) && Main.mouseY <= position.Y;
 
 			if (!qeChest.inScreen && !qeChest.hovered && qeChest.scale > 0f) qeChest.scale -= 0.05f;
 			else if (qeChest.scale < 1f) qeChest.scale += 0.05f;
+			else if (qeChest.scale <= 0f) return true;
 
-			if (qeChest.scale < 0f) return true;
-
-			spriteBatch.Draw(QEChest_Glow, position, null, Color.Purple, -MathHelper.PiOver2, new Vector2(10, 48), qeChest.scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(QEChest_Glow, position.WithOffscreenRange(), null, Color.Purple, -MathHelper.PiOver2, new Vector2(10, 48), qeChest.scale, SpriteEffects.None, 0f);
 
 			float scale = qeChest.scale * 1.5f;
 
 			for (int k = -1; k <= 1; k++)
 			{
-				spriteBatch.Draw(QEChest_Gems, position + new Vector2(0, -42 * qeChest.scale).RotatedBy(AngleStep * k), new Rectangle(8 * (int)qeChest.frequency[k + 1], 0, 8, 10), Color.White, AngleStep * k, new Vector2(4, 5), scale, SpriteEffects.None, 0f);
+				Vector2 origin = position - new Vector2(0, 42 * qeChest.scale).RotatedBy(AngleStep * k);
+				Matrix transformation = translation * Matrix.CreateRotationZ(AngleStep * k) * Matrix.CreateTranslation(new Vector3(origin, 0f));
 
-				Vector2 origin = position - new Vector2(Main.offScreenRange) - new Vector2(0, 42 * qeChest.scale).RotatedBy(AngleStep * k);
+				spriteBatch.DrawWithTransformation(transformation * Matrix.CreateTranslation(Main.offScreenRange, Main.offScreenRange, 0f), sb => sb.Draw(QEChest_Gems, Vector2.Zero, new Rectangle(8 * (int)qeChest.frequency[k + 1], 0, 8, 10), Color.White, 0f, new Vector2(4, 5), scale, SpriteEffects.None, 0f));
 
-				Vector2 p1 = new Vector2(-4, -5).RotatedBy(AngleStep * k) * scale + origin;
-				Vector2 p2 = new Vector2(4, -5).RotatedBy(AngleStep * k) * scale + origin;
-				Vector2 p3 = new Vector2(4, 5).RotatedBy(AngleStep * k) * scale + origin;
-				Vector2 p4 = new Vector2(-4, 5).RotatedBy(AngleStep * k) * scale + origin;
-
-				if (Main.mouseRight && Main.MouseScreen.IsInPolygon4(p1, p2, p3, p4))
+				if (Main.mouseRight && Main.MouseScreen.IsInPolygon4(Utility.CreatePolygon(new Vector2(8, 10), new Vector2(4, 5), scale).Transform(transformation)))
 				{
 					qeChest.frequency[k + 1] = Main.LocalPlayer.GetHeldItem().ColorFromItem(qeChest.frequency[k + 1]);
 					qeChest.UI?.Repopulate();

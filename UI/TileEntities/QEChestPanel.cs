@@ -26,7 +26,7 @@ namespace PortableStorage.UI.TileEntities
 			gridItems = new UIGrid<UIContainerSlot>(9)
 			{
 				Width = (-16, 1),
-				Height = (-128, 1),
+				Height = (-44, 1),
 				Left = (8, 0),
 				Top = (36, 0),
 				OverflowHidden = true,
