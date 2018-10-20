@@ -8,4 +8,4 @@ includeSource = false
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, .git\*, .editorconfig, .gitignore, *.sln, *.md
 includePDB = true
 languageVersion = 6
-modReferences = BaseLibrary, ContainerLibrary
+modReferences = BaseLibrary, ContainerLibrary, FluidLibrary

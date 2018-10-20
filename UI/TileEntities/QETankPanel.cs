@@ -7,9 +7,9 @@ using Terraria.Map;
 
 namespace PortableStorage.UI.TileEntities
 {
-	public class QEChestPanel : BaseTEPanel
+	public class QETankPanel : BaseTEPanel
 	{
-		public UIGrid<UIContainerSlot> gridItems;
+		public UITank tankFluid;
 
 		public override void OnInitialize()
 		{
@@ -25,30 +25,14 @@ namespace PortableStorage.UI.TileEntities
 			};
 			Append(textLabel);
 
-			gridItems = new UIGrid<UIContainerSlot>(9)
+			tankFluid = new UITank(((TEQETank)te).Handler)
 			{
 				Width = (-16, 1),
 				Height = (-44, 1),
 				Left = (8, 0),
-				Top = (36, 0),
-				OverflowHidden = true,
-				ListPadding = 4f
+				Top = (36, 0)
 			};
-			Append(gridItems);
-
-			Repopulate();
-		}
-
-		public void Repopulate()
-		{
-			gridItems.Clear();
-
-			TEQEChest qeChest = (TEQEChest)te;
-			for (int i = 0; i < qeChest.Handler.stacks.Count; i++)
-			{
-				UIContainerSlot slot = new UIContainerSlot(qeChest.Handler, i);
-				gridItems.Add(slot);
-			}
+			Append(tankFluid);
 		}
 	}
 }

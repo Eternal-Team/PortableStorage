@@ -10,6 +10,5 @@ namespace PortableStorage.UI.TileEntities
 
 		public UIText textLabel;
 		public UITextButton buttonClose;
-		public UIGrid<UIContainerSlot> gridItems;
 	}
 }

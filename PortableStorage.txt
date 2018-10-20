@@ -1,4 +1,6 @@
-priority system for QE chest freq selection drawing
+fix shiftclicking
+
+close UI when out of range
 
 more fluid containers
 
