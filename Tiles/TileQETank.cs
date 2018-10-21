@@ -1,4 +1,5 @@
-﻿using BaseLibrary.Tiles;
+﻿using System.Linq;
+using BaseLibrary.Tiles;
 using BaseLibrary.Utility;
 using FluidLibrary.Content;
 using Microsoft.Xna.Framework;
@@ -7,7 +8,6 @@ using Microsoft.Xna.Framework.Input;
 using PortableStorage.Global;
 using PortableStorage.Items;
 using PortableStorage.TileEntities;
-using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -42,12 +42,16 @@ namespace PortableStorage.Tiles
 			TEQETank qeTank = mod.GetTileEntity<TEQETank>(i, j);
 			if (qeTank == null) return;
 
-			if (Main.keyState.IsKeyDown(Keys.RightShift)) PortableStorage.Instance.PanelUI.UI.HandleTE(qeTank);
+			if (Main.keyState.IsKeyDown(Keys.RightShift))
+			{
+				PortableStorage.Instance.PanelUI.UI.HandleUI(qeTank);
+				return;
+			}
 
 			//qeTank.Handler.ExtractFluid(0, 100);
 
 			ModFluid f = FluidLoader.GetFluid<Water>().NewInstance();
-			f.volume = 1000;
+			f.volume = 255;
 
 			qeTank.Handler.InsertFluid(0, f);
 		}
@@ -61,7 +65,7 @@ namespace PortableStorage.Tiles
 		public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
 		{
 			TEQETank qeTank = mod.GetTileEntity<TEQETank>(i, j);
-			if (qeTank == null || !Main.tile[i, j].IsTopLeft()/* || TileEntity.ByID.Values.OfType<TEQEChest>().Any(x => x != qeChest && x.inScreen && !x.hovered)*/) return true;
+			if (qeTank == null || !Main.tile[i, j].IsTopLeft() || TileEntity.ByID.Values.OfType<TEQETank>().Any(x => x != qeTank && x.inScreen && !x.hovered)) return true;
 
 			Vector2 position = new Point16(i + 1, j + 1).ToScreenCoordinates();
 

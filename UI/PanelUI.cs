@@ -1,6 +1,6 @@
 ﻿using System;
+using BaseLibrary.Tiles.TileEntites;
 using PortableStorage.Items.Bags;
-using PortableStorage.TileEntities;
 using PortableStorage.UI.Bags;
 using PortableStorage.UI.TileEntities;
 using Terraria;
@@ -14,20 +14,20 @@ namespace PortableStorage.UI
 		{
 		}
 
-		public void HandleBag(BaseBag bag)
+		public void HandleUI(BaseBag bag)
 		{
-			if (bag.UI != null) CloseBag(bag);
-			else OpenBag(bag);
+			if (bag.UI != null) CloseUI(bag);
+			else OpenUI(bag);
 		}
 
-		public void CloseBag(BaseBag bag)
+		public void CloseUI(BaseBag bag)
 		{
 			bag.UIPosition = bag.UI.Position;
 			Elements.Remove(bag.UI);
 			Main.PlaySound(bag.CloseSound);
 		}
 
-		public void OpenBag(BaseBag bag)
+		public void OpenUI(BaseBag bag)
 		{
 			BaseBagPanel bagUI = (BaseBagPanel)Activator.CreateInstance(bag.UIType);
 			bagUI.bag = bag;
@@ -42,13 +42,13 @@ namespace PortableStorage.UI
 			Main.PlaySound(bag.OpenSound);
 		}
 
-		public void HandleTE(BasePSTE te)
+		public void HandleUI<T>(BaseTEWithUI<T> te) where T : BaseTEPanel
 		{
-			if (te.UI != null) CloseTE(te);
-			else OpenTE(te);
+			if (te.UI != null) CloseUI(te);
+			else OpenUI(te);
 		}
 
-		public void CloseTE(BasePSTE te)
+		public void CloseUI<T>(BaseTEWithUI<T> te) where T : BaseTEPanel
 		{
 			if (te.UI == null) return;
 
@@ -57,9 +57,9 @@ namespace PortableStorage.UI
 			Main.PlaySound(te.CloseSound);
 		}
 
-		public void OpenTE(BasePSTE te)
+		public void OpenUI<T>(BaseTEWithUI<T> te) where T : BaseTEPanel
 		{
-			BaseTEPanel teUI = (BaseTEPanel)Activator.CreateInstance(te.UIType);
+			T teUI = Activator.CreateInstance<T>();
 			teUI.te = te;
 			teUI.Activate();
 			if (te.UIPosition != null)

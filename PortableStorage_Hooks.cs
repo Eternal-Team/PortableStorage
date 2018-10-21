@@ -41,7 +41,7 @@ namespace PortableStorage
 
 		private void ItemSlot_LeftClick(ItemSlot.orig_LeftClick_ItemArray_int_int orig, Item[] inv, int context, int slot)
 		{
-			if (inv[slot].modItem is BaseBag bag && bag.UI != null) PanelUI.UI.CloseBag(bag);
+			if (inv[slot].modItem is BaseBag bag && bag.UI != null) PanelUI.UI.CloseUI(bag);
 
 			orig(inv, context, slot);
 		}
@@ -60,7 +60,7 @@ namespace PortableStorage
 			long piggyCount = Utils.CoinsCount(out bool _, player.bank.item);
 			long safeCount = Utils.CoinsCount(out bool _, player.bank2.item);
 			long defendersCount = Utils.CoinsCount(out bool _, player.bank3.item);
-			long walletCount = player.inventory.OfType<Wallet>().Sum(wallet => wallet.handler.stacks.CountCoins());
+			long walletCount = player.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.stacks.CountCoins());
 
 			long combined = Utils.CoinsCombineStacks(out bool _, piggyCount, safeCount, defendersCount, walletCount);
 			if (combined > 0L)
@@ -69,7 +69,7 @@ namespace PortableStorage
 				if (walletCount > 0L) sb.Draw(Main.itemTexture[ItemType<Wallet>()], Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 40f), Main.itemTexture[ItemType<Wallet>()].Size() * 0.5f));
 				if (safeCount > 0L) sb.Draw(Main.itemTexture[ItemID.Safe], Utils.CenteredRectangle(new Vector2(shopx + 80f, shopy + 50f), Main.itemTexture[ItemID.Safe].Size() * 0.65f), null, Color.White);
 				if (piggyCount > 0L) sb.Draw(Main.itemTexture[ItemID.PiggyBank], Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 60f), Main.itemTexture[ItemID.PiggyBank].Size() * 0.65f), null, Color.White);
-				Terraria.UI.ItemSlot.DrawMoney(sb, Language.GetTextValue("LegacyInterface.66"), shopx, shopy, Utils.CoinsSplit(combined), horizontal);
+				ItemSlot.DrawMoney(sb, Language.GetTextValue("LegacyInterface.66"), shopx, shopy, Utils.CoinsSplit(combined), horizontal);
 			}
 		}
 
@@ -175,7 +175,7 @@ namespace PortableStorage
 			{
 				texture2D = Main.inventoryBack10Texture;
 			}
-			else if (item.type > 0 && item.stack > 0 && Terraria.UI.ItemSlot.Options.HighlightNewItems && item.newAndShiny && context != 13 && context != 21 && context != 14 && context != 22)
+			else if (item.type > 0 && item.stack > 0 && ItemSlot.Options.HighlightNewItems && item.newAndShiny && context != 13 && context != 21 && context != 14 && context != 22)
 			{
 				texture2D = Main.inventoryBack15Texture;
 				float num3 = Main.mouseTextColor / 255f;
@@ -370,7 +370,7 @@ namespace PortableStorage
 
 				Color newColor = color;
 				float num8 = 1f;
-				Terraria.UI.ItemSlot.GetItemLight(ref newColor, ref num8, item, false);
+				ItemSlot.GetItemLight(ref newColor, ref num8, item, false);
 				float num9 = 1f;
 				if (rectangle2.Width > 32 || rectangle2.Height > 32)
 				{
@@ -432,7 +432,7 @@ namespace PortableStorage
 							}
 						}
 
-						num10 += player.inventory.OfType<BaseAmmoBag>().SelectMany(x => x.handler.stacks).Where(x => x.ammo == useAmmo).Sum(x => x.stack);
+						num10 += player.inventory.OfType<BaseAmmoBag>().SelectMany(x => x.Handler.stacks).Where(x => x.ammo == useAmmo).Sum(x => x.stack);
 					}
 
 					if (item.fishingPole > 0)
@@ -542,7 +542,7 @@ namespace PortableStorage
 
 		private void Player_DropSelectedItem(Player.orig_DropSelectedItem orig, Terraria.Player self)
 		{
-			if (self.inventory[self.selectedItem].modItem is BaseBag bag && bag.UI != null) PanelUI.UI.CloseBag(bag);
+			if (self.inventory[self.selectedItem].modItem is BaseBag bag && bag.UI != null) PanelUI.UI.CloseUI(bag);
 
 			orig(self);
 		}
@@ -555,7 +555,7 @@ namespace PortableStorage
 			long piggyCount = Utils.CoinsCount(out bool _, self.bank.item);
 			long safeCount = Utils.CoinsCount(out bool _, self.bank2.item);
 			long defendersCount = Utils.CoinsCount(out bool _, self.bank3.item);
-			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.handler.stacks.CountCoins());
+			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.stacks.CountCoins());
 
 			long combined = Utils.CoinsCombineStacks(out bool _, inventoryCount, piggyCount, safeCount, defendersCount, walletCount);
 
@@ -573,7 +573,7 @@ namespace PortableStorage
 			list.Add(self.bank.item);
 			list.Add(self.bank2.item);
 			list.Add(self.bank3.item);
-			list.AddRange(self.inventory.OfType<Wallet>().Select(x => x.handler.stacks.ToArray()));
+			list.AddRange(self.inventory.OfType<Wallet>().Select(x => x.Handler.stacks.ToArray()));
 			for (int i = 0; i < list.Count; i++) ignoredSlots[i] = new List<int>();
 
 			ignoredSlots[0] = new List<int>
@@ -639,7 +639,7 @@ namespace PortableStorage
 			long piggyCount = Utils.CoinsCount(out bool _, self.bank.item);
 			long safeCount = Utils.CoinsCount(out bool _, self.bank2.item);
 			long defendersCount = Utils.CoinsCount(out bool _, self.bank3.item);
-			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.handler.stacks.CountCoins());
+			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.stacks.CountCoins());
 			long combined = Utils.CoinsCombineStacks(out bool _, inventoryCount, piggyCount, safeCount, defendersCount, walletCount);
 
 			return combined >= price;
@@ -775,7 +775,7 @@ namespace PortableStorage
 
 		private bool Player_HasAmmo(Player.orig_HasAmmo orig, Terraria.Player self, Item ammoUser, bool canUse)
 		{
-			if (ammoUser.useAmmo > 0) canUse = self.inventory.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0) || self.inventory.OfType<BaseAmmoBag>().Any(ammoBag => ammoBag.handler.stacks.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0));
+			if (ammoUser.useAmmo > 0) canUse = self.inventory.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0) || self.inventory.OfType<BaseAmmoBag>().Any(ammoBag => ammoBag.Handler.stacks.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0));
 			return canUse;
 		}
 
@@ -783,7 +783,7 @@ namespace PortableStorage
 		{
 			Item item = new Item();
 
-			Item firstAmmo = self.inventory.OfType<BaseAmmoBag>().SelectMany(x => x.handler.stacks).FirstOrDefault(ammo => ammo.ammo == sItem.useAmmo && ammo.stack > 0);
+			Item firstAmmo = self.inventory.OfType<BaseAmmoBag>().SelectMany(x => x.Handler.stacks).FirstOrDefault(ammo => ammo.ammo == sItem.useAmmo && ammo.stack > 0);
 			if (firstAmmo != null)
 			{
 				item = firstAmmo;
@@ -926,7 +926,7 @@ namespace PortableStorage
 			Item result = null;
 			int healtGain = -self.statLifeMax2;
 
-			foreach (Item item in self.inventory.OfType<PotionBelt>().SelectMany(x => x.handler.stacks).Concat(self.inventory))
+			foreach (Item item in self.inventory.OfType<PotionBelt>().SelectMany(x => x.Handler.stacks).Concat(self.inventory))
 			{
 				if (item.stack > 0 && item.type > 0 && item.potion && item.healLife > 0 && ItemLoader.CanUseItem(item, self))
 				{
@@ -954,7 +954,7 @@ namespace PortableStorage
 		{
 			if (self.noItems || self.statMana == self.statManaMax2) return;
 
-			foreach (Item item in self.inventory.OfType<PotionBelt>().SelectMany(x => x.handler.stacks).Concat(self.inventory))
+			foreach (Item item in self.inventory.OfType<PotionBelt>().SelectMany(x => x.Handler.stacks).Concat(self.inventory))
 			{
 				if (item.stack > 0 && item.type > 0 && item.healMana > 0 && (self.potionDelay == 0 || !item.potion) && ItemLoader.CanUseItem(item, self))
 				{
@@ -983,7 +983,7 @@ namespace PortableStorage
 					if (healLife > 0 && Main.myPlayer == self.whoAmI) self.HealEffect(healLife);
 					if (healMana > 0)
 					{
-						self.AddBuff(BuffID.ManaSickness, Terraria.Player.manaSickTime);
+						self.AddBuff(BuffID.ManaSickness, Player.manaSickTime);
 						if (Main.myPlayer == self.whoAmI) self.ManaEffect(healMana);
 					}
 
@@ -1002,7 +1002,7 @@ namespace PortableStorage
 
 			LegacySoundStyle sound = null;
 
-			foreach (Item item in self.inventory.OfType<PotionBelt>().SelectMany(x => x.handler.stacks).Concat(self.inventory))
+			foreach (Item item in self.inventory.OfType<PotionBelt>().SelectMany(x => x.Handler.stacks).Concat(self.inventory))
 			{
 				if (self.CountBuffs() == 22) return;
 				if (item.stack > 0 && item.type > 0 && item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph)

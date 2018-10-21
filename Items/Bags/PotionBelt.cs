@@ -24,8 +24,8 @@ namespace PortableStorage.Items.Bags
 
 		public PotionBelt()
 		{
-			handler = new ItemHandler(18);
-			handler.OnContentsChanged += slot =>
+			Handler = new ItemHandler(18);
+			Handler.OnContentsChanged += slot =>
 			{
 				if (Main.netMode == NetmodeID.MultiplayerClient)
 				{
@@ -38,13 +38,13 @@ namespace PortableStorage.Items.Bags
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
-			handler.IsItemValid += (handler, slot, item) => item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph || item.potion && item.healLife > 0 || item.healMana > 0;
+			Handler.IsItemValid += (handler, slot, item) => item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph || item.potion && item.healLife > 0 || item.healMana > 0;
 		}
 
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Potion Belt");
-			Tooltip.SetDefault($"Stores {handler.Slots} stacks of potions");
+			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of potions");
 		}
 
 		public override void SetDefaults()
@@ -68,12 +68,12 @@ namespace PortableStorage.Items.Bags
 
 		public override TagCompound Save() => new TagCompound
 		{
-			["Items"] = handler.Save()
+			["Items"] = Handler.Save()
 		};
 
 		public override void Load(TagCompound tag)
 		{
-			handler.Load(tag.GetCompound("Items"));
+			Handler.Load(tag.GetCompound("Items"));
 		}
 
 		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);

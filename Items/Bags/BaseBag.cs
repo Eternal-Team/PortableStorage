@@ -11,11 +11,11 @@ using Terraria.ModLoader;
 
 namespace PortableStorage.Items.Bags
 {
-	public abstract class BaseBag : BaseItem
+	public abstract class BaseBag : BaseItem, IItemHandler
 	{
 		public override bool CloneNewInstances => true;
 
-		public ItemHandler handler;
+		public ItemHandler Handler { get; set; }
 		public int ID => item.stringColor;
 
 		public BaseBagPanel UI => PortableStorage.Instance.PanelUI.UI.Elements.OfType<BaseBagPanel>().FirstOrDefault(x => x.bag.ID == ID);
@@ -28,7 +28,7 @@ namespace PortableStorage.Items.Bags
 		public override ModItem Clone()
 		{
 			BaseBag clone = (BaseBag)base.Clone();
-			clone.handler = handler.Clone();
+			clone.Handler = Handler.Clone();
 			return clone;
 		}
 
@@ -44,7 +44,7 @@ namespace PortableStorage.Items.Bags
 
 		public override bool UseItem(Player player)
 		{
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.PanelUI.UI.HandleBag(this);
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.PanelUI.UI.HandleUI(this);
 
 			return true;
 		}
@@ -55,7 +55,7 @@ namespace PortableStorage.Items.Bags
 		{
 			item.stack++;
 
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.PanelUI.UI.HandleBag(this);
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.PanelUI.UI.HandleUI(this);
 		}
 	}
 }

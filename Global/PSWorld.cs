@@ -1,6 +1,6 @@
-﻿using ContainerLibrary;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using ContainerLibrary;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -43,15 +43,8 @@ namespace PortableStorage.Global
 
 		public override void Load(TagCompound tag)
 		{
-			foreach (TagCompound compound in tag.GetList<TagCompound>("QEItems"))
-			{
-				Frequency frequency = compound.Get<Frequency>("Frequency");
-				ItemHandler handler = baseItemHandler.Clone().Load(compound.GetCompound("Items"));
-				if (qeItemHandlers.ContainsKey(frequency)) qeItemHandlers[frequency] = handler;
-				else qeItemHandlers.Add(frequency, handler);
-			}
-
-			foreach (TagCompound compound in tag.GetList<TagCompound>("QEFluids")) qeFluidHandlers.Add(compound.Get<Frequency>("Frequency"), baseFluidHandler.Clone().Load(compound.GetCompound("Fluids")));
+			qeItemHandlers = tag.GetList<TagCompound>("QEItems").ToDictionary(c => c.Get<Frequency>("Frequency"), c => baseItemHandler.Clone().Load(c.GetCompound("Items")));
+			qeFluidHandlers = tag.GetList<TagCompound>("QEFluids").ToDictionary(c => c.Get<Frequency>("Frequency"), c => baseFluidHandler.Clone().Load(c.GetCompound("Fluids")));
 		}
 	}
 }

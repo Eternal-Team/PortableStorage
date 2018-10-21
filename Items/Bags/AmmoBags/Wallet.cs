@@ -17,8 +17,8 @@ namespace PortableStorage.Items.Bags
 
 		public Wallet()
 		{
-			handler = new ItemHandler(4);
-			handler.OnContentsChanged += slot =>
+			Handler = new ItemHandler(4);
+			Handler.OnContentsChanged += slot =>
 			{
 				if (Main.netMode == NetmodeID.MultiplayerClient)
 				{
@@ -31,8 +31,8 @@ namespace PortableStorage.Items.Bags
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
-			handler.IsItemValid += (handler, slot, item) => item.type == ItemID.PlatinumCoin - slot;
-			handler.GetSlotLimit += slot => int.MaxValue;
+			Handler.IsItemValid += (handler, slot, item) => item.type == ItemID.PlatinumCoin - slot;
+			Handler.GetSlotLimit += slot => int.MaxValue;
 		}
 
 		public override void SetStaticDefaults()
@@ -51,12 +51,12 @@ namespace PortableStorage.Items.Bags
 
 		public override TagCompound Save() => new TagCompound
 		{
-			["Items"] = handler.Save()
+			["Items"] = Handler.Save()
 		};
 
 		public override void Load(TagCompound tag)
 		{
-			handler.Load(tag.GetCompound("Items"));
+			Handler.Load(tag.GetCompound("Items"));
 		}
 
 		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);

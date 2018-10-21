@@ -36,9 +36,9 @@ namespace PortableStorage.Global
 			{
 				Wallet wallet = player.inventory.OfType<Wallet>().First();
 
-				long addedCoins = Utils.CoinsCount(out bool _, new[] { item }) + wallet.handler.stacks.CountCoins();
+				long addedCoins = Utils.CoinsCount(out bool _, new[] { item }) + wallet.Handler.stacks.CountCoins();
 
-				wallet.handler.stacks = Utils.CoinsSplit(addedCoins).Select((x, index) =>
+				wallet.Handler.stacks = Utils.CoinsSplit(addedCoins).Select((x, index) =>
 				{
 					Item coin = new Item();
 					coin.SetDefaults(ItemID.CopperCoin + index);
@@ -46,7 +46,7 @@ namespace PortableStorage.Global
 					return coin;
 				}).Reverse().ToList();
 
-				for (int i = 0; i < 4; i++) wallet.handler.OnContentsChanged.Invoke(i);
+				for (int i = 0; i < 4; i++) wallet.Handler.OnContentsChanged.Invoke(i);
 
 				return false;
 			}

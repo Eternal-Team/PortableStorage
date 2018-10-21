@@ -1,12 +1,11 @@
-﻿using BaseLibrary.UI.Elements;
-using ContainerLibrary;
-using PortableStorage.TileEntities;
+﻿using BaseLibrary.Tiles.TileEntites;
+using BaseLibrary.UI.Elements;
 
 namespace PortableStorage.UI.TileEntities
 {
 	public class BaseTEPanel : UIDraggablePanel
 	{
-		public BasePSTE te;
+		public BaseTE te;
 
 		public UIText textLabel;
 		public UITextButton buttonClose;

@@ -25,12 +25,12 @@ namespace PortableStorage.UI.TileEntities
 			};
 			Append(textLabel);
 
-			tankFluid = new UITank(((TEQETank)te).Handler)
+			tankFluid = new UITank((TEQETank)te)
 			{
-				Width = (-16, 1),
+				Width = (40, 0),
 				Height = (-44, 1),
-				Left = (8, 0),
-				Top = (36, 0)
+				Top = (36, 0),
+				HAlign = 0.5f
 			};
 			Append(tankFluid);
 		}

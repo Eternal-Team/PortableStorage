@@ -1,18 +1,19 @@
-﻿using ContainerLibrary;
+﻿using System;
+using System.Linq;
+using BaseLibrary.Tiles.TileEntites;
+using ContainerLibrary;
 using PortableStorage.Global;
 using PortableStorage.Tiles;
 using PortableStorage.UI.TileEntities;
-using System;
 using Terraria.ModLoader.IO;
 
 namespace PortableStorage.TileEntities
 {
-	public class TEQETank : BasePSTE
+	public class TEQETank : BaseTEWithUI<QETankPanel>, IFluidHandler
 	{
 		public override Type TileType => typeof(TileQETank);
-		public override Type UIType => typeof(QETankPanel);
 
-		//public QEChestPanel UI => PortableStorage.Instance.PanelUI.UI.Elements.OfType<QEChestPanel>().FirstOrDefault(x => x.te.ID == ID);
+		public override QETankPanel UI => PortableStorage.Instance.PanelUI.UI.Elements.OfType<QETankPanel>().FirstOrDefault(x => x.te.ID == ID);
 
 		public Frequency frequency = new Frequency(Colors.White, Colors.White, Colors.White);
 
@@ -23,7 +24,7 @@ namespace PortableStorage.TileEntities
 				if (PSWorld.Instance.qeFluidHandlers.TryGetValue(frequency, out FluidHandler handler)) return handler;
 
 				FluidHandler temp = PSWorld.baseFluidHandler.Clone();
-				PSWorld.Instance.qeFluidHandlers.Add(frequency, temp);
+				PSWorld.Instance.qeFluidHandlers.Add(new Frequency(frequency.colors), temp);
 				return temp;
 			}
 		}

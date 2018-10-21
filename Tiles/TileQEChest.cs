@@ -1,11 +1,11 @@
-﻿using BaseLibrary.Tiles;
+﻿using System.Linq;
+using BaseLibrary.Tiles;
 using BaseLibrary.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Global;
 using PortableStorage.Items;
 using PortableStorage.TileEntities;
-using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -39,7 +39,7 @@ namespace PortableStorage.Tiles
 			TEQEChest qeChest = mod.GetTileEntity<TEQEChest>(i, j);
 			if (qeChest == null) return;
 
-			PortableStorage.Instance.PanelUI.UI.HandleTE(qeChest);
+			PortableStorage.Instance.PanelUI.UI.HandleUI(qeChest);
 		}
 
 		public const float MaxAngle = 0.8726646f;
@@ -56,7 +56,7 @@ namespace PortableStorage.Tiles
 			Vector2 position = new Point16(i + 1, j + 1).ToScreenCoordinates();
 
 			qeChest.hovered = new Rectangle(i * 16, j * 16, 32, 32).Contains(Main.MouseWorld);
-			qeChest.inScreen = Main.MouseScreen.IsInCircularSector(position, Radius*qeChest.scale, -MaxAngle, MaxAngle) && Main.mouseY <= position.Y;
+			qeChest.inScreen = Main.MouseScreen.IsInCircularSector(position, Radius * qeChest.scale, -MaxAngle, MaxAngle) && Main.mouseY <= position.Y;
 
 			if (!qeChest.inScreen && !qeChest.hovered && qeChest.scale > 0f) qeChest.scale -= 0.05f;
 			else if (qeChest.scale < 1f) qeChest.scale += 0.05f;
@@ -76,7 +76,6 @@ namespace PortableStorage.Tiles
 				if (Main.mouseRight && Main.MouseScreen.IsInPolygon4(Utility.CreatePolygon(new Vector2(8, 10), new Vector2(4, 5), scale).Transform(transformation)))
 				{
 					qeChest.frequency[k + 1] = Main.LocalPlayer.GetHeldItem().ColorFromItem(qeChest.frequency[k + 1]);
-					qeChest.UI?.Repopulate();
 				}
 			}
 
@@ -112,7 +111,7 @@ namespace PortableStorage.Tiles
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
 			TEQEChest qeChest = mod.GetTileEntity<TEQEChest>(i, j);
-			PortableStorage.Instance.PanelUI.UI.CloseTE(qeChest);
+			PortableStorage.Instance.PanelUI.UI.CloseUI(qeChest);
 
 			Item.NewItem(i * 16, j * 16, 32, 32, mod.ItemType<ItemQEChest>());
 			qeChest.Kill(i, j);

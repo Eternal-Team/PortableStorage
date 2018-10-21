@@ -19,8 +19,8 @@ namespace PortableStorage.Items.Bags
 
 		public DevNull()
 		{
-			handler = new ItemHandler(9);
-			handler.OnContentsChanged += slot =>
+			Handler = new ItemHandler(9);
+			Handler.OnContentsChanged += slot =>
 			{
 				if (Main.netMode == NetmodeID.MultiplayerClient)
 				{
@@ -33,8 +33,8 @@ namespace PortableStorage.Items.Bags
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
-			handler.IsItemValid += (handler, slot, item) => item.createTile > 0 && (handler.stacks.All(x => x.type != item.type) || handler.stacks[slot].type == item.type);
-			handler.GetSlotLimit += slot => int.MaxValue;
+			Handler.IsItemValid += (handler, slot, item) => item.createTile > 0 && (handler.stacks.All(x => x.type != item.type) || handler.stacks[slot].type == item.type);
+			Handler.GetSlotLimit += slot => int.MaxValue;
 
 			selectedIndex = -1;
 		}
@@ -49,7 +49,7 @@ namespace PortableStorage.Items.Bags
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("dev/null/");
-			Tooltip.SetDefault($"Stores {handler.Slots} stacks of tiles");
+			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of tiles");
 		}
 
 		public override void SetDefaults()
@@ -62,7 +62,7 @@ namespace PortableStorage.Items.Bags
 			item.useTurn = true;
 		}
 
-		public override bool CanUseItem(Player player) => selectedIndex >= 0 && handler.stacks[selectedIndex].type > 0 && handler.stacks[selectedIndex].stack > 1;
+		public override bool CanUseItem(Player player) => selectedIndex >= 0 && Handler.stacks[selectedIndex].type > 0 && Handler.stacks[selectedIndex].stack > 1;
 
 		public override bool UseItem(Player player) => false;
 
@@ -72,7 +72,7 @@ namespace PortableStorage.Items.Bags
 			else
 			{
 				selectedIndex = index;
-				Item selectedItem = handler.stacks[selectedIndex];
+				Item selectedItem = Handler.stacks[selectedIndex];
 
 				if (selectedItem.createTile >= 0)
 				{
@@ -87,12 +87,12 @@ namespace PortableStorage.Items.Bags
 
 		public override TagCompound Save() => new TagCompound
 		{
-			["Items"] = handler.Save()
+			["Items"] = Handler.Save()
 		};
 
 		public override void Load(TagCompound tag)
 		{
-			handler.Load(tag.GetCompound("Items"));
+			Handler.Load(tag.GetCompound("Items"));
 		}
 
 		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);

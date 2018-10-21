@@ -10,7 +10,7 @@ namespace PortableStorage.Items.Bags
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Fire-proof Container");
-			Tooltip.SetDefault($"Stores {handler.Slots} stacks of explosive or flameable ammo");
+			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of explosive or flameable ammo");
 		}
 
 		public override void SetDefaults()
@@ -23,12 +23,12 @@ namespace PortableStorage.Items.Bags
 
 		public override TagCompound Save() => new TagCompound
 		{
-			["Items"] = handler.Save()
+			["Items"] = Handler.Save()
 		};
 
 		public override void Load(TagCompound tag)
 		{
-			handler.Load(tag.GetCompound("Items"));
+			Handler.Load(tag.GetCompound("Items"));
 		}
 
 		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);

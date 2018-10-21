@@ -18,7 +18,7 @@ namespace PortableStorage.Global
 			if (PortableStorage.HotkeyBag.JustPressed)
 			{
 				BaseBag bag = player.Accessory().OfType<BaseBag>().FirstOrDefault();
-				if (bag != null) PortableStorage.Instance.PanelUI.UI.HandleBag(bag);
+				if (bag != null) PortableStorage.Instance.PanelUI.UI.HandleUI(bag);
 			}
 		}
 
@@ -33,7 +33,7 @@ namespace PortableStorage.Global
 				Item item = inventory[slot];
 				if (item.favorited || item.IsAir) return false;
 
-				ItemHandler container = panel.bag.handler;
+				ItemHandler container = panel.bag.Handler;
 
 				for (int i = 0; i < container.Slots; i++)
 				{

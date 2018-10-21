@@ -11,7 +11,7 @@ namespace PortableStorage.Global
 			if (item.type == mod.ItemType<DevNull>())
 			{
 				DevNull devNull = (DevNull)item.modItem;
-				Item usedItem = devNull.handler.stacks[devNull.selectedIndex];
+				Item usedItem = devNull.Handler.stacks[devNull.selectedIndex];
 				usedItem.stack--;
 				if (usedItem.stack <= 0)
 				{

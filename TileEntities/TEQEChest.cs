@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using BaseLibrary.Tiles.TileEntites;
 using ContainerLibrary;
 using PortableStorage.Global;
 using PortableStorage.Tiles;
@@ -8,12 +9,11 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.TileEntities
 {
-	public class TEQEChest : BasePSTE
+	public class TEQEChest : BaseTEWithUI<QEChestPanel>, IItemHandler
 	{
 		public override Type TileType => typeof(TileQEChest);
-		public override Type UIType => typeof(QEChestPanel);
 
-		public QEChestPanel UI => PortableStorage.Instance.PanelUI.UI.Elements.OfType<QEChestPanel>().FirstOrDefault(x => x.te.ID == ID);
+		public override QEChestPanel UI => PortableStorage.Instance.PanelUI.UI.Elements.OfType<QEChestPanel>().FirstOrDefault(x => x.te.ID == ID);
 
 		public bool hovered;
 		public bool inScreen;
@@ -28,7 +28,7 @@ namespace PortableStorage.TileEntities
 				if (PSWorld.Instance.qeItemHandlers.TryGetValue(frequency, out ItemHandler handler)) return handler;
 
 				ItemHandler temp = PSWorld.baseItemHandler.Clone();
-				PSWorld.Instance.qeItemHandlers.Add(frequency, temp);
+				PSWorld.Instance.qeItemHandlers.Add(new Frequency(frequency.colors), temp);
 				return temp;
 			}
 		}

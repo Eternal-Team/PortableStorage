@@ -28,8 +28,8 @@ namespace PortableStorage.Items.Bags
 
 		public TheBlackHole()
 		{
-			handler = new ItemHandler(27);
-			handler.OnContentsChanged += slot =>
+			Handler = new ItemHandler(27);
+			Handler.OnContentsChanged += slot =>
 			{
 				if (Main.netMode == NetmodeID.MultiplayerClient)
 				{
@@ -54,7 +54,7 @@ namespace PortableStorage.Items.Bags
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("The Black Hole");
-			Tooltip.SetDefault($"Stores {handler.Slots} stacks of items\nCollects them in a {maxRange / 16} block radius");
+			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of items\nCollects them in a {maxRange / 16} block radius");
 			ItemID.Sets.ItemNoGravity[item.type] = true;
 		}
 
@@ -77,7 +77,7 @@ namespace PortableStorage.Items.Bags
 			for (int i = 0; i < Main.item.Length; i++)
 			{
 				ref Item item = ref Main.item[i];
-				if (item == null || item.IsAir || item.IsCoin() || !handler.stacks.HasSpace(item)) continue;
+				if (item == null || item.IsAir || item.IsCoin() || !Handler.stacks.HasSpace(item)) continue;
 
 				PSItem globalItem = item.GetGlobalItem<PSItem>();
 
@@ -118,10 +118,10 @@ namespace PortableStorage.Items.Bags
 					}
 					else if (item.IsCoin())
 					{
-						long addedCoins = Utils.CoinsCount(out bool _, new[] { item }) + Utils.CoinsCount(out bool _, handler.stacks.ToArray());
+						long addedCoins = Utils.CoinsCount(out bool _, new[] { item }) + Utils.CoinsCount(out bool _, Handler.stacks.ToArray());
 						if (addedCoins < Utils.MaxCoins)
 						{
-							handler.stacks.Where(x => x.IsCoin()).ForEach(x => x.TurnToAir());
+							Handler.stacks.Where(x => x.IsCoin()).ForEach(x => x.TurnToAir());
 
 							List<Item> coins = Utils.CoinsSplit(addedCoins).Select((x, index) =>
 							{
@@ -133,9 +133,9 @@ namespace PortableStorage.Items.Bags
 							for (int c = 0; c < coins.Count; c++)
 							{
 								Item coin = coins[c];
-								for (int j = 0; j < handler.Slots; j++)
+								for (int j = 0; j < Handler.Slots; j++)
 								{
-									coin = handler.InsertItem(j, coin);
+									coin = Handler.InsertItem(j, coin);
 
 									if (coin.IsAir || !coin.active) break;
 								}
@@ -146,9 +146,9 @@ namespace PortableStorage.Items.Bags
 					}
 					else
 					{
-						for (int j = 0; j < handler.Slots; j++)
+						for (int j = 0; j < Handler.Slots; j++)
 						{
-							item = handler.InsertItem(j, item);
+							item = Handler.InsertItem(j, item);
 
 							if (item.IsAir || !item.active) break;
 						}
@@ -183,13 +183,13 @@ namespace PortableStorage.Items.Bags
 
 		public override TagCompound Save() => new TagCompound
 		{
-			["Items"] = handler.Save(),
+			["Items"] = Handler.Save(),
 			["Active"] = active
 		};
 
 		public override void Load(TagCompound tag)
 		{
-			handler.Load(tag.GetCompound("Items"));
+			Handler.Load(tag.GetCompound("Items"));
 			active = tag.GetBool("Active");
 		}
 

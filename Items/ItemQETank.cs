@@ -1,7 +1,5 @@
 ﻿using BaseLibrary.Items;
 using PortableStorage.Tiles;
-using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace PortableStorage.Items
 {

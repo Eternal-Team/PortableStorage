@@ -36,17 +36,10 @@ namespace PortableStorage.UI.TileEntities
 			};
 			Append(gridItems);
 
-			Repopulate();
-		}
-
-		public void Repopulate()
-		{
-			gridItems.Clear();
-
 			TEQEChest qeChest = (TEQEChest)te;
 			for (int i = 0; i < qeChest.Handler.stacks.Count; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(qeChest.Handler, i);
+				UIContainerSlot slot = new UIContainerSlot(qeChest, i);
 				gridItems.Add(slot);
 			}
 		}

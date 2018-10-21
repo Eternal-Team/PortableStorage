@@ -20,8 +20,8 @@ namespace PortableStorage.Items.Bags
 
 		public BaseAmmoBag()
 		{
-			handler = new ItemHandler(27);
-			handler.OnContentsChanged += slot =>
+			Handler = new ItemHandler(27);
+			Handler.OnContentsChanged += slot =>
 			{
 				if (Main.netMode == NetmodeID.MultiplayerClient)
 				{
@@ -34,7 +34,7 @@ namespace PortableStorage.Items.Bags
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
-			handler.IsItemValid += (handler, slot, item) => PortableStorage.ammoTypes[AmmoType].Contains(item.type);
+			Handler.IsItemValid += (handler, slot, item) => PortableStorage.ammoTypes[AmmoType].Contains(item.type);
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)

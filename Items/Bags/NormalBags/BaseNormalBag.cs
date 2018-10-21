@@ -20,8 +20,8 @@ namespace PortableStorage.Items.Bags
 
 		public BaseNormalBag()
 		{
-			handler = new ItemHandler(SlotCount);
-			handler.OnContentsChanged += slot =>
+			Handler = new ItemHandler(SlotCount);
+			Handler.OnContentsChanged += slot =>
 			{
 				if (Main.netMode == NetmodeID.MultiplayerClient)
 				{
@@ -52,12 +52,12 @@ namespace PortableStorage.Items.Bags
 
 		public override TagCompound Save() => new TagCompound
 		{
-			["Items"] = handler.Save()
+			["Items"] = Handler.Save()
 		};
 
 		public override void Load(TagCompound tag)
 		{
-			handler.Load(tag.GetCompound("Items"));
+			Handler.Load(tag.GetCompound("Items"));
 		}
 
 		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
