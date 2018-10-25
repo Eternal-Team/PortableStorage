@@ -1,6 +1,6 @@
 ﻿using System;
-using BaseLibrary.Tiles.TileEntites;
 using PortableStorage.Items.Bags;
+using PortableStorage.TileEntities;
 using PortableStorage.UI.Bags;
 using PortableStorage.UI.TileEntities;
 using Terraria;
@@ -42,24 +42,24 @@ namespace PortableStorage.UI
 			Main.PlaySound(bag.OpenSound);
 		}
 
-		public void HandleUI<T>(BaseTEWithUI<T> te) where T : BaseTEPanel
+		public void HandleUI(BaseQETE te)
 		{
-			if (te.UI != null) CloseUI(te);
+			if (te.UIInternal != null) CloseUI(te);
 			else OpenUI(te);
 		}
 
-		public void CloseUI<T>(BaseTEWithUI<T> te) where T : BaseTEPanel
+		public void CloseUI(BaseQETE te)
 		{
-			if (te.UI == null) return;
+			if (te.UIInternal == null) return;
 
-			te.UIPosition = te.UI.Position;
-			Elements.Remove(te.UI);
+			te.UIPosition = te.UIInternal.Position;
+			Elements.Remove(te.UIInternal);
 			Main.PlaySound(te.CloseSound);
 		}
 
-		public void OpenUI<T>(BaseTEWithUI<T> te) where T : BaseTEPanel
+		public void OpenUI(BaseQETE te)
 		{
-			T teUI = Activator.CreateInstance<T>();
+			BaseTEPanel teUI = (BaseTEPanel)Activator.CreateInstance(te.UIType);
 			teUI.te = te;
 			teUI.Activate();
 			if (te.UIPosition != null)

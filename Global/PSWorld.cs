@@ -37,7 +37,7 @@ namespace PortableStorage.Global
 			["QEFluids"] = qeFluidHandlers.Select(x => new TagCompound
 			{
 				["Frequency"] = x.Key,
-				["Fluid"] = x.Value.Save()
+				["Fluids"] = x.Value.Save()
 			}).ToList()
 		};
 

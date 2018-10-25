@@ -69,7 +69,7 @@ namespace PortableStorage
 				if (walletCount > 0L) sb.Draw(Main.itemTexture[ItemType<Wallet>()], Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 40f), Main.itemTexture[ItemType<Wallet>()].Size() * 0.5f));
 				if (safeCount > 0L) sb.Draw(Main.itemTexture[ItemID.Safe], Utils.CenteredRectangle(new Vector2(shopx + 80f, shopy + 50f), Main.itemTexture[ItemID.Safe].Size() * 0.65f), null, Color.White);
 				if (piggyCount > 0L) sb.Draw(Main.itemTexture[ItemID.PiggyBank], Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 60f), Main.itemTexture[ItemID.PiggyBank].Size() * 0.65f), null, Color.White);
-				ItemSlot.DrawMoney(sb, Language.GetTextValue("LegacyInterface.66"), shopx, shopy, Utils.CoinsSplit(combined), horizontal);
+				Terraria.UI.ItemSlot.DrawMoney(sb, Language.GetTextValue("LegacyInterface.66"), shopx, shopy, Utils.CoinsSplit(combined), horizontal);
 			}
 		}
 
@@ -175,7 +175,7 @@ namespace PortableStorage
 			{
 				texture2D = Main.inventoryBack10Texture;
 			}
-			else if (item.type > 0 && item.stack > 0 && ItemSlot.Options.HighlightNewItems && item.newAndShiny && context != 13 && context != 21 && context != 14 && context != 22)
+			else if (item.type > 0 && item.stack > 0 && Terraria.UI.ItemSlot.Options.HighlightNewItems && item.newAndShiny && context != 13 && context != 21 && context != 14 && context != 22)
 			{
 				texture2D = Main.inventoryBack15Texture;
 				float num3 = Main.mouseTextColor / 255f;
@@ -370,7 +370,7 @@ namespace PortableStorage
 
 				Color newColor = color;
 				float num8 = 1f;
-				ItemSlot.GetItemLight(ref newColor, ref num8, item, false);
+				Terraria.UI.ItemSlot.GetItemLight(ref newColor, ref num8, item, false);
 				float num9 = 1f;
 				if (rectangle2.Width > 32 || rectangle2.Height > 32)
 				{
@@ -983,7 +983,7 @@ namespace PortableStorage
 					if (healLife > 0 && Main.myPlayer == self.whoAmI) self.HealEffect(healLife);
 					if (healMana > 0)
 					{
-						self.AddBuff(BuffID.ManaSickness, Player.manaSickTime);
+						self.AddBuff(BuffID.ManaSickness, Terraria.Player.manaSickTime);
 						if (Main.myPlayer == self.whoAmI) self.ManaEffect(healMana);
 					}
 

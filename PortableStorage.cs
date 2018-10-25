@@ -16,6 +16,7 @@ using Terraria.ModLoader.IO;
 using Terraria.UI;
 using static BaseLibrary.BaseLibrary;
 using ItemSlot = On.Terraria.UI.ItemSlot;
+using Player = On.Terraria.Player;
 using UIElement = On.Terraria.UI.UIElement;
 using Utility = BaseLibrary.Utility.Utility;
 
@@ -121,7 +122,12 @@ namespace PortableStorage
 
 		public override void UpdateUI(GameTime gameTime)
 		{
-			if (TileEntity.ByID.Values.OfType<TEQEChest>().Any(x => x.inScreen && !x.hovered))
+			foreach (var entity in TileEntity.ByPosition.Where(x => x.Value is BaseQETE))
+			{
+				if (Vector2.Distance(Main.LocalPlayer.Center, entity.Key.ToWorldCoordinates(16, 16)) > 240) PanelUI.UI.CloseUI((BaseQETE)entity.Value);
+			}
+
+			if (TileEntity.ByID.Values.OfType<BaseQETE>().Any(x => x.inScreen && !x.hovered))
 			{
 				Main.LocalPlayer.mouseInterface = true;
 				Main.LocalPlayer.showItemIcon = false;
