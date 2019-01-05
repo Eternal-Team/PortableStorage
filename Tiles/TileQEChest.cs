@@ -82,32 +82,6 @@ namespace PortableStorage.Tiles
 			return true;
 		}
 
-		//public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref Color drawColor, ref int nextSpecialDrawIndex)
-		//{
-		//	Main.specX[nextSpecialDrawIndex] = i;
-		//	Main.specY[nextSpecialDrawIndex] = j;
-		//	nextSpecialDrawIndex++;
-		//}
-
-		//public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
-		//{
-		//	TEQEChest qeChest = mod.GetTileEntity<TEQEChest>(i, j);
-		//	if (qeChest == null) return;
-
-		//	Tile tile = Main.tile[i, j];
-		//	if (tile.TopLeft())
-		//	{
-		//		//	Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
-		//		//	if (Main.drawToScreen) zero = Vector2.Zero;
-		//		//	Vector2 position = new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero;
-
-		//		//	spriteBatch.Draw(PortableStorage.Textures.gemsSide[0], position + new Vector2(5, 9), new Rectangle(6 * (int)qeChest.frequency.colorLeft, 0, 6, 10), Color.White, 0f, new Vector2(3, 5), 1f, SpriteEffects.None, 0f);
-		//		//	spriteBatch.Draw(PortableStorage.Textures.gemsMiddle[0], position + new Vector2(12, 4), new Rectangle(8 * (int)qeChest.frequency.colorMiddle, 0, 8, 10), Color.White);
-		//		//	spriteBatch.Draw(PortableStorage.Textures.gemsSide[0], position + new Vector2(24, 4), new Rectangle(6 * (int)qeChest.frequency.colorRight, 0, 6, 10), Color.White, 0f, Vector2.Zero, Vector2.One, SpriteEffects.FlipHorizontally, 0f);
-		//		//}
-		//	}
-		//}
-
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
 			TEQEChest qeChest = mod.GetTileEntity<TEQEChest>(i, j);

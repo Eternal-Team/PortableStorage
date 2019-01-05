@@ -5,6 +5,8 @@ namespace PortableStorage.Items.Bags
 {
 	public class Magazine : BaseAmmoBag
 	{
+		public override string Texture => "PortableStorage/Textures/Items/Magazine";
+
 		public override string AmmoType => "Bullet";
 
 		public override void SetStaticDefaults()
@@ -17,7 +19,7 @@ namespace PortableStorage.Items.Bags
 		{
 			base.SetDefaults();
 
-			item.width = 32;
+			item.width = 18;
 			item.height = 32;
 		}
 

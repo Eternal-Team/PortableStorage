@@ -5,6 +5,7 @@ namespace PortableStorage.Items.Bags
 {
 	public class AdventurerBag : BaseNormalBag
 	{
+		public override string Texture => "PortableStorage/Textures/Items/AdventurerBag";
 		public override int SlotCount => 18;
 		public override string Name => "Adventurer's";
 

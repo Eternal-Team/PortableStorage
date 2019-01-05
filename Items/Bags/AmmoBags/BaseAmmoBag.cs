@@ -42,7 +42,7 @@ namespace PortableStorage.Items.Bags
 			if (AmmoType == null) return;
 
 			int type = PortableStorage.ammoTypes[AmmoType][PortableStorage.tooltipIndexes[AmmoType]];
-			tooltips.Add(new TooltipLine(mod, "PortableStorage:AmmoInfo", $"Accepts [c/{colorAmmoHighlight}:{BaseLibrary.BaseLibrary.itemsCache[type].HoverName}]"));
+			tooltips.Add(new TooltipLine(mod, "PortableStorage:AmmoInfo", $"Accepts [c/{colorAmmoHighlight}:{BaseLibrary.BaseLibrary.itemCache[type].HoverName}]"));
 		}
 	}
 }

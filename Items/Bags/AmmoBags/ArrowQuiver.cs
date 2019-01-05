@@ -5,6 +5,8 @@ namespace PortableStorage.Items.Bags
 {
 	public class ArrowQuiver : BaseAmmoBag
 	{
+		public override string Texture => "PortableStorage/Textures/Items/ArrowQuiver";
+
 		public override string AmmoType => "Arrow";
 
 		public override void SetStaticDefaults()

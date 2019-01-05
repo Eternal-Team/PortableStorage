@@ -15,14 +15,11 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
 using static BaseLibrary.BaseLibrary;
-using ItemSlot = On.Terraria.UI.ItemSlot;
-using Player = On.Terraria.Player;
-using UIElement = On.Terraria.UI.UIElement;
 using Utility = BaseLibrary.Utility.Utility;
 
 namespace PortableStorage
 {
-	public partial class PortableStorage : Mod
+	public class PortableStorage : Mod
 	{
 		public static PortableStorage Instance;
 
@@ -48,19 +45,7 @@ namespace PortableStorage
 
 			TagSerializer.AddSerializer(new FrequencySerializer());
 
-			UIElement.GetElementAt += UIElement_GetElementAt;
-			ItemSlot.LeftClick_ItemArray_int_int += ItemSlot_LeftClick;
-			ItemSlot.DrawSavings += ItemSlot_DrawSavings;
-			ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color;
-			Player.CanBuyItem += Player_CanBuyItem;
-			Player.BuyItem += Player_BuyItem;
-			Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
-			Player.HasAmmo += Player_HasAmmo;
-			Player.PickAmmo += Player_PickAmmo;
-			Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
-			Player.QuickMana += Player_QuickMana;
-			Player.QuickBuff += Player_QuickBuff;
-			Player.DropSelectedItem += Player_DropSelectedItem;
+			Hooking.Hooking.Initialize();
 
 			HotkeyBag = this.Register("Open Bag", Keys.B);
 
@@ -85,14 +70,14 @@ namespace PortableStorage
 
 			ammoTypes = new Dictionary<string, List<int>>
 			{
-				["Misc"] = itemsCache.Where(item => miscTypes.Contains(item.ammo)).Select(item => item.type).ToList(),
-				["Arrow"] = itemsCache.Where(item => item.ammo == AmmoID.Arrow).Select(item => item.type).ToList(),
-				["Dart"] = itemsCache.Where(item => item.ammo == AmmoID.Dart).Select(item => item.type).ToList(),
-				["Flameable"] = itemsCache.Where(item => flameableTypes.Contains(item.ammo)).Select(item => item.type).ToList(),
-				["Bullet"] = itemsCache.Where(item => item.ammo == AmmoID.Bullet).Select(x => x.type).ToList(),
-				["Solution"] = itemsCache.Where(item => item.ammo == AmmoID.Solution).Select(item => item.type).ToList(),
-				["Coin"] = itemsCache.Where(item => item.ammo == AmmoID.Coin).Select(item => item.type).ToList(),
-				["All"] = itemsCache.Where(item => item.ammo > 0).Select(item => item.type).ToList()
+				["Misc"] = itemCache.Where(item => miscTypes.Contains(item.ammo)).Select(item => item.type).ToList(),
+				["Arrow"] = itemCache.Where(item => item.ammo == AmmoID.Arrow).Select(item => item.type).ToList(),
+				["Dart"] = itemCache.Where(item => item.ammo == AmmoID.Dart).Select(item => item.type).ToList(),
+				["Flameable"] = itemCache.Where(item => flameableTypes.Contains(item.ammo)).Select(item => item.type).ToList(),
+				["Bullet"] = itemCache.Where(item => item.ammo == AmmoID.Bullet).Select(x => x.type).ToList(),
+				["Solution"] = itemCache.Where(item => item.ammo == AmmoID.Solution).Select(item => item.type).ToList(),
+				["Coin"] = itemCache.Where(item => item.ammo == AmmoID.Coin).Select(item => item.type).ToList(),
+				["All"] = itemCache.Where(item => item.ammo > 0).Select(item => item.type).ToList()
 			};
 
 			tooltipIndexes = new Dictionary<string, int>();
@@ -126,6 +111,8 @@ namespace PortableStorage
 			{
 				if (Vector2.Distance(Main.LocalPlayer.Center, entity.Key.ToWorldCoordinates(16, 16)) > 240) PanelUI.UI.CloseUI((BaseQETE)entity.Value);
 			}
+
+			PanelUI.Update(gameTime);
 
 			if (TileEntity.ByID.Values.OfType<BaseQETE>().Any(x => x.inScreen && !x.hovered))
 			{

@@ -12,6 +12,8 @@ namespace PortableStorage.Items.Bags
 {
 	public class Wallet : BaseAmmoBag
 	{
+		public override string Texture => "PortableStorage/Textures/Items/Wallet";
+
 		public override Type UIType => typeof(WalletPanel);
 		public override string AmmoType => "Coin";
 
@@ -45,8 +47,8 @@ namespace PortableStorage.Items.Bags
 		{
 			base.SetDefaults();
 
-			item.width = 32;
-			item.height = 32;
+			item.width = 28;
+			item.height = 14;
 		}
 
 		public override TagCompound Save() => new TagCompound

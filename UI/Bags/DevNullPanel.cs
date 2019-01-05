@@ -24,7 +24,7 @@ namespace PortableStorage.UI.Bags
 			};
 			Append(textLabel);
 
-			buttonClose = new UITextButton("X", 0f)
+			buttonClose = new UITextButton("X")
 			{
 				Size = new Vector2(20),
 				Left = (-28, 1),
