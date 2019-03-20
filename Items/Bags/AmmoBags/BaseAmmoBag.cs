@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BaseLibrary.Utility;
+using BaseLibrary;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.UI.Bags;
@@ -16,7 +16,7 @@ namespace PortableStorage.Items.Bags
 		public override Type UIType => typeof(AmmoBagPanel);
 		public virtual string AmmoType => null;
 
-		public static readonly string colorAmmoHighlight = new Color(193, 102, 79).ColorToHex();
+		public static readonly string colorAmmoHighlight = new Color(193, 102, 79).ToHex();
 
 		public BaseAmmoBag()
 		{
@@ -42,7 +42,7 @@ namespace PortableStorage.Items.Bags
 			if (AmmoType == null) return;
 
 			int type = PortableStorage.ammoTypes[AmmoType][PortableStorage.tooltipIndexes[AmmoType]];
-			tooltips.Add(new TooltipLine(mod, "PortableStorage:AmmoInfo", $"Accepts [c/{colorAmmoHighlight}:{BaseLibrary.BaseLibrary.itemCache[type].HoverName}]"));
+			//tooltips.Add(new TooltipLine(mod, "PortableStorage:AmmoInfo", $"Accepts [c/{colorAmmoHighlight}:{BaseLibrary.BaseLibrary.itemCache[type].HoverName}]"));
 		}
 	}
 }

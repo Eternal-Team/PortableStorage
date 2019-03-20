@@ -1,10 +1,10 @@
 ﻿using System;
+using BaseLibrary.UI;
 using PortableStorage.Items.Bags;
 using PortableStorage.TileEntities;
 using PortableStorage.UI.Bags;
 using PortableStorage.UI.TileEntities;
 using Terraria;
-using TheOneLibrary.Base.UI;
 
 namespace PortableStorage.UI
 {
@@ -16,14 +16,14 @@ namespace PortableStorage.UI
 
 		public void HandleUI(BaseBag bag)
 		{
-			if (bag.UI != null) CloseUI(bag);
-			else OpenUI(bag);
+			//if (bag.UI != null) CloseUI(bag);
+			//else OpenUI(bag);
 		}
 
 		public void CloseUI(BaseBag bag)
 		{
-			bag.UIPosition = bag.UI.Position;
-			Elements.Remove(bag.UI);
+			//bag.UIPosition = bag.UI.Position;
+			//Elements.Remove(bag.UI);
 			Main.PlaySound(bag.CloseSound);
 		}
 

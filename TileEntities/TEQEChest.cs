@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using ContainerLibrary;
 using PortableStorage.Global;
 using PortableStorage.Tiles;
@@ -13,7 +12,7 @@ namespace PortableStorage.TileEntities
 		public override Type TileType => typeof(TileQEChest);
 		public override Type UIType => typeof(QEChestPanel);
 
-		public QEChestPanel UI => PortableStorage.Instance.PanelUI.UI.Elements.OfType<QEChestPanel>().FirstOrDefault(x => x.te.ID == ID);
+		//public QEChestPanel UI => PortableStorage.Instance.PanelUI.UI.Elements.OfType<QEChestPanel>().FirstOrDefault(x => x.te.ID == ID);
 
 		public ItemHandler Handler
 		{

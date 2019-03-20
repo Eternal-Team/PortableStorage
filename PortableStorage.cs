@@ -1,21 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BaseLibrary.UI;
-using BaseLibrary.Utility;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using PortableStorage.Global;
-using PortableStorage.TileEntities;
-using PortableStorage.UI;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.UI;
-using static BaseLibrary.BaseLibrary;
-using Utility = BaseLibrary.Utility.Utility;
 
 namespace PortableStorage
 {
@@ -26,13 +15,11 @@ namespace PortableStorage
 		public static int BagID;
 		public static int timer;
 
-		[PathOverride("PortableStorage/Textures/Tiles/QEChest_Glow")]
 		public static Texture2D QE_Glow { get; set; }
 
-		[PathOverride("PortableStorage/Textures/Tiles/GemMiddle_0")]
 		public static Texture2D QE_Gems { get; set; }
 
-		public GUI<PanelUI> PanelUI;
+		//public GUI<PanelUI> PanelUI;
 
 		public static ModHotKey HotkeyBag;
 
@@ -47,90 +34,93 @@ namespace PortableStorage
 
 			Hooking.Hooking.Initialize();
 
-			HotkeyBag = this.Register("Open Bag", Keys.B);
+			//HotkeyBag = this.Register("Open Bag", Keys.B);
 
 			if (!Main.dedServ)
 			{
-				this.LoadTextures();
+				//this.LoadTextures();
 
-				PanelUI = Utility.SetupGUI<PanelUI>();
-				PanelUI.Visible = true;
+				//PanelUI = Utility.SetupGUI<PanelUI>();
+				//PanelUI.Visible = true;
 			}
 		}
 
 		public override void Unload()
 		{
-			Utility.UnloadNullableTypes();
+			BaseLibrary.Utility.UnloadNullableTypes();
+		}
+
+		public override object Call(params object[] args)
+		{
+			if (args.Length < 1 || !(args[0] is string command)) return base.Call(args);
+
+			switch (command)
+			{
+				case "RegisterIngredient" when args.Length == 2 && args[1] is short ID && !Utility.AlchemistBagWhitelist.Contains(ID):
+				{
+					Utility.AlchemistBagWhitelist.Add(ID);
+					Logger.Info($"Ingredient '{ID}' added to Alchemist's Bag whitelist!");
+					break;
+				}
+			}
+
+			return base.Call(args);
 		}
 
 		public override void PostSetupContent()
 		{
-			List<int> miscTypes = new List<int> { AmmoID.FallenStar, AmmoID.Sand, AmmoID.Snowball, AmmoID.CandyCorn, AmmoID.Stake };
-			List<int> flameableTypes = new List<int> { AmmoID.Rocket, AmmoID.Gel, AmmoID.Flare, AmmoID.StyngerBolt, AmmoID.JackOLantern };
-
-			ammoTypes = new Dictionary<string, List<int>>
-			{
-				["Misc"] = itemCache.Where(item => miscTypes.Contains(item.ammo)).Select(item => item.type).ToList(),
-				["Arrow"] = itemCache.Where(item => item.ammo == AmmoID.Arrow).Select(item => item.type).ToList(),
-				["Dart"] = itemCache.Where(item => item.ammo == AmmoID.Dart).Select(item => item.type).ToList(),
-				["Flameable"] = itemCache.Where(item => flameableTypes.Contains(item.ammo)).Select(item => item.type).ToList(),
-				["Bullet"] = itemCache.Where(item => item.ammo == AmmoID.Bullet).Select(x => x.type).ToList(),
-				["Solution"] = itemCache.Where(item => item.ammo == AmmoID.Solution).Select(item => item.type).ToList(),
-				["Coin"] = itemCache.Where(item => item.ammo == AmmoID.Coin).Select(item => item.type).ToList(),
-				["All"] = itemCache.Where(item => item.ammo > 0).Select(item => item.type).ToList()
-			};
-
-			tooltipIndexes = new Dictionary<string, int>();
-			foreach (var ammoType in ammoTypes) tooltipIndexes.Add(ammoType.Key, 0);
+			Utility.Load();
 		}
+
+		// bag for throwing items
 
 		public override void PostAddRecipes()
 		{
-			foreach (ModItem item in this.GetValue<Dictionary<string, ModItem>>("items").Values)
+			foreach (ModItem item in BaseLibrary.Utility.GetValue<Dictionary<string, ModItem>>(this, "items").Values)
 			{
 				Recipe recipe = Main.recipe.FirstOrDefault(x => x.createItem.type == item.item.type);
 				if (recipe != null) item.item.value = recipe.requiredItem.Sum(x => x.value);
 			}
 		}
 
-		public override void PreSaveAndQuit()
-		{
-			PanelUI.UI.Elements.Clear();
-		}
+		//	public override void PreSaveAndQuit()
+		//	{
+		//		PanelUI.UI.Elements.Clear();
+		//	}
 
-		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
-		{
-			int HotbarIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Hotbar"));
+		//	public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
+		//	{
+		//		int HotbarIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Hotbar"));
 
-			if (HotbarIndex != -1 && PanelUI != null) layers.Insert(HotbarIndex + 1, PanelUI.InterfaceLayer);
-		}
+		//		if (HotbarIndex != -1 && PanelUI != null) layers.Insert(HotbarIndex + 1, PanelUI.InterfaceLayer);
+		//	}
 
-		public override void UpdateUI(GameTime gameTime)
-		{
-			foreach (var entity in TileEntity.ByPosition.Where(x => x.Value is BaseQETE))
-			{
-				if (Vector2.Distance(Main.LocalPlayer.Center, entity.Key.ToWorldCoordinates(16, 16)) > 240) PanelUI.UI.CloseUI((BaseQETE)entity.Value);
-			}
+		//	public override void UpdateUI(GameTime gameTime)
+		//	{
+		//		foreach (var entity in TileEntity.ByPosition.Where(x => x.Value is BaseQETE))
+		//		{
+		//			if (Vector2.Distance(Main.LocalPlayer.Center, entity.Key.ToWorldCoordinates(16, 16)) > 240) PanelUI.UI.CloseUI((BaseQETE)entity.Value);
+		//		}
 
-			PanelUI.Update(gameTime);
+		//		PanelUI.Update(gameTime);
 
-			if (TileEntity.ByID.Values.OfType<BaseQETE>().Any(x => x.inScreen && !x.hovered))
-			{
-				Main.LocalPlayer.mouseInterface = true;
-				Main.LocalPlayer.showItemIcon = false;
-				Main.ItemIconCacheUpdate(0);
-			}
+		//		if (TileEntity.ByID.Values.OfType<BaseQETE>().Any(x => x.inScreen && !x.hovered))
+		//		{
+		//			Main.LocalPlayer.mouseInterface = true;
+		//			Main.LocalPlayer.showItemIcon = false;
+		//			Main.ItemIconCacheUpdate(0);
+		//		}
 
-			if (++timer > 60)
-			{
-				timer = 0;
-				for (int i = 0; i < tooltipIndexes.Count; i++)
-				{
-					string key = tooltipIndexes.Keys.ElementAt(i);
-					tooltipIndexes[key]++;
-					if (tooltipIndexes[key] > ammoTypes[key].Count - 1) tooltipIndexes[key] = 0;
-				}
-			}
-		}
+		//		if (++timer > 60)
+		//		{
+		//			timer = 0;
+		//			for (int i = 0; i < tooltipIndexes.Count; i++)
+		//			{
+		//				string key = tooltipIndexes.Keys.ElementAt(i);
+		//				tooltipIndexes[key]++;
+		//				if (tooltipIndexes[key] > ammoTypes[key].Count - 1) tooltipIndexes[key] = 0;
+		//			}
+		//		}
+		//	}
 	}
 }

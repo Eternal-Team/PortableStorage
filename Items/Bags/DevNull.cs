@@ -82,7 +82,7 @@ namespace PortableStorage.Items.Bags
 				}
 			}
 
-			(UI as DevNullPanel)?.RefreshTextures();
+			//(UI as DevNullPanel)?.RefreshTextures();
 		}
 
 		public override TagCompound Save() => new TagCompound

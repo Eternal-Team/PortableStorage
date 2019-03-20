@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(MSBuildExtensionsPath)$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="C:\Users\Itorius\Documents\My Games\Terraria\ModLoader\references\tModLoader.targets" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -21,7 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>7</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,55 +31,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>7</LangVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553" />
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553" />
-    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="ReLogic">
-      <HintPath>..\ReLogic.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\Libraries\BaseLibrary\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="TerrariaHooks">
-      <HintPath>..\TerrariaHooks.dll</HintPath>
-    </Reference>
-    <Reference Include="tModLoader">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\content\app_105600\depot_105601\tModLoader.exe</HintPath>
-    </Reference>
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="Global\Colors.cs" />
+    <Compile Include="Global\MultiValueDictionary.cs" />
     <Compile Include="Global\PSItem.cs" />
     <Compile Include="Global\PSPlayer.cs" />
     <Compile Include="Global\PSTile.cs" />
@@ -87,9 +44,10 @@
     <Compile Include="Hooking\Hooking.cs" />
     <Compile Include="Hooking\Hooking_Player.cs" />
     <Compile Include="Hooking\Hooking_UI.cs" />
+    <Compile Include="Items\Bags\AlchemistBag.cs" />
     <Compile Include="Items\Bags\AmmoBags\BaseAmmoBag.cs" />
-    <Compile Include="Items\Bags\AmmoBags\MasterAmmoPounch.cs" />
-    <Compile Include="Items\Bags\AmmoBags\AmmoPounch.cs" />
+    <Compile Include="Items\Bags\AmmoBags\MasterAmmoPouch.cs" />
+    <Compile Include="Items\Bags\AmmoBags\AmmoPouch.cs" />
     <Compile Include="Items\Bags\AmmoBags\DartHolder.cs" />
     <Compile Include="Items\Bags\AmmoBags\ThePerfectSolution.cs" />
     <Compile Include="Items\Bags\AmmoBags\Wallet.cs" />
@@ -102,7 +60,6 @@
     <Compile Include="Items\Bags\NormalBags\StoragemasterBag.cs" />
     <Compile Include="Items\Bags\BaseBag.cs" />
     <Compile Include="Items\Bags\DevNull.cs" />
-    <Compile Include="Items\Bags\PotionBelt.cs" />
     <Compile Include="Items\Bags\TheBlackHole.cs" />
     <Compile Include="Items\ItemQEChest.cs" />
     <Compile Include="Items\ItemQETank.cs" />
@@ -114,12 +71,12 @@
     <Compile Include="TileEntities\TEQETank.cs" />
     <Compile Include="Tiles\TileQETank.cs" />
     <Compile Include="Tiles\TileQEChest.cs" />
+    <Compile Include="UI\Bags\AlchemistBagPanel.cs" />
     <Compile Include="UI\Bags\DevNullPanel.cs" />
     <Compile Include="UI\Bags\AmmoBagPanel.cs" />
     <Compile Include="UI\PanelUI.cs" />
     <Compile Include="UI\Bags\BagPanel.cs" />
     <Compile Include="UI\Bags\BaseBagPanel.cs" />
-    <Compile Include="UI\Bags\PotionBeltPanel.cs" />
     <Compile Include="UI\Bags\WalletPanel.cs" />
     <Compile Include="UI\Bags\TheBlackHolePanel.cs" />
     <Compile Include="UI\TileEntities\QETankPanel.cs" />
@@ -144,12 +101,8 @@
       <Name>FluidLibrary</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="PortableStorage.json" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"C:\Program Files (x86)\Steam\steamapps\content\app_105600\depot_105601\tModLoaderServer.exe" -build "$(ProjectDir)\" -eac "$(TargetPath)"</PostBuildEvent>
+    <PostBuildEvent>"C:\Program Files (x86)\Steam\steamapps\common\Terraria\TerrariaServer.exe" -build "$(ProjectDir)\" -eac "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

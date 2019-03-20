@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Linq;
 using BaseLibrary.Items;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
-using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -18,7 +16,7 @@ namespace PortableStorage.Items.Bags
 		public ItemHandler Handler { get; set; }
 		public int ID => item.stringColor;
 
-		public BaseBagPanel UI => PortableStorage.Instance.PanelUI.UI.Elements.OfType<BaseBagPanel>().FirstOrDefault(x => x.bag.ID == ID);
+		//public BaseBagPanel UI => PortableStorage.Instance.PanelUI.UI.Elements.OfType<BaseBagPanel>().FirstOrDefault(x => x.bag.ID == ID);
 		public Vector2? UIPosition;
 
 		public virtual Type UIType { get; }
@@ -44,7 +42,7 @@ namespace PortableStorage.Items.Bags
 
 		public override bool UseItem(Player player)
 		{
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.PanelUI.UI.HandleUI(this);
+			//if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.PanelUI.UI.HandleUI(this);
 
 			return true;
 		}
@@ -55,7 +53,7 @@ namespace PortableStorage.Items.Bags
 		{
 			item.stack++;
 
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.PanelUI.UI.HandleUI(this);
+			//if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.PanelUI.UI.HandleUI(this);
 		}
 	}
 }

@@ -3,14 +3,14 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public class MasterAmmoPounch : BaseAmmoBag
+	public class AmmoPouch : BaseAmmoBag
 	{
-		public override string AmmoType => "All";
+		public override string AmmoType => "Misc";
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Master Ammo Pounch");
-			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of ammo");
+			DisplayName.SetDefault("Ammo Pouch");
+			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of misc. ammo");
 		}
 
 		public override void SetDefaults()

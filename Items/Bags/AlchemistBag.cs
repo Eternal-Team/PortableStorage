@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using BaseLibrary.Utility;
+using BaseLibrary;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.UI.Bags;
@@ -14,15 +14,13 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public class PotionBelt : BaseBag
+	// todo: automatically pick up potion ingredients (only if the player has told it to), allow a way of crafting potions, store potions
+
+	public class AlchemistBag : BaseBag
 	{
-		public override Type UIType => typeof(PotionBeltPanel);
+		public override Type UIType => typeof(AlchemistBagPanel);
 
-		public static readonly string colorQuickHeal = new Color(23, 237, 47).ColorToHex();
-		public static readonly string colorQuickMana = new Color(33, 124, 221).ColorToHex();
-		public static readonly string colorQuickBuff = new Color(230, 255, 109).ColorToHex();
-
-		public PotionBelt()
+		public AlchemistBag()
 		{
 			Handler = new ItemHandler(18);
 			Handler.OnContentsChanged += slot =>
@@ -43,7 +41,7 @@ namespace PortableStorage.Items.Bags
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Potion Belt");
+			DisplayName.SetDefault("Alchemist's Bag");
 			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of potions");
 		}
 
@@ -55,15 +53,18 @@ namespace PortableStorage.Items.Bags
 			item.height = 32;
 		}
 
+		public static readonly (string key, string value, string color)[] tooltip =
+		{
+			("QuickHeal", "quick heal", new Color(23, 237, 47).ToHex()),
+			("QuickMana", "quick mana", new Color(33, 124, 221).ToHex()),
+			("QuickBuff", "quick buff", new Color(230, 255, 109).ToHex())
+		};
+
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			string quickHeal = PlayerInput.CurrentProfile.InputModes[InputMode.Keyboard].KeyStatus["QuickHeal"][0];
-			string quickMana = PlayerInput.CurrentProfile.InputModes[InputMode.Keyboard].KeyStatus["QuickMana"][0];
-			string quickBuff = PlayerInput.CurrentProfile.InputModes[InputMode.Keyboard].KeyStatus["QuickBuff"][0];
 
-			tooltips.Add(new TooltipLine(mod, "PortableStorage:QuickHeal", $"Pressing [c/{colorQuickHeal}:{quickHeal}] will quick heal you using the potions in the belt"));
-			tooltips.Add(new TooltipLine(mod, "PortableStorage:QuickMana", $"Pressing [c/{colorQuickMana}:{quickMana}] will quick mana you using the potions in the belt"));
-			tooltips.Add(new TooltipLine(mod, "PortableStorage:QuickBuff", $"Pressing [c/{colorQuickBuff}:{quickBuff}] will quick buff you using the potions in the belt"));
+			//tooltips.Add(new TooltipLine(mod, "PortableStorage:AlchemistBagInfo", $"Pressing [c/{colorQuickHeal}:{quickHeal}] will quick heal you using the potions in the belt"));
 		}
 
 		public override TagCompound Save() => new TagCompound

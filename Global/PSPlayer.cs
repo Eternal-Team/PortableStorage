@@ -1,8 +1,6 @@
 ﻿using System.Linq;
-using BaseLibrary.Utility;
-using ContainerLibrary;
+using BaseLibrary;
 using PortableStorage.Items.Bags;
-using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -18,7 +16,7 @@ namespace PortableStorage.Global
 			if (PortableStorage.HotkeyBag.JustPressed)
 			{
 				BaseBag bag = player.Accessory().OfType<BaseBag>().FirstOrDefault();
-				if (bag != null) PortableStorage.Instance.PanelUI.UI.HandleUI(bag);
+				//if (bag != null) PortableStorage.Instance.PanelUI.UI.HandleUI(bag);
 			}
 		}
 
@@ -26,21 +24,21 @@ namespace PortableStorage.Global
 		{
 			if (context != ItemSlot.Context.InventoryItem && context != ItemSlot.Context.InventoryCoin && context != ItemSlot.Context.InventoryAmmo) return false;
 
-			if (!PortableStorage.Instance.PanelUI.UI.Elements.Any()) return false;
+			//if (!PortableStorage.Instance.PanelUI.UI.Elements.Any()) return false;
 
-			foreach (BaseBagPanel panel in PortableStorage.Instance.PanelUI.UI.Elements.OfType<BaseBagPanel>())
-			{
-				Item item = inventory[slot];
-				if (item.favorited || item.IsAir) return false;
+			//foreach (BaseBagPanel panel in PortableStorage.Instance.PanelUI.UI.Elements.OfType<BaseBagPanel>())
+			//{
+			//	Item item = inventory[slot];
+			//	if (item.favorited || item.IsAir) return false;
 
-				ItemHandler container = panel.bag.Handler;
+			//	ItemHandler container = panel.bag.Handler;
 
-				for (int i = 0; i < container.Slots; i++)
-				{
-					inventory[slot] = container.InsertItem(i, item);
-					if (inventory[slot].IsAir) break;
-				}
-			}
+			//	for (int i = 0; i < container.Slots; i++)
+			//	{
+			//		inventory[slot] = container.InsertItem(i, item);
+			//		if (inventory[slot].IsAir) break;
+			//	}
+			//}
 
 			Main.PlaySound(SoundID.Grab);
 

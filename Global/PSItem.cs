@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using BaseLibrary.Utility;
+using BaseLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Items.Bags;

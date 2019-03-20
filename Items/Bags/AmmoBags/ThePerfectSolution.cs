@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using BaseLibrary.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -11,7 +10,7 @@ namespace PortableStorage.Items.Bags
 	{
 		public override string Texture => "PortableStorage/Textures/Items/ThePerfectSolution";
 
-		[PathOverride("PortableStorage/Textures/Items/ThePerfectSolution_Infill")]
+		//[PathOverride("PortableStorage/Textures/Items/ThePerfectSolution_Infill")]
 		public static Texture2D Texture_Infill { get; set; }
 
 		public override string AmmoType => "Solution";
