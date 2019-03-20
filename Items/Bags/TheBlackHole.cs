@@ -196,5 +196,15 @@ namespace PortableStorage.Items.Bags
 		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
 
 		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.CrystalBall);
+			recipe.AddIngredient(ItemID.Ectoplasm, 12);
+			recipe.AddTile(TileID.DemonAltar);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
 	}
 }

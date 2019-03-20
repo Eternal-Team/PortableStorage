@@ -1,5 +1,7 @@
 ﻿using BaseLibrary.Items;
 using PortableStorage.Tiles;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace PortableStorage.Items
 {
@@ -23,6 +25,17 @@ namespace PortableStorage.Items
 			item.useStyle = 1;
 			item.consumable = true;
 			item.createTile = mod.TileType<TileQETank>();
+		}
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.Glass, 40);
+			recipe.AddIngredient(ItemID.HallowedBar, 7);
+			recipe.AddIngredient(ItemID.SoulofSight, 5);
+			recipe.AddTile(TileID.SteampunkBoiler);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
 		}
 	}
 }

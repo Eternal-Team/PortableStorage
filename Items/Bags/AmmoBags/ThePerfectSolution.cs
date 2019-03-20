@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
@@ -54,5 +56,16 @@ namespace PortableStorage.Items.Bags
 		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
 
 		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.Glass, 10);
+			recipe.AddIngredient(ItemID.HallowedBar, 7);
+			recipe.AddIngredient(ItemID.SoulofFright, 5);
+			recipe.AddTile(TileID.SteampunkBoiler);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
 	}
 }

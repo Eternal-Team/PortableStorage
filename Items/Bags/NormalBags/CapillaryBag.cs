@@ -3,11 +3,11 @@ using Terraria.ModLoader;
 
 namespace PortableStorage.Items.Bags
 {
-	public class StoragemasterBag : BaseNormalBag
+	public class CapillaryBag : BaseNormalBag
 	{
 		public override string Texture => "PortableStorage/Textures/Items/StoragemasterBag";
 		public override int SlotCount => 54;
-		public override string Name => "Storagemaster's";
+		public override string Name => "Capillary";
 
 		public override void SetDefaults()
 		{
@@ -19,10 +19,11 @@ namespace PortableStorage.Items.Bags
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Leather, 55);
-			recipe.AddIngredient(ItemID.ChlorophyteBar, 10);
-			recipe.AddRecipeGroup("Wood", 20);
-			recipe.AddTile(TileID.WorkBenches);
+			recipe.AddIngredient(ItemID.Leather, 20);
+			recipe.AddIngredient(ItemID.ChlorophyteBar, 15);
+			recipe.AddIngredient(ItemID.Vine, 7);
+			recipe.AddIngredient(ItemID.Heart);
+			recipe.AddTile(TileID.LivingLoom);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

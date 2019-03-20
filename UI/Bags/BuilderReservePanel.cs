@@ -7,7 +7,7 @@ using Terraria;
 
 namespace PortableStorage.UI.Bags
 {
-	public class DevNullPanel : BaseBagPanel
+	public class BuilderReservePanel : BaseBagPanel
 	{
 		public override void OnInitialize()
 		{
@@ -44,7 +44,7 @@ namespace PortableStorage.UI.Bags
 			};
 			Append(gridItems);
 
-			DevNull devNull = (DevNull)bag;
+			BuilderReserve devNull = (BuilderReserve)bag;
 			for (int i = 0; i < bag.Handler.stacks.Count; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(bag, i);
@@ -72,7 +72,7 @@ namespace PortableStorage.UI.Bags
 
 		public void RefreshTextures()
 		{
-			DevNull devNull = (DevNull)bag;
+			BuilderReserve devNull = (BuilderReserve)bag;
 			if (devNull.selectedIndex >= 0)
 			{
 				foreach (UIContainerSlot slot in gridItems.items) slot.backgroundTexture = devNull.selectedIndex == slot.slot ? Main.inventoryBack15Texture : Main.inventoryBackTexture;

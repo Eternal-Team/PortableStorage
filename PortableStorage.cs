@@ -3,8 +3,10 @@ using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Global;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Utility = BaseLibrary.Utility;
 
 namespace PortableStorage
 {
@@ -47,7 +49,35 @@ namespace PortableStorage
 
 		public override void Unload()
 		{
-			BaseLibrary.Utility.UnloadNullableTypes();
+			Utility.UnloadNullableTypes();
+		}
+
+		public RecipeGroup yoyoStringGroup;
+		public RecipeGroup tier1HMBarsGroup;
+		public RecipeGroup ichorFlameGroup;
+
+		public override void AddRecipeGroups()
+		{
+			yoyoStringGroup = new RecipeGroup(() => "PortableStorage:YoYoStrings",
+				ItemID.RedString,
+				ItemID.OrangeString,
+				ItemID.YellowString,
+				ItemID.LimeString,
+				ItemID.GreenString,
+				ItemID.TealString,
+				ItemID.CyanString,
+				ItemID.SkyBlueString,
+				ItemID.BlueString,
+				ItemID.PurpleString,
+				ItemID.VioletString,
+				ItemID.PinkString,
+				ItemID.BrownString,
+				ItemID.WhiteString,
+				ItemID.RainbowString,
+				ItemID.BlackString);
+
+			tier1HMBarsGroup = new RecipeGroup(() => "PortableStorage:T1HMBars", ItemID.CobaltBar, ItemID.PalladiumBar);
+			ichorFlameGroup = new RecipeGroup(() => "PortableStorage:IchorCursedFlame", ItemID.Ichor, ItemID.CursedFlame);
 		}
 
 		public override object Call(params object[] args)
@@ -56,9 +86,9 @@ namespace PortableStorage
 
 			switch (command)
 			{
-				case "RegisterIngredient" when args.Length == 2 && args[1] is short ID && !Utility.AlchemistBagWhitelist.Contains(ID):
+				case "RegisterIngredient" when args.Length == 2 && args[1] is short ID && !Global.Utility.AlchemistBagWhitelist.Contains(ID):
 				{
-					Utility.AlchemistBagWhitelist.Add(ID);
+					Global.Utility.AlchemistBagWhitelist.Add(ID);
 					Logger.Info($"Ingredient '{ID}' added to Alchemist's Bag whitelist!");
 					break;
 				}
@@ -69,14 +99,12 @@ namespace PortableStorage
 
 		public override void PostSetupContent()
 		{
-			Utility.Load();
+			Global.Utility.Load();
 		}
-
-		// bag for throwing items
 
 		public override void PostAddRecipes()
 		{
-			foreach (ModItem item in BaseLibrary.Utility.GetValue<Dictionary<string, ModItem>>(this, "items").Values)
+			foreach (ModItem item in Utility.GetValue<Dictionary<string, ModItem>>(this, "items").Values)
 			{
 				Recipe recipe = Main.recipe.FirstOrDefault(x => x.createItem.type == item.item.type);
 				if (recipe != null) item.item.value = recipe.requiredItem.Sum(x => x.value);

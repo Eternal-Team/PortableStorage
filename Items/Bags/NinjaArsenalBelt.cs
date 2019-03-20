@@ -14,13 +14,11 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	// todo: automatically pick up potion ingredients (only if the player has told it to), allow a way of crafting potions, store potions
-
-	public class AlchemistBag : BaseBag
+	public class NinjaArsenalBelt : BaseBag
 	{
 		public override Type UIType => typeof(AlchemistBagPanel);
 
-		public AlchemistBag()
+		public NinjaArsenalBelt()
 		{
 			Handler = new ItemHandler(18);
 			Handler.OnContentsChanged += slot =>
@@ -41,8 +39,8 @@ namespace PortableStorage.Items.Bags
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Alchemist's Bag");
-			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of potions");
+			DisplayName.SetDefault("Ninja's Arsenal Belt");
+			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of throwing supplies");
 		}
 
 		public override void SetDefaults()
@@ -84,9 +82,9 @@ namespace PortableStorage.Items.Bags
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Leather, 10);
-			recipe.AddIngredient(ItemID.FossilOre, 15);
-			recipe.AddTile(TileID.AlchemyTable);
+			recipe.AddIngredient(ItemID.NinjaShirt);
+			recipe.AddIngredient(ItemID.IronChainmail, 3);
+			recipe.AddTile(TileID.Anvils);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

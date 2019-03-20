@@ -8,9 +8,9 @@ namespace PortableStorage.Global
 	{
 		public override void PlaceInWorld(int i, int j, Item item)
 		{
-			if (item.type == mod.ItemType<DevNull>())
+			if (item.type == mod.ItemType<BuilderReserve>())
 			{
-				DevNull devNull = (DevNull)item.modItem;
+				BuilderReserve devNull = (BuilderReserve)item.modItem;
 				Item usedItem = devNull.Handler.stacks[devNull.selectedIndex];
 				usedItem.stack--;
 				if (usedItem.stack <= 0)

@@ -35,6 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Global\Colors.cs" />
+    <Compile Include="Global\PortableStorageNPC.cs" />
     <Compile Include="Global\MultiValueDictionary.cs" />
     <Compile Include="Global\PSItem.cs" />
     <Compile Include="Global\PSPlayer.cs" />
@@ -44,6 +45,7 @@
     <Compile Include="Hooking\Hooking.cs" />
     <Compile Include="Hooking\Hooking_Player.cs" />
     <Compile Include="Hooking\Hooking_UI.cs" />
+    <Compile Include="Items\Bags\NinjaArsenalBelt.cs" />
     <Compile Include="Items\Bags\AlchemistBag.cs" />
     <Compile Include="Items\Bags\AmmoBags\BaseAmmoBag.cs" />
     <Compile Include="Items\Bags\AmmoBags\MasterAmmoPouch.cs" />
@@ -55,11 +57,11 @@
     <Compile Include="Items\Bags\AmmoBags\FireProofContainer.cs" />
     <Compile Include="Items\Bags\AmmoBags\ArrowQuiver.cs" />
     <Compile Include="Items\Bags\NormalBags\BaseNormalBag.cs" />
-    <Compile Include="Items\Bags\NormalBags\ReinforcedBag.cs" />
+    <Compile Include="Items\Bags\NormalBags\FaerieBag.cs" />
     <Compile Include="Items\Bags\NormalBags\AdventurerBag.cs" />
-    <Compile Include="Items\Bags\NormalBags\StoragemasterBag.cs" />
+    <Compile Include="Items\Bags\NormalBags\CapillaryBag.cs" />
     <Compile Include="Items\Bags\BaseBag.cs" />
-    <Compile Include="Items\Bags\DevNull.cs" />
+    <Compile Include="Items\Bags\BuilderReserve.cs" />
     <Compile Include="Items\Bags\TheBlackHole.cs" />
     <Compile Include="Items\ItemQEChest.cs" />
     <Compile Include="Items\ItemQETank.cs" />
@@ -72,7 +74,7 @@
     <Compile Include="Tiles\TileQETank.cs" />
     <Compile Include="Tiles\TileQEChest.cs" />
     <Compile Include="UI\Bags\AlchemistBagPanel.cs" />
-    <Compile Include="UI\Bags\DevNullPanel.cs" />
+    <Compile Include="UI\Bags\BuilderReservePanel.cs" />
     <Compile Include="UI\Bags\AmmoBagPanel.cs" />
     <Compile Include="UI\PanelUI.cs" />
     <Compile Include="UI\Bags\BagPanel.cs" />

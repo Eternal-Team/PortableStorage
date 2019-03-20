@@ -49,6 +49,7 @@ namespace PortableStorage.Items.Bags
 
 			item.width = 28;
 			item.height = 14;
+			item.value = Item.buyPrice(gold: 5);
 		}
 
 		public override TagCompound Save() => new TagCompound

@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
@@ -36,5 +38,16 @@ namespace PortableStorage.Items.Bags
 		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
 
 		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.IronBar, 10);
+			recipe.AddIngredient(ItemID.Obsidian, 10);
+			recipe.anyIronBar = true;
+			recipe.AddTile(TileID.Anvils);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
 	}
 }

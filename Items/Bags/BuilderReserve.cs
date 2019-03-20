@@ -11,13 +11,13 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public class DevNull : BaseBag
+	public class BuilderReserve : BaseBag
 	{
-		public override Type UIType => typeof(DevNullPanel);
+		public override Type UIType => typeof(BuilderReservePanel);
 
 		public int selectedIndex;
 
-		public DevNull()
+		public BuilderReserve()
 		{
 			Handler = new ItemHandler(9);
 			Handler.OnContentsChanged += slot =>
@@ -41,14 +41,14 @@ namespace PortableStorage.Items.Bags
 
 		public override ModItem Clone()
 		{
-			DevNull clone = (DevNull)base.Clone();
+			BuilderReserve clone = (BuilderReserve)base.Clone();
 			clone.selectedIndex = selectedIndex;
 			return clone;
 		}
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("dev/null/");
+			DisplayName.SetDefault("Builder's Reserve");
 			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of tiles");
 		}
 
@@ -98,5 +98,15 @@ namespace PortableStorage.Items.Bags
 		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
 
 		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.Bone, 30);
+			recipe.AddIngredient(ItemID.IronCrate);
+			recipe.AddTile(TileID.BoneWelder);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
 	}
 }

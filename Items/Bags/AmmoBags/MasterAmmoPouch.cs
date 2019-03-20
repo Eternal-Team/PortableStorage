@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
@@ -34,5 +36,16 @@ namespace PortableStorage.Items.Bags
 		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
 
 		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddRecipeGroup(PortableStorage.Instance.tier1HMBarsGroup.GetText(), 15);
+			recipe.AddRecipeGroup(PortableStorage.Instance.ichorFlameGroup.GetText(), 10);
+			recipe.AddIngredient(ItemID.SoulofNight, 7);
+			recipe.AddTile(TileID.MythrilAnvil);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
 	}
 }

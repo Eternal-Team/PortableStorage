@@ -76,7 +76,6 @@ namespace PortableStorage.Global
 		/*
 		["Arrow"] = itemCache.Where(item => item.ammo == AmmoID.Arrow).Select(item => item.type).ToList(),
 		["Dart"] = itemCache.Where(item => item.ammo == AmmoID.Dart).Select(item => item.type).ToList(),
-		["Bullet"] = itemCache.Where(item => item.ammo == AmmoID.Bullet).Select(x => x.type).ToList(),
 		["Solution"] = itemCache.Where(item => item.ammo == AmmoID.Solution).Select(item => item.type).ToList(),
 		["Coin"] = itemCache.Where(item => item.ammo == AmmoID.Coin).Select(item => item.type).ToList(),
 		["All"] = itemCache.Where(item => item.ammo > 0).Select(item => item.type).ToList()
@@ -105,6 +104,12 @@ namespace PortableStorage.Global
 			Add("Flameable", AmmoID.Flare);
 			Add("Flameable", AmmoID.StyngerBolt);
 			Add("Flameable", AmmoID.JackOLantern);
+
+			Add("Bullet", AmmoID.Bullet);
+			Add("Arrow", AmmoID.Arrow);
+			Add("Dart", AmmoID.Dart);
+			Add("Solution", AmmoID.Solution);
+			Add("Coin", AmmoID.Coin);
 		}
 
 		public static Colors ColorFromItem(this Item item, Colors existing)
