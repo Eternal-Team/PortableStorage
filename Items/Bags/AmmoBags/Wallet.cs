@@ -2,14 +2,13 @@
 using System.IO;
 using System.Linq;
 using ContainerLibrary;
-using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public class Wallet : BaseAmmoBag<WalletPanel>
+	public class Wallet : BaseAmmoBag
 	{
 		public override string Texture => "PortableStorage/Textures/Items/Wallet";
 

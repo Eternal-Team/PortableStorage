@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -9,7 +8,7 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public class ThePerfectSolution : BaseAmmoBag<AmmoBagPanel>
+	public class ThePerfectSolution : BaseAmmoBag
 	{
 		public override string Texture => "PortableStorage/Textures/Items/ThePerfectSolution";
 

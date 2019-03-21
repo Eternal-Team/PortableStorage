@@ -1,10 +1,9 @@
 ﻿using System.IO;
-using PortableStorage.UI.Bags;
 using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public class DartHolder : BaseAmmoBag<AmmoBagPanel>
+	public class DartHolder : BaseAmmoBag
 	{
 		public override string AmmoType => "Dart";
 

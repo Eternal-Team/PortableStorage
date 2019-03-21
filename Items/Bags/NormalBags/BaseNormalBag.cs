@@ -9,10 +9,12 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public abstract class BaseNormalBag : BaseBag<BagPanel>
+	public abstract class BaseNormalBag : BaseBag
 	{
 		public virtual int SlotCount { get; }
 		public new virtual string Name { get; }
+
+		public new BagPanel UI;
 
 		public BaseNormalBag()
 		{

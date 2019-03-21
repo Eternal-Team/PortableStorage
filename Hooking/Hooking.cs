@@ -1,4 +1,9 @@
-﻿using On.Terraria.UI;
+﻿using System;
+using BaseLibrary;
+using MonoMod.RuntimeDetour;
+using On.Terraria.UI;
+using Terraria;
+using Terraria.ModLoader;
 
 namespace PortableStorage.Hooking
 {
@@ -7,10 +12,16 @@ namespace PortableStorage.Hooking
 		public static void Initialize()
 		{
 			UIElement.GetElementAt += UIElement_GetElementAt;
+
 			ItemSlot.LeftClick_ItemArray_int_int += ItemSlot_LeftClick;
-			//ItemSlot.DrawSavings += ItemSlot_DrawSavings;
-			//ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color;
-			////Player.CanBuyItem += Player_CanBuyItem;
+			ItemSlot.DrawSavings += ItemSlot_DrawSavings;
+			ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color;
+
+			MonoModHooks.RequestNativeAccess();
+			IDetour detour = new Hook(typeof(Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Func<Func<Player, int, int, bool>, Player, int, int, bool>(Player_CanBuyItem));
+
+			On.Terraria.Player.DropSelectedItem += Player_DropSelectedItem1;
+
 			//Player.BuyItem += Player_BuyItem;
 			//Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
 			//Player.HasAmmo += Player_HasAmmo;
@@ -18,7 +29,6 @@ namespace PortableStorage.Hooking
 			//Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
 			//Player.QuickMana += Player_QuickMana;
 			//Player.QuickBuff += Player_QuickBuff;
-			//Player.DropSelectedItem += Player_DropSelectedItem;
 		}
 	}
 }

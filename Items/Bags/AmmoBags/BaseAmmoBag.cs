@@ -3,7 +3,6 @@ using System.Linq;
 using BaseLibrary;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
-using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -11,7 +10,7 @@ using Utility = PortableStorage.Global.Utility;
 
 namespace PortableStorage.Items.Bags
 {
-	public abstract class BaseAmmoBag<T> : BaseBag<T> where T : BaseBagPanel
+	public abstract class BaseAmmoBag : BaseBag
 	{
 		public virtual string AmmoType => null;
 

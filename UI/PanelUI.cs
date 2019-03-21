@@ -1,4 +1,5 @@
 ﻿using System;
+using BaseLibrary;
 using BaseLibrary.UI;
 using PortableStorage.Items.Bags;
 using PortableStorage.UI.Bags;
@@ -12,36 +13,39 @@ namespace PortableStorage.UI
 		{
 		}
 
-		public void HandleUI<T>(BaseBag<T> bag) where T : BaseBagPanel
+		public void HandleUI(BaseBag bag)
 		{
 			if (bag.UI != null) CloseUI(bag);
 			else OpenUI(bag);
 		}
 
-		public void CloseUI<T>(BaseBag<T> bag) where T : BaseBagPanel
+		public void CloseUI(BaseBag bag)
 		{
-			bag.UIPosition = bag.UI.Position;
+			//Main.LocalPlayer.GetModPlayer<PSPlayer>().UIPositions[bag] = bag.UI.Position;
 			Elements.Remove(bag.UI);
 			bag.UI = null;
 
 			Main.PlaySound(bag.CloseSound);
 		}
 
-		public void OpenUI<T>(BaseBag<T> bag) where T : BaseBagPanel
+		public void OpenUI(BaseBag bag)
 		{
-			T bagUI = (T)Activator.CreateInstance(typeof(T));
-			bagUI.bag = bag;
-			bag.UI = bagUI;
+			Type type = bag.GetType().GetField("UI", Utility.defaultFlags)?.FieldType;
 
-			bagUI.Activate();
+			if (type == null || !type.IsSubclassOf(typeof(BaseBagPanel))) throw new Exception("Bag must implement field 'UI' with type derived from 'BaseBagPanel'!");
 
-			if (bag.UIPosition != null)
-			{
-				bagUI.HAlign = bagUI.VAlign = 0f;
-				bagUI.Position = bag.UIPosition.Value;
-			}
+			bag.UI = (BaseBagPanel)Activator.CreateInstance(type);
+			bag.UI.bag = bag;
 
-			Append(bagUI);
+			bag.UI.Activate();
+
+			//if (Main.LocalPlayer.GetModPlayer<PSPlayer>().UIPositions.TryGetValue(bag, out Vector2 position))
+			//{
+			//	bag.UI.HAlight = bag.UI.VAlight = 0;
+			//	bag.UI.Position = position;
+			//}
+
+			Append(bag.UI);
 
 			Main.PlaySound(bag.OpenSound);
 		}

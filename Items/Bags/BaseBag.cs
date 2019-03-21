@@ -1,6 +1,5 @@
 ﻿using BaseLibrary.Items;
 using ContainerLibrary;
-using Microsoft.Xna.Framework;
 using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.Audio;
@@ -9,22 +8,23 @@ using Terraria.ModLoader;
 
 namespace PortableStorage.Items.Bags
 {
-	public abstract class BaseBag<T> : BaseItem, IItemHandler where T : BaseBagPanel
+	public abstract class BaseBag : BaseItem, IItemHandler
 	{
 		public override bool CloneNewInstances => true;
 
 		public ItemHandler Handler { get; set; }
+
+		// todo: use GUID instead of dynamic ID
 		public int ID => item.stringColor;
 
-		public T UI;
-		public Vector2? UIPosition;
+		public BaseBagPanel UI;
 
 		public virtual LegacySoundStyle OpenSound => SoundID.Item1;
 		public virtual LegacySoundStyle CloseSound => SoundID.Item1;
 
 		public override ModItem Clone()
 		{
-			BaseBag<T> clone = (BaseBag<T>)base.Clone();
+			BaseBag clone = (BaseBag)base.Clone();
 			clone.Handler = Handler.Clone();
 			return clone;
 		}

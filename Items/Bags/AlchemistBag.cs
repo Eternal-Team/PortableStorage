@@ -4,7 +4,6 @@ using System.Linq;
 using BaseLibrary;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
-using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -15,7 +14,7 @@ namespace PortableStorage.Items.Bags
 {
 	// todo: automatically pick up potion ingredients (only if the player has told it to), allow a way of crafting potions, store potions
 
-	public class AlchemistBag : BaseBag<AlchemistBagPanel>
+	public class AlchemistBag : BaseBag
 	{
 		public AlchemistBag()
 		{

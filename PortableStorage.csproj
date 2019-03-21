@@ -103,6 +103,12 @@
       <Name>FluidLibrary</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="TerrariaHooks, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\Itorius\Documents\My Games\Terraria\ModLoader\references\TerrariaHooks.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>"C:\Program Files (x86)\Steam\steamapps\common\Terraria\TerrariaServer.exe" -build "$(ProjectDir)\" -eac "$(TargetPath)"</PostBuildEvent>

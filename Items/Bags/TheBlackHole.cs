@@ -6,7 +6,6 @@ using BaseLibrary;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -14,7 +13,7 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public class TheBlackHole : BaseBag<TheBlackHolePanel>
+	public class TheBlackHole : BaseBag
 	{
 		private const float angleDecrement = 0.05235988F;
 		private static readonly Vector2 origin = new Vector2(30);

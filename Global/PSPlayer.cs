@@ -11,6 +11,8 @@ namespace PortableStorage.Global
 {
 	public class PSPlayer : ModPlayer
 	{
+		//public Dictionary<BaseBag, Vector2> UIPositions = new Dictionary<BaseBag, Vector2>();
+
 		public override bool ShiftClickSlot(Item[] inventory, int context, int slot)
 		{
 			if (context != ItemSlot.Context.InventoryItem && context != ItemSlot.Context.InventoryCoin && context != ItemSlot.Context.InventoryAmmo) return false;
