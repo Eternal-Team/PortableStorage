@@ -6,7 +6,6 @@ using BaseLibrary;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.Global;
 using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ID;
@@ -15,10 +14,8 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public class TheBlackHole : BaseBag
+	public class TheBlackHole : BaseBag<TheBlackHolePanel>
 	{
-		public override Type UIType => typeof(TheBlackHolePanel);
-
 		private const float angleDecrement = 0.05235988F;
 		private static readonly Vector2 origin = new Vector2(30);
 		private const int maxRange = 160;
@@ -74,89 +71,89 @@ namespace PortableStorage.Items.Bags
 
 		public void Update(Player player)
 		{
-			for (int i = 0; i < Main.item.Length; i++)
-			{
-				ref Item item = ref Main.item[i];
-				if (item == null || item.IsAir || item.IsCoin() || !Handler.stacks.HasSpace(item)) continue;
+			//for (int i = 0; i < Main.item.Length; i++)
+			//{
+			//	ref Item item = ref Main.item[i];
+			//	if (item == null || item.IsAir || item.IsCoin() || !Handler.stacks.HasSpace(item)) continue;
 
-				PSItem globalItem = item.GetGlobalItem<PSItem>();
+			//	PSItem globalItem = item.GetGlobalItem<PSItem>();
 
-				if (Vector2.Distance(item.Center, player.Center) <= maxRange) globalItem.markedForSuction = true;
-				else
-				{
-					globalItem.markedForSuction = false;
-					globalItem.scale = 1f;
-					globalItem.angle = 0f;
-				}
+			//	if (Vector2.Distance(item.Center, player.Center) <= maxRange) globalItem.markedForSuction = true;
+			//	else
+			//	{
+			//		globalItem.markedForSuction = false;
+			//		globalItem.scale = 1f;
+			//		globalItem.angle = 0f;
+			//	}
 
-				if (globalItem.scale <= 0f)
-				{
-					if (!ItemLoader.OnPickup(item, player)) item = new Item();
-					else if (ItemID.Sets.NebulaPickup[item.type])
-					{
-						int buffType = item.buffType;
-						item = new Item();
+			//	if (globalItem.scale <= 0f)
+			//	{
+			//		if (!ItemLoader.OnPickup(item, player)) item = new Item();
+			//		else if (ItemID.Sets.NebulaPickup[item.type])
+			//		{
+			//			int buffType = item.buffType;
+			//			item = new Item();
 
-						if (Main.netMode == 1) NetMessage.SendData(MessageID.NebulaLevelupRequest, -1, -1, null, player.whoAmI, buffType, player.Center.X, player.Center.Y);
-						else player.NebulaLevelup(buffType);
-					}
-					else if (item.type == 58 || item.type == 1734 || item.type == 1867)
-					{
-						player.statLife += 20;
-						if (Main.myPlayer == player.whoAmI) player.HealEffect(20);
-						if (player.statLife > player.statLifeMax2) player.statLife = player.statLifeMax2;
+			//			if (Main.netMode == 1) NetMessage.SendData(MessageID.NebulaLevelupRequest, -1, -1, null, player.whoAmI, buffType, player.Center.X, player.Center.Y);
+			//			else player.NebulaLevelup(buffType);
+			//		}
+			//		else if (item.type == 58 || item.type == 1734 || item.type == 1867)
+			//		{
+			//			player.statLife += 20;
+			//			if (Main.myPlayer == player.whoAmI) player.HealEffect(20);
+			//			if (player.statLife > player.statLifeMax2) player.statLife = player.statLifeMax2;
 
-						item = new Item();
-					}
-					else if (item.type == 184 || item.type == 1735 || item.type == 1868)
-					{
-						player.statMana += 100;
-						if (Main.myPlayer == player.whoAmI) player.ManaEffect(100);
-						if (player.statMana > player.statManaMax2) player.statMana = player.statManaMax2;
+			//			item = new Item();
+			//		}
+			//		else if (item.type == 184 || item.type == 1735 || item.type == 1868)
+			//		{
+			//			player.statMana += 100;
+			//			if (Main.myPlayer == player.whoAmI) player.ManaEffect(100);
+			//			if (player.statMana > player.statManaMax2) player.statMana = player.statManaMax2;
 
-						item = new Item();
-					}
-					else if (item.IsCoin())
-					{
-						long addedCoins = Utils.CoinsCount(out bool _, new[] { item }) + Utils.CoinsCount(out bool _, Handler.stacks.ToArray());
-						if (addedCoins < Utils.MaxCoins)
-						{
-							Handler.stacks.Where(x => x.IsCoin()).ForEach(x => x.TurnToAir());
+			//			item = new Item();
+			//		}
+			//		else if (item.IsCoin())
+			//		{
+			//			long addedCoins = Utils.CoinsCount(out bool _, new[] { item }) + Utils.CoinsCount(out bool _, Handler.stacks.ToArray());
+			//			if (addedCoins < Utils.MaxCoins)
+			//			{
+			//				Handler.stacks.Where(x => x.IsCoin()).ForEach(x => x.TurnToAir());
 
-							List<Item> coins = Utils.CoinsSplit(addedCoins).Select((x, index) =>
-							{
-								Item coin = new Item();
-								coin.SetDefaults(ItemID.CopperCoin + index);
-								coin.stack = x;
-								return coin;
-							}).ToList();
-							for (int c = 0; c < coins.Count; c++)
-							{
-								Item coin = coins[c];
-								for (int j = 0; j < Handler.Slots; j++)
-								{
-									coin = Handler.InsertItem(j, coin);
+			//				List<Item> coins = Utils.CoinsSplit(addedCoins).Select((x, index) =>
+			//				{
+			//					Item coin = new Item();
+			//					coin.SetDefaults(ItemID.CopperCoin + index);
+			//					coin.stack = x;
+			//					return coin;
+			//				}).ToList();
+			//				for (int c = 0; c < coins.Count; c++)
+			//				{
+			//					Item coin = coins[c];
+			//					for (int j = 0; j < Handler.Slots; j++)
+			//					{
+			//						coin = Handler.InsertItem(j, coin);
 
-									if (coin.IsAir || !coin.active) break;
-								}
-							}
-						}
+			//						if (coin.IsAir || !coin.active) break;
+			//					}
+			//				}
+			//			}
 
-						item = new Item();
-					}
-					else
-					{
-						for (int j = 0; j < Handler.Slots; j++)
-						{
-							item = Handler.InsertItem(j, item);
+			//			item = new Item();
+			//		}
+			//		else
+			//		{
+			//			for (int j = 0; j < Handler.Slots; j++)
+			//			{
+			//				item = Handler.InsertItem(j, item);
 
-							if (item.IsAir || !item.active) break;
-						}
-					}
+			//				if (item.IsAir || !item.active) break;
+			//			}
+			//		}
 
-					if (Main.netMode == 1) NetMessage.SendData(MessageID.SyncItem, -1, -1, null, i);
-				}
-			}
+			//		if (Main.netMode == 1) NetMessage.SendData(MessageID.SyncItem, -1, -1, null, i);
+			//	}
+			//}
 		}
 
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)

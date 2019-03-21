@@ -1,10 +1,11 @@
 ﻿using System.IO;
+using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public class FireProofContainer : BaseAmmoBag
+	public class FireProofContainer : BaseAmmoBag<AmmoBagPanel>
 	{
 		public override string AmmoType => "Flameable";
 

@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace PortableStorage.Global
 {
-	public class PortableStorageNPC : GlobalNPC
+	public class PSNPC : GlobalNPC
 	{
 		public override void SetupTravelShop(int[] shop, ref int nextSlot)
 		{

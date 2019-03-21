@@ -73,15 +73,7 @@ namespace PortableStorage.Global
 			ItemID.FragmentVortex
 		};
 
-		/*
-		["Arrow"] = itemCache.Where(item => item.ammo == AmmoID.Arrow).Select(item => item.type).ToList(),
-		["Dart"] = itemCache.Where(item => item.ammo == AmmoID.Dart).Select(item => item.type).ToList(),
-		["Solution"] = itemCache.Where(item => item.ammo == AmmoID.Solution).Select(item => item.type).ToList(),
-		["Coin"] = itemCache.Where(item => item.ammo == AmmoID.Coin).Select(item => item.type).ToList(),
-		["All"] = itemCache.Where(item => item.ammo > 0).Select(item => item.type).ToList()
-		 */
-
-		internal static void Load()
+		internal static void PostSetupContent()
 		{
 			void Add(string key, int ammoType)
 			{
@@ -126,6 +118,20 @@ namespace PortableStorage.Global
 				case ItemID.Amber: return Colors.Orange;
 				default: return existing;
 			}
+		}
+
+		public static RecipeGroup yoyoStringGroup;
+		public static RecipeGroup tier1HMBarsGroup;
+		public static RecipeGroup ichorFlameGroup;
+
+		public static void AddRecipeGroups()
+		{
+			yoyoStringGroup = new RecipeGroup(() => "PortableStorage:YoYoStrings", ItemID.RedString, ItemID.OrangeString, ItemID.YellowString, ItemID.LimeString, ItemID.GreenString, ItemID.TealString, ItemID.CyanString, ItemID.SkyBlueString, ItemID.BlueString, ItemID.PurpleString, ItemID.VioletString, ItemID.PinkString, ItemID.BrownString, ItemID.WhiteString, ItemID.RainbowString, ItemID.BlackString);
+			RecipeGroup.RegisterGroup("PortableStorage:YoYoStrings", yoyoStringGroup);
+			tier1HMBarsGroup = new RecipeGroup(() => "PortableStorage:T1HMBars", ItemID.CobaltBar, ItemID.PalladiumBar);
+			RecipeGroup.RegisterGroup("PortableStorage:T1HMBars", tier1HMBarsGroup);
+			ichorFlameGroup = new RecipeGroup(() => "PortableStorage:IchorCursedFlame", ItemID.Ichor, ItemID.CursedFlame);
+			RecipeGroup.RegisterGroup("PortableStorage:IchorCursedFlame", ichorFlameGroup);
 		}
 	}
 }

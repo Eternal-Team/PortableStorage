@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BaseLibrary;
 using ContainerLibrary;
@@ -8,12 +7,12 @@ using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Utility = PortableStorage.Global.Utility;
 
 namespace PortableStorage.Items.Bags
 {
-	public abstract class BaseAmmoBag : BaseBag
+	public abstract class BaseAmmoBag<T> : BaseBag<T> where T : BaseBagPanel
 	{
-		public override Type UIType => typeof(AmmoBagPanel);
 		public virtual string AmmoType => null;
 
 		public static readonly string colorAmmoHighlight = new Color(193, 102, 79).ToHex();
@@ -34,14 +33,14 @@ namespace PortableStorage.Items.Bags
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
-			Handler.IsItemValid += (handler, slot, item) => PortableStorage.ammoTypes[AmmoType].Contains(item.type);
+			Handler.IsItemValid += (handler, slot, item) => Utility.Ammos[AmmoType].Values.SelectMany(x => x).Contains(item.type);
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			if (AmmoType == null) return;
 
-			int type = PortableStorage.ammoTypes[AmmoType][PortableStorage.tooltipIndexes[AmmoType]];
+			int type = Utility.Ammos[AmmoType].Values.SelectMany(x => x).ElementAt(0);
 			//tooltips.Add(new TooltipLine(mod, "PortableStorage:AmmoInfo", $"Accepts [c/{colorAmmoHighlight}:{BaseLibrary.BaseLibrary.itemCache[type].HoverName}]"));
 		}
 	}

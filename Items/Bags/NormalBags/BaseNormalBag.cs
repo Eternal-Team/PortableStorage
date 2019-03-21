@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ContainerLibrary;
@@ -10,11 +9,8 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public abstract class BaseNormalBag : BaseBag
+	public abstract class BaseNormalBag : BaseBag<BagPanel>
 	{
-		public override string Texture => "PortableStorage/Textures/Items/Bag";
-		public override Type UIType => typeof(BagPanel);
-
 		public virtual int SlotCount { get; }
 		public new virtual string Name { get; }
 

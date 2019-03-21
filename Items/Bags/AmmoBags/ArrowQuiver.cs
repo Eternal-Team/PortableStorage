@@ -1,11 +1,13 @@
 ﻿using System.IO;
+using PortableStorage.Global;
+using PortableStorage.UI.Bags;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public class ArrowQuiver : BaseAmmoBag
+	public class ArrowQuiver : BaseAmmoBag<AmmoBagPanel>
 	{
 		public override string Texture => "PortableStorage/Textures/Items/ArrowQuiver";
 
@@ -43,7 +45,7 @@ namespace PortableStorage.Items.Bags
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.Leather, 8);
-			recipe.AddRecipeGroup(PortableStorage.Instance.yoyoStringGroup.GetText());
+			recipe.AddRecipeGroup(Utility.yoyoStringGroup.GetText());
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.SetResult(this);
 			recipe.AddRecipe();

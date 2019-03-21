@@ -1,9 +1,6 @@
 ﻿using BaseLibrary;
-using BaseLibrary.UI.Elements;
 using ContainerLibrary;
 using PortableStorage.TileEntities;
-using Terraria;
-using Terraria.Map;
 
 namespace PortableStorage.UI.TileEntities
 {
@@ -18,14 +15,14 @@ namespace PortableStorage.UI.TileEntities
 			this.Center();
 			SetPadding(0);
 
-			textLabel = new UIText(Lang.GetMapObjectName(MapHelper.TileToLookup(PortableStorage.Instance.TileType(te.TileType.Name), 0)))
-			{
-				Top = (8, 0),
-				HAlign = 0.5f
-			};
-			Append(textLabel);
+			//textLabel = new UIText(Lang.GetMapObjectName(MapHelper.TileToLookup(PortableStorage.Instance.TileType(tileEntity.TileType.Name), 0)))
+			//{
+			//	Top = (8, 0),
+			//	HAlign = 0.5f
+			//};
+			//Append(textLabel);
 
-			tankFluid = new UITank((TEQETank)te)
+			tankFluid = new UITank((TEQETank)tileEntity)
 			{
 				Width = (40, 0),
 				Height = (-44, 1),

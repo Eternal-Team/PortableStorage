@@ -7,12 +7,9 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.TileEntities
 {
-	public class TEQETank : BaseQETE, IFluidHandler
+	public class TEQETank : BaseQETE<QETankPanel>, IFluidHandler
 	{
 		public override Type TileType => typeof(TileQETank);
-		public override Type UIType => typeof(QETankPanel);
-
-		//public QETankPanel UI => PortableStorage.Instance.PanelUI.UI.Elements.OfType<QETankPanel>().FirstOrDefault(x => x.te.ID == ID);
 
 		public FluidHandler Handler
 		{

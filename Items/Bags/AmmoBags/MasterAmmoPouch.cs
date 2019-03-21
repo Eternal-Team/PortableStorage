@@ -1,11 +1,13 @@
 ﻿using System.IO;
+using PortableStorage.Global;
+using PortableStorage.UI.Bags;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public class MasterAmmoPounch : BaseAmmoBag
+	public class MasterAmmoPounch : BaseAmmoBag<AmmoBagPanel>
 	{
 		public override string AmmoType => "All";
 
@@ -40,8 +42,8 @@ namespace PortableStorage.Items.Bags
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddRecipeGroup(PortableStorage.Instance.tier1HMBarsGroup.GetText(), 15);
-			recipe.AddRecipeGroup(PortableStorage.Instance.ichorFlameGroup.GetText(), 10);
+			recipe.AddRecipeGroup(Utility.tier1HMBarsGroup.GetText(), 15);
+			recipe.AddRecipeGroup(Utility.ichorFlameGroup.GetText(), 10);
 			recipe.AddIngredient(ItemID.SoulofNight, 7);
 			recipe.AddTile(TileID.MythrilAnvil);
 			recipe.SetResult(this);

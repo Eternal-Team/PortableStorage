@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ContainerLibrary;
@@ -10,11 +9,10 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public class Wallet : BaseAmmoBag
+	public class Wallet : BaseAmmoBag<WalletPanel>
 	{
 		public override string Texture => "PortableStorage/Textures/Items/Wallet";
 
-		public override Type UIType => typeof(WalletPanel);
 		public override string AmmoType => "Coin";
 
 		public Wallet()

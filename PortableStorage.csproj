@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Global\Colors.cs" />
-    <Compile Include="Global\PortableStorageNPC.cs" />
+    <Compile Include="Global\PSNPC.cs" />
     <Compile Include="Global\MultiValueDictionary.cs" />
     <Compile Include="Global\PSItem.cs" />
     <Compile Include="Global\PSPlayer.cs" />

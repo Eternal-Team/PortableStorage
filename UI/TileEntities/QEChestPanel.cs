@@ -2,8 +2,6 @@
 using BaseLibrary.UI.Elements;
 using ContainerLibrary;
 using PortableStorage.TileEntities;
-using Terraria;
-using Terraria.Map;
 
 namespace PortableStorage.UI.TileEntities
 {
@@ -18,12 +16,12 @@ namespace PortableStorage.UI.TileEntities
 			this.Center();
 			SetPadding(0);
 
-			textLabel = new UIText(Lang.GetMapObjectName(MapHelper.TileToLookup(PortableStorage.Instance.TileType(te.TileType.Name), 0)))
-			{
-				Top = (8, 0),
-				HAlign = 0.5f
-			};
-			Append(textLabel);
+			//textLabel = new UIText(Lang.GetMapObjectName(MapHelper.TileToLookup(PortableStorage.Instance.TileType(tileEntity.TileType.Name), 0)))
+			//{
+			//	Top = (8, 0),
+			//	HAlign = 0.5f
+			//};
+			//Append(textLabel);
 
 			gridItems = new UIGrid<UIContainerSlot>(9)
 			{
@@ -36,7 +34,7 @@ namespace PortableStorage.UI.TileEntities
 			};
 			Append(gridItems);
 
-			TEQEChest qeChest = (TEQEChest)te;
+			TEQEChest qeChest = (TEQEChest)tileEntity;
 			for (int i = 0; i < qeChest.Handler.stacks.Count; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(qeChest, i);

@@ -12,8 +12,9 @@ namespace PortableStorage.Global
 
 		public Dictionary<Frequency, ItemHandler> qeItemHandlers;
 		public Dictionary<Frequency, FluidHandler> qeFluidHandlers;
-		public static ItemHandler baseItemHandler;
-		public static FluidHandler baseFluidHandler;
+
+		internal static ItemHandler baseItemHandler;
+		internal static FluidHandler baseFluidHandler;
 
 		public override void Initialize()
 		{
@@ -21,7 +22,7 @@ namespace PortableStorage.Global
 
 			baseItemHandler = new ItemHandler(27);
 			baseFluidHandler = new FluidHandler();
-			baseFluidHandler.GetSlotLimit += slot => 255 * 8;
+			baseFluidHandler.GetSlotLimit += slot => 255 * 4;
 
 			qeItemHandlers = new Dictionary<Frequency, ItemHandler>();
 			qeFluidHandlers = new Dictionary<Frequency, FluidHandler>();
@@ -43,8 +44,24 @@ namespace PortableStorage.Global
 
 		public override void Load(TagCompound tag)
 		{
-			qeItemHandlers = tag.GetList<TagCompound>("QEItems").ToDictionary(c => c.Get<Frequency>("Frequency"), c => baseItemHandler.Clone().Load(c.GetCompound("Items")));
-			qeFluidHandlers = tag.GetList<TagCompound>("QEFluids").ToDictionary(c => c.Get<Frequency>("Frequency"), c => baseFluidHandler.Clone().Load(c.GetCompound("Fluids")));
+			qeItemHandlers = tag.GetList<TagCompound>("QEItems").ToDictionary(c => c.Get<Frequency>("Frequency"), c =>
+			{
+				ItemHandler cloned = baseItemHandler.Clone();
+				cloned.OnContentsChanged = slot =>
+				{
+					// todo: implement this
+				};
+				return cloned.Load(c.GetCompound("Items"));
+			});
+			qeFluidHandlers = tag.GetList<TagCompound>("QEFluids").ToDictionary(c => c.Get<Frequency>("Frequency"), c =>
+			{
+				FluidHandler cloned = baseFluidHandler.Clone();
+				cloned.OnContentsChanged = slot =>
+				{
+					// todo: implement this
+				};
+				return cloned.Load(c.GetCompound("Fluids"));
+			});
 		}
 	}
 }

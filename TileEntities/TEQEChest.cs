@@ -7,12 +7,9 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.TileEntities
 {
-	public class TEQEChest : BaseQETE, IItemHandler
+	public class TEQEChest : BaseQETE<QEChestPanel>, IItemHandler
 	{
 		public override Type TileType => typeof(TileQEChest);
-		public override Type UIType => typeof(QEChestPanel);
-
-		//public QEChestPanel UI => PortableStorage.Instance.PanelUI.UI.Elements.OfType<QEChestPanel>().FirstOrDefault(x => x.te.ID == ID);
 
 		public ItemHandler Handler
 		{

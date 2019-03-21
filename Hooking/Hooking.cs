@@ -1,11 +1,13 @@
-﻿namespace PortableStorage.Hooking
+﻿using On.Terraria.UI;
+
+namespace PortableStorage.Hooking
 {
-	public static class Hooking
+	public static partial class Hooking
 	{
 		public static void Initialize()
 		{
-			//UIElement.GetElementAt += UIElement_GetElementAt;
-			//ItemSlot.LeftClick_ItemArray_int_int += ItemSlot_LeftClick;
+			UIElement.GetElementAt += UIElement_GetElementAt;
+			ItemSlot.LeftClick_ItemArray_int_int += ItemSlot_LeftClick;
 			//ItemSlot.DrawSavings += ItemSlot_DrawSavings;
 			//ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color;
 			////Player.CanBuyItem += Player_CanBuyItem;

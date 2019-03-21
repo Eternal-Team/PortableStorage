@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BaseLibrary;
@@ -16,10 +15,8 @@ namespace PortableStorage.Items.Bags
 {
 	// todo: automatically pick up potion ingredients (only if the player has told it to), allow a way of crafting potions, store potions
 
-	public class AlchemistBag : BaseBag
+	public class AlchemistBag : BaseBag<AlchemistBagPanel>
 	{
-		public override Type UIType => typeof(AlchemistBagPanel);
-
 		public AlchemistBag()
 		{
 			Handler = new ItemHandler(18);

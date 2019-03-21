@@ -4,8 +4,9 @@ using System.Collections.Generic;
 
 namespace PortableStorage.Global
 {
-	public class MultiValueDictionary<TKey, TValue> :
-		IReadOnlyDictionary<TKey, IReadOnlyCollection<TValue>>
+	/* All credit goes to the guys at corefxlab */
+
+	public class MultiValueDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, IReadOnlyCollection<TValue>>
 	{
 		#region Variables
 		/*======================================================================
@@ -975,8 +976,7 @@ namespace PortableStorage.Global
 		///     that iterates over <typeparamref name="TKey" />-<see cref="IReadOnlyCollection{TValue}" />
 		///     pairs.
 		/// </summary>
-		private class Enumerator :
-			IEnumerator<KeyValuePair<TKey, IReadOnlyCollection<TValue>>>
+		private class Enumerator : IEnumerator<KeyValuePair<TKey, IReadOnlyCollection<TValue>>>
 		{
 			private readonly MultiValueDictionary<TKey, TValue> _multiValueDictionary;
 			private readonly int _version;
@@ -1072,9 +1072,7 @@ namespace PortableStorage.Global
 		/// <summary>
 		///     An inner class that functions as a view of an ICollection within a MultiValueDictionary
 		/// </summary>
-		private class InnerCollectionView :
-			ICollection<TValue>,
-			IReadOnlyCollection<TValue>
+		private class InnerCollectionView : ICollection<TValue>, IReadOnlyCollection<TValue>
 		{
 			private readonly ICollection<TValue> _collection;
 

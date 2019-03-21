@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -8,7 +9,7 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
-	public class ThePerfectSolution : BaseAmmoBag
+	public class ThePerfectSolution : BaseAmmoBag<AmmoBagPanel>
 	{
 		public override string Texture => "PortableStorage/Textures/Items/ThePerfectSolution";
 
@@ -33,7 +34,7 @@ namespace PortableStorage.Items.Bags
 
 		public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			spriteBatch.Draw(Texture_Infill, position + new Vector2(9, 23) * scale, null, Main.DiscoColor, 0f, Texture_Infill.Size() * 0.5f, scale, SpriteEffects.None, 0f);
+			//spriteBatch.Draw(Texture_Infill, position + new Vector2(9, 23) * scale, null, Main.DiscoColor, 0f, Texture_Infill.Size() * 0.5f, scale, SpriteEffects.None, 0f);
 		}
 
 		public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
