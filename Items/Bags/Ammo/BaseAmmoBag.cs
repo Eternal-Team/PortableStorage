@@ -1,11 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BaseLibrary;
 using ContainerLibrary;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
 using Utility = PortableStorage.Global.Utility;
 
 namespace PortableStorage.Items.Bags

@@ -15,10 +15,16 @@ namespace PortableStorage.Global
 
 		public override void SetupShop(int type, Chest shop, ref int nextSlot)
 		{
-			if (type == NPCID.Cyborg)
+			switch (type)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType<FireProofContainer>());
-				nextSlot++;
+				case NPCID.Cyborg:
+					shop.item[nextSlot].SetDefaults(mod.ItemType<FireProofContainer>());
+					nextSlot++;
+					break;
+				case NPCID.Merchant:
+					shop.item[nextSlot].SetDefaults(mod.ItemType<AmmoPouch>());
+					nextSlot++;
+					break;
 			}
 		}
 	}

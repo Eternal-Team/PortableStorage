@@ -41,13 +41,13 @@ namespace PortableStorage.UI
 
 			bag.UI.Activate();
 
-            if (Main.LocalPlayer.GetModPlayer<PSPlayer>().UIPositions.TryGetValue(bag.ID, out Vector2 position))
-            {
-                bag.UI.HAlign = bag.UI.VAlign = 0;
-                bag.UI.Position = position;
-            }
+			if (Main.LocalPlayer.GetModPlayer<PSPlayer>().UIPositions.TryGetValue(bag.ID, out Vector2 position))
+			{
+				bag.UI.HAlign = bag.UI.VAlign = 0;
+				bag.UI.Position = position;
+			}
 
-            Append(bag.UI);
+			Append(bag.UI);
 
 			Main.PlaySound(bag.OpenSound);
 		}

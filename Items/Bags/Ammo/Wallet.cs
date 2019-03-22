@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using ContainerLibrary;
+using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
 	public class Wallet : BaseAmmoBag
 	{
 		public override string Texture => "PortableStorage/Textures/Items/Wallet";
-
 		public override string AmmoType => "Coin";
+
+		public new WalletPanel UI;
 
 		public Wallet()
 		{
@@ -37,7 +37,7 @@ namespace PortableStorage.Items.Bags
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Wallet");
-			Tooltip.SetDefault("Stores coins\nIt is seemingly bottomless");
+			Tooltip.SetDefault("Stores coins\nIt is seemingly bottomless!");
 		}
 
 		public override void SetDefaults()
@@ -48,19 +48,5 @@ namespace PortableStorage.Items.Bags
 			item.height = 14;
 			item.value = Item.buyPrice(gold: 5);
 		}
-
-		public override TagCompound Save() => new TagCompound
-		{
-			["Items"] = Handler.Save()
-		};
-
-		public override void Load(TagCompound tag)
-		{
-			Handler.Load(tag.GetCompound("Items"));
-		}
-
-		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
-
-		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));
 	}
 }

@@ -4,11 +4,13 @@ using System.Linq;
 using BaseLibrary;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
+using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Utility = PortableStorage.Global.Utility;
 
 namespace PortableStorage.Items.Bags
 {
@@ -16,6 +18,10 @@ namespace PortableStorage.Items.Bags
 
 	public class AlchemistBag : BaseBag
 	{
+		public new AlchemistBagPanel UI;
+
+		public ItemHandler HandlerIngredients;
+
 		public AlchemistBag()
 		{
 			Handler = new ItemHandler(18);
@@ -33,12 +39,35 @@ namespace PortableStorage.Items.Bags
 				}
 			};
 			Handler.IsItemValid += (handler, slot, item) => item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph || item.potion && item.healLife > 0 || item.healMana > 0;
+
+			HandlerIngredients = new ItemHandler(63);
+			HandlerIngredients.OnContentsChanged += slot =>
+			{
+				if (Main.netMode == NetmodeID.MultiplayerClient)
+				{
+					Player player = Main.player[item.owner];
+
+					List<Item> joined = player.inventory.Concat(player.armor).Concat(player.dye).Concat(player.miscEquips).Concat(player.miscDyes).Concat(player.bank.item).Concat(player.bank2.item).Concat(new[] { player.trashItem }).Concat(player.bank3.item).ToList();
+					int index = joined.FindIndex(x => x == item);
+					if (index < 0) return;
+
+					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
+				}
+			};
+			HandlerIngredients.IsItemValid += (handler, slot, item) => Utility.AlchemistBagWhitelist.Contains(item.type);
+		}
+
+		public override ModItem Clone()
+		{
+			AlchemistBag clone = (AlchemistBag)base.Clone();
+			clone.HandlerIngredients = HandlerIngredients.Clone();
+			return clone;
 		}
 
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Alchemist's Bag");
-			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of potions");
+			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of potions and {HandlerIngredients.Slots} stacks of potion ingredients");
 		}
 
 		public override void SetDefaults()
@@ -48,41 +77,39 @@ namespace PortableStorage.Items.Bags
 			item.width = 32;
 			item.height = 32;
 		}
-
-		public static readonly (string key, string value, string color)[] tooltip =
+		
+		public override TagCompound Save()
 		{
-			("QuickHeal", "quick heal", new Color(23, 237, 47).ToHex()),
-			("QuickMana", "quick mana", new Color(33, 124, 221).ToHex()),
-			("QuickBuff", "quick buff", new Color(230, 255, 109).ToHex())
-		};
-
-		public override void ModifyTooltips(List<TooltipLine> tooltips)
-		{
-			string quickHeal = PlayerInput.CurrentProfile.InputModes[InputMode.Keyboard].KeyStatus["QuickHeal"][0];
-
-			//tooltips.Add(new TooltipLine(mod, "PortableStorage:AlchemistBagInfo", $"Pressing [c/{colorQuickHeal}:{quickHeal}] will quick heal you using the potions in the belt"));
+			TagCompound tag = base.Save();
+			tag["Ingredients"] = HandlerIngredients.Save();
+			return tag;
 		}
-
-		public override TagCompound Save() => new TagCompound
-		{
-			["Items"] = Handler.Save()
-		};
 
 		public override void Load(TagCompound tag)
 		{
-			Handler.Load(tag.GetCompound("Items"));
+			base.Load(tag);
+			HandlerIngredients.Load(tag.GetCompound("Ingredients"));
 		}
 
-		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
+		public override void NetSend(BinaryWriter writer)
+		{
+			base.NetSend(writer);
+			HandlerIngredients.Serialize(writer);
+		}
 
-		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));
+		public override void NetRecieve(BinaryReader reader)
+		{
+			base.NetRecieve(reader);
+			HandlerIngredients.Deserialize(reader);
+		}
 
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.Leather, 10);
 			recipe.AddIngredient(ItemID.FossilOre, 15);
-			recipe.AddTile(TileID.AlchemyTable);
+			recipe.AddIngredient(ItemID.AlchemyTable);
+			recipe.AddTile(TileID.Anvils);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

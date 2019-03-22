@@ -1,16 +1,16 @@
-﻿using System.IO;
-using PortableStorage.Global;
+﻿using PortableStorage.Global;
+using PortableStorage.UI.Bags;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
 	public class ArrowQuiver : BaseAmmoBag
 	{
 		public override string Texture => "PortableStorage/Textures/Items/ArrowQuiver";
-
 		public override string AmmoType => "Arrow";
+
+		public new AmmoBagPanel UI;
 
 		public override void SetStaticDefaults()
 		{
@@ -25,20 +25,6 @@ namespace PortableStorage.Items.Bags
 			item.width = 32;
 			item.height = 32;
 		}
-
-		public override TagCompound Save() => new TagCompound
-		{
-			["Items"] = Handler.Save()
-		};
-
-		public override void Load(TagCompound tag)
-		{
-			Handler.Load(tag.GetCompound("Items"));
-		}
-
-		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
-
-		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));
 
 		public override void AddRecipes()
 		{

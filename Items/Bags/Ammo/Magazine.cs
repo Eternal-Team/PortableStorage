@@ -1,15 +1,15 @@
-﻿using System.IO;
+﻿using PortableStorage.UI.Bags;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
 	public class Magazine : BaseAmmoBag
 	{
 		public override string Texture => "PortableStorage/Textures/Items/Magazine";
-
 		public override string AmmoType => "Bullet";
+
+		public new AmmoBagPanel UI;
 
 		public override void SetStaticDefaults()
 		{
@@ -24,20 +24,6 @@ namespace PortableStorage.Items.Bags
 			item.width = 18;
 			item.height = 32;
 		}
-
-		public override TagCompound Save() => new TagCompound
-		{
-			["Items"] = Handler.Save()
-		};
-
-		public override void Load(TagCompound tag)
-		{
-			Handler.Load(tag.GetCompound("Items"));
-		}
-
-		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
-
-		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));
 
 		public override void AddRecipes()
 		{

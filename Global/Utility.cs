@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BaseLibrary;
@@ -10,9 +9,9 @@ namespace PortableStorage.Global
 {
 	public static class Utility
 	{
-		public static Dictionary<string, MultiValueDictionary<int, int>> Ammos { get; internal set; } = new Dictionary<string, MultiValueDictionary<int, int>>();
+		public static readonly Dictionary<string, MultiValueDictionary<int, int>> Ammos = new Dictionary<string, MultiValueDictionary<int, int>>();
 
-		public static List<short> AlchemistBagWhitelist { get; internal set; } = new List<short>
+		public static List<int> AlchemistBagWhitelist { get; internal set; } = new List<int>
 		{
 			ItemID.Bottle,
 			ItemID.BottledWater,
@@ -104,7 +103,7 @@ namespace PortableStorage.Global
 			Add("Dart", AmmoID.Dart);
 			Add("Solution", AmmoID.Solution);
 			Add("Coin", AmmoID.Coin);
-        }
+		}
 
 		public static Colors ColorFromItem(this Item item, Colors existing)
 		{

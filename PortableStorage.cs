@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BaseLibrary.UI;
@@ -14,6 +13,7 @@ using Terraria.UI;
 namespace PortableStorage
 {
 	// todo: add bag slot
+	// todo: override mouse icon when shiftclicking into bag
 
 	public class PortableStorage : Mod
 	{

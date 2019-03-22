@@ -1,14 +1,17 @@
-﻿//using System.IO;
-//using PortableStorage.Global;
+﻿//using PortableStorage.Global;
+//using PortableStorage.UI.Bags;
 //using Terraria.ID;
 //using Terraria.ModLoader;
-//using Terraria.ModLoader.IO;
 
 //namespace PortableStorage.Items.Bags
 //{
+// todo: implement
+
 //	public class MasterAmmoPounch : BaseAmmoBag
 //	{
 //		public override string AmmoType => "All";
+
+//		public new AmmoBagPanel UI;
 
 //		public override void SetStaticDefaults()
 //		{
@@ -24,20 +27,6 @@
 //			item.height = 32;
 //		}
 
-//		public override TagCompound Save() => new TagCompound
-//		{
-//			["Items"] = Handler.Save()
-//		};
-
-//		public override void Load(TagCompound tag)
-//		{
-//			Handler.Load(tag.GetCompound("Items"));
-//		}
-
-//		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
-
-//		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));
-
 //		public override void AddRecipes()
 //		{
 //			ModRecipe recipe = new ModRecipe(mod);
@@ -50,4 +39,3 @@
 //		}
 //	}
 //}
-

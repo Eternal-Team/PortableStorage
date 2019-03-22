@@ -1,4 +1,5 @@
 ﻿using PortableStorage.UI.Bags;
+using Terraria;
 
 namespace PortableStorage.Items.Bags
 {
@@ -20,6 +21,7 @@ namespace PortableStorage.Items.Bags
 
 			item.width = 32;
 			item.height = 32;
+			item.value = Item.buyPrice(gold: 3);
 		}
-	}
+    }
 }

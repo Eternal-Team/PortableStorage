@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using ContainerLibrary;
+using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
 	public class BuilderReserve : BaseBag
 	{
+		public new BuilderReservePanel UI;
+
 		public int selectedIndex;
 
 		public BuilderReserve()
@@ -29,7 +30,7 @@ namespace PortableStorage.Items.Bags
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
-			Handler.IsItemValid += (handler, slot, item) => item.createTile > 0 && (handler.stacks.All(x => x.type != item.type) || handler.stacks[slot].type == item.type);
+			Handler.IsItemValid += (handler, slot, item) => (item.createTile > 0 || item.createWall > 0) && (handler.stacks.All(x => x.type != item.type) || handler.stacks[slot].type == item.type);
 			Handler.GetSlotLimit += slot => int.MaxValue;
 
 			selectedIndex = -1;
@@ -45,7 +46,7 @@ namespace PortableStorage.Items.Bags
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Builder's Reserve");
-			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of tiles");
+			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of tiles or walls");
 		}
 
 		public override void SetDefaults()
@@ -64,7 +65,7 @@ namespace PortableStorage.Items.Bags
 
 		public void SetIndex(int index)
 		{
-			if (index == -1) selectedIndex = item.placeStyle = item.createTile = -1;
+			if (index == -1) selectedIndex = item.placeStyle = item.createTile = item.createWall = -1;
 			else
 			{
 				selectedIndex = index;
@@ -76,24 +77,16 @@ namespace PortableStorage.Items.Bags
 					item.createWall = -1;
 					item.placeStyle = selectedItem.placeStyle;
 				}
+				else if (selectedItem.createWall >= 0)
+				{
+					item.createTile = -1;
+					item.createWall = selectedItem.createWall;
+					item.placeStyle = selectedItem.placeStyle;
+				}
 			}
 
 			//(UI as DevNullPanel)?.RefreshTextures();
 		}
-
-		public override TagCompound Save() => new TagCompound
-		{
-			["Items"] = Handler.Save()
-		};
-
-		public override void Load(TagCompound tag)
-		{
-			Handler.Load(tag.GetCompound("Items"));
-		}
-
-		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
-
-		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));
 
 		public override void AddRecipes()
 		{
