@@ -22,7 +22,7 @@ namespace PortableStorage.Global
 			if (context != ItemSlot.Context.InventoryItem && context != ItemSlot.Context.InventoryCoin && context != ItemSlot.Context.InventoryAmmo) return false;
 
 			if (!PortableStorage.Instance.PanelUI.UI.Elements.Any()) return false;
-			
+
 			foreach (UIElement panel in PortableStorage.Instance.PanelUI.UI.Elements)
 			{
 				Item item = inventory[slot];

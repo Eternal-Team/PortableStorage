@@ -23,5 +23,5 @@ namespace PortableStorage.Items.Bags
 			item.height = 32;
 			item.value = Item.buyPrice(gold: 3);
 		}
-    }
+	}
 }

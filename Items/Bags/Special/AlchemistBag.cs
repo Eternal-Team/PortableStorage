@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using BaseLibrary;
 using ContainerLibrary;
-using Microsoft.Xna.Framework;
 using PortableStorage.UI.Bags;
 using Terraria;
-using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -77,7 +74,7 @@ namespace PortableStorage.Items.Bags
 			item.width = 32;
 			item.height = 32;
 		}
-		
+
 		public override TagCompound Save()
 		{
 			TagCompound tag = base.Save();

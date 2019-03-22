@@ -78,15 +78,9 @@ namespace PortableStorage
 			if (HotbarIndex != -1 && PanelUI != null) layers.Insert(HotbarIndex + 1, PanelUI.InterfaceLayer);
 		}
 
-		public override void UpdateUI(GameTime gameTime)
-		{
-			PanelUI?.Update(gameTime);
-		}
+		public override void UpdateUI(GameTime gameTime) => PanelUI?.Update(gameTime);
 
-		public override void PreSaveAndQuit()
-		{
-			PanelUI?.UI.Elements.Clear();
-		}
+		public override void PreSaveAndQuit() => PanelUI?.UI.Elements.Clear();
 
 		public override void HandlePacket(BinaryReader reader, int whoAmI) => Utility.Networking.HandlePacket(reader, whoAmI);
 	}

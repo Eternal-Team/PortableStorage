@@ -165,9 +165,17 @@ namespace PortableStorage.Items.Bags
 			active = tag.GetBool("Active");
 		}
 
-		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
+		public override void NetSend(BinaryWriter writer)
+		{
+			base.NetSend(writer);
+			writer.Write(active);
+		}
 
-		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));
+		public override void NetRecieve(BinaryReader reader)
+		{
+			base.NetRecieve(reader);
+			active = reader.ReadBoolean();
+		}
 
 		public override void AddRecipes()
 		{
