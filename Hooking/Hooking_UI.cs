@@ -78,16 +78,16 @@ namespace PortableStorage.Hooking
 		}
 
 		private static int[] inventoryGlowTime;
-		private static int[] inventoryGlowHue;
+		private static float[] inventoryGlowHue;
 		private static int[] inventoryGlowTimeChest;
-		private static int[] inventoryGlowHueChest;
+		private static float[] inventoryGlowHueChest;
 
 		public static void ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
 		{
 			if (inventoryGlowTime == null) inventoryGlowTime = typeof(Terraria.UI.ItemSlot).GetValue<int[]>("inventoryGlowTime");
-			if (inventoryGlowHue == null) inventoryGlowHue = typeof(Terraria.UI.ItemSlot).GetValue<int[]>("inventoryGlowHue");
+			if (inventoryGlowHue == null) inventoryGlowHue = typeof(Terraria.UI.ItemSlot).GetValue<float[]>("inventoryGlowHue");
 			if (inventoryGlowTimeChest == null) inventoryGlowTimeChest = typeof(Terraria.UI.ItemSlot).GetValue<int[]>("inventoryGlowTimeChest");
-			if (inventoryGlowHueChest == null) inventoryGlowHueChest = typeof(Terraria.UI.ItemSlot).GetValue<int[]>("inventoryGlowHueChest");
+			if (inventoryGlowHueChest == null) inventoryGlowHueChest = typeof(Terraria.UI.ItemSlot).GetValue<float[]>("inventoryGlowHueChest");
 
 			Player player = Main.LocalPlayer;
 

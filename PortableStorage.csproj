@@ -36,7 +36,6 @@
   <ItemGroup>
     <Compile Include="Global\Colors.cs" />
     <Compile Include="Global\PSNPC.cs" />
-    <Compile Include="Global\MultiValueDictionary.cs" />
     <Compile Include="Global\PSItem.cs" />
     <Compile Include="Global\PSPlayer.cs" />
     <Compile Include="Global\PSTile.cs" />

@@ -20,15 +20,14 @@ namespace PortableStorage.Hooking
 			MonoModHooks.RequestNativeAccess();
 			IDetour detour = new Hook(typeof(Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Func<Func<Player, int, int, bool>, Player, int, int, bool>(Player_CanBuyItem));
 
-			On.Terraria.Player.DropSelectedItem += Player_DropSelectedItem1;
-
-			//Player.BuyItem += Player_BuyItem;
-			//Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
-			//Player.HasAmmo += Player_HasAmmo;
-			//Player.PickAmmo += Player_PickAmmo;
-			//Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
-			//Player.QuickMana += Player_QuickMana;
-			//Player.QuickBuff += Player_QuickBuff;
+			On.Terraria.Player.DropSelectedItem += Player_DropSelectedItem;
+			On.Terraria.Player.BuyItem += Player_BuyItem;
+			On.Terraria.Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
+			On.Terraria.Player.HasAmmo += Player_HasAmmo;
+			On.Terraria.Player.PickAmmo += Player_PickAmmo;
+			On.Terraria.Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
+			On.Terraria.Player.QuickMana += Player_QuickMana;
+			On.Terraria.Player.QuickBuff += Player_QuickBuff;
 		}
 	}
 }
