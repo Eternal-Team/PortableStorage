@@ -1,17 +1,21 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ContainerLibrary;
+using Microsoft.Xna.Framework;
 using PortableStorage.UI.Bags;
 using PortableStorage.UI.TileEntities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Terraria.UI;
 
 namespace PortableStorage.Global
 {
 	public class PSPlayer : ModPlayer
 	{
-		//public Dictionary<BaseBag, Vector2> UIPositions = new Dictionary<BaseBag, Vector2>();
+		public Dictionary<Guid, Vector2> UIPositions = new Dictionary<Guid, Vector2>();
 
 		public override bool ShiftClickSlot(Item[] inventory, int context, int slot)
 		{
@@ -36,6 +40,23 @@ namespace PortableStorage.Global
 			Main.PlaySound(SoundID.Grab);
 
 			return true;
+		}
+
+		public override TagCompound Save()
+		{
+			return new TagCompound
+			{
+				["UIPositions"] = UIPositions.Select(position => new TagCompound
+				{
+					["ID"] = position.Key.ToString(),
+					["Position"] = position.Value
+				}).ToList()
+			};
+		}
+
+		public override void Load(TagCompound tag)
+		{
+			UIPositions = tag.GetList<TagCompound>("UIPositions").ToDictionary(c => Guid.Parse(c.Get<string>("ID")), c => c.Get<Vector2>("Position"));
 		}
 	}
 }

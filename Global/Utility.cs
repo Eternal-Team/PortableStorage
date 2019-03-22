@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using BaseLibrary;
 using Terraria;
@@ -132,6 +133,23 @@ namespace PortableStorage.Global
 			RecipeGroup.RegisterGroup("PortableStorage:T1HMBars", tier1HMBarsGroup);
 			ichorFlameGroup = new RecipeGroup(() => "PortableStorage:IchorCursedFlame", ItemID.Ichor, ItemID.CursedFlame);
 			RecipeGroup.RegisterGroup("PortableStorage:IchorCursedFlame", ichorFlameGroup);
+		}
+
+		public static class Networking
+		{
+			private enum MessageType : byte
+			{
+				QEChest
+			}
+
+			public static void HandlePacket(BinaryReader reader, int whoAmI)
+			{
+				switch ((MessageType)reader.ReadByte())
+				{
+					case MessageType.QEChest:
+						break;
+				}
+			}
 		}
 	}
 }

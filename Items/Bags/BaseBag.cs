@@ -1,10 +1,13 @@
-﻿using BaseLibrary.Items;
+﻿using System;
+using System.IO;
+using BaseLibrary.Items;
 using ContainerLibrary;
 using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
@@ -14,8 +17,7 @@ namespace PortableStorage.Items.Bags
 
 		public ItemHandler Handler { get; set; }
 
-		// todo: use GUID instead of dynamic ID
-		public int ID => item.stringColor;
+		public Guid ID;
 
 		public BaseBagPanel UI;
 
@@ -26,12 +28,13 @@ namespace PortableStorage.Items.Bags
 		{
 			BaseBag clone = (BaseBag)base.Clone();
 			clone.Handler = Handler.Clone();
+			clone.ID = ID;
 			return clone;
 		}
 
 		public override void SetDefaults()
 		{
-			item.stringColor = PortableStorage.BagID++;
+			ID = Guid.NewGuid();
 			item.useTime = 5;
 			item.useAnimation = 5;
 			item.noUseGraphic = true;
@@ -53,6 +56,33 @@ namespace PortableStorage.Items.Bags
 			item.stack++;
 
 			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.PanelUI.UI.HandleUI(this);
+		}
+
+		public override TagCompound Save()
+		{
+			return new TagCompound
+			{
+				["ID"] = ID.ToString(),
+				["Items"] = Handler.Save()
+			};
+		}
+
+		public override void Load(TagCompound tag)
+		{
+			if (!Guid.TryParse(tag.GetString("ID"), out ID)) ID = Guid.NewGuid();
+			Handler.Load(tag.GetCompound("Items"));
+		}
+
+		public override void NetSend(BinaryWriter writer)
+		{
+			writer.Write(ID.ToString());
+			Handler.Serialize(writer);
+		}
+
+		public override void NetRecieve(BinaryReader reader)
+		{
+			ID = Guid.Parse(reader.ReadString());
+			Handler.Deserialize(reader);
 		}
 	}
 }

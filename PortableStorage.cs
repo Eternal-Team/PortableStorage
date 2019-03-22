@@ -4,7 +4,9 @@ using System.Linq;
 using BaseLibrary.UI;
 using Microsoft.Xna.Framework;
 using PortableStorage.Global;
+using PortableStorage.Items.Bags;
 using PortableStorage.UI;
+using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -17,8 +19,6 @@ namespace PortableStorage
 	public class PortableStorage : Mod
 	{
 		public static PortableStorage Instance;
-		public static ModHotKey HotkeyBag;
-		public static int BagID;
 
 		public GUI<PanelUI> PanelUI;
 
@@ -89,28 +89,6 @@ namespace PortableStorage
 			PanelUI?.UI.Elements.Clear();
 		}
 
-		public override void HandlePacket(BinaryReader reader, int whoAmI)
-		{
-			base.HandlePacket(reader, whoAmI);
-		}
-
-		//	public override void UpdateUI(GameTime gameTime)
-		//	{
-		//		foreach (var entity in TileEntity.ByPosition.Where(x => x.Value is BaseQETE))
-		//		{
-		//			if (Vector2.Distance(Main.LocalPlayer.Center, entity.Key.ToWorldCoordinates(16, 16)) > 240) PanelUI.UI.CloseUI((BaseQETE)entity.Value);
-		//		}
-
-		//		if (++timer > 60)
-		//		{
-		//			timer = 0;
-		//			for (int i = 0; i < tooltipIndexes.Count; i++)
-		//			{
-		//				string key = tooltipIndexes.Keys.ElementAt(i);
-		//				tooltipIndexes[key]++;
-		//				if (tooltipIndexes[key] > ammoTypes[key].Count - 1) tooltipIndexes[key] = 0;
-		//			}
-		//		}
-		//	}
+		public override void HandlePacket(BinaryReader reader, int whoAmI) => Utility.Networking.HandlePacket(reader, whoAmI);
 	}
 }
