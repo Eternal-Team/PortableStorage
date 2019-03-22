@@ -12,9 +12,7 @@ namespace PortableStorage.Items.Bags
 {
 	public abstract class BaseAmmoBag : BaseBag
 	{
-		public virtual string AmmoType => null;
-
-		public static readonly string colorAmmoHighlight = new Color(193, 102, 79).ToHex();
+		public abstract string AmmoType { get; }
 
 		public BaseAmmoBag()
 		{
@@ -33,14 +31,6 @@ namespace PortableStorage.Items.Bags
 				}
 			};
 			Handler.IsItemValid += (handler, slot, item) => Utility.Ammos[AmmoType].Values.SelectMany(x => x).Contains(item.type);
-		}
-
-		public override void ModifyTooltips(List<TooltipLine> tooltips)
-		{
-			if (AmmoType == null) return;
-
-			int type = Utility.Ammos[AmmoType].Values.SelectMany(x => x).ElementAt(0);
-			//tooltips.Add(new TooltipLine(mod, "PortableStorage:AmmoInfo", $"Accepts [c/{colorAmmoHighlight}:{BaseLibrary.BaseLibrary.itemCache[type].HoverName}]"));
 		}
 	}
 }

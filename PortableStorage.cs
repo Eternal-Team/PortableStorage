@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BaseLibrary.UI;
 using Microsoft.Xna.Framework;
 using PortableStorage.Global;
-using PortableStorage.Items.Bags;
 using PortableStorage.UI;
-using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;

@@ -1,18 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using ContainerLibrary;
 using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Bags
 {
 	public abstract class BaseNormalBag : BaseBag
 	{
-		public virtual int SlotCount { get; }
-		public new virtual string Name { get; }
+		public abstract int SlotCount { get; }
+		public new abstract string Name { get; }
 
 		public new BagPanel UI;
 
@@ -47,9 +45,5 @@ namespace PortableStorage.Items.Bags
 			item.width = 26;
 			item.height = 34;
 		}
-		
-		public override void NetSend(BinaryWriter writer) => TagIO.Write(Save(), writer);
-
-		public override void NetRecieve(BinaryReader reader) => Load(TagIO.Read(reader));
 	}
 }

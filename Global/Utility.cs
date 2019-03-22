@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BaseLibrary;
@@ -103,7 +104,7 @@ namespace PortableStorage.Global
 			Add("Dart", AmmoID.Dart);
 			Add("Solution", AmmoID.Solution);
 			Add("Coin", AmmoID.Coin);
-		}
+        }
 
 		public static Colors ColorFromItem(this Item item, Colors existing)
 		{
