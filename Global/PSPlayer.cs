@@ -5,7 +5,6 @@ using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using MonoMod.Utils;
 using PortableStorage.UI.Bags;
-using PortableStorage.UI.TileEntities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -32,8 +31,8 @@ namespace PortableStorage.Global
 			{
 				if (item.favorited || item.IsAir) return false;
 
-				ItemHandler container = panel is IBagPanel ? ((IBagPanel)panel).Bag.Handler : ((BaseTEPanel)panel).tileEntity.Handler;
-
+				ItemHandler container = (panel as IBagPanel)?.Bag.Handler;
+				if (container == null) continue;
 				for (int i = 0; i < container.Slots; i++)
 				{
 					inventory[slot] = container.InsertItem(i, item);
