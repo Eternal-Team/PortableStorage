@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BaseLibrary;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.UI.Bags;
@@ -19,13 +20,14 @@ namespace PortableStorage.Global
 
 		public override bool ShiftClickSlot(Item[] inventory, int context, int slot)
 		{
+			Item item = inventory[slot];
+
 			if (context != ItemSlot.Context.InventoryItem && context != ItemSlot.Context.InventoryCoin && context != ItemSlot.Context.InventoryAmmo) return false;
 
-			if (!PortableStorage.Instance.PanelUI.UI.Elements.Any()) return false;
+			if (!PortableStorage.Instance.PanelUI.UI.Elements.Any(panel => ((BaseBagPanel)panel).bag.Handler.stacks.HasSpace(item))) return false;
 
 			foreach (UIElement panel in PortableStorage.Instance.PanelUI.UI.Elements)
 			{
-				Item item = inventory[slot];
 				if (item.favorited || item.IsAir) return false;
 
 				ItemHandler container = panel is BaseBagPanel ? ((BaseBagPanel)panel).bag.Handler : ((BaseTEPanel)panel).tileEntity.Handler;

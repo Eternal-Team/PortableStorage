@@ -10,7 +10,8 @@ namespace PortableStorage.Items.Bags
 {
 	public class NinjaArsenalBelt : BaseBag
 	{
-		// todo: implement
+		// todo: replenish throwable items in inventory
+		// note: overhaul support?
 
 		public new NinjaArsenalBeltPanel UI;
 

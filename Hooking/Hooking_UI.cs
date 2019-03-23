@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Items.Bags;
 using PortableStorage.UI;
+using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.GameContent.UI;
 using Terraria.GameInput;
@@ -14,6 +15,7 @@ using Terraria.UI.Chat;
 using Terraria.UI.Gamepad;
 using ItemSlot = On.Terraria.UI.ItemSlot;
 using Language = Terraria.Localization.Language;
+using Main = On.Terraria.Main;
 
 namespace PortableStorage.Hooking
 {
@@ -50,7 +52,7 @@ namespace PortableStorage.Hooking
 
 		public static void ItemSlot_DrawSavings(ItemSlot.orig_DrawSavings orig, SpriteBatch sb, float shopx, float shopy, bool horizontal)
 		{
-			Player player = Main.LocalPlayer;
+			Player player = Terraria.Main.LocalPlayer;
 			int customCurrencyForSavings = typeof(Terraria.UI.ItemSlot).GetValue<int>("_customCurrencyForSavings");
 
 			if (customCurrencyForSavings != -1)
@@ -69,10 +71,10 @@ namespace PortableStorage.Hooking
 			{
 				int walletType = PortableStorage.Instance.ItemType<Wallet>();
 
-				if (defendersCount > 0L) sb.Draw(Main.itemTexture[ItemID.DefendersForge], Utils.CenteredRectangle(new Vector2(shopx + 92f, shopy + 45f), Main.itemTexture[ItemID.DefendersForge].Size() * 0.65f), null, Color.White);
-				if (walletCount > 0L) sb.Draw(Main.itemTexture[walletType], Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 40f), Main.itemTexture[walletType].Size() * 0.5f));
-				if (safeCount > 0L) sb.Draw(Main.itemTexture[ItemID.Safe], Utils.CenteredRectangle(new Vector2(shopx + 80f, shopy + 50f), Main.itemTexture[ItemID.Safe].Size() * 0.65f), null, Color.White);
-				if (piggyCount > 0L) sb.Draw(Main.itemTexture[ItemID.PiggyBank], Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 60f), Main.itemTexture[ItemID.PiggyBank].Size() * 0.65f), null, Color.White);
+				if (defendersCount > 0L) sb.Draw(Terraria.Main.itemTexture[ItemID.DefendersForge], Utils.CenteredRectangle(new Vector2(shopx + 92f, shopy + 45f), Terraria.Main.itemTexture[ItemID.DefendersForge].Size() * 0.65f), null, Color.White);
+				if (walletCount > 0L) sb.Draw(Terraria.Main.itemTexture[walletType], Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 40f), Terraria.Main.itemTexture[walletType].Size() * 0.5f));
+				if (safeCount > 0L) sb.Draw(Terraria.Main.itemTexture[ItemID.Safe], Utils.CenteredRectangle(new Vector2(shopx + 80f, shopy + 50f), Terraria.Main.itemTexture[ItemID.Safe].Size() * 0.65f), null, Color.White);
+				if (piggyCount > 0L) sb.Draw(Terraria.Main.itemTexture[ItemID.PiggyBank], Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 60f), Terraria.Main.itemTexture[ItemID.PiggyBank].Size() * 0.65f), null, Color.White);
 				Terraria.UI.ItemSlot.DrawMoney(sb, Language.GetTextValue("LegacyInterface.66"), shopx, shopy, Utils.CoinsSplit(combined), horizontal);
 			}
 		}
@@ -89,10 +91,10 @@ namespace PortableStorage.Hooking
 			if (inventoryGlowTimeChest == null) inventoryGlowTimeChest = typeof(Terraria.UI.ItemSlot).GetValue<int[]>("inventoryGlowTimeChest");
 			if (inventoryGlowHueChest == null) inventoryGlowHueChest = typeof(Terraria.UI.ItemSlot).GetValue<float[]>("inventoryGlowHueChest");
 
-			Player player = Main.LocalPlayer;
+			Player player = Terraria.Main.LocalPlayer;
 
 			Item item = inv[slot];
-			float inventoryScale = Main.inventoryScale;
+			float inventoryScale = Terraria.Main.inventoryScale;
 			int drawMode = 0;
 			Color color = Color.White;
 			if (lightColor != Color.Transparent) color = lightColor;
@@ -166,40 +168,40 @@ namespace PortableStorage.Hooking
 				}
 			}
 
-			Texture2D texture2D = Main.inventoryBackTexture;
-			Color color2 = Main.inventoryBack;
+			Texture2D texture2D = Terraria.Main.inventoryBackTexture;
+			Color color2 = Terraria.Main.inventoryBack;
 			bool flag2 = false;
 
 			if (item.type > 0 && item.stack > 0 && item.favorited && context != 13 && context != 21 && context != 22 && context != 14)
-				texture2D = Main.inventoryBack10Texture;
+				texture2D = Terraria.Main.inventoryBack10Texture;
 			else if (item.type > 0 && item.stack > 0 && Terraria.UI.ItemSlot.Options.HighlightNewItems && item.newAndShiny && context != 13 && context != 21 && context != 14 && context != 22)
 			{
-				texture2D = Main.inventoryBack15Texture;
-				float num3 = Main.mouseTextColor / 255f;
+				texture2D = Terraria.Main.inventoryBack15Texture;
+				float num3 = Terraria.Main.mouseTextColor / 255f;
 				num3 = num3 * 0.2f + 0.8f;
 				color2 = color2.MultiplyRGBA(new Color(num3, num3, num3));
 			}
 			else if (PlayerInput.UsingGamepadUI && item.type > 0 && item.stack > 0 && drawMode != 0 && context != 13 && context != 21 && context != 22)
 			{
-				texture2D = Main.inventoryBack15Texture;
-				float num4 = Main.mouseTextColor / 255f;
+				texture2D = Terraria.Main.inventoryBack15Texture;
+				float num4 = Terraria.Main.mouseTextColor / 255f;
 				num4 = num4 * 0.2f + 0.8f;
 				color2 = color2.MultiplyRGBA(drawMode == 1 ? new Color(num4, num4 / 2f, num4 / 2f) : new Color(num4 / 2f, num4, num4 / 2f));
 			}
-			else if (context == 0 && slot < 10) texture2D = Main.inventoryBack9Texture;
-			else if (context == 10 || context == 8 || context == 16 || context == 17 || context == 19 || context == 18 || context == 20) texture2D = Main.inventoryBack3Texture;
-			else if (context == 11 || context == 9) texture2D = Main.inventoryBack8Texture;
-			else if (context == 12) texture2D = Main.inventoryBack12Texture;
-			else if (context == 3) texture2D = Main.inventoryBack5Texture;
-			else if (context == 4) texture2D = Main.inventoryBack2Texture;
-			else if (context == 7 || context == 5) texture2D = Main.inventoryBack4Texture;
-			else if (context == 6) texture2D = Main.inventoryBack7Texture;
+			else if (context == 0 && slot < 10) texture2D = Terraria.Main.inventoryBack9Texture;
+			else if (context == 10 || context == 8 || context == 16 || context == 17 || context == 19 || context == 18 || context == 20) texture2D = Terraria.Main.inventoryBack3Texture;
+			else if (context == 11 || context == 9) texture2D = Terraria.Main.inventoryBack8Texture;
+			else if (context == 12) texture2D = Terraria.Main.inventoryBack12Texture;
+			else if (context == 3) texture2D = Terraria.Main.inventoryBack5Texture;
+			else if (context == 4) texture2D = Terraria.Main.inventoryBack2Texture;
+			else if (context == 7 || context == 5) texture2D = Terraria.Main.inventoryBack4Texture;
+			else if (context == 6) texture2D = Terraria.Main.inventoryBack7Texture;
 			else if (context == 13)
 			{
 				byte b = 200;
-				if (slot == Main.player[Main.myPlayer].selectedItem)
+				if (slot == Terraria.Main.player[Terraria.Main.myPlayer].selectedItem)
 				{
-					texture2D = Main.inventoryBack14Texture;
+					texture2D = Terraria.Main.inventoryBack14Texture;
 					b = 255;
 				}
 
@@ -208,36 +210,36 @@ namespace PortableStorage.Hooking
 			else if (context == 14 || context == 21)
 				flag2 = true;
 			else if (context == 15)
-				texture2D = Main.inventoryBack6Texture;
-			else if (context == 22) texture2D = Main.inventoryBack4Texture;
+				texture2D = Terraria.Main.inventoryBack6Texture;
+			else if (context == 22) texture2D = Terraria.Main.inventoryBack4Texture;
 
 			if (context == 0 && inventoryGlowTime[slot] > 0 && !inv[slot].favorited)
 			{
-				float scale = Main.invAlpha / 255f;
+				float scale = Terraria.Main.invAlpha / 255f;
 				Color value = new Color(63, 65, 151, 255) * scale;
-				Color value2 = Main.hslToRgb(inventoryGlowHue[slot], 1f, 0.5f) * scale;
+				Color value2 = Terraria.Main.hslToRgb(inventoryGlowHue[slot], 1f, 0.5f) * scale;
 				float num5 = inventoryGlowTime[slot] / 300f;
 				num5 *= num5;
 				color2 = Color.Lerp(value, value2, num5 / 2f);
-				texture2D = Main.inventoryBack13Texture;
+				texture2D = Terraria.Main.inventoryBack13Texture;
 			}
 
 			if ((context == 4 || context == 3) && inventoryGlowTimeChest[slot] > 0 && !inv[slot].favorited)
 			{
-				float scale2 = Main.invAlpha / 255f;
+				float scale2 = Terraria.Main.invAlpha / 255f;
 				Color value3 = new Color(130, 62, 102, 255) * scale2;
 				if (context == 3) value3 = new Color(104, 52, 52, 255) * scale2;
 
-				Color value4 = Main.hslToRgb(inventoryGlowHueChest[slot], 1f, 0.5f) * scale2;
+				Color value4 = Terraria.Main.hslToRgb(inventoryGlowHueChest[slot], 1f, 0.5f) * scale2;
 				float num6 = inventoryGlowTimeChest[slot] / 300f;
 				num6 *= num6;
 				color2 = Color.Lerp(value3, value4, num6 / 2f);
-				texture2D = Main.inventoryBack13Texture;
+				texture2D = Terraria.Main.inventoryBack13Texture;
 			}
 
 			if (flag)
 			{
-				texture2D = Main.inventoryBack14Texture;
+				texture2D = Terraria.Main.inventoryBack14Texture;
 				color2 = Color.White;
 			}
 
@@ -284,7 +286,7 @@ namespace PortableStorage.Hooking
 
 			if ((item.type <= 0 || item.stack <= 0) && num7 != -1)
 			{
-				Texture2D texture2D2 = Main.extraTexture[54];
+				Texture2D texture2D2 = Terraria.Main.extraTexture[54];
 				Rectangle rectangle = texture2D2.Frame(3, 6, num7 % 3, num7 / 3);
 				rectangle.Width -= 2;
 				rectangle.Height -= 2;
@@ -294,8 +296,8 @@ namespace PortableStorage.Hooking
 			Vector2 vector = texture2D.Size() * inventoryScale;
 			if (item.type > 0 && item.stack > 0)
 			{
-				Texture2D texture2D3 = Main.itemTexture[item.type];
-				Rectangle rectangle2 = Main.itemAnimations[item.type] != null ? Main.itemAnimations[item.type].GetFrame(texture2D3) : texture2D3.Frame();
+				Texture2D texture2D3 = Terraria.Main.itemTexture[item.type];
+				Rectangle rectangle2 = Terraria.Main.itemAnimations[item.type] != null ? Terraria.Main.itemAnimations[item.type].GetFrame(texture2D3) : texture2D3.Frame();
 
 				Color newColor = color;
 				float num8 = 1f;
@@ -317,9 +319,9 @@ namespace PortableStorage.Hooking
 				}
 
 				ItemLoader.PostDrawInInventory(item, spriteBatch, position2, rectangle2, item.GetAlpha(newColor), item.GetColor(color), origin, num9 * num8);
-				if (ItemID.Sets.TrapSigned[item.type]) spriteBatch.Draw(Main.wireTexture, position + new Vector2(40f, 40f) * inventoryScale, new Rectangle(4, 58, 8, 8), color, 0f, new Vector2(4f), 1f, SpriteEffects.None, 0f);
+				if (ItemID.Sets.TrapSigned[item.type]) spriteBatch.Draw(Terraria.Main.wireTexture, position + new Vector2(40f, 40f) * inventoryScale, new Rectangle(4, 58, 8, 8), color, 0f, new Vector2(4f), 1f, SpriteEffects.None, 0f);
 
-				if (item.stack > 1) ChatManager.DrawColorCodedStringWithShadow(spriteBatch, Main.fontItemStack, item.stack.ToString(), position + new Vector2(10f, 26f) * inventoryScale, color, 0f, Vector2.Zero, new Vector2(inventoryScale), -1f, inventoryScale);
+				if (item.stack > 1) ChatManager.DrawColorCodedStringWithShadow(spriteBatch, Terraria.Main.fontItemStack, item.stack.ToString(), position + new Vector2(10f, 26f) * inventoryScale, color, 0f, Vector2.Zero, new Vector2(inventoryScale), -1f, inventoryScale);
 
 				int ammoCount = -1;
 				if (context == 13)
@@ -370,33 +372,33 @@ namespace PortableStorage.Hooking
 					}
 				}
 
-				if (ammoCount != -1) ChatManager.DrawColorCodedStringWithShadow(spriteBatch, Main.fontItemStack, ammoCount.ToString(), position + new Vector2(8f, 30f) * inventoryScale, color, 0f, Vector2.Zero, new Vector2(inventoryScale * 0.8f), -1f, inventoryScale);
+				if (ammoCount != -1) ChatManager.DrawColorCodedStringWithShadow(spriteBatch, Terraria.Main.fontItemStack, ammoCount.ToString(), position + new Vector2(8f, 30f) * inventoryScale, color, 0f, Vector2.Zero, new Vector2(inventoryScale * 0.8f), -1f, inventoryScale);
 
 				if (context == 13)
 				{
 					string text = string.Concat(slot + 1);
 					if (text == "10") text = "0";
 
-					ChatManager.DrawColorCodedStringWithShadow(spriteBatch, Main.fontItemStack, text, position + new Vector2(8f, 4f) * inventoryScale, color, 0f, Vector2.Zero, new Vector2(inventoryScale), -1f, inventoryScale);
+					ChatManager.DrawColorCodedStringWithShadow(spriteBatch, Terraria.Main.fontItemStack, text, position + new Vector2(8f, 4f) * inventoryScale, color, 0f, Vector2.Zero, new Vector2(inventoryScale), -1f, inventoryScale);
 				}
 
 				if (context == 13 && item.potion)
 				{
-					Vector2 position3 = position + texture2D.Size() * inventoryScale / 2f - Main.cdTexture.Size() * inventoryScale / 2f;
+					Vector2 position3 = position + texture2D.Size() * inventoryScale / 2f - Terraria.Main.cdTexture.Size() * inventoryScale / 2f;
 					Color color3 = item.GetAlpha(color) * (player.potionDelay / (float)player.potionDelayTime);
-					spriteBatch.Draw(Main.cdTexture, position3, null, color3, 0f, default(Vector2), num9, SpriteEffects.None, 0f);
+					spriteBatch.Draw(Terraria.Main.cdTexture, position3, null, color3, 0f, default(Vector2), num9, SpriteEffects.None, 0f);
 				}
 
-				if ((context == 10 || context == 18) && item.expertOnly && !Main.expertMode)
+				if ((context == 10 || context == 18) && item.expertOnly && !Terraria.Main.expertMode)
 				{
-					Vector2 position4 = position + texture2D.Size() * inventoryScale / 2f - Main.cdTexture.Size() * inventoryScale / 2f;
+					Vector2 position4 = position + texture2D.Size() * inventoryScale / 2f - Terraria.Main.cdTexture.Size() * inventoryScale / 2f;
 					Color white = Color.White;
-					spriteBatch.Draw(Main.cdTexture, position4, null, white, 0f, default(Vector2), num9, SpriteEffects.None, 0f);
+					spriteBatch.Draw(Terraria.Main.cdTexture, position4, null, white, 0f, default(Vector2), num9, SpriteEffects.None, 0f);
 				}
 			}
 			else if (context == 6)
 			{
-				Texture2D trashTexture = Main.trashTexture;
+				Texture2D trashTexture = Terraria.Main.trashTexture;
 				Vector2 position5 = position + texture2D.Size() * inventoryScale / 2f - trashTexture.Size() * inventoryScale / 2f;
 				spriteBatch.Draw(trashTexture, position5, null, new Color(100, 100, 100, 100), 0f, default(Vector2), inventoryScale, SpriteEffects.None, 0f);
 			}
@@ -406,9 +408,9 @@ namespace PortableStorage.Hooking
 				string slotText = string.Concat(slot + 1);
 				if (slotText == "10") slotText = "0";
 
-				Color inventoryBack = Main.inventoryBack;
+				Color inventoryBack = Terraria.Main.inventoryBack;
 				int num12 = 0;
-				if (Main.player[Main.myPlayer].selectedItem == slot)
+				if (Terraria.Main.player[Terraria.Main.myPlayer].selectedItem == slot)
 				{
 					num12 -= 3;
 					inventoryBack.R = 255;
@@ -417,10 +419,131 @@ namespace PortableStorage.Hooking
 					inventoryBack.A = 100;
 				}
 
-				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, Main.fontItemStack, slotText, position + new Vector2(6f, 4 + num12) * inventoryScale, inventoryBack, 0f, Vector2.Zero, new Vector2(inventoryScale), -1f, inventoryScale);
+				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, Terraria.Main.fontItemStack, slotText, position + new Vector2(6f, 4 + num12) * inventoryScale, inventoryBack, 0f, Vector2.Zero, new Vector2(inventoryScale), -1f, inventoryScale);
 			}
 
 			if (linkpointNav != -1) UILinkPointNavigator.SetPosition(linkpointNav, position + vector * 0.75f);
+		}
+
+		private static bool[] canFavoriteAt;
+
+		private static void ItemSlot_OverrideHover(ItemSlot.orig_OverrideHover orig, Item[] inv, int context, int slot)
+		{
+			if (canFavoriteAt == null) canFavoriteAt = typeof(Terraria.UI.ItemSlot).GetValue<bool[]>("canFavoriteAt");
+
+			Item item = inv[slot];
+			if (Terraria.UI.ItemSlot.ShiftInUse && item.type > 0 && item.stack > 0 && !inv[slot].favorited)
+			{
+				switch (context)
+				{
+					case Terraria.UI.ItemSlot.Context.InventoryItem:
+					case Terraria.UI.ItemSlot.Context.InventoryCoin:
+					case Terraria.UI.ItemSlot.Context.InventoryAmmo:
+						if (PortableStorage.Instance.PanelUI.UI.Elements.Any(panel => ((BaseBagPanel)panel).bag.Handler.stacks.HasSpace(item))) Terraria.Main.cursorOverride = 1000;
+						else if (Terraria.Main.npcShop > 0 && !item.favorited) Terraria.Main.cursorOverride = 10;
+						else if (Terraria.Main.player[Terraria.Main.myPlayer].chest != -1)
+						{
+							if (ChestUI.TryPlacingInChest(item, true)) Terraria.Main.cursorOverride = 9;
+						}
+						else Terraria.Main.cursorOverride = 6;
+
+						break;
+					case Terraria.UI.ItemSlot.Context.ChestItem:
+					case Terraria.UI.ItemSlot.Context.BankItem:
+						if (Terraria.Main.player[Terraria.Main.myPlayer].ItemSpace(item)) Terraria.Main.cursorOverride = 8;
+						break;
+					case Terraria.UI.ItemSlot.Context.PrefixItem:
+					case Terraria.UI.ItemSlot.Context.EquipArmor:
+					case Terraria.UI.ItemSlot.Context.EquipArmorVanity:
+					case Terraria.UI.ItemSlot.Context.EquipAccessory:
+					case Terraria.UI.ItemSlot.Context.EquipAccessoryVanity:
+					case Terraria.UI.ItemSlot.Context.EquipDye:
+					case Terraria.UI.ItemSlot.Context.EquipGrapple:
+					case Terraria.UI.ItemSlot.Context.EquipMount:
+					case Terraria.UI.ItemSlot.Context.EquipMinecart:
+					case Terraria.UI.ItemSlot.Context.EquipPet:
+					case Terraria.UI.ItemSlot.Context.EquipLight:
+						if (Terraria.Main.player[Terraria.Main.myPlayer].ItemSpace(inv[slot])) Terraria.Main.cursorOverride = 7;
+						break;
+				}
+			}
+
+			if (Terraria.Main.keyState.IsKeyDown(Terraria.Main.FavoriteKey) && canFavoriteAt[context])
+			{
+				if (item.type > 0 && item.stack > 0 && Terraria.Main.drawingPlayerChat)
+				{
+					Terraria.Main.cursorOverride = 2;
+					return;
+				}
+
+				if (item.type > 0 && item.stack > 0) Terraria.Main.cursorOverride = 3;
+			}
+		}
+
+		private static Texture2D placeholderTexture;
+
+		private static void Main_DrawInterface_36_Cursor(Main.orig_DrawInterface_36_Cursor orig)
+		{
+			if (placeholderTexture == null) placeholderTexture = ModContent.GetTexture("BaseLibrary/Textures/Placeholder");
+
+			if (Terraria.Main.cursorOverride != -1)
+			{
+				Color color = new Color((int)(Terraria.Main.cursorColor.R * 0.2f), (int)(Terraria.Main.cursorColor.G * 0.2f), (int)(Terraria.Main.cursorColor.B * 0.2f), (int)(Terraria.Main.cursorColor.A * 0.5f));
+				Color white = Terraria.Main.cursorColor;
+
+				bool drawOutline = true;
+				Vector2 value = default(Vector2);
+				float scale = 1f;
+				if (Terraria.Main.cursorOverride == 2)
+				{
+					drawOutline = false;
+					white = Color.White;
+					scale = 0.7f;
+					value = new Vector2(0.1f);
+				}
+
+				switch (Terraria.Main.cursorOverride)
+				{
+					case 2:
+						drawOutline = false;
+						white = Color.White;
+						scale = 0.7f;
+						value = new Vector2(0.1f);
+						break;
+					case 3:
+					case 6:
+					case 7:
+					case 8:
+					case 9:
+					case 10:
+						drawOutline = false;
+						white = Color.White;
+						break;
+				}
+
+				if (Terraria.Main.cursorOverride == 1000)
+				{
+					float downscale = 14f / placeholderTexture.Width;
+					Terraria.Main.spriteBatch.Draw(placeholderTexture, new Vector2(Terraria.Main.mouseX, Terraria.Main.mouseY), null, Color.White, 0f, Vector2.Zero, Terraria.Main.cursorScale * scale * downscale, SpriteEffects.None, 0f);
+					return;
+				}
+
+				if (drawOutline) Terraria.Main.spriteBatch.Draw(Terraria.Main.cursorTextures[Terraria.Main.cursorOverride], new Vector2(Terraria.Main.mouseX + 1, Terraria.Main.mouseY + 1), null, color, 0f, value * Terraria.Main.cursorTextures[Terraria.Main.cursorOverride].Size(), Terraria.Main.cursorScale * 1.1f * scale, SpriteEffects.None, 0f);
+
+				Terraria.Main.spriteBatch.Draw(Terraria.Main.cursorTextures[Terraria.Main.cursorOverride], new Vector2(Terraria.Main.mouseX, Terraria.Main.mouseY), null, white, 0f, value * Terraria.Main.cursorTextures[Terraria.Main.cursorOverride].Size(), Terraria.Main.cursorScale * scale, SpriteEffects.None, 0f);
+			}
+			else
+			{
+				if (Terraria.Main.SmartCursorEnabled)
+				{
+					Vector2 bonus = Terraria.Main.DrawThickCursor(true);
+					Terraria.Main.DrawCursor(bonus, true);
+					return;
+				}
+
+				Vector2 bonus2 = Terraria.Main.DrawThickCursor();
+				Terraria.Main.DrawCursor(bonus2);
+			}
 		}
 	}
 }
