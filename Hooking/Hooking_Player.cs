@@ -14,7 +14,7 @@ namespace PortableStorage.Hooking
 {
 	public static partial class Hooking
 	{
-		public static bool Player_CanBuyItem(Func<Player, int, int, bool> orig, Player self, int price, int customCurrency)
+		private static bool Player_CanBuyItem(Func<Player, int, int, bool> orig, Player self, int price, int customCurrency)
 		{
 			if (customCurrency != -1) return CustomCurrencyManager.BuyItem(self, price, customCurrency);
 
@@ -35,7 +35,7 @@ namespace PortableStorage.Hooking
 			orig(self);
 		}
 
-		public static bool Player_BuyItem(On.Terraria.Player.orig_BuyItem orig, Player self, int price, int customCurrency)
+		private static bool Player_BuyItem(On.Terraria.Player.orig_BuyItem orig, Player self, int price, int customCurrency)
 		{
 			if (customCurrency != -1) return CustomCurrencyManager.BuyItem(self, price, customCurrency);
 
@@ -119,8 +119,7 @@ namespace PortableStorage.Hooking
 			return !Player_TryPurchasing(price, list, coins, emptyInventory, emptyPiggy, emptySafe, emptyDefenders, emptyWallet);
 		}
 
-		// todo: sell -> add to wallet
-		public static bool Player_TryPurchasing(int price, List<Item[]> inv, List<Point> slotCoins, List<Point> slotsEmpty, List<Point> slotEmptyBank, List<Point> slotEmptyBank2, List<Point> slotEmptyBank3, List<Point> slotEmptyWallet)
+		private static bool Player_TryPurchasing(int price, List<Item[]> inv, List<Point> slotCoins, List<Point> slotsEmpty, List<Point> slotEmptyBank, List<Point> slotEmptyBank2, List<Point> slotEmptyBank3, List<Point> slotEmptyWallet)
 		{
 			long priceRemaining = price;
 			Dictionary<Point, Item> dictionary = new Dictionary<Point, Item>();
@@ -248,13 +247,13 @@ namespace PortableStorage.Hooking
 			return result;
 		}
 
-		public static bool Player_HasAmmo(On.Terraria.Player.orig_HasAmmo orig, Player self, Item ammoUser, bool canUse)
+		private static bool Player_HasAmmo(On.Terraria.Player.orig_HasAmmo orig, Player self, Item ammoUser, bool canUse)
 		{
 			if (ammoUser.useAmmo > 0) canUse = self.inventory.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0) || self.inventory.OfType<BaseAmmoBag>().Any(ammoBag => ammoBag.Handler.stacks.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0));
 			return canUse;
 		}
 
-		public static void Player_PickAmmo(On.Terraria.Player.orig_PickAmmo orig, Player self, Item sItem, ref int shoot, ref float speed, ref bool canShoot, ref int Damage, ref float KnockBack, bool dontConsume)
+		private static void Player_PickAmmo(On.Terraria.Player.orig_PickAmmo orig, Player self, Item sItem, ref int shoot, ref float speed, ref bool canShoot, ref int Damage, ref float KnockBack, bool dontConsume)
 		{
 			Item item = new Item();
 
@@ -395,7 +394,7 @@ namespace PortableStorage.Hooking
 			}
 		}
 
-		public static Item Player_QuickHeal_GetItemToUse(On.Terraria.Player.orig_QuickHeal_GetItemToUse orig, Player self)
+		private static Item Player_QuickHeal_GetItemToUse(On.Terraria.Player.orig_QuickHeal_GetItemToUse orig, Player self)
 		{
 			int lostHealth = self.statLifeMax2 - self.statLife;
 			Item result = null;
@@ -425,7 +424,7 @@ namespace PortableStorage.Hooking
 			return result;
 		}
 
-		public static void Player_QuickMana(On.Terraria.Player.orig_QuickMana orig, Player self)
+		private static void Player_QuickMana(On.Terraria.Player.orig_QuickMana orig, Player self)
 		{
 			if (self.noItems || self.statMana == self.statManaMax2) return;
 
@@ -471,7 +470,7 @@ namespace PortableStorage.Hooking
 			}
 		}
 
-		public static void Player_QuickBuff(On.Terraria.Player.orig_QuickBuff orig, Player self)
+		private static void Player_QuickBuff(On.Terraria.Player.orig_QuickBuff orig, Player self)
 		{
 			if (self.noItems) return;
 
@@ -556,6 +555,209 @@ namespace PortableStorage.Hooking
 				Main.PlaySound(sound, self.position);
 				Recipe.FindRecipes();
 			}
+		}
+
+		private static bool Player_SellItem(On.Terraria.Player.orig_SellItem orig, Player self, int price, int stack)
+		{
+			if (price <= 0) return false;
+
+			int actualPrice = price / 5;
+			if (actualPrice < 1) actualPrice = 1;
+			actualPrice *= stack;
+
+			Wallet wallet = self.inventory.OfType<Wallet>().FirstOrDefault();
+
+			if (wallet != null)
+			{
+				long addedCoins = actualPrice + wallet.Handler.stacks.CountCoins();
+
+				wallet.Handler.stacks = Utils.CoinsSplit(addedCoins).Select((s, index) =>
+				{
+					Item coin = new Item();
+					coin.SetDefaults(ItemID.CopperCoin + index);
+					coin.stack = s;
+					return coin;
+				}).Reverse().ToList();
+
+				for (int i = 0; i < 4; i++) wallet.Handler.OnContentsChanged.Invoke(i);
+
+				return true;
+			}
+
+			Item[] array = new Item[58];
+			for (int i = 0; i < 58; i++)
+			{
+				array[i] = new Item();
+				array[i] = self.inventory[i].Clone();
+			}
+
+			bool flag = false;
+			while (actualPrice >= 1000000)
+			{
+				if (flag) break;
+				int num = -1;
+				for (int k = 53; k >= 0; k--)
+				{
+					if (num == -1 && (self.inventory[k].type == 0 || self.inventory[k].stack == 0))
+					{
+						num = k;
+					}
+
+					while (self.inventory[k].type == 74 && self.inventory[k].stack < self.inventory[k].maxStack && actualPrice >= 1000000)
+					{
+						self.inventory[k].stack++;
+						actualPrice -= 1000000;
+						self.DoCoins(k);
+						if (self.inventory[k].stack == 0 && num == -1)
+						{
+							num = k;
+						}
+					}
+				}
+
+				if (actualPrice >= 1000000)
+				{
+					if (num == -1)
+					{
+						flag = true;
+					}
+					else
+					{
+						self.inventory[num].SetDefaults(74, false);
+						actualPrice -= 1000000;
+					}
+				}
+			}
+
+			while (actualPrice >= 10000)
+			{
+				if (flag)
+				{
+					break;
+				}
+
+				int num2 = -1;
+				for (int l = 53; l >= 0; l--)
+				{
+					if (num2 == -1 && (self.inventory[l].type == 0 || self.inventory[l].stack == 0))
+					{
+						num2 = l;
+					}
+
+					while (self.inventory[l].type == 73 && self.inventory[l].stack < self.inventory[l].maxStack && actualPrice >= 10000)
+					{
+						self.inventory[l].stack++;
+						actualPrice -= 10000;
+						self.DoCoins(l);
+						if (self.inventory[l].stack == 0 && num2 == -1)
+						{
+							num2 = l;
+						}
+					}
+				}
+
+				if (actualPrice >= 10000)
+				{
+					if (num2 == -1)
+					{
+						flag = true;
+					}
+					else
+					{
+						self.inventory[num2].SetDefaults(73, false);
+						actualPrice -= 10000;
+					}
+				}
+			}
+
+			while (actualPrice >= 100)
+			{
+				if (flag)
+				{
+					break;
+				}
+
+				int num3 = -1;
+				for (int m = 53; m >= 0; m--)
+				{
+					if (num3 == -1 && (self.inventory[m].type == 0 || self.inventory[m].stack == 0))
+					{
+						num3 = m;
+					}
+
+					while (self.inventory[m].type == 72 && self.inventory[m].stack < self.inventory[m].maxStack && actualPrice >= 100)
+					{
+						self.inventory[m].stack++;
+						actualPrice -= 100;
+						self.DoCoins(m);
+						if (self.inventory[m].stack == 0 && num3 == -1)
+						{
+							num3 = m;
+						}
+					}
+				}
+
+				if (actualPrice >= 100)
+				{
+					if (num3 == -1)
+					{
+						flag = true;
+					}
+					else
+					{
+						self.inventory[num3].SetDefaults(72, false);
+						actualPrice -= 100;
+					}
+				}
+			}
+
+			while (actualPrice >= 1 && !flag)
+			{
+				int num4 = -1;
+				for (int n = 53; n >= 0; n--)
+				{
+					if (num4 == -1 && (self.inventory[n].type == 0 || self.inventory[n].stack == 0))
+					{
+						num4 = n;
+					}
+
+					while (self.inventory[n].type == 71 && self.inventory[n].stack < self.inventory[n].maxStack && actualPrice >= 1)
+					{
+						self.inventory[n].stack++;
+						actualPrice--;
+						self.DoCoins(n);
+						if (self.inventory[n].stack == 0 && num4 == -1)
+						{
+							num4 = n;
+						}
+					}
+				}
+
+				if (actualPrice >= 1)
+				{
+					if (num4 == -1)
+					{
+						flag = true;
+					}
+					else
+					{
+						self.inventory[num4].SetDefaults(71, false);
+						actualPrice--;
+					}
+				}
+			}
+
+			if (flag)
+			{
+				for (int num5 = 0; num5 < 58; num5++)
+				{
+					self.inventory[num5] = array[num5].Clone();
+				}
+
+				return false;
+			}
+
+			return true;
 		}
 	}
 }

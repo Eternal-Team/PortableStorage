@@ -19,3 +19,4 @@
 //		public Frequency frequency = new Frequency(Colors.White, Colors.White, Colors.White);
 //	}
 //}
+

@@ -109,6 +109,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\Itorius\Documents\My Games\Terraria\ModLoader\references\TerrariaHooks.dll</HintPath>
     </Reference>
+    <Reference Include="TerrariaOverhaul">
+      <HintPath>..\TerrariaOverhaul.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -8,6 +8,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using TerrariaOverhaul;
 
 namespace PortableStorage.Items.Bags
 {
@@ -30,6 +31,11 @@ namespace PortableStorage.Items.Bags
 			clone.Handler = Handler.Clone();
 			clone.ID = ID;
 			return clone;
+		}
+
+		public void OverhaulInit()
+		{
+			this.SetTag(ItemTags.AllowQuickUse);
 		}
 
 		public override void SetDefaults()

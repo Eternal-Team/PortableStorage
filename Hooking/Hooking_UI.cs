@@ -22,7 +22,7 @@ namespace PortableStorage.Hooking
 {
 	public static partial class Hooking
 	{
-		public static UIElement UIElement_GetElementAt(On.Terraria.UI.UIElement.orig_GetElementAt orig, UIElement self, Vector2 point)
+		private static UIElement UIElement_GetElementAt(On.Terraria.UI.UIElement.orig_GetElementAt orig, UIElement self, Vector2 point)
 		{
 			if (self is PanelUI ui)
 			{
@@ -44,14 +44,14 @@ namespace PortableStorage.Hooking
 			return orig(self, point);
 		}
 
-		public static void ItemSlot_LeftClick(ItemSlot.orig_LeftClick_ItemArray_int_int orig, Item[] inv, int context, int slot)
+		private static void ItemSlot_LeftClick(ItemSlot.orig_LeftClick_ItemArray_int_int orig, Item[] inv, int context, int slot)
 		{
 			if (inv[slot].modItem is BaseBag bag && bag.UI != null) PortableStorage.Instance.PanelUI.UI.CloseUI(bag);
 
 			orig(inv, context, slot);
 		}
 
-		public static void ItemSlot_DrawSavings(ItemSlot.orig_DrawSavings orig, SpriteBatch sb, float shopx, float shopy, bool horizontal)
+		private static void ItemSlot_DrawSavings(ItemSlot.orig_DrawSavings orig, SpriteBatch sb, float shopx, float shopy, bool horizontal)
 		{
 			Player player = Terraria.Main.LocalPlayer;
 			int customCurrencyForSavings = typeof(Terraria.UI.ItemSlot).GetValue<int>("_customCurrencyForSavings");
@@ -86,7 +86,7 @@ namespace PortableStorage.Hooking
 		private static float[] inventoryGlowHueChest;
 
 		// todo: draw ammo that is currently being usen if it comes from a bag
-		public static void ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
+		private static void ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
 		{
 			if (inventoryGlowTime == null) inventoryGlowTime = typeof(Terraria.UI.ItemSlot).GetValue<int[]>("inventoryGlowTime");
 			if (inventoryGlowHue == null) inventoryGlowHue = typeof(Terraria.UI.ItemSlot).GetValue<float[]>("inventoryGlowHue");
@@ -484,7 +484,9 @@ namespace PortableStorage.Hooking
 		}
 
 		private static Texture2D placeholderTexture;
+
 		private const int BagCursorOverride = 1000;
+
 		// note: move to ContainerLibrary
 		private static void Main_DrawInterface_36_Cursor(Main.orig_DrawInterface_36_Cursor orig)
 		{

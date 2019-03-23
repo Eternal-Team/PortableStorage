@@ -35,3 +35,4 @@
 //		//public override void NetReceive(BinaryReader reader, bool lightReceive) => frequency = reader.ReadFrequency();
 //	}
 //}
+
