@@ -1,5 +1,4 @@
-﻿using PortableStorage.UI.Bags;
-using Terraria.ID;
+﻿using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace PortableStorage.Items.Bags
@@ -8,8 +7,6 @@ namespace PortableStorage.Items.Bags
 	{
 		public override string Texture => "PortableStorage/Textures/Items/Magazine";
 		public override string AmmoType => "Bullet";
-
-		public new AmmoBagPanel UI;
 
 		public override void SetStaticDefaults()
 		{

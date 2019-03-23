@@ -1,5 +1,4 @@
-﻿using PortableStorage.UI.Bags;
-using Terraria.ID;
+﻿using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace PortableStorage.Items.Bags
@@ -8,8 +7,6 @@ namespace PortableStorage.Items.Bags
 	{
 		public override string Texture => "PortableStorage/Textures/Items/ThePerfectSolution";
 		public override string AmmoType => "Solution";
-
-		public new AmmoBagPanel UI;
 
 		public override void SetStaticDefaults()
 		{

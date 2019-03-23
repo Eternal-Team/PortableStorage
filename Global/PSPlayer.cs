@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BaseLibrary;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.UI.Bags;
@@ -24,13 +23,13 @@ namespace PortableStorage.Global
 
 			if (context != ItemSlot.Context.InventoryItem && context != ItemSlot.Context.InventoryCoin && context != ItemSlot.Context.InventoryAmmo) return false;
 
-			if (!PortableStorage.Instance.PanelUI.UI.Elements.Any(panel => ((BaseBagPanel)panel).bag.Handler.stacks.HasSpace(item))) return false;
+			if (!PortableStorage.Instance.PanelUI.UI.Elements.Any(panel => ((IBagPanel)panel).Bag.Handler.HasSpace(item))) return false;
 
 			foreach (UIElement panel in PortableStorage.Instance.PanelUI.UI.Elements)
 			{
 				if (item.favorited || item.IsAir) return false;
 
-				ItemHandler container = panel is BaseBagPanel ? ((BaseBagPanel)panel).bag.Handler : ((BaseTEPanel)panel).tileEntity.Handler;
+				ItemHandler container = panel is IBagPanel ? ((IBagPanel)panel).Bag.Handler : ((BaseTEPanel)panel).tileEntity.Handler;
 
 				for (int i = 0; i < container.Slots; i++)
 				{

@@ -1,5 +1,4 @@
 ﻿using PortableStorage.Global;
-using PortableStorage.UI.Bags;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,8 +8,6 @@ namespace PortableStorage.Items.Bags
 	{
 		public override string Texture => "PortableStorage/Textures/Items/ArrowQuiver";
 		public override string AmmoType => "Arrow";
-
-		public new AmmoBagPanel UI;
 
 		public override void SetStaticDefaults()
 		{

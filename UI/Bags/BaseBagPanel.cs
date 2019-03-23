@@ -4,9 +4,14 @@ using PortableStorage.Items.Bags;
 
 namespace PortableStorage.UI.Bags
 {
-	public class BaseBagPanel : UIDraggablePanel
+	public interface IBagPanel
 	{
-		public BaseBag bag;
+		BaseBag Bag { get; set; }
+	}
+
+	public class BaseBagPanel<T> : UIDraggablePanel, IBagPanel where T : BaseBag
+	{
+		public BaseBag Bag { get; set; }
 
 		public UIText textLabel;
 		public UITextButton buttonClose;

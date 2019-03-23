@@ -1,12 +1,8 @@
-﻿using PortableStorage.UI.Bags;
-
-namespace PortableStorage.Items.Bags
+﻿namespace PortableStorage.Items.Bags
 {
 	public class DartHolder : BaseAmmoBag
 	{
 		public override string AmmoType => "Dart";
-
-		public new AmmoBagPanel UI;
 
 		public override void SetStaticDefaults()
 		{

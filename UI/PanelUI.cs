@@ -1,16 +1,30 @@
 ﻿using System;
+using System.Collections.Generic;
+using BaseLibrary;
 using BaseLibrary.UI;
+using BaseLibrary.UI.Elements;
 using Microsoft.Xna.Framework;
 using PortableStorage.Global;
 using PortableStorage.Items.Bags;
 using PortableStorage.UI.Bags;
 using Terraria;
-using Utility = BaseLibrary.Utility;
 
 namespace PortableStorage.UI
 {
 	public class PanelUI : BaseUI
 	{
+		private static Dictionary<Type, Type> UICache;
+
+		public PanelUI()
+		{
+			UICache = new Dictionary<Type, Type>();
+
+			foreach (Type type in PortableStorage.Instance.Code.GetTypes())
+			{
+				if (type.IsSubclassOfRawGeneric(typeof(BaseBagPanel<>)) && type.BaseType != null && type.BaseType.GenericTypeArguments.Length > 0) UICache[type.BaseType.GenericTypeArguments[0]] = type;
+			}
+		}
+
 		public override void OnInitialize()
 		{
 		}
@@ -23,8 +37,8 @@ namespace PortableStorage.UI
 
 		public void CloseUI(BaseBag bag)
 		{
-			Main.LocalPlayer.GetModPlayer<PSPlayer>().UIPositions[bag.ID] = bag.UI.Position;
-			Elements.Remove(bag.UI);
+			Main.LocalPlayer.GetModPlayer<PSPlayer>().UIPositions[bag.ID] = ((BaseElement)bag.UI).Position;
+			Elements.Remove((BaseElement)bag.UI);
 			bag.UI = null;
 
 			Main.PlaySound(bag.CloseSound);
@@ -32,22 +46,22 @@ namespace PortableStorage.UI
 
 		public void OpenUI(BaseBag bag)
 		{
-			Type type = bag.GetType().GetField("UI", Utility.defaultFlags)?.FieldType;
+			Type bagType = UICache.ContainsKey(bag.GetType()) ? bag.GetType() : bag.GetType().BaseType;
 
-			if (type == null || !type.IsSubclassOf(typeof(BaseBagPanel))) throw new Exception("Bag must implement field 'UI' with type derived from 'BaseBagPanel'!");
+			bag.UI = (IBagPanel)Activator.CreateInstance(UICache[bagType]);
+			bag.UI.Bag = bag;
 
-			bag.UI = (BaseBagPanel)Activator.CreateInstance(type);
-			bag.UI.bag = bag;
+			BaseElement element = (BaseElement)bag.UI;
 
-			bag.UI.Activate();
+			element.Activate();
 
 			if (Main.LocalPlayer.GetModPlayer<PSPlayer>().UIPositions.TryGetValue(bag.ID, out Vector2 position))
 			{
-				bag.UI.HAlign = bag.UI.VAlign = 0;
-				bag.UI.Position = position;
+				element.HAlign = element.VAlign = 0;
+				element.Position = position;
 			}
 
-			Append(bag.UI);
+			Append(element);
 
 			Main.PlaySound(bag.OpenSound);
 		}

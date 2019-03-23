@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using BaseLibrary;
 using BaseLibrary.UI;
 using Microsoft.Xna.Framework;
 using PortableStorage.Global;
@@ -9,11 +10,11 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
+using Utility = PortableStorage.Global.Utility;
 
 namespace PortableStorage
 {
 	// todo: add bag slot
-	// todo: override mouse icon when shiftclicking into bag
 
 	public class PortableStorage : Mod
 	{
@@ -64,7 +65,7 @@ namespace PortableStorage
 
 		public override void PostAddRecipes()
 		{
-			foreach (ModItem item in BaseLibrary.Utility.GetValue<Dictionary<string, ModItem>>(this, "items").Values)
+			foreach (ModItem item in this.GetValue<Dictionary<string, ModItem>>("items").Values)
 			{
 				Recipe recipe = Main.recipe.FirstOrDefault(x => x.createItem.type == item.item.type);
 				if (recipe != null) item.item.value = recipe.requiredItem.Sum(x => x.value);

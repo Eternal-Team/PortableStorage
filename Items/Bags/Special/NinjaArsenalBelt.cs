@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ContainerLibrary;
-using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -10,10 +10,9 @@ namespace PortableStorage.Items.Bags
 {
 	public class NinjaArsenalBelt : BaseBag
 	{
-		// todo: replenish throwable items in inventory
+		// note: if I'm not lazy implement ammo-like system where Ninja's Arsenal Belt doesn't replenish throwable items instead when player uses it it checks whether any bag has it and use it from that
+		// note: also draw the amount in the bottom-right corner of the slot
 		// note: overhaul support?
-
-		public new NinjaArsenalBeltPanel UI;
 
 		public NinjaArsenalBelt()
 		{
@@ -46,6 +45,26 @@ namespace PortableStorage.Items.Bags
 
 			item.width = 32;
 			item.height = 32;
+		}
+
+		public override void UpdateInventory(Player player)
+		{
+			if (UI != null) return;
+
+			for (int i = 0; i < player.inventory.Length; i++)
+			{
+				Item item = player.inventory[i];
+				if (item == null || item.IsAir || !item.thrown || item.stack == item.maxStack) continue;
+
+				Item itemBag = Handler.stacks.FirstOrDefault(x => x.type == item.type && x.stack > 1);
+				if (itemBag != null)
+				{
+					int count = Math.Min(item.maxStack - item.stack, itemBag.stack - 1);
+					item.stack += count;
+					itemBag.stack -= count;
+					if (itemBag.stack <= 0) itemBag.TurnToAir();
+				}
+			}
 		}
 
 		public override void AddRecipes()

@@ -17,9 +17,9 @@ namespace PortableStorage.Items.Bags
 
 		public ItemHandler Handler { get; set; }
 
-		public Guid ID;
+		public IBagPanel UI;
 
-		public BaseBagPanel UI;
+		public Guid ID;
 
 		public virtual LegacySoundStyle OpenSound => SoundID.Item1;
 		public virtual LegacySoundStyle CloseSound => SoundID.Item1;

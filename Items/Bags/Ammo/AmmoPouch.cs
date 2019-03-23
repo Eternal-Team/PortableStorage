@@ -1,13 +1,10 @@
-﻿using PortableStorage.UI.Bags;
-using Terraria;
+﻿using Terraria;
 
 namespace PortableStorage.Items.Bags
 {
 	public class AmmoPouch : BaseAmmoBag
 	{
 		public override string AmmoType => "Misc";
-
-		public new AmmoBagPanel UI;
 
 		public override void SetStaticDefaults()
 		{

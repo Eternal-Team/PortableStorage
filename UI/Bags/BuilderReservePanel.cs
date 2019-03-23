@@ -8,15 +8,15 @@ using Terraria;
 
 namespace PortableStorage.UI.Bags
 {
-	public class BuilderReservePanel : BaseBagPanel
+	public class BuilderReservePanel : BaseBagPanel<BuilderReserve>
 	{
 		public override void OnInitialize()
 		{
 			Width = (408, 0);
-			Height = (40 + bag.Handler.Slots / 9 * 44, 0);
+			Height = (40 + Bag.Handler.Slots / 9 * 44, 0);
 			this.Center();
 
-			textLabel = new UIText(bag.DisplayName.GetTranslation())
+			textLabel = new UIText(Bag.DisplayName.GetTranslation())
 			{
 				HAlign = 0.5f
 			};
@@ -28,7 +28,7 @@ namespace PortableStorage.UI.Bags
 				Left = (-20, 1),
 				RenderPanel = false
 			};
-			buttonClose.OnClick += (evt, element) => PortableStorage.Instance.PanelUI.UI.CloseUI(bag);
+			buttonClose.OnClick += (evt, element) => PortableStorage.Instance.PanelUI.UI.CloseUI(Bag);
 			Append(buttonClose);
 
 			gridItems = new UIGrid<UIContainerSlot>(9)
@@ -41,10 +41,10 @@ namespace PortableStorage.UI.Bags
 			};
 			Append(gridItems);
 
-			BuilderReserve devNull = (BuilderReserve)bag;
-			for (int i = 0; i < bag.Handler.stacks.Count; i++)
+			BuilderReserve devNull = (BuilderReserve)Bag;
+			for (int i = 0; i < Bag.Handler.stacks.Count; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(bag, i);
+				UIContainerSlot slot = new UIContainerSlot(Bag, i);
 				slot.ClickOverride += () =>
 				{
 					if (!slot.Item.IsAir && Main.keyState.IsKeyDown(Keys.RightShift))
@@ -69,7 +69,7 @@ namespace PortableStorage.UI.Bags
 
 		public void RefreshTextures()
 		{
-			BuilderReserve devNull = (BuilderReserve)bag;
+			BuilderReserve devNull = (BuilderReserve)Bag;
 			if (devNull.selectedIndex >= 0)
 			{
 				foreach (UIContainerSlot slot in gridItems.items) slot.backgroundTexture = devNull.selectedIndex == slot.slot ? Main.inventoryBack15Texture : Main.inventoryBackTexture;

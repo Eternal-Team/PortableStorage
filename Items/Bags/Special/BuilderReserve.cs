@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ContainerLibrary;
-using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -10,8 +9,6 @@ namespace PortableStorage.Items.Bags
 {
 	public class BuilderReserve : BaseBag
 	{
-		public new BuilderReservePanel UI;
-
 		public int selectedIndex;
 
 		public BuilderReserve()

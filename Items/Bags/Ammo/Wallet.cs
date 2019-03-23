@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ContainerLibrary;
-using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ID;
 
@@ -11,8 +10,6 @@ namespace PortableStorage.Items.Bags
 	{
 		public override string Texture => "PortableStorage/Textures/Items/Wallet";
 		public override string AmmoType => "Coin";
-
-		public new WalletPanel UI;
 
 		public Wallet()
 		{

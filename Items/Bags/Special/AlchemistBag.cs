@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using ContainerLibrary;
-using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -15,8 +14,6 @@ namespace PortableStorage.Items.Bags
 
 	public class AlchemistBag : BaseBag
 	{
-		public new AlchemistBagPanel UI;
-
 		public ItemHandler HandlerIngredients;
 
 		public AlchemistBag()

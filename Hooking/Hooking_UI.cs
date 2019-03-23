@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using BaseLibrary;
+using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Items.Bags;
@@ -439,7 +440,7 @@ namespace PortableStorage.Hooking
 					case Terraria.UI.ItemSlot.Context.InventoryItem:
 					case Terraria.UI.ItemSlot.Context.InventoryCoin:
 					case Terraria.UI.ItemSlot.Context.InventoryAmmo:
-						if (PortableStorage.Instance.PanelUI.UI.Elements.Any(panel => ((BaseBagPanel)panel).bag.Handler.stacks.HasSpace(item))) Terraria.Main.cursorOverride = 1000;
+						if (PortableStorage.Instance.PanelUI.UI.Elements.Any(panel => ((IBagPanel)panel).Bag.Handler.HasSpace(item))) Terraria.Main.cursorOverride = BagCursorOverride;
 						else if (Terraria.Main.npcShop > 0 && !item.favorited) Terraria.Main.cursorOverride = 10;
 						else if (Terraria.Main.player[Terraria.Main.myPlayer].chest != -1)
 						{
@@ -481,6 +482,7 @@ namespace PortableStorage.Hooking
 		}
 
 		private static Texture2D placeholderTexture;
+		private const int BagCursorOverride = 1000;
 
 		private static void Main_DrawInterface_36_Cursor(Main.orig_DrawInterface_36_Cursor orig)
 		{
@@ -488,25 +490,18 @@ namespace PortableStorage.Hooking
 
 			if (Terraria.Main.cursorOverride != -1)
 			{
-				Color color = new Color((int)(Terraria.Main.cursorColor.R * 0.2f), (int)(Terraria.Main.cursorColor.G * 0.2f), (int)(Terraria.Main.cursorColor.B * 0.2f), (int)(Terraria.Main.cursorColor.A * 0.5f));
-				Color white = Terraria.Main.cursorColor;
+				Color colorOutline = new Color((int)(Terraria.Main.cursorColor.R * 0.2f), (int)(Terraria.Main.cursorColor.G * 0.2f), (int)(Terraria.Main.cursorColor.B * 0.2f), (int)(Terraria.Main.cursorColor.A * 0.5f));
+				Color color = Terraria.Main.cursorColor;
 
 				bool drawOutline = true;
 				Vector2 value = default(Vector2);
 				float scale = 1f;
-				if (Terraria.Main.cursorOverride == 2)
-				{
-					drawOutline = false;
-					white = Color.White;
-					scale = 0.7f;
-					value = new Vector2(0.1f);
-				}
 
 				switch (Terraria.Main.cursorOverride)
 				{
 					case 2:
 						drawOutline = false;
-						white = Color.White;
+						color = Color.White;
 						scale = 0.7f;
 						value = new Vector2(0.1f);
 						break;
@@ -516,21 +511,22 @@ namespace PortableStorage.Hooking
 					case 8:
 					case 9:
 					case 10:
+					case BagCursorOverride:
 						drawOutline = false;
-						white = Color.White;
+						color = Color.White;
 						break;
 				}
 
-				if (Terraria.Main.cursorOverride == 1000)
+				if (Terraria.Main.cursorOverride == BagCursorOverride)
 				{
 					float downscale = 14f / placeholderTexture.Width;
-					Terraria.Main.spriteBatch.Draw(placeholderTexture, new Vector2(Terraria.Main.mouseX, Terraria.Main.mouseY), null, Color.White, 0f, Vector2.Zero, Terraria.Main.cursorScale * scale * downscale, SpriteEffects.None, 0f);
+					Terraria.Main.spriteBatch.Draw(placeholderTexture, new Vector2(Terraria.Main.mouseX, Terraria.Main.mouseY), null, color, 0f, Vector2.Zero, Terraria.Main.cursorScale * scale * downscale, SpriteEffects.None, 0f);
 					return;
 				}
 
-				if (drawOutline) Terraria.Main.spriteBatch.Draw(Terraria.Main.cursorTextures[Terraria.Main.cursorOverride], new Vector2(Terraria.Main.mouseX + 1, Terraria.Main.mouseY + 1), null, color, 0f, value * Terraria.Main.cursorTextures[Terraria.Main.cursorOverride].Size(), Terraria.Main.cursorScale * 1.1f * scale, SpriteEffects.None, 0f);
+				if (drawOutline) Terraria.Main.spriteBatch.Draw(Terraria.Main.cursorTextures[Terraria.Main.cursorOverride], new Vector2(Terraria.Main.mouseX + 1, Terraria.Main.mouseY + 1), null, colorOutline, 0f, value * Terraria.Main.cursorTextures[Terraria.Main.cursorOverride].Size(), Terraria.Main.cursorScale * 1.1f * scale, SpriteEffects.None, 0f);
 
-				Terraria.Main.spriteBatch.Draw(Terraria.Main.cursorTextures[Terraria.Main.cursorOverride], new Vector2(Terraria.Main.mouseX, Terraria.Main.mouseY), null, white, 0f, value * Terraria.Main.cursorTextures[Terraria.Main.cursorOverride].Size(), Terraria.Main.cursorScale * scale, SpriteEffects.None, 0f);
+				Terraria.Main.spriteBatch.Draw(Terraria.Main.cursorTextures[Terraria.Main.cursorOverride], new Vector2(Terraria.Main.mouseX, Terraria.Main.mouseY), null, color, 0f, value * Terraria.Main.cursorTextures[Terraria.Main.cursorOverride].Size(), Terraria.Main.cursorScale * scale, SpriteEffects.None, 0f);
 			}
 			else
 			{

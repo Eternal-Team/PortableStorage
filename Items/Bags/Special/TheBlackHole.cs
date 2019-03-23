@@ -7,7 +7,6 @@ using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Global;
-using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -17,8 +16,6 @@ namespace PortableStorage.Items.Bags
 {
 	public class TheBlackHole : BaseBag
 	{
-		public new TheBlackHolePanel UI;
-
 		private const float angleDecrement = 0.05235988F;
 		private static readonly Vector2 origin = new Vector2(30);
 		private const int maxRange = 160;
@@ -68,13 +65,8 @@ namespace PortableStorage.Items.Bags
 			item.noUseGraphic = true;
 		}
 
-		public override void UpdateAccessory(Player player, bool hideVisual) => Update(player);
-
-		public override void UpdateInventory(Player player) => Update(player);
-
-		private void Update(Player player)
+		public override void UpdateInventory(Player player)
 		{
-			active = true;
 			if (!active) return;
 
 			for (int i = 0; i < Main.item.Length; i++)

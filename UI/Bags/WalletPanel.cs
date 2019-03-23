@@ -2,10 +2,11 @@
 using BaseLibrary.UI.Elements;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
+using PortableStorage.Items.Bags;
 
 namespace PortableStorage.UI.Bags
 {
-	public class WalletPanel : BaseBagPanel
+	public class WalletPanel : BaseBagPanel<Wallet>
 	{
 		public override void OnInitialize()
 		{
@@ -13,7 +14,7 @@ namespace PortableStorage.UI.Bags
 			Height = (84, 0);
 			this.Center();
 
-			textLabel = new UIText(bag.DisplayName.GetTranslation())
+			textLabel = new UIText(Bag.DisplayName.GetTranslation())
 			{
 				HAlign = 0.5f
 			};
@@ -25,7 +26,7 @@ namespace PortableStorage.UI.Bags
 				Left = (-20, 1),
 				RenderPanel = false
 			};
-			buttonClose.OnClick += (evt, element) => PortableStorage.Instance.PanelUI.UI.CloseUI(bag);
+			buttonClose.OnClick += (evt, element) => PortableStorage.Instance.PanelUI.UI.CloseUI(Bag);
 			Append(buttonClose);
 
 			gridItems = new UIGrid<UIContainerSlot>(9)
@@ -38,9 +39,9 @@ namespace PortableStorage.UI.Bags
 			};
 			Append(gridItems);
 
-			for (int i = 0; i < bag.Handler.stacks.Count; i++)
+			for (int i = 0; i < Bag.Handler.stacks.Count; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(bag, i);
+				UIContainerSlot slot = new UIContainerSlot(Bag, i);
 				gridItems.Add(slot);
 			}
 		}
