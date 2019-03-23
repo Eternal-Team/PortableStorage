@@ -5,7 +5,7 @@
 
 //namespace PortableStorage.Items.Bags
 //{
-// todo: implement
+// todo: Handler that combines all the other Handlers
 
 //	public class MasterAmmoPounch : BaseAmmoBag
 //	{

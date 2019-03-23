@@ -10,9 +10,7 @@ namespace PortableStorage.Items.Bags
 {
 	public class NinjaArsenalBelt : BaseBag
 	{
-		// note: if I'm not lazy implement ammo-like system where Ninja's Arsenal Belt doesn't replenish throwable items instead when player uses it it checks whether any bag has it and use it from that
-		// note: also draw the amount in the bottom-right corner of the slot
-		// note: overhaul support?
+		// note: if I'm not lazy implement ammo-like system where Ninja's Arsenal Belt doesn't replenish throwable items instead when player uses it it checks whether any bag has it and use it from that, also draw the amount in the bottom-right corner of the slot
 
 		public NinjaArsenalBelt()
 		{

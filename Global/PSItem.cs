@@ -53,10 +53,8 @@ namespace PortableStorage.Global
 					{
 						item = ammoBag.Handler.InsertItem(j, item);
 
-						if (item.IsAir || !item.active) break;
+						if (item.IsAir || !item.active) return false;
 					}
-
-					return false;
 				}
 			}
 
