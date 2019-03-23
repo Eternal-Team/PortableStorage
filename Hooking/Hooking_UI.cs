@@ -85,6 +85,7 @@ namespace PortableStorage.Hooking
 		private static int[] inventoryGlowTimeChest;
 		private static float[] inventoryGlowHueChest;
 
+		// todo: draw ammo that is currently being usen if it comes from a bag
 		public static void ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
 		{
 			if (inventoryGlowTime == null) inventoryGlowTime = typeof(Terraria.UI.ItemSlot).GetValue<int[]>("inventoryGlowTime");

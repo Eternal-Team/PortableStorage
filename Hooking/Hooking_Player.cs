@@ -119,6 +119,7 @@ namespace PortableStorage.Hooking
 			return !Player_TryPurchasing(price, list, coins, emptyInventory, emptyPiggy, emptySafe, emptyDefenders, emptyWallet);
 		}
 
+		// todo: sell -> add to wallet
 		public static bool Player_TryPurchasing(int price, List<Item[]> inv, List<Point> slotCoins, List<Point> slotsEmpty, List<Point> slotEmptyBank, List<Point> slotEmptyBank2, List<Point> slotEmptyBank3, List<Point> slotEmptyWallet)
 		{
 			long priceRemaining = price;

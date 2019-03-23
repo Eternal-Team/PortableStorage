@@ -21,7 +21,7 @@ namespace PortableStorage.Items.Bags
 		private const int maxRange = 160;
 
 		public bool active;
-		private float angle;
+		public float angle;
 
 		public TheBlackHole()
 		{
@@ -125,8 +125,9 @@ namespace PortableStorage.Items.Bags
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
 			if ((angle -= angleDecrement) < 0f) angle = MathHelper.TwoPi;
+
 			scale *= 32f / 60f;
-			float scaleMultiplier = (float)Math.Sin(angle).Remap(-1f, 1f, 0.4f, 1f);
+			float scaleMultiplier = !active ? 1f : (float)Math.Sin(angle).Remap(-1f, 1f, 0.4f, 1f);
 
 			spriteBatch.Draw(Main.extraTexture[50], position + TheBlackHole.origin * scale, null, Color.White, angle, origin + TheBlackHole.origin, scale * scaleMultiplier, SpriteEffects.None, 0f);
 
@@ -136,8 +137,9 @@ namespace PortableStorage.Items.Bags
 		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
 		{
 			if ((angle -= angleDecrement) < 0f) angle = MathHelper.TwoPi;
+
 			scale *= 32f / 60f;
-			float scaleMultiplier = (float)Math.Sin(angle).Remap(-1f, 1f, 0.4f, 1f);
+			float scaleMultiplier = !active ? 1f : (float)Math.Sin(angle).Remap(-1f, 1f, 0.4f, 1f);
 
 			spriteBatch.Draw(Main.extraTexture[50], item.position - Main.screenPosition + origin, null, lightColor, angle + rotation, origin, scale * scaleMultiplier, SpriteEffects.None, 0f);
 

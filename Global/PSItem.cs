@@ -12,6 +12,8 @@ namespace PortableStorage.Global
 {
 	public class PSItem : GlobalItem
 	{
+		// todo: picked up ammo get automatically sent into a bag
+
 		private const float angleDecrement = 0.06981317f;
 		private const float scaleDecrement = 0.015f;
 		private static readonly Vector2 origin = new Vector2(30);

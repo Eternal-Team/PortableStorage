@@ -1,8 +1,10 @@
 ﻿using BaseLibrary;
+using BaseLibrary.UI;
 using BaseLibrary.UI.Elements;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.Items.Bags;
+using Terraria;
 
 namespace PortableStorage.UI.Bags
 {
@@ -12,6 +14,24 @@ namespace PortableStorage.UI.Bags
 		{
 			Size = new Vector2(408, 172);
 			this.Center();
+
+			UITexture textureActivation = new UITexture(Main.extraTexture[50], ScaleMode.Stretch)
+			{
+				Size = new Vector2(20)
+			};
+			textureActivation.GetHoverText += () => ((TheBlackHole)Bag).active ? "Deactivate" : "Activate";
+			textureActivation.OnClick += (evt, element) =>
+			{
+				TheBlackHole blackHole = (TheBlackHole)Bag;
+				blackHole.active = !blackHole.active;
+				// todo: sync
+			};
+			textureActivation.OnPreDraw += spriteBatch =>
+			{
+				TheBlackHole blackHole = (TheBlackHole)Bag;
+				textureActivation.Rotation = blackHole.active ? blackHole.angle : 0f;
+			};
+			Append(textureActivation);
 
 			textLabel = new UIText(Bag.DisplayName.GetTranslation())
 			{
