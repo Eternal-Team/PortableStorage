@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
+using MonoMod.Utils;
 using PortableStorage.UI.Bags;
 using PortableStorage.UI.TileEntities;
 using Terraria;
@@ -15,7 +16,9 @@ namespace PortableStorage.Global
 {
 	public class PSPlayer : ModPlayer
 	{
-		public Dictionary<Guid, Vector2> UIPositions = new Dictionary<Guid, Vector2>();
+		private Dictionary<Guid, Vector2> _uiPositions;
+
+		public Dictionary<Guid, Vector2> UIPositions => _uiPositions ?? (_uiPositions = new Dictionary<Guid, Vector2>());
 
 		public override bool ShiftClickSlot(Item[] inventory, int context, int slot)
 		{
@@ -57,7 +60,8 @@ namespace PortableStorage.Global
 
 		public override void Load(TagCompound tag)
 		{
-			UIPositions = tag.GetList<TagCompound>("UIPositions").ToDictionary(c => Guid.Parse(c.Get<string>("ID")), c => c.Get<Vector2>("Position"));
+			_uiPositions = new Dictionary<Guid, Vector2>();
+			UIPositions.AddRange(tag.GetList<TagCompound>("UIPositions").ToDictionary(c => Guid.Parse(c.Get<string>("ID")), c => c.Get<Vector2>("Position")));
 		}
 	}
 }
