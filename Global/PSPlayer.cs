@@ -15,9 +15,12 @@ namespace PortableStorage.Global
 {
 	public class PSPlayer : ModPlayer
 	{
-		private Dictionary<Guid, Vector2> _uiPositions;
+		public Dictionary<Guid, Vector2> UIPositions;
 
-		public Dictionary<Guid, Vector2> UIPositions => _uiPositions ?? (_uiPositions = new Dictionary<Guid, Vector2>());
+		public override void Initialize()
+		{
+			UIPositions = new Dictionary<Guid, Vector2>();
+		}
 
 		public override bool ShiftClickSlot(Item[] inventory, int context, int slot)
 		{
@@ -31,8 +34,10 @@ namespace PortableStorage.Global
 			{
 				if (item.favorited || item.IsAir) return false;
 
+				// note: hook QE stuff here
 				ItemHandler container = (panel as IBagPanel)?.Bag.Handler;
 				if (container == null) continue;
+
 				for (int i = 0; i < container.Slots; i++)
 				{
 					inventory[slot] = container.InsertItem(i, item);
@@ -59,7 +64,7 @@ namespace PortableStorage.Global
 
 		public override void Load(TagCompound tag)
 		{
-			_uiPositions = new Dictionary<Guid, Vector2>();
+			UIPositions = new Dictionary<Guid, Vector2>();
 			UIPositions.AddRange(tag.GetList<TagCompound>("UIPositions").ToDictionary(c => Guid.Parse(c.Get<string>("ID")), c => c.Get<Vector2>("Position")));
 		}
 	}

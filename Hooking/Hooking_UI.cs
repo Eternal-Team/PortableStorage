@@ -441,6 +441,7 @@ namespace PortableStorage.Hooking
 					case Terraria.UI.ItemSlot.Context.InventoryItem:
 					case Terraria.UI.ItemSlot.Context.InventoryCoin:
 					case Terraria.UI.ItemSlot.Context.InventoryAmmo:
+						// note: move to ContainerLibrary, support any UI with IItemHandler
 						if (PortableStorage.Instance.PanelUI.UI.Elements.Any(panel => ((IBagPanel)panel).Bag.Handler.HasSpace(item))) Terraria.Main.cursorOverride = BagCursorOverride;
 						else if (Terraria.Main.npcShop > 0 && !item.favorited) Terraria.Main.cursorOverride = 10;
 						else if (Terraria.Main.player[Terraria.Main.myPlayer].chest != -1)
@@ -484,9 +485,10 @@ namespace PortableStorage.Hooking
 
 		private static Texture2D placeholderTexture;
 		private const int BagCursorOverride = 1000;
-
+		// note: move to ContainerLibrary
 		private static void Main_DrawInterface_36_Cursor(Main.orig_DrawInterface_36_Cursor orig)
 		{
+			// todo: actual texture here
 			if (placeholderTexture == null) placeholderTexture = ModContent.GetTexture("BaseLibrary/Textures/Placeholder");
 
 			if (Terraria.Main.cursorOverride != -1)

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BaseLibrary;
+using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Items.Bags;
@@ -12,14 +13,11 @@ namespace PortableStorage.Global
 {
 	public class PSItem : GlobalItem
 	{
-		// todo: picked up ammo get automatically sent into a bag
-
 		private const float angleDecrement = 0.06981317f;
 		private const float scaleDecrement = 0.015f;
 		private static readonly Vector2 origin = new Vector2(30);
 
 		private static Dictionary<int, (float scale, float angle)> _blackHoleData;
-
 		public static Dictionary<int, (float scale, float angle)> BlackHoleData => _blackHoleData ?? (_blackHoleData = new Dictionary<int, (float, float)>());
 
 		public override bool OnPickup(Item item, Player player)
@@ -41,6 +39,22 @@ namespace PortableStorage.Global
 					}).Reverse().ToList();
 
 					for (int i = 0; i < 4; i++) wallet.Handler.OnContentsChanged.Invoke(i);
+
+					return false;
+				}
+			}
+			else if (item.ammo > 0)
+			{
+				BaseAmmoBag ammoBag = player.inventory.OfType<BaseAmmoBag>().FirstOrDefault(bag => bag.Handler.HasSpace(item) && bag.Handler.stacks.Any(item1 => item1.type == item.type));
+
+				if (ammoBag != null)
+				{
+					for (int j = 0; j < ammoBag.Handler.Slots; j++)
+					{
+						item = ammoBag.Handler.InsertItem(j, item);
+
+						if (item.IsAir || !item.active) break;
+					}
 
 					return false;
 				}
