@@ -41,7 +41,7 @@ namespace PortableStorage.Hooking
 				return self.ContainsPoint(point) ? self : null;
 			}
 
-			return orig.Invoke(self, point);
+			return orig(self, point);
 		}
 
 		public static void ItemSlot_LeftClick(ItemSlot.orig_LeftClick_ItemArray_int_int orig, Item[] inv, int context, int slot)

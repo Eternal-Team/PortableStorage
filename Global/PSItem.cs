@@ -16,7 +16,9 @@ namespace PortableStorage.Global
 		private const float scaleDecrement = 0.015f;
 		private static readonly Vector2 origin = new Vector2(30);
 
-		public static Dictionary<int, (float scale, float angle)> BlackHoleData = new Dictionary<int, (float, float)>();
+		private static Dictionary<int, (float scale, float angle)> _blackHoleData;
+
+		public static Dictionary<int, (float scale, float angle)> BlackHoleData => _blackHoleData ?? (_blackHoleData = new Dictionary<int, (float, float)>());
 
 		public override bool OnPickup(Item item, Player player)
 		{
