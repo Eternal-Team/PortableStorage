@@ -50,6 +50,8 @@ namespace PortableStorage.Items.Bags
 
 		public override bool UseItem(Player player)
 		{
+			if (!Main.playerInventory) return false;
+
 			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.PanelUI.UI.HandleUI(this);
 
 			return true;

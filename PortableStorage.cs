@@ -84,7 +84,8 @@ namespace PortableStorage
 		{
             if (!Main.playerInventory)
             {
-                foreach (IBagPanel panel in PanelUI.UI.Elements.Cast<IBagPanel>()) PanelUI.UI.CloseUI(panel.Bag);
+	            List<IBagPanel> bagPanels = PanelUI.UI.Elements.Cast<IBagPanel>().ToList();
+	            for (int i = 0; i < bagPanels.Count; i++) PanelUI.UI.CloseUI(bagPanels[i].Bag);
             }
 
 			PanelUI?.Update(gameTime);
