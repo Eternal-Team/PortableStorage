@@ -173,19 +173,16 @@ namespace PortableStorage.Hooking
 				while (index < Terraria.Recipe.maxRecipes && Main.recipe[index].createItem.type != 0)
 				{
 					bool hasTile = true;
-					if (hasTile)
+					int tileIndex = 0;
+					while (tileIndex < Terraria.Recipe.maxRequirements && Main.recipe[index].requiredTile[tileIndex] != -1)
 					{
-						int tileIndex = 0;
-						while (tileIndex < Terraria.Recipe.maxRequirements && Main.recipe[index].requiredTile[tileIndex] != -1)
+						if (!Main.player[Main.myPlayer].adjTile[Main.recipe[index].requiredTile[tileIndex]])
 						{
-							if (!Main.player[Main.myPlayer].adjTile[Main.recipe[index].requiredTile[tileIndex]])
-							{
-								hasTile = false;
-								break;
-							}
-
-							tileIndex++;
+							hasTile = false;
+							break;
 						}
+
+						tileIndex++;
 					}
 
 					if (hasTile)

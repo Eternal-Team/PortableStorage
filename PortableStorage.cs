@@ -6,6 +6,7 @@ using BaseLibrary.UI;
 using Microsoft.Xna.Framework;
 using PortableStorage.Global;
 using PortableStorage.UI;
+using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -79,7 +80,15 @@ namespace PortableStorage
 			if (HotbarIndex != -1 && PanelUI != null) layers.Insert(HotbarIndex + 1, PanelUI.InterfaceLayer);
 		}
 
-		public override void UpdateUI(GameTime gameTime) => PanelUI?.Update(gameTime);
+		public override void UpdateUI(GameTime gameTime)
+		{
+            if (!Main.playerInventory)
+            {
+                foreach (IBagPanel panel in PanelUI.UI.Elements.Cast<IBagPanel>()) PanelUI.UI.CloseUI(panel.Bag);
+            }
+
+			PanelUI?.Update(gameTime);
+		}
 
 		public override void PreSaveAndQuit() => PanelUI?.UI.Elements.Clear();
 
