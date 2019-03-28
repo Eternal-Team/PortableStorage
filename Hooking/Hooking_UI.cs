@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BaseLibrary;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
@@ -429,6 +430,8 @@ namespace PortableStorage.Hooking
 
 		private static bool[] canFavoriteAt;
 
+		//private static Dictionary<>
+
 		private static void ItemSlot_OverrideHover(ItemSlot.orig_OverrideHover orig, Item[] inv, int context, int slot)
 		{
 			if (canFavoriteAt == null) canFavoriteAt = typeof(Terraria.UI.ItemSlot).GetValue<bool[]>("canFavoriteAt");
@@ -442,6 +445,9 @@ namespace PortableStorage.Hooking
 					case Terraria.UI.ItemSlot.Context.InventoryCoin:
 					case Terraria.UI.ItemSlot.Context.InventoryAmmo:
 						// note: move to ContainerLibrary, support any UI with IItemHandler
+
+						// note: store references to BaseElements that constitute as item/tile UIs
+
 						if (PortableStorage.Instance.PanelUI.UI.Elements.Any(panel => ((IBagPanel)panel).Bag.Handler.HasSpace(item))) Terraria.Main.cursorOverride = BagCursorOverride;
 						else if (Terraria.Main.npcShop > 0 && !item.favorited) Terraria.Main.cursorOverride = 10;
 						else if (Terraria.Main.player[Terraria.Main.myPlayer].chest != -1)

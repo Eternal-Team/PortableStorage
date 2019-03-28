@@ -1,10 +1,8 @@
 ﻿using System;
 using BaseLibrary;
-using MonoMod.RuntimeDetour;
+using MonoMod.RuntimeDetour.HookGen;
+using On.Terraria;
 using On.Terraria.UI;
-using Terraria;
-using Terraria.ModLoader;
-using Main = On.Terraria.Main;
 
 namespace PortableStorage.Hooking
 {
@@ -19,20 +17,22 @@ namespace PortableStorage.Hooking
 			ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color;
 			ItemSlot.OverrideHover += ItemSlot_OverrideHover;
 
-			MonoModHooks.RequestNativeAccess();
-			IDetour detour = new Hook(typeof(Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Func<Func<Player, int, int, bool>, Player, int, int, bool>(Player_CanBuyItem));
+			Player.DropSelectedItem += Player_DropSelectedItem;
+			Player.BuyItem += Player_BuyItem;
+			Player.SellItem += Player_SellItem;
+			Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
+			Player.HasAmmo += Player_HasAmmo;
+			Player.PickAmmo += Player_PickAmmo;
+			Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
+			Player.QuickMana += Player_QuickMana;
+			Player.QuickBuff += Player_QuickBuff;
 
-			On.Terraria.Player.DropSelectedItem += Player_DropSelectedItem;
-			On.Terraria.Player.BuyItem += Player_BuyItem;
-			On.Terraria.Player.SellItem += Player_SellItem;
-			On.Terraria.Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
-			On.Terraria.Player.HasAmmo += Player_HasAmmo;
-			On.Terraria.Player.PickAmmo += Player_PickAmmo;
-			On.Terraria.Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
-			On.Terraria.Player.QuickMana += Player_QuickMana;
-			On.Terraria.Player.QuickBuff += Player_QuickBuff;
+			HookEndpointManager.Add(typeof(Terraria.Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Func<Func<Terraria.Player, int, int, bool>, Terraria.Player, int, int, bool>(Player_CanBuyItem));
 
 			Main.DrawInterface_36_Cursor += Main_DrawInterface_36_Cursor;
+
+            Recipe.FindRecipes += Recipe_FindRecipes;
+			Recipe.Create += Recipe_Create;
 		}
 	}
 }
