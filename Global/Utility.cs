@@ -97,7 +97,7 @@ namespace PortableStorage.Global
 			Add("Flameable", AmmoID.Flare);
 			Add("Flameable", AmmoID.StyngerBolt);
 			Add("Flameable", AmmoID.JackOLantern);
-			
+
 			Add("Bullet", AmmoID.Bullet);
 			Add("Arrow", AmmoID.Arrow);
 			Add("Dart", AmmoID.Dart);

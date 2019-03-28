@@ -43,7 +43,6 @@ namespace PortableStorage.Items.Bags
 			ID = Guid.NewGuid();
 			item.useTime = 5;
 			item.useAnimation = 5;
-			item.noUseGraphic = true;
 			item.useStyle = 1;
 			item.rare = 0;
 		}

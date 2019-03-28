@@ -31,7 +31,7 @@ namespace PortableStorage.Hooking
 
 			Main.DrawInterface_36_Cursor += Main_DrawInterface_36_Cursor;
 
-            Recipe.FindRecipes += Recipe_FindRecipes;
+			Recipe.FindRecipes += Recipe_FindRecipes;
 			Recipe.Create += Recipe_Create;
 		}
 	}

@@ -5,6 +5,7 @@ using BaseLibrary;
 using BaseLibrary.UI;
 using Microsoft.Xna.Framework;
 using PortableStorage.Global;
+using PortableStorage.Items.Bags;
 using PortableStorage.UI;
 using PortableStorage.UI.Bags;
 using Terraria;
@@ -16,6 +17,7 @@ using Utility = PortableStorage.Global.Utility;
 namespace PortableStorage
 {
 	// todo: add bag slot
+	// todo: bait storage
 
 	public class PortableStorage : Mod
 	{
@@ -80,18 +82,37 @@ namespace PortableStorage
 			if (HotbarIndex != -1 && PanelUI != null) layers.Insert(HotbarIndex + 1, PanelUI.InterfaceLayer);
 		}
 
+		public List<BaseBag> bagCache = new List<BaseBag>();
+
 		public override void UpdateUI(GameTime gameTime)
 		{
-            if (!Main.playerInventory)
-            {
-	            List<IBagPanel> bagPanels = PanelUI.UI.Elements.Cast<IBagPanel>().ToList();
-	            for (int i = 0; i < bagPanels.Count; i++) PanelUI.UI.CloseUI(bagPanels[i].Bag);
-            }
+			if (!Main.playerInventory)
+			{
+				List<IBagPanel> bagPanels = PanelUI.UI.Elements.Cast<IBagPanel>().ToList();
+				for (int i = 0; i < bagPanels.Count; i++)
+				{
+					BaseBag panel = bagPanels[i].Bag;
+					bagCache.Add(panel);
+					PanelUI.UI.CloseUI(panel);
+				}
+			}
+			else
+			{
+				while (bagCache.Count > 0)
+				{
+					PanelUI.UI.OpenUI(bagCache[0]);
+					bagCache.RemoveAt(0);
+				}
+			}
 
 			PanelUI?.Update(gameTime);
 		}
 
-		public override void PreSaveAndQuit() => PanelUI?.UI.Elements.Clear();
+		public override void PreSaveAndQuit()
+		{
+			PanelUI?.UI.Elements.Clear();
+			bagCache.Clear();
+		}
 
 		public override void HandlePacket(BinaryReader reader, int whoAmI) => Utility.Networking.HandlePacket(reader, whoAmI);
 	}
