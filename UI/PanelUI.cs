@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BaseLibrary;
 using BaseLibrary.UI;
 using BaseLibrary.UI.Elements;
+using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.Global;
 using PortableStorage.Items.Bags;
@@ -37,8 +38,11 @@ namespace PortableStorage.UI
 
 		public void CloseUI(BaseBag bag)
 		{
-			Main.LocalPlayer.GetModPlayer<PSPlayer>().UIPositions[bag.ID] = ((BaseElement)bag.UI).Position;
-			Elements.Remove((BaseElement)bag.UI);
+			BaseElement element = (BaseElement)bag.UI;
+
+			ContainerLibrary.ContainerLibrary.elements.Remove((IItemHandlerUI)element);
+			Main.LocalPlayer.GetModPlayer<PSPlayer>().UIPositions[bag.ID] = element.Position;
+			Elements.Remove(element);
 			bag.UI = null;
 
 			Main.PlaySound(bag.CloseSound);
@@ -62,6 +66,7 @@ namespace PortableStorage.UI
 			}
 
 			Append(element);
+			ContainerLibrary.ContainerLibrary.elements.Add((IItemHandlerUI)element);
 
 			Main.PlaySound(bag.OpenSound);
 		}

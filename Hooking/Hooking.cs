@@ -15,7 +15,6 @@ namespace PortableStorage.Hooking
 			ItemSlot.LeftClick_ItemArray_int_int += ItemSlot_LeftClick;
 			ItemSlot.DrawSavings += ItemSlot_DrawSavings;
 			ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color;
-			ItemSlot.OverrideHover += ItemSlot_OverrideHover;
 
 			Player.DropSelectedItem += Player_DropSelectedItem;
 			Player.BuyItem += Player_BuyItem;
@@ -28,8 +27,6 @@ namespace PortableStorage.Hooking
 			Player.QuickBuff += Player_QuickBuff;
 
 			HookEndpointManager.Add(typeof(Terraria.Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Func<Func<Terraria.Player, int, int, bool>, Terraria.Player, int, int, bool>(Player_CanBuyItem));
-
-			Main.DrawInterface_36_Cursor += Main_DrawInterface_36_Cursor;
 
 			Recipe.FindRecipes += Recipe_FindRecipes;
 			Recipe.Create += Recipe_Create;

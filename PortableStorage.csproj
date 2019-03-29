@@ -45,6 +45,7 @@
     <Compile Include="Hooking\Hooking_Other.cs" />
     <Compile Include="Hooking\Hooking_Player.cs" />
     <Compile Include="Hooking\Hooking_UI.cs" />
+    <Compile Include="Items\Bags\Special\TackleBox.cs" />
     <Compile Include="Items\Bags\Special\NinjaArsenalBelt.cs" />
     <Compile Include="Items\Bags\Special\AlchemistBag.cs" />
     <Compile Include="Items\Bags\Ammo\BaseAmmoBag.cs" />
