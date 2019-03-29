@@ -17,15 +17,15 @@ using Utility = PortableStorage.Global.Utility;
 namespace PortableStorage
 {
 	// todo: add bag slot
-	// todo: bait storage
 
 	public class PortableStorage : Mod
 	{
 		public static PortableStorage Instance;
 
 		public GUI<PanelUI> PanelUI;
+		private List<BaseBag> bagCache = new List<BaseBag>();
 
-		public override void Load()
+        public override void Load()
 		{
 			Instance = this;
 
@@ -81,9 +81,7 @@ namespace PortableStorage
 
 			if (HotbarIndex != -1 && PanelUI != null) layers.Insert(HotbarIndex + 1, PanelUI.InterfaceLayer);
 		}
-
-		public List<BaseBag> bagCache = new List<BaseBag>();
-
+		
 		public override void UpdateUI(GameTime gameTime)
 		{
 			if (!Main.playerInventory)

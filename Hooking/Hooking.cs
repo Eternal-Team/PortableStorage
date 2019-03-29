@@ -25,6 +25,7 @@ namespace PortableStorage.Hooking
 			Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
 			Player.QuickMana += Player_QuickMana;
 			Player.QuickBuff += Player_QuickBuff;
+			IL.Terraria.Player.ItemCheck += Player_ItemCheck;
 
 			HookEndpointManager.Add(typeof(Terraria.Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Func<Func<Terraria.Player, int, int, bool>, Terraria.Player, int, int, bool>(Player_CanBuyItem));
 

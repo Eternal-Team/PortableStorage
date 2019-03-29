@@ -1,20 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using BaseLibrary;
-using On.Terraria;
 using PortableStorage.Items.Bags;
 using Terraria.GameContent.Achievements;
+using Microsoft.Xna.Framework;
 using Terraria.ID;
+using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
+using Terraria.Enums;
+using Terraria.GameContent.UI;
 using Terraria.ModLoader;
+using Terraria.ObjectData;
 using Item = Terraria.Item;
 using Main = Terraria.Main;
 using NetMessage = Terraria.NetMessage;
+using NPC = Terraria.NPC;
 
 namespace PortableStorage.Hooking
 {
 	public static partial class Hooking
 	{
-		private static void Recipe_Create(Recipe.orig_Create orig, Terraria.Recipe self)
+		private static void Recipe_Create(On.Terraria.Recipe.orig_Create orig, Terraria.Recipe self)
 		{
 			for (int i = 0; i < Terraria.Recipe.maxRequirements; i++)
 			{
@@ -97,7 +104,7 @@ namespace PortableStorage.Hooking
 			Terraria.Recipe.FindRecipes();
 		}
 
-		private static void Recipe_FindRecipes(Recipe.orig_FindRecipes orig)
+		private static void Recipe_FindRecipes(On.Terraria.Recipe.orig_FindRecipes orig)
 		{
 			int focusIndex = Main.availableRecipe[Main.focusRecipe];
 			float focusY = Main.availableRecipeY[Main.focusRecipe];

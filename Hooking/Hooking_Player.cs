@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using BaseLibrary;
 using Microsoft.Xna.Framework;
+using Mono.Cecil.Cil;
+using MonoMod.RuntimeDetour.HookGen;
 using PortableStorage.Items.Bags;
 using Terraria;
 using Terraria.Audio;
@@ -758,6 +760,133 @@ namespace PortableStorage.Hooking
 			}
 
 			return true;
+		}
+
+		private static void Player_ItemCheck(HookIL il)
+		{
+			HookILCursor c = il.At(0);
+
+			if (c.TryGotoNext(i => i.MatchLdloc(2), i => i.MatchLdfld<Item>("fishingPole"), i => i.MatchLdcI4(0), i => i.MatchBle(out HookILLabel label)))
+			{
+				HookILLabel label = il.DefineLabel();
+
+				c.Emit(OpCodes.Ldarg_0);
+				c.EmitDelegate((Func<Player, bool>)(player =>
+				{
+					bool b = true;
+					for (int num10 = 0; num10 < 1000; num10++)
+					{
+						if (Main.projectile[num10].active && Main.projectile[num10].owner == player.whoAmI && Main.projectile[num10].bobber)
+						{
+							b = false;
+							if (player.whoAmI == Main.myPlayer && Main.projectile[num10].ai[0] == 0f)
+							{
+								Main.projectile[num10].ai[0] = 1f;
+								float num11 = -10f;
+								if (Main.projectile[num10].wet && Main.projectile[num10].velocity.Y > num11)
+								{
+									Main.projectile[num10].velocity.Y = num11;
+								}
+
+								Main.projectile[num10].netUpdate2 = true;
+								if (Main.projectile[num10].ai[1] < 0f && Main.projectile[num10].localAI[1] != 0f)
+								{
+									bool flag4 = false;
+									int num12 = 0;
+									for (int num13 = 0; num13 < 58; num13++)
+									{
+										if (player.inventory[num13].stack > 0 && player.inventory[num13].bait > 0)
+										{
+											bool flag5 = false;
+											int num14 = 1 + player.inventory[num13].bait / 5;
+											if (num14 < 1)
+											{
+												num14 = 1;
+											}
+
+											if (player.accTackleBox)
+											{
+												num14++;
+											}
+
+											if (Main.rand.Next(num14) == 0)
+											{
+												flag5 = true;
+											}
+
+											if (Main.projectile[num10].localAI[1] < 0f)
+											{
+												flag5 = true;
+											}
+
+											if (Main.projectile[num10].localAI[1] > 0f)
+											{
+												Item item2 = new Item();
+												item2.SetDefaults((int)Main.projectile[num10].localAI[1], false);
+												if (item2.rare < 0)
+												{
+													flag5 = false;
+												}
+											}
+
+											if (flag5)
+											{
+												num12 = player.inventory[num13].type;
+												if (ItemLoader.ConsumeItem(player.inventory[num13], player))
+												{
+													player.inventory[num13].stack--;
+												}
+
+												if (player.inventory[num13].stack <= 0)
+												{
+													player.inventory[num13].SetDefaults(0, false);
+												}
+											}
+
+											flag4 = true;
+											break;
+										}
+									}
+
+									if (flag4)
+									{
+										if (num12 == 2673)
+										{
+											if (Main.netMode != 1)
+											{
+												NPC.SpawnOnPlayer(player.whoAmI, 370);
+											}
+											else
+											{
+												NetMessage.SendData(61, -1, -1, null, player.whoAmI, 370f, 0f, 0f, 0, 0, 0);
+											}
+
+											Main.projectile[num10].ai[0] = 2f;
+										}
+										else if (Main.rand.Next(7) == 0 && !player.accFishingLine)
+										{
+											Main.projectile[num10].ai[0] = 2f;
+										}
+										else
+										{
+											Main.projectile[num10].ai[1] = Main.projectile[num10].localAI[1];
+										}
+
+										Main.projectile[num10].netUpdate = true;
+									}
+								}
+							}
+						}
+					}
+
+					return b;
+				}));
+				c.Emit(OpCodes.Stloc, il.Body.Variables[17]);
+
+				c.GotoNext(i => i.MatchLdloc(2), i => i.MatchLdfld<Item>("shoot"), i => i.MatchLdcI4(6));
+
+				c.MarkLabel(label);
+			}
 		}
 	}
 }

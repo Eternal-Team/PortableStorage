@@ -50,6 +50,13 @@ namespace PortableStorage.Global
 			return true;
 		}
 
+		public override bool PreItemCheck()
+		{
+			return true;	
+
+			return base.PreItemCheck();
+		}
+
 		public override TagCompound Save()
 		{
 			return new TagCompound

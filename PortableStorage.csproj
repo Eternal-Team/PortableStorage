@@ -75,6 +75,7 @@
     <Compile Include="Tiles\TileQETank.cs" />
     <Compile Include="Tiles\TileQEChest.cs" />
     <Compile Include="UI\Bags\AlchemistBagPanel.cs" />
+    <Compile Include="UI\Bags\TackleBoxPanel.cs" />
     <Compile Include="UI\Bags\NinjaArsenalBeltPanel.cs" />
     <Compile Include="UI\Bags\BuilderReservePanel.cs" />
     <Compile Include="UI\Bags\AmmoBagPanel.cs" />
