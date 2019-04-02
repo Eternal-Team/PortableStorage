@@ -10,7 +10,7 @@ using Utility = PortableStorage.Global.Utility;
 
 namespace PortableStorage.Items.Bags
 {
-	// todo: automatically pick up potion ingredients (only if the player has told it to), allow a way of crafting potions, store potions
+	// todo: automatically pick up potion ingredients (only if the player has told it to), store potions
 
 	public class AlchemistBag : BaseBag
 	{

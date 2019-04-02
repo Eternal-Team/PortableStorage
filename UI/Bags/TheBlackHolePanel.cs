@@ -60,7 +60,7 @@ namespace PortableStorage.UI.Bags
 
 			for (int i = 0; i < Bag.Handler.stacks.Count; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(Bag, i);
+				UIContainerSlot slot = new UIContainerSlot(() => Bag, i);
 				gridItems.Add(slot);
 			}
 		}

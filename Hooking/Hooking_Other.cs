@@ -1,27 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using BaseLibrary;
+using On.Terraria;
 using PortableStorage.Items.Bags;
 using Terraria.GameContent.Achievements;
-using Microsoft.Xna.Framework;
 using Terraria.ID;
-using Terraria;
-using Terraria.Audio;
-using Terraria.DataStructures;
-using Terraria.Enums;
-using Terraria.GameContent.UI;
 using Terraria.ModLoader;
-using Terraria.ObjectData;
 using Item = Terraria.Item;
 using Main = Terraria.Main;
 using NetMessage = Terraria.NetMessage;
-using NPC = Terraria.NPC;
 
 namespace PortableStorage.Hooking
 {
 	public static partial class Hooking
 	{
-		private static void Recipe_Create(On.Terraria.Recipe.orig_Create orig, Terraria.Recipe self)
+		private static void Recipe_Create(Recipe.orig_Create orig, Terraria.Recipe self)
 		{
 			for (int i = 0; i < Terraria.Recipe.maxRequirements; i++)
 			{
@@ -31,6 +24,7 @@ namespace PortableStorage.Hooking
 				if (self is ModRecipe modRecipe) amount = modRecipe.ConsumeItem(item.type, item.stack);
 				if (self.alchemy && Main.LocalPlayer.alchemyTable)
 				{
+					// note: hook alchemist bag here
 					int num2 = 0;
 					for (int j = 0; j < amount; j++)
 					{
@@ -104,7 +98,7 @@ namespace PortableStorage.Hooking
 			Terraria.Recipe.FindRecipes();
 		}
 
-		private static void Recipe_FindRecipes(On.Terraria.Recipe.orig_FindRecipes orig)
+		private static void Recipe_FindRecipes(Recipe.orig_FindRecipes orig)
 		{
 			int focusIndex = Main.availableRecipe[Main.focusRecipe];
 			float focusY = Main.availableRecipeY[Main.focusRecipe];
@@ -134,7 +128,7 @@ namespace PortableStorage.Hooking
 			{
 				Dictionary<int, int> availableItems = new Dictionary<int, int>();
 				Item item;
-				Item[] array = Main.player[Main.myPlayer].inventory;
+				Item[] array = Main.LocalPlayer.inventory;
 				for (int i = 0; i < array.Length; i++)
 				{
 					item = array[i];
@@ -183,6 +177,7 @@ namespace PortableStorage.Hooking
 					int tileIndex = 0;
 					while (tileIndex < Terraria.Recipe.maxRequirements && Main.recipe[index].requiredTile[tileIndex] != -1)
 					{
+						// note: hook alchemist bag here
 						if (!Main.player[Main.myPlayer].adjTile[Main.recipe[index].requiredTile[tileIndex]])
 						{
 							hasTile = false;
@@ -254,7 +249,8 @@ namespace PortableStorage.Hooking
 				}
 			}
 
-			Main.focusRecipe = Main.focusRecipe.Clamp(0, Main.numAvailableRecipes - 1);
+			if (Main.focusRecipe >= Main.numAvailableRecipes) Main.focusRecipe = Main.numAvailableRecipes - 1;
+			if (Main.focusRecipe < 0) Main.focusRecipe = 0;
 
 			float num7 = Main.availableRecipeY[Main.focusRecipe] - focusY;
 			for (int num8 = 0; num8 < Terraria.Recipe.maxRecipes; num8++)

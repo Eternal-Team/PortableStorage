@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using BaseLibrary;
 using BaseLibrary.UI;
@@ -53,7 +53,7 @@ namespace PortableStorage.UI
 			Type bagType = UICache.ContainsKey(bag.GetType()) ? bag.GetType() : bag.GetType().BaseType;
 
 			bag.UI = (IBagPanel)Activator.CreateInstance(UICache[bagType]);
-			bag.UI.Bag = bag;
+			bag.UI.ID = bag.ID;
 
 			BaseElement element = (BaseElement)bag.UI;
 

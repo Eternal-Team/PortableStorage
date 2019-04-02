@@ -17,6 +17,7 @@ using Utility = PortableStorage.Global.Utility;
 namespace PortableStorage
 {
 	// todo: add bag slot
+	// bug: don't allow bags to be inside bags
 
 	public class PortableStorage : Mod
 	{
@@ -84,26 +85,26 @@ namespace PortableStorage
 		
 		public override void UpdateUI(GameTime gameTime)
 		{
-			if (!Main.playerInventory)
-			{
-				List<IBagPanel> bagPanels = PanelUI.UI.Elements.Cast<IBagPanel>().ToList();
-				for (int i = 0; i < bagPanels.Count; i++)
-				{
-					BaseBag panel = bagPanels[i].Bag;
-					bagCache.Add(panel);
-					PanelUI.UI.CloseUI(panel);
-				}
-			}
-			else
-			{
-				while (bagCache.Count > 0)
-				{
-					PanelUI.UI.OpenUI(bagCache[0]);
-					bagCache.RemoveAt(0);
-				}
-			}
+            if (!Main.playerInventory)
+            {
+                List<IBagPanel> bagPanels = PanelUI.UI.Elements.Cast<IBagPanel>().ToList();
+                for (int i = 0; i < bagPanels.Count; i++)
+                {
+                    BaseBag panel = bagPanels[i].Bag;
+                    bagCache.Add(panel);
+                    PanelUI.UI.CloseUI(panel);
+                }
+            }
+            else
+            {
+                while (bagCache.Count > 0)
+                {
+                    PanelUI.UI.OpenUI(bagCache[0]);
+                    bagCache.RemoveAt(0);
+                }
+            }
 
-			PanelUI?.Update(gameTime);
+            PanelUI?.Update(gameTime);
 		}
 
 		public override void PreSaveAndQuit()

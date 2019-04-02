@@ -22,6 +22,8 @@ namespace PortableStorage.Global
 
 		public override bool OnPickup(Item item, Player player)
 		{
+			// note: pickup sound
+
 			if (item.IsCoin())
 			{
 				Wallet wallet = player.inventory.OfType<Wallet>().FirstOrDefault();
@@ -45,7 +47,7 @@ namespace PortableStorage.Global
 			}
 			else if (item.ammo > 0)
 			{
-				BaseAmmoBag ammoBag = player.inventory.OfType<BaseAmmoBag>().FirstOrDefault(bag => bag.Handler.HasSpace(item) && bag.Handler.stacks.Any(item1 => item1.type == item.type));
+				BaseAmmoBag ammoBag = player.inventory.OfType<BaseAmmoBag>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
 
 				if (ammoBag != null)
 				{

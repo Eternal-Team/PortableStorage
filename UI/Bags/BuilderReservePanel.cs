@@ -44,7 +44,7 @@ namespace PortableStorage.UI.Bags
 			BuilderReserve devNull = (BuilderReserve)Bag;
 			for (int i = 0; i < Bag.Handler.stacks.Count; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(Bag, i);
+				UIContainerSlot slot = new UIContainerSlot(() => Bag, i);
 				slot.ClickOverride += () =>
 				{
 					if (!slot.Item.IsAir && Main.keyState.IsKeyDown(Keys.RightShift))
