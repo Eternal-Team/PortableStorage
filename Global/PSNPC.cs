@@ -25,7 +25,16 @@ namespace PortableStorage.Global
 					shop.item[nextSlot].SetDefaults(mod.ItemType<AmmoPouch>());
 					nextSlot++;
 					break;
+				case NPCID.SkeletonMerchant:
+					shop.item[nextSlot].SetDefaults(mod.ItemType<SkeletalBag>());
+					nextSlot++;
+					break;
 			}
+		}
+
+		public override void NPCLoot(NPC npc)
+		{
+			if (npc.type == NPCID.UndeadMiner && Main.rand.NextBool(10)) Item.NewItem(npc.getRect(), mod.ItemType<MinersBackpack>());
 		}
 	}
 }

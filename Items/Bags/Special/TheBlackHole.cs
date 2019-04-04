@@ -117,7 +117,7 @@ namespace PortableStorage.Items.Bags
 						}
 					}
 
-					if (Main.netMode == 1) NetMessage.SendData(MessageID.SyncItem, -1, -1, null, i);
+					if (Main.netMode == NetmodeID.MultiplayerClient) NetMessage.SendData(MessageID.SyncItem, -1, -1, null, i);
 				}
 			}
 		}

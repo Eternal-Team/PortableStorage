@@ -32,8 +32,12 @@ namespace PortableStorage.UI
 
 		public void HandleUI(BaseBag bag)
 		{
-			if (bag.UI != null) CloseUI(bag);
-			else OpenUI(bag);
+			if (bag.UI != null || PortableStorage.Instance.bagCache.Contains(bag)) CloseUI(bag);
+			else
+			{
+				Main.playerInventory = true;
+				OpenUI(bag);
+			}
 		}
 
 		public void CloseUI(BaseBag bag)
@@ -70,35 +74,5 @@ namespace PortableStorage.UI
 
 			Main.PlaySound(bag.OpenSound);
 		}
-
-		//public void HandleUI(BaseQETE te)
-		//{
-		//	if (te.UIInternal != null) CloseUI(te);
-		//	else OpenUI(te);
-		//}
-
-		//public void CloseUI(BaseQETE te)
-		//{
-		//	if (te.UIInternal == null) return;
-
-		//	te.UIPosition = te.UIInternal.Position;
-		//	Elements.Remove(te.UIInternal);
-		//	Main.PlaySound(te.CloseSound);
-		//}
-
-		//public void OpenUI(BaseQETE te)
-		//{
-		//	BaseTEPanel teUI = (BaseTEPanel)Activator.CreateInstance(te.UIType);
-		//	teUI.tileEntity = te;
-		//	teUI.Activate();
-		//	if (te.UIPosition != null)
-		//	{
-		//		teUI.HAlign = teUI.VAlign = 0f;
-		//		teUI.Position = te.UIPosition.Value;
-		//	}
-
-		//	Append(teUI);
-		//	Main.PlaySound(te.OpenSound);
-		//}
 	}
 }

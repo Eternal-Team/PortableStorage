@@ -24,7 +24,7 @@ namespace PortableStorage
 		public static PortableStorage Instance;
 
 		public GUI<PanelUI> PanelUI;
-		private List<BaseBag> bagCache = new List<BaseBag>();
+		internal List<BaseBag> bagCache = new List<BaseBag>();
 
         public override void Load()
 		{
@@ -37,7 +37,7 @@ namespace PortableStorage
 			if (!Main.dedServ)
 			{
 				PanelUI = BaseLibrary.Utility.SetupGUI<PanelUI>();
-				PanelUI.Visible = true;
+				PanelUI.Visible += () => PanelUI.UI.Elements.Count > 0;
 			}
 		}
 
@@ -52,14 +52,20 @@ namespace PortableStorage
 
 		public override object Call(params object[] args)
 		{
-			if (args.Length < 1 || !(args[0] is string command)) return base.Call(args);
+			if (args.Length != 2 || !(args[0] is string command)) return base.Call(args);
 
 			switch (command)
 			{
-				case "RegisterIngredient" when args.Length == 2 && args[1] is short ID && !Utility.AlchemistBagWhitelist.Contains(ID):
+				case "RegisterIngredient" when args[1] is short ID && !Utility.AlchemistBagWhitelist.Contains(ID):
 				{
 					Utility.AlchemistBagWhitelist.Add(ID);
 					Logger.Info($"Ingredient '{ID}' added to Alchemist's Bag whitelist!");
+					break;
+				}
+				case "RegisterOre" when args[1] is short ID && !Utility.OreWhitelist.Contains(ID):
+				{
+					Utility.OreWhitelist.Add(ID);
+					Logger.Info($"Ore '{ID}' added to Ore whitelist!");
 					break;
 				}
 			}

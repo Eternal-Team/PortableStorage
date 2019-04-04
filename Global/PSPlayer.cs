@@ -37,7 +37,7 @@ namespace PortableStorage.Global
 				// note: hook QE stuff here
 				ItemHandler container = (panel as IBagPanel)?.Bag.Handler;
 				if (container == null) continue;
-
+				// bug: find one with the same type and stack<max
 				for (int i = 0; i < container.Slots; i++)
 				{
 					inventory[slot] = container.InsertItem(i, item);

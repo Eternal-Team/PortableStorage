@@ -42,6 +42,8 @@ namespace PortableStorage.Global
 
 					for (int i = 0; i < 4; i++) wallet.Handler.OnContentsChanged.Invoke(i);
 
+					Main.PlaySound(SoundID.CoinPickup);
+
 					return false;
 				}
 			}
@@ -49,11 +51,30 @@ namespace PortableStorage.Global
 			{
 				BaseAmmoBag ammoBag = player.inventory.OfType<BaseAmmoBag>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
 
+				// bug: find one with the same type and stack<max
 				if (ammoBag != null)
 				{
+					Main.PlaySound(SoundID.Grab);
+
 					for (int j = 0; j < ammoBag.Handler.Slots; j++)
 					{
 						item = ammoBag.Handler.InsertItem(j, item);
+
+						if (item.IsAir || !item.active) {return false;}
+					}
+				}
+			}
+			else if (Utility.OreWhitelist.Contains(item.type))
+			{
+				MinersBackpack minersBackpack = player.inventory.OfType<MinersBackpack>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
+
+				if (minersBackpack != null)
+				{
+					Main.PlaySound(SoundID.Grab);
+
+					for (int j = 0; j < minersBackpack.Handler.Slots; j++)
+					{
+						item = minersBackpack.Handler.InsertItem(j, item);
 
 						if (item.IsAir || !item.active) return false;
 					}

@@ -10,7 +10,7 @@ namespace PortableStorage.Global
 	public static class Utility
 	{
 		public static readonly Dictionary<string, MultiValueDictionary<int, int>> Ammos = new Dictionary<string, MultiValueDictionary<int, int>>();
-
+		
 		public static List<int> AlchemistBagWhitelist { get; internal set; } = new List<int>
 		{
 			ItemID.Bottle,
@@ -72,6 +72,30 @@ namespace PortableStorage.Global
 			ItemID.FragmentSolar,
 			ItemID.FragmentStardust,
 			ItemID.FragmentVortex
+		};
+
+		public static List<int> OreWhitelist { get; internal set; } = new List<int>
+		{
+			ItemID.LunarOre,
+			ItemID.FossilOre,
+			ItemID.TinOre,
+			ItemID.CrimtaneOre,
+			ItemID.LeadOre,
+			ItemID.TungstenOre,
+			ItemID.PlatinumOre,
+			ItemID.IronOre,
+			ItemID.CopperOre,
+			ItemID.GoldOre,
+			ItemID.SilverOre,
+			ItemID.DemoniteOre,
+			ItemID.CobaltOre,
+			ItemID.MythrilOre,
+			ItemID.AdamantiteOre,
+			ItemID.ChlorophyteOre,
+			ItemID.OrichalcumOre,
+			ItemID.TitaniumOre,
+			ItemID.PalladiumOre,
+			ItemID.Hellstone
 		};
 
 		internal static void PostSetupContent()

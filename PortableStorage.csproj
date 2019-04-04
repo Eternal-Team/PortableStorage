@@ -45,6 +45,8 @@
     <Compile Include="Hooking\Hooking_Other.cs" />
     <Compile Include="Hooking\Hooking_Player.cs" />
     <Compile Include="Hooking\Hooking_UI.cs" />
+    <Compile Include="Items\Bags\Normal\SkeletalBag.cs" />
+    <Compile Include="Items\Bags\Special\MinersBackpack.cs" />
     <Compile Include="Items\Bags\Special\NinjaArsenalBelt.cs" />
     <Compile Include="Items\Bags\Special\AlchemistBag.cs" />
     <Compile Include="Items\Bags\Ammo\BaseAmmoBag.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="Tiles\TileQETank.cs" />
     <Compile Include="Tiles\TileQEChest.cs" />
     <Compile Include="UI\Bags\AlchemistBagPanel.cs" />
+    <Compile Include="UI\Bags\MinersBackpackPanel.cs" />
     <Compile Include="UI\Bags\NinjaArsenalBeltPanel.cs" />
     <Compile Include="UI\Bags\BuilderReservePanel.cs" />
     <Compile Include="UI\Bags\AmmoBagPanel.cs" />
