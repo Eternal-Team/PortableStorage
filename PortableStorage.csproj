@@ -42,7 +42,6 @@
     <Compile Include="Global\PSWorld.cs" />
     <Compile Include="Global\Utility.cs" />
     <Compile Include="Hooking\Hooking.cs" />
-    <Compile Include="Hooking\Hooking_Other.cs" />
     <Compile Include="Hooking\Hooking_Player.cs" />
     <Compile Include="Hooking\Hooking_UI.cs" />
     <Compile Include="Items\Bags\Normal\SkeletalBag.cs" />

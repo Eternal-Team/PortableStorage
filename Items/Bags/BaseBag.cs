@@ -12,7 +12,7 @@ using TerrariaOverhaul;
 
 namespace PortableStorage.Items.Bags
 {
-	public abstract class BaseBag : BaseItem, IItemHandler
+	public abstract class BaseBag : BaseItem, IItemHandler, ICraftingStorage
 	{
 		public override bool CloneNewInstances => true;
 

@@ -27,9 +27,6 @@ namespace PortableStorage.Hooking
 			Player.QuickBuff += Player_QuickBuff;
 			
 			HookEndpointManager.Add(typeof(Terraria.Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Func<Func<Terraria.Player, int, int, bool>, Terraria.Player, int, int, bool>(Player_CanBuyItem));
-
-			Recipe.FindRecipes += Recipe_FindRecipes;
-			Recipe.Create += Recipe_Create;
 		}
     }
 }
