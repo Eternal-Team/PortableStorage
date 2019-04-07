@@ -4,6 +4,7 @@ using System.Linq;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using MonoMod.Utils;
+using PortableStorage.Items.Bags;
 using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ID;
@@ -49,7 +50,14 @@ namespace PortableStorage.Global
 
 			return true;
 		}
-		
+
+		public override void CatchFish(Item fishingRod, Item bait, int power, int liquidType, int poolSize, int worldLayer, int questFish, ref int caughtType, ref bool junk)
+		{
+			if (junk) return;
+
+			if (liquidType == 0 && worldLayer == 3 && Main.rand.NextBool(200 / (power / 100))) caughtType = mod.ItemType<FishingBelt>();
+		}
+
 		public override TagCompound Save()
 		{
 			return new TagCompound

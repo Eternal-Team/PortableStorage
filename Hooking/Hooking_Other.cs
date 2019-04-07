@@ -14,6 +14,8 @@ namespace PortableStorage.Hooking
 {
 	public static partial class Hooking
 	{
+		// todo: move to container library, ICraftingInventory
+
 		private static void Recipe_Create(Recipe.orig_Create orig, Terraria.Recipe self)
 		{
 			for (int i = 0; i < Terraria.Recipe.maxRequirements; i++)
