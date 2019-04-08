@@ -4,7 +4,8 @@ using BaseLibrary;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.Items.Bags;
+using PortableStorage.Items.Ammo;
+using PortableStorage.Items.Special;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -22,8 +23,6 @@ namespace PortableStorage.Global
 
 		public override bool OnPickup(Item item, Player player)
 		{
-			// note: pickup sound
-
 			if (item.IsCoin())
 			{
 				Wallet wallet = player.inventory.OfType<Wallet>().FirstOrDefault();
@@ -60,7 +59,10 @@ namespace PortableStorage.Global
 					{
 						item = ammoBag.Handler.InsertItem(j, item);
 
-						if (item.IsAir || !item.active) {return false;}
+						if (item.IsAir || !item.active)
+						{
+							return false;
+						}
 					}
 				}
 			}

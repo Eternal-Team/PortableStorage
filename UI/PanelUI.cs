@@ -6,8 +6,7 @@ using BaseLibrary.UI.Elements;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.Global;
-using PortableStorage.Items.Bags;
-using PortableStorage.UI.Bags;
+using PortableStorage.Items;
 using Terraria;
 
 namespace PortableStorage.UI

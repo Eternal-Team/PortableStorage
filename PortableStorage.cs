@@ -5,9 +5,8 @@ using BaseLibrary;
 using BaseLibrary.UI;
 using Microsoft.Xna.Framework;
 using PortableStorage.Global;
-using PortableStorage.Items.Bags;
+using PortableStorage.Items;
 using PortableStorage.UI;
-using PortableStorage.UI.Bags;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -26,7 +25,7 @@ namespace PortableStorage
 		public GUI<PanelUI> PanelUI;
 		internal List<BaseBag> bagCache = new List<BaseBag>();
 
-        public override void Load()
+		public override void Load()
 		{
 			Instance = this;
 
@@ -62,6 +61,7 @@ namespace PortableStorage
 					Logger.Info($"Ingredient '{ID}' added to Alchemist's Bag whitelist!");
 					break;
 				}
+
 				case "RegisterOre" when args[1] is short ID && !Utility.OreWhitelist.Contains(ID):
 				{
 					Utility.OreWhitelist.Add(ID);
@@ -88,29 +88,29 @@ namespace PortableStorage
 
 			if (HotbarIndex != -1 && PanelUI != null) layers.Insert(HotbarIndex + 1, PanelUI.InterfaceLayer);
 		}
-		
+
 		public override void UpdateUI(GameTime gameTime)
 		{
-            if (!Main.playerInventory)
-            {
-                List<IBagPanel> bagPanels = PanelUI.UI.Elements.Cast<IBagPanel>().ToList();
-                for (int i = 0; i < bagPanels.Count; i++)
-                {
-                    BaseBag panel = bagPanels[i].Bag;
-                    bagCache.Add(panel);
-                    PanelUI.UI.CloseUI(panel);
-                }
-            }
-            else
-            {
-                while (bagCache.Count > 0)
-                {
-                    PanelUI.UI.OpenUI(bagCache[0]);
-                    bagCache.RemoveAt(0);
-                }
-            }
+			if (!Main.playerInventory)
+			{
+				List<IBagPanel> bagPanels = PanelUI.UI.Elements.Cast<IBagPanel>().ToList();
+				for (int i = 0; i < bagPanels.Count; i++)
+				{
+					BaseBag panel = bagPanels[i].Bag;
+					bagCache.Add(panel);
+					PanelUI.UI.CloseUI(panel);
+				}
+			}
+			else
+			{
+				while (bagCache.Count > 0)
+				{
+					PanelUI.UI.OpenUI(bagCache[0]);
+					bagCache.RemoveAt(0);
+				}
+			}
 
-            PanelUI?.Update(gameTime);
+			PanelUI?.Update(gameTime);
 		}
 
 		public override void PreSaveAndQuit()

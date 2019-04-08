@@ -4,8 +4,8 @@ using System.Linq;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using MonoMod.Utils;
-using PortableStorage.Items.Bags;
-using PortableStorage.UI.Bags;
+using PortableStorage.Items.Special;
+using PortableStorage.UI;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -35,7 +35,6 @@ namespace PortableStorage.Global
 			{
 				if (item.favorited || item.IsAir) return false;
 
-				// note: hook QE stuff here
 				ItemHandler container = (panel as IBagPanel)?.Bag.Handler;
 				if (container == null) continue;
 				// bug: find one with the same type and stack<max

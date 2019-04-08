@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using BaseLibrary;
 using Microsoft.Xna.Framework;
-using PortableStorage.Items.Bags;
+using PortableStorage.Items;
+using PortableStorage.Items.Ammo;
+using PortableStorage.Items.Special;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.UI;
@@ -624,7 +626,7 @@ namespace PortableStorage.Hooking
 					}
 					else
 					{
-						self.inventory[num].SetDefaults(74, false);
+						self.inventory[num].SetDefaults(74);
 						actualPrice -= 1000000;
 					}
 				}
@@ -665,7 +667,7 @@ namespace PortableStorage.Hooking
 					}
 					else
 					{
-						self.inventory[num2].SetDefaults(73, false);
+						self.inventory[num2].SetDefaults(73);
 						actualPrice -= 10000;
 					}
 				}
@@ -706,7 +708,7 @@ namespace PortableStorage.Hooking
 					}
 					else
 					{
-						self.inventory[num3].SetDefaults(72, false);
+						self.inventory[num3].SetDefaults(72);
 						actualPrice -= 100;
 					}
 				}
@@ -742,7 +744,7 @@ namespace PortableStorage.Hooking
 					}
 					else
 					{
-						self.inventory[num4].SetDefaults(71, false);
+						self.inventory[num4].SetDefaults(71);
 						actualPrice--;
 					}
 				}

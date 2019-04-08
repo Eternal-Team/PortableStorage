@@ -1,4 +1,4 @@
-﻿using PortableStorage.Items.Bags;
+﻿using PortableStorage.Items.Special;
 using Terraria;
 using Terraria.ModLoader;
 

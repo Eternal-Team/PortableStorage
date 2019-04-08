@@ -1,4 +1,6 @@
-﻿using PortableStorage.Items.Bags;
+﻿using PortableStorage.Items.Ammo;
+using PortableStorage.Items.Normal;
+using PortableStorage.Items.Special;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

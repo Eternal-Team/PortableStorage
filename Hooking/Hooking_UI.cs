@@ -2,7 +2,8 @@
 using BaseLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.Items.Bags;
+using PortableStorage.Items;
+using PortableStorage.Items.Ammo;
 using PortableStorage.UI;
 using Terraria;
 using Terraria.GameContent.UI;
@@ -299,7 +300,7 @@ namespace PortableStorage.Hooking
 
 				Color newColor = color;
 				float num8 = 1f;
-				Terraria.UI.ItemSlot.GetItemLight(ref newColor, ref num8, item, false);
+				Terraria.UI.ItemSlot.GetItemLight(ref newColor, ref num8, item);
 				float num9 = 1f;
 				if (rectangle2.Width > 32 || rectangle2.Height > 32)
 				{
