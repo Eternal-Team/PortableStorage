@@ -34,7 +34,6 @@
     <LangVersion>7</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Global\Colors.cs" />
     <Compile Include="Global\PSNPC.cs" />
     <Compile Include="Global\PSItem.cs" />
     <Compile Include="Global\PSPlayer.cs" />
@@ -66,7 +65,6 @@
     <Compile Include="Items\Special\TheBlackHole.cs" />
     <Compile Include="PortableStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Global\Frequency.cs" />
     <Compile Include="UI\AlchemistBagPanel.cs" />
     <Compile Include="UI\FishingBeltPanel.cs" />
     <Compile Include="UI\MinersBackpackPanel.cs" />

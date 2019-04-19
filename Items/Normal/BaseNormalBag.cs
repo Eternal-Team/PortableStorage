@@ -27,7 +27,7 @@ namespace PortableStorage.Items.Normal
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
-			Handler.IsItemValid += (handler, slot, item) => item.modItem != this;
+			Handler.IsItemValid += (handler, slot, item) => !(item.modItem is BaseBag);
 		}
 
 		public override void SetStaticDefaults()

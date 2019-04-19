@@ -4,19 +4,16 @@ using System.Linq;
 using BaseLibrary;
 using BaseLibrary.UI;
 using Microsoft.Xna.Framework;
-using PortableStorage.Global;
 using PortableStorage.Items;
 using PortableStorage.UI;
 using Terraria;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 using Terraria.UI;
 using Utility = PortableStorage.Global.Utility;
 
 namespace PortableStorage
 {
 	// todo: add bag slot
-	// bug: don't allow bags to be inside bags
 
 	public class PortableStorage : Mod
 	{
@@ -29,7 +26,6 @@ namespace PortableStorage
 		{
 			Instance = this;
 
-			TagSerializer.AddSerializer(new FrequencySerializer());
 
 			Hooking.Hooking.Initialize();
 
