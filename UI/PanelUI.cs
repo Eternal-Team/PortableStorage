@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BaseLibrary;
 using BaseLibrary.UI;
 using BaseLibrary.UI.Elements;
@@ -31,7 +32,11 @@ namespace PortableStorage.UI
 
 		public void HandleUI(BaseBag bag)
 		{
-			if (bag.UI != null || PortableStorage.Instance.bagCache.Contains(bag)) CloseUI(bag);
+			if (bag.UI != null || PortableStorage.Instance.bagCache.Contains(bag))
+			{
+				if (bag.UI != null) CloseUI(bag);
+				else PortableStorage.Instance.bagCache.Remove(bag);
+			}
 			else
 			{
 				Main.playerInventory = true;
