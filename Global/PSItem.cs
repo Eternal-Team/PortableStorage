@@ -50,19 +50,22 @@ namespace PortableStorage.Global
 			{
 				BaseAmmoBag ammoBag = player.inventory.OfType<BaseAmmoBag>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
 
-				// bug: find one with the same type and stack<max
 				if (ammoBag != null)
 				{
 					Main.PlaySound(SoundID.Grab);
+
+					int index = ammoBag.Handler.stacks.FindIndex(other => other.type == item.type && other.stack < other.maxStack);
+					if (index != -1)
+					{
+						item = ammoBag.Handler.InsertItem(index, item);
+						if (item.IsAir || !item.active) return false;
+					}
 
 					for (int j = 0; j < ammoBag.Handler.Slots; j++)
 					{
 						item = ammoBag.Handler.InsertItem(j, item);
 
-						if (item.IsAir || !item.active)
-						{
-							return false;
-						}
+						if (item.IsAir || !item.active) return false;
 					}
 				}
 			}
@@ -74,9 +77,39 @@ namespace PortableStorage.Global
 				{
 					Main.PlaySound(SoundID.Grab);
 
+					int index = minersBackpack.Handler.stacks.FindIndex(other => other.type == item.type && other.stack < other.maxStack);
+					if (index != -1)
+					{
+						item = minersBackpack.Handler.InsertItem(index, item);
+						if (item.IsAir || !item.active) return false;
+					}
+
 					for (int j = 0; j < minersBackpack.Handler.Slots; j++)
 					{
 						item = minersBackpack.Handler.InsertItem(j, item);
+
+						if (item.IsAir || !item.active) return false;
+					}
+				}
+			}
+			else if (Utility.AlchemistBagWhitelist.Contains(item.type))
+			{
+				AlchemistBag alchemistBag = player.inventory.OfType<AlchemistBag>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
+
+				if (alchemistBag != null)
+				{
+					Main.PlaySound(SoundID.Grab);
+
+					int index = alchemistBag.Handler.stacks.FindIndex(other => other.type == item.type && other.stack < other.maxStack);
+					if (index != -1)
+					{
+						item = alchemistBag.Handler.InsertItem(index, item);
+						if (item.IsAir || !item.active) return false;
+					}
+
+					for (int j = 0; j < alchemistBag.Handler.Slots; j++)
+					{
+						item = alchemistBag.Handler.InsertItem(j, item);
 
 						if (item.IsAir || !item.active) return false;
 					}

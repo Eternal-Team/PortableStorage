@@ -111,11 +111,17 @@ namespace PortableStorage.Items.Special
 					}
 					else
 					{
-						for (int j = 0; j < Handler.Slots; j++)
+						Item item1 = item;
+						int index = Handler.stacks.FindIndex(other => other.type == item1.type && other.stack < other.maxStack);
+						if (index != -1) item = Handler.InsertItem(index, item);
+						else
 						{
-							item = Handler.InsertItem(j, item);
+							for (int j = 0; j < Handler.Slots; j++)
+							{
+								item = Handler.InsertItem(j, item);
 
-							if (item.IsAir || !item.active) break;
+								if (item.IsAir || !item.active) break;
+							}
 						}
 					}
 

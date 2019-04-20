@@ -37,7 +37,14 @@ namespace PortableStorage.Global
 
 				ItemHandler container = (panel as IBagPanel)?.Handler;
 				if (container == null) continue;
-				// bug: find one with the same type and stack<max
+
+				int index = container.stacks.FindIndex(other => other.type == item.type && other.stack < other.maxStack);
+				if (index != -1)
+				{
+					item = container.InsertItem(index, item);
+					if (item.IsAir || !item.active) return false;
+				}
+
 				for (int i = 0; i < container.Slots; i++)
 				{
 					inventory[slot] = container.InsertItem(i, item);
