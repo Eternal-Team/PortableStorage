@@ -29,13 +29,13 @@ namespace PortableStorage.Global
 
 			if (context != ItemSlot.Context.InventoryItem && context != ItemSlot.Context.InventoryCoin && context != ItemSlot.Context.InventoryAmmo) return false;
 
-			if (!PortableStorage.Instance.PanelUI.UI.Elements.Any(panel => ((IBagPanel)panel).Bag.Handler.HasSpace(item))) return false;
+			if (!PortableStorage.Instance.PanelUI.UI.Elements.Any(panel => ((IBagPanel)panel).Handler.HasSpace(item))) return false;
 
 			foreach (UIElement panel in PortableStorage.Instance.PanelUI.UI.Elements)
 			{
 				if (item.favorited || item.IsAir) return false;
 
-				ItemHandler container = (panel as IBagPanel)?.Bag.Handler;
+				ItemHandler container = (panel as IBagPanel)?.Handler;
 				if (container == null) continue;
 				// bug: find one with the same type and stack<max
 				for (int i = 0; i < container.Slots; i++)

@@ -212,8 +212,6 @@ namespace PortableStorage.Global
 			Add("Coin", AmmoID.Coin);
 		}
 
-		
-
 		public static RecipeGroup yoyoStringGroup;
 		public static RecipeGroup tier1HMBarsGroup;
 		public static RecipeGroup ichorFlameGroup;

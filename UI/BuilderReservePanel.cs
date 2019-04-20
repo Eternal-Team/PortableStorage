@@ -41,7 +41,7 @@ namespace PortableStorage.UI
 			};
 			Append(gridItems);
 
-			BuilderReserve devNull = (BuilderReserve)Bag;
+			BuilderReserve devNull = Bag;
 			for (int i = 0; i < Bag.Handler.stacks.Count; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(() => Bag, i);
@@ -69,7 +69,7 @@ namespace PortableStorage.UI
 
 		public void RefreshTextures()
 		{
-			BuilderReserve devNull = (BuilderReserve)Bag;
+			BuilderReserve devNull = Bag;
 			if (devNull.selectedIndex >= 0)
 			{
 				foreach (UIContainerSlot slot in gridItems.items) slot.backgroundTexture = devNull.selectedIndex == slot.slot ? Main.inventoryBack15Texture : Main.inventoryBackTexture;

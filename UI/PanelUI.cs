@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using BaseLibrary;
 using BaseLibrary.UI;
 using BaseLibrary.UI.Elements;
@@ -32,10 +31,10 @@ namespace PortableStorage.UI
 
 		public void HandleUI(BaseBag bag)
 		{
-			if (bag.UI != null || PortableStorage.Instance.bagCache.Contains(bag))
+			if (bag.UI != null || PortableStorage.Instance.BagCache.Contains(bag.ID))
 			{
 				if (bag.UI != null) CloseUI(bag);
-				else PortableStorage.Instance.bagCache.Remove(bag);
+				else PortableStorage.Instance.BagCache.Remove(bag.ID);
 			}
 			else
 			{
@@ -48,7 +47,7 @@ namespace PortableStorage.UI
 		{
 			BaseElement element = (BaseElement)bag.UI;
 
-			ContainerLibrary.ContainerLibrary.elements.Remove((IItemHandlerUI)element);
+			ContainerLibrary.ContainerLibrary.ItemHandlerUI.Remove((IItemHandlerUI)element);
 			Main.LocalPlayer.GetModPlayer<PSPlayer>().UIPositions[bag.ID] = element.Position;
 			Elements.Remove(element);
 			bag.UI = null;
@@ -74,7 +73,7 @@ namespace PortableStorage.UI
 			}
 
 			Append(element);
-			ContainerLibrary.ContainerLibrary.elements.Add((IItemHandlerUI)element);
+			ContainerLibrary.ContainerLibrary.ItemHandlerUI.Add((IItemHandlerUI)element);
 
 			Main.PlaySound(bag.OpenSound);
 		}

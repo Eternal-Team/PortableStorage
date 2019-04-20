@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BaseLibrary;
@@ -20,7 +21,7 @@ namespace PortableStorage
 		public static PortableStorage Instance;
 
 		public GUI<PanelUI> PanelUI;
-		internal List<BaseBag> bagCache = new List<BaseBag>();
+		internal List<Guid> BagCache = new List<Guid>();
 
 		public override void Load()
 		{
@@ -87,22 +88,25 @@ namespace PortableStorage
 
 		public override void UpdateUI(GameTime gameTime)
 		{
+			// note: central behaviour from BaseLibrary
+
 			if (!Main.playerInventory)
 			{
 				List<IBagPanel> bagPanels = PanelUI.UI.Elements.Cast<IBagPanel>().ToList();
 				for (int i = 0; i < bagPanels.Count; i++)
 				{
-					BaseBag panel = bagPanels[i].Bag;
-					bagCache.Add(panel);
+					BaseBag panel = Main.LocalPlayer.inventory.OfType<BaseBag>().FirstOrDefault(x => x.ID == bagPanels[i].ID);
+					BagCache.Add(bagPanels[i].ID);
 					PanelUI.UI.CloseUI(panel);
 				}
 			}
 			else
 			{
-				while (bagCache.Count > 0)
+				while (BagCache.Count > 0)
 				{
-					PanelUI.UI.OpenUI(bagCache[0]);
-					bagCache.RemoveAt(0);
+					BaseBag panel = Main.LocalPlayer.inventory.OfType<BaseBag>().FirstOrDefault(x => x.ID == BagCache[0]);
+					PanelUI.UI.OpenUI(panel);
+					BagCache.RemoveAt(0);
 				}
 			}
 
@@ -112,7 +116,7 @@ namespace PortableStorage
 		public override void PreSaveAndQuit()
 		{
 			PanelUI?.UI.Elements.Clear();
-			bagCache.Clear();
+			BagCache.Clear();
 		}
 
 		public override void HandlePacket(BinaryReader reader, int whoAmI) => Utility.Networking.HandlePacket(reader, whoAmI);

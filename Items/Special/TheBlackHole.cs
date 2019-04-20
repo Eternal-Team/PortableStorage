@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BaseLibrary;
@@ -8,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Global;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -16,18 +16,18 @@ namespace PortableStorage.Items.Special
 {
 	public class TheBlackHole : BaseBag
 	{
-		private const float angleDecrement = 0.05235988F;
-		private static readonly Vector2 origin = new Vector2(30);
+		public override string Texture => "PortableStorage/Textures/Items/TheBlackHole";
+
 		private const int maxRange = 160;
 
 		public bool active;
-		public float angle;
 
 		public TheBlackHole()
 		{
 			Handler = new ItemHandler(27);
 			Handler.OnContentsChanged += slot =>
 			{
+				// todo: cleanup this
 				if (Main.netMode == NetmodeID.MultiplayerClient)
 				{
 					Player player = Main.player[item.owner];
@@ -52,15 +52,17 @@ namespace PortableStorage.Items.Special
 		{
 			DisplayName.SetDefault("The Black Hole");
 			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of items\nCollects them in a {maxRange / 16} block radius");
+
 			ItemID.Sets.ItemNoGravity[item.type] = true;
+			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(8, 8));
 		}
 
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
 
-			item.width = 32;
-			item.height = 32;
+			item.width = 28;
+			item.height = 28;
 			item.rare = ItemRarityID.Purple;
 			item.noUseGraphic = true;
 		}
@@ -124,24 +126,18 @@ namespace PortableStorage.Items.Special
 
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			if ((angle -= angleDecrement) < 0f) angle = MathHelper.TwoPi;
+			Texture2D texture = ModContent.GetTexture("PortableStorage/Textures/Items/TheBlackHole");
 
-			scale *= 32f / 60f;
-			float scaleMultiplier = !active ? 1f : (float)Math.Sin(angle).Remap(-1f, 1f, 0.4f, 1f);
-
-			spriteBatch.Draw(Main.extraTexture[50], position + TheBlackHole.origin * scale, null, Color.White, angle, origin + TheBlackHole.origin, scale * scaleMultiplier, SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture, position, new Rectangle(0, 28 * (active ? Main.itemAnimations[item.type].Frame : 6), 28, 28), drawColor, 0f, origin, scale, SpriteEffects.None, 0f);
 
 			return false;
 		}
 
 		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
 		{
-			if ((angle -= angleDecrement) < 0f) angle = MathHelper.TwoPi;
+			Texture2D texture = ModContent.GetTexture("PortableStorage/Textures/Items/TheBlackHole");
 
-			scale *= 32f / 60f;
-			float scaleMultiplier = !active ? 1f : (float)Math.Sin(angle).Remap(-1f, 1f, 0.4f, 1f);
-
-			spriteBatch.Draw(Main.extraTexture[50], item.position - Main.screenPosition + origin, null, lightColor, angle + rotation, origin, scale * scaleMultiplier, SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture, item.position - Main.screenPosition + new Vector2(14, 14), new Rectangle(0, 28 * (active ? Main.itemAnimations[item.type].Frame : 6), 28, 28), lightColor, rotation, new Vector2(14), scale, SpriteEffects.None, 0f);
 
 			return false;
 		}

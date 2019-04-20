@@ -12,13 +12,14 @@ namespace PortableStorage.UI
 {
 	public interface IBagPanel
 	{
-		BaseBag Bag { get; }
+		ItemHandler Handler { get; }
 		Guid ID { get; set; }
 	}
 
 	public class BaseBagPanel<T> : UIDraggablePanel, IBagPanel, IItemHandlerUI where T : BaseBag
 	{
-		public BaseBag Bag => Main.LocalPlayer.inventory.Concat(Main.mouseItem).OfType<BaseBag>().FirstOrDefault(x => x.ID == ID);
+		public T Bag => Main.LocalPlayer.inventory.Concat(Main.mouseItem).OfType<T>().FirstOrDefault(x => x.ID == ID);
+
 		public Guid ID { get; set; }
 
 		public UIText textLabel;

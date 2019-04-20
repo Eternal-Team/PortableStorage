@@ -4,7 +4,8 @@ using BaseLibrary.UI.Elements;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.Items.Special;
-using Terraria;
+using Terraria.DataStructures;
+using Terraria.ModLoader;
 
 namespace PortableStorage.UI
 {
@@ -15,21 +16,17 @@ namespace PortableStorage.UI
 			Size = new Vector2(408, 172);
 			this.Center();
 
-			UITexture textureActivation = new UITexture(Main.extraTexture[50], ScaleMode.Stretch)
+			UIAnimatedTexture textureActivation = new UIAnimatedTexture(ModContent.GetTexture("PortableStorage/Textures/Items/TheBlackHole"), new DrawAnimationVertical(8, 8), ScaleMode.Stretch)
 			{
-				Size = new Vector2(20)
+				Size = new Vector2(20),
+				Animate = Bag.active
 			};
-			textureActivation.GetHoverText += () => ((TheBlackHole)Bag).active ? "Deactivate" : "Activate";
+			textureActivation.GetHoverText += () => Bag.active ? "Deactivate" : "Activate";
 			textureActivation.OnClick += (evt, element) =>
 			{
-				TheBlackHole blackHole = (TheBlackHole)Bag;
-				blackHole.active = !blackHole.active;
+				Bag.active = !Bag.active;
+				textureActivation.Animate = Bag.active;
 				// todo: sync
-			};
-			textureActivation.OnPreDraw += spriteBatch =>
-			{
-				TheBlackHole blackHole = (TheBlackHole)Bag;
-				textureActivation.Rotation = blackHole.active ? blackHole.angle : 0f;
 			};
 			Append(textureActivation);
 
