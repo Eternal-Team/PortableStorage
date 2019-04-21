@@ -88,7 +88,7 @@ namespace PortableStorage
 
 		public override void UpdateUI(GameTime gameTime)
 		{
-			// note: central behaviour from BaseLibrary
+			// note: central behaviour from BaseLibrary?
 
 			if (!Main.playerInventory)
 			{

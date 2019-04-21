@@ -26,7 +26,8 @@ namespace PortableStorage.UI
 			{
 				Bag.active = !Bag.active;
 				textureActivation.Animate = Bag.active;
-				// todo: sync
+
+				Bag.Handler.OnContentsChanged?.Invoke(-1);
 			};
 			Append(textureActivation);
 
@@ -45,7 +46,7 @@ namespace PortableStorage.UI
 			buttonClose.OnClick += (evt, element) => PortableStorage.Instance.PanelUI.UI.CloseUI(Bag);
 			Append(buttonClose);
 
-			gridItems = new UIGrid<UIContainerSlot>(9)
+			gridPotions = new UIGrid<UIContainerSlot>(9)
 			{
 				Width = (0, 1),
 				Height = (-28, 1),
@@ -53,12 +54,12 @@ namespace PortableStorage.UI
 				OverflowHidden = true,
 				ListPadding = 4f
 			};
-			Append(gridItems);
+			Append(gridPotions);
 
 			for (int i = 0; i < Bag.Handler.stacks.Count; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(() => Bag, i);
-				gridItems.Add(slot);
+				UIContainerSlot slot = new UIContainerSlot(() => Bag.Handler, i);
+				gridPotions.Add(slot);
 			}
 		}
 	}

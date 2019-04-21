@@ -39,7 +39,3 @@
 //		}
 //	}
 //}
-
-namespace PortableStorage.Items.Ammo
-{
-}
