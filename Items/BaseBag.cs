@@ -17,6 +17,7 @@ namespace PortableStorage.Items
 		public override bool CloneNewInstances => true;
 
 		public ItemHandler Handler { get; set; }
+		public ItemHandler CraftingHandler => Handler;
 
 		public IBagPanel UI;
 

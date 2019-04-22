@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using ContainerLibrary;
 using PortableStorage.Global;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -8,9 +9,11 @@ using Utility = PortableStorage.Global.Utility;
 
 namespace PortableStorage.Items.Special
 {
-	public class AlchemistBag : BaseBag
+	public class AlchemistBag : BaseBag, ICraftingStorage
 	{
 		public ItemHandler HandlerIngredients;
+
+		public new ItemHandler CraftingHandler => HandlerIngredients;
 
 		public AlchemistBag()
 		{

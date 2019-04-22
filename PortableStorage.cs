@@ -6,8 +6,10 @@ using BaseLibrary;
 using BaseLibrary.UI;
 using Microsoft.Xna.Framework;
 using PortableStorage.Items;
+using PortableStorage.Items.Special;
 using PortableStorage.UI;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Utility = PortableStorage.Global.Utility;
@@ -26,14 +28,16 @@ namespace PortableStorage
 		public override void Load()
 		{
 			Instance = this;
-
-
+			
 			Hooking.Hooking.Initialize();
 
 			if (!Main.dedServ)
 			{
 				PanelUI = BaseLibrary.Utility.SetupGUI<PanelUI>();
 				PanelUI.Visible += () => PanelUI.UI.Elements.Count > 0;
+
+				ContainerLibrary.ContainerLibrary.CheckAlchemy += () => (33, Main.LocalPlayer.inventory.OfType<AlchemistBag>().Any());
+				ContainerLibrary.ContainerLibrary.ModifyAdjTiles += () => Main.LocalPlayer.adjTile[TileID.Bottles] = true;
 			}
 		}
 
