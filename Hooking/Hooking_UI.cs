@@ -341,7 +341,7 @@ namespace PortableStorage.Hooking
 						for (int j = 0; j < 58; j++)
 							if (inv[j].ammo == useAmmo)
 								ammoCount += inv[j].stack;
-						
+
 						ammoCount += player.inventory.OfType<BaseAmmoBag>().SelectMany(x => x.Handler.Items).Where(x => x.ammo == useAmmo).Sum(x => x.stack);
 					}
 

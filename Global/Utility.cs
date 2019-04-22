@@ -226,6 +226,19 @@ namespace PortableStorage.Global
 			RecipeGroup.RegisterGroup("PortableStorage:IchorCursedFlame", ichorFlameGroup);
 		}
 
+		public static void SyncBag(this Item item)
+		{
+			if (Main.netMode == NetmodeID.MultiplayerClient)
+			{
+				Player player = Main.player[item.owner];
+
+				int index = player.inventory.ToList().FindIndex(x => x == item);
+				if (index < 0) return;
+
+				NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
+			}
+		}
+
 		public static class Networking
 		{
 			private enum MessageType : byte

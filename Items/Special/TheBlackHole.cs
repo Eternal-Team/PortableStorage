@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using BaseLibrary;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
@@ -25,20 +23,7 @@ namespace PortableStorage.Items.Special
 		public TheBlackHole()
 		{
 			Handler = new ItemHandler(27);
-			Handler.OnContentsChanged += slot =>
-			{
-				// todo: cleanup this
-				if (Main.netMode == NetmodeID.MultiplayerClient)
-				{
-					Player player = Main.player[item.owner];
-
-					List<Item> joined = player.inventory.Concat(player.armor).Concat(player.dye).Concat(player.miscEquips).Concat(player.miscDyes).Concat(player.bank.item).Concat(player.bank2.item).Concat(new[] { player.trashItem }).Concat(player.bank3.item).ToList();
-					int index = joined.FindIndex(x => x == item);
-					if (index < 0) return;
-
-					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
-				}
-			};
+			Handler.OnContentsChanged += slot => item.SyncBag();
 		}
 
 		public override ModItem Clone()

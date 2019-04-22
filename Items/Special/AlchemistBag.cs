@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using ContainerLibrary;
-using Terraria;
+using PortableStorage.Global;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -17,35 +15,11 @@ namespace PortableStorage.Items.Special
 		public AlchemistBag()
 		{
 			Handler = new ItemHandler(18);
-			Handler.OnContentsChanged += slot =>
-			{
-				if (Main.netMode == NetmodeID.MultiplayerClient)
-				{
-					Player player = Main.player[item.owner];
-
-					List<Item> joined = player.inventory.Concat(player.armor).Concat(player.dye).Concat(player.miscEquips).Concat(player.miscDyes).Concat(player.bank.item).Concat(player.bank2.item).Concat(new[] { player.trashItem }).Concat(player.bank3.item).ToList();
-					int index = joined.FindIndex(x => x == item);
-					if (index < 0) return;
-
-					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
-				}
-			};
+			Handler.OnContentsChanged += slot => item.SyncBag();
 			Handler.IsItemValid += (slot, item) => item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph || item.potion && item.healLife > 0 || item.healMana > 0;
 
 			HandlerIngredients = new ItemHandler(63);
-			HandlerIngredients.OnContentsChanged += slot =>
-			{
-				if (Main.netMode == NetmodeID.MultiplayerClient)
-				{
-					Player player = Main.player[item.owner];
-
-					List<Item> joined = player.inventory.Concat(player.armor).Concat(player.dye).Concat(player.miscEquips).Concat(player.miscDyes).Concat(player.bank.item).Concat(player.bank2.item).Concat(new[] { player.trashItem }).Concat(player.bank3.item).ToList();
-					int index = joined.FindIndex(x => x == item);
-					if (index < 0) return;
-
-					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
-				}
-			};
+			HandlerIngredients.OnContentsChanged += slot => item.SyncBag();
 			HandlerIngredients.IsItemValid += (slot, item) => Utility.AlchemistBagWhitelist.Contains(item.type);
 		}
 
