@@ -25,7 +25,7 @@ namespace PortableStorage.Items.Special
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
-			Handler.IsItemValid += (handler, slot, item) => Utility.OreWhitelist.Contains(item.type);
+			Handler.IsItemValid += (slot, item) => Utility.OreWhitelist.Contains(item.type);
 		}
 
 		public override void SetStaticDefaults()

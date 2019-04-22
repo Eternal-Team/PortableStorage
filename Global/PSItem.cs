@@ -29,9 +29,9 @@ namespace PortableStorage.Global
 
 				if (wallet != null)
 				{
-					long addedCoins = Utils.CoinsCount(out bool _, new[] { item }) + wallet.Handler.stacks.CountCoins();
+					long addedCoins = Utils.CoinsCount(out bool _, new[] { item }) + wallet.Handler.Items.CountCoins();
 
-					wallet.Handler.stacks = Utils.CoinsSplit(addedCoins).Select((stack, index) =>
+					wallet.Handler.Items = Utils.CoinsSplit(addedCoins).Select((stack, index) =>
 					{
 						Item coin = new Item();
 						coin.SetDefaults(ItemID.CopperCoin + index);
@@ -54,7 +54,7 @@ namespace PortableStorage.Global
 				{
 					Main.PlaySound(SoundID.Grab);
 
-					int index = ammoBag.Handler.stacks.FindIndex(other => other.type == item.type && other.stack < other.maxStack);
+					int index = ammoBag.Handler.Items.FindIndex(other => other.type == item.type && other.stack < other.maxStack);
 					if (index != -1)
 					{
 						item = ammoBag.Handler.InsertItem(index, item);
@@ -77,7 +77,7 @@ namespace PortableStorage.Global
 				{
 					Main.PlaySound(SoundID.Grab);
 
-					int index = minersBackpack.Handler.stacks.FindIndex(other => other.type == item.type && other.stack < other.maxStack);
+					int index = minersBackpack.Handler.Items.FindIndex(other => other.type == item.type && other.stack < other.maxStack);
 					if (index != -1)
 					{
 						item = minersBackpack.Handler.InsertItem(index, item);
@@ -100,7 +100,7 @@ namespace PortableStorage.Global
 				{
 					Main.PlaySound(SoundID.Grab);
 
-					int index = alchemistBag.Handler.stacks.FindIndex(other => other.type == item.type && other.stack < other.maxStack);
+					int index = alchemistBag.Handler.Items.FindIndex(other => other.type == item.type && other.stack < other.maxStack);
 					if (index != -1)
 					{
 						item = alchemistBag.Handler.InsertItem(index, item);

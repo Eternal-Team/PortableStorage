@@ -30,7 +30,7 @@ namespace PortableStorage.Items.Special
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
-			Handler.IsItemValid += (handler, slot, item) => item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph || item.potion && item.healLife > 0 || item.healMana > 0;
+			Handler.IsItemValid += (slot, item) => item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph || item.potion && item.healLife > 0 || item.healMana > 0;
 
 			HandlerIngredients = new ItemHandler(63);
 			HandlerIngredients.OnContentsChanged += slot =>
@@ -46,7 +46,7 @@ namespace PortableStorage.Items.Special
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
-			HandlerIngredients.IsItemValid += (handler, slot, item) => Utility.AlchemistBagWhitelist.Contains(item.type);
+			HandlerIngredients.IsItemValid += (slot, item) => Utility.AlchemistBagWhitelist.Contains(item.type);
 		}
 
 		public override ModItem Clone()

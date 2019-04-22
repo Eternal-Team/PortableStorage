@@ -24,7 +24,7 @@ namespace PortableStorage.UI
 
 		public UIText textLabel;
 		public UITextButton buttonClose;
-		public UIGrid<UIContainerSlot> gridPotions;
+		public UIGrid<UIContainerSlot> gridItems;
 		public ItemHandler Handler => Bag.Handler;
 		public Texture2D ShiftClickIcon => ModContent.GetTexture("PortableStorage/Textures/MouseCursor");
 	}

@@ -28,7 +28,7 @@ namespace PortableStorage.Items.Special
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
-			Handler.IsItemValid += (handler, slot, item) => item.thrown;
+			Handler.IsItemValid += (slot, item) => item.thrown;
 		}
 
 		public override void SetStaticDefaults()
@@ -54,7 +54,7 @@ namespace PortableStorage.Items.Special
 				Item item = player.inventory[i];
 				if (item == null || item.IsAir || !item.thrown || item.stack == item.maxStack) continue;
 
-				Item itemBag = Handler.stacks.FirstOrDefault(x => x.type == item.type && x.stack > 1);
+				Item itemBag = Handler.Items.FirstOrDefault(x => x.type == item.type && x.stack > 1);
 				if (itemBag != null)
 				{
 					int count = Math.Min(item.maxStack - item.stack, itemBag.stack - 1);

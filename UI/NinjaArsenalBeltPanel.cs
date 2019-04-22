@@ -29,7 +29,7 @@ namespace PortableStorage.UI
 			buttonClose.OnClick += (evt, element) => PortableStorage.Instance.PanelUI.UI.CloseUI(Bag);
 			Append(buttonClose);
 
-			gridPotions = new UIGrid<UIContainerSlot>(9)
+			gridItems = new UIGrid<UIContainerSlot>(9)
 			{
 				Width = (0, 1),
 				Height = (-28, 1),
@@ -37,12 +37,12 @@ namespace PortableStorage.UI
 				OverflowHidden = true,
 				ListPadding = 4f
 			};
-			Append(gridPotions);
+			Append(gridItems);
 
-			for (int i = 0; i < Bag.Handler.stacks.Count; i++)
+			for (int i = 0; i < Bag.Handler.Slots; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(() => Bag.Handler, i);
-				gridPotions.Add(slot);
+				gridItems.Add(slot);
 			}
 		}
 	}

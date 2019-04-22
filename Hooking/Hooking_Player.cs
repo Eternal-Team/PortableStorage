@@ -24,7 +24,7 @@ namespace PortableStorage.Hooking
 			long piggyCount = Utils.CoinsCount(out bool _, self.bank.item);
 			long safeCount = Utils.CoinsCount(out bool _, self.bank2.item);
 			long defendersCount = Utils.CoinsCount(out bool _, self.bank3.item);
-			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.stacks.CountCoins());
+			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins());
 			long combined = Utils.CoinsCombineStacks(out bool _, inventoryCount, piggyCount, safeCount, defendersCount, walletCount);
 
 			return combined >= price;
@@ -45,7 +45,7 @@ namespace PortableStorage.Hooking
 			long piggyCount = Utils.CoinsCount(out bool _, self.bank.item);
 			long safeCount = Utils.CoinsCount(out bool _, self.bank2.item);
 			long defendersCount = Utils.CoinsCount(out bool _, self.bank3.item);
-			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.stacks.CountCoins());
+			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins());
 
 			long combined = Utils.CoinsCombineStacks(out bool _, inventoryCount, piggyCount, safeCount, defendersCount, walletCount);
 
@@ -63,7 +63,7 @@ namespace PortableStorage.Hooking
 			list.Add(self.bank.item);
 			list.Add(self.bank2.item);
 			list.Add(self.bank3.item);
-			list.AddRange(self.inventory.OfType<Wallet>().Select(x => x.Handler.stacks.ToArray()));
+			list.AddRange(self.inventory.OfType<Wallet>().Select(x => x.Handler.Items.ToArray()));
 			for (int i = 0; i < list.Count; i++) ignoredSlots[i] = new List<int>();
 
 			ignoredSlots[0] = new List<int>
@@ -251,7 +251,7 @@ namespace PortableStorage.Hooking
 
 		private static bool Player_HasAmmo(On.Terraria.Player.orig_HasAmmo orig, Player self, Item ammoUser, bool canUse)
 		{
-			if (ammoUser.useAmmo > 0) canUse = self.inventory.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0) || self.inventory.OfType<BaseAmmoBag>().Any(ammoBag => ammoBag.Handler.stacks.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0));
+			if (ammoUser.useAmmo > 0) canUse = self.inventory.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0) || self.inventory.OfType<BaseAmmoBag>().Any(ammoBag => ammoBag.Handler.Items.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0));
 			return canUse;
 		}
 
@@ -259,7 +259,7 @@ namespace PortableStorage.Hooking
 		{
 			Item item = new Item();
 
-			Item firstAmmo = self.inventory.OfType<BaseAmmoBag>().SelectMany(x => x.Handler.stacks).FirstOrDefault(ammo => ammo.ammo == sItem.useAmmo && ammo.stack > 0);
+			Item firstAmmo = self.inventory.OfType<BaseAmmoBag>().SelectMany(x => x.Handler.Items).FirstOrDefault(ammo => ammo.ammo == sItem.useAmmo && ammo.stack > 0);
 			if (firstAmmo != null)
 			{
 				item = firstAmmo;
@@ -403,7 +403,7 @@ namespace PortableStorage.Hooking
 			Item result = null;
 			int healtGain = -self.statLifeMax2;
 
-			foreach (Item item in self.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.stacks).Concat(self.inventory))
+			foreach (Item item in self.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items).Concat(self.inventory))
 			{
 				if (item.stack > 0 && item.type > 0 && item.potion && item.healLife > 0 && ItemLoader.CanUseItem(item, self))
 				{
@@ -431,7 +431,7 @@ namespace PortableStorage.Hooking
 		{
 			if (self.noItems || self.statMana == self.statManaMax2) return;
 
-			foreach (Item item in self.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.stacks).Concat(self.inventory))
+			foreach (Item item in self.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items).Concat(self.inventory))
 			{
 				if (item.stack > 0 && item.type > 0 && item.healMana > 0 && (self.potionDelay == 0 || !item.potion) && ItemLoader.CanUseItem(item, self))
 				{
@@ -479,7 +479,7 @@ namespace PortableStorage.Hooking
 
 			LegacySoundStyle sound = null;
 
-			foreach (Item item in self.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.stacks).Concat(self.inventory))
+			foreach (Item item in self.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items).Concat(self.inventory))
 			{
 				if (self.CountBuffs() == 22) return;
 				if (item.stack > 0 && item.type > 0 && item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph)
@@ -572,9 +572,9 @@ namespace PortableStorage.Hooking
 
 			if (wallet != null)
 			{
-				long addedCoins = actualPrice + wallet.Handler.stacks.CountCoins();
+				long addedCoins = actualPrice + wallet.Handler.Items.CountCoins();
 
-				wallet.Handler.stacks = Utils.CoinsSplit(addedCoins).Select((s, index) =>
+				wallet.Handler.Items = Utils.CoinsSplit(addedCoins).Select((s, index) =>
 				{
 					Item coin = new Item();
 					coin.SetDefaults(ItemID.CopperCoin + index);

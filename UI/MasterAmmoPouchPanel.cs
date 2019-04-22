@@ -3,39 +3,32 @@ using BaseLibrary.UI;
 using BaseLibrary.UI.Elements;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
-using PortableStorage.Items.Special;
-using Terraria.DataStructures;
+using PortableStorage.Items.Bags;
 using Terraria.ModLoader;
 
 namespace PortableStorage.UI
 {
-	public class TheBlackHolePanel : BaseBagPanel<TheBlackHole>
+	public class MasterAmmoPouchPanel : BaseBagPanel<MasterAmmoPouch>
 	{
 		public override void OnInitialize()
 		{
-			Size = new Vector2(408, 172);
+			Width = (408, 0);
+			Height = (40 + Bag.HandlerBags.Slots / 9 * 44, 0);
 			this.Center();
-
-			UIAnimatedTexture textureActivation = new UIAnimatedTexture(ModContent.GetTexture("PortableStorage/Textures/Items/TheBlackHole"), new DrawAnimationVertical(8, 8), ScaleMode.Stretch)
-			{
-				Size = new Vector2(20),
-				Animate = Bag.active
-			};
-			textureActivation.GetHoverText += () => Bag.active ? "Deactivate" : "Activate";
-			textureActivation.OnClick += (evt, element) =>
-			{
-				Bag.active = !Bag.active;
-				textureActivation.Animate = Bag.active;
-
-				Bag.Handler.OnContentsChanged?.Invoke(-1);
-			};
-			Append(textureActivation);
 
 			textLabel = new UIText(Bag.DisplayName.GetTranslation())
 			{
 				HAlign = 0.5f
 			};
 			Append(textLabel);
+
+			UITexture textureBags = new UITexture(ModContent.GetTexture("PortableStorage/Textures/Items/AdventurerBag"), ScaleMode.Stretch)
+			{
+				Size = new Vector2(20)
+			};
+			textureBags.GetHoverText += () => "Access bag storage";
+			textureBags.OnClick += (evt, element) => { };
+			Append(textureBags);
 
 			buttonClose = new UITextButton("X")
 			{
@@ -56,9 +49,22 @@ namespace PortableStorage.UI
 			};
 			Append(gridItems);
 
-			for (int i = 0; i < Bag.Handler.Slots; i++)
+			for (int i = 0; i < Bag.HandlerBags.Slots; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(() => Bag.Handler, i);
+				UIContainerSlot slot = new UIContainerSlot(() => Bag.HandlerBags, i);
+				slot.OnClick += (evt, element) =>
+				{
+					if (!slot.Item.IsAir)
+					{
+						// todo: handler Handler here
+					}
+				};
+				slot.RightClickOverride += () =>
+				{
+					// todo: open the bag UI here
+
+					return true;
+				};
 				gridItems.Add(slot);
 			}
 		}

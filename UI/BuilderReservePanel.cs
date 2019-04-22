@@ -31,7 +31,7 @@ namespace PortableStorage.UI
 			buttonClose.OnClick += (evt, element) => PortableStorage.Instance.PanelUI.UI.CloseUI(Bag);
 			Append(buttonClose);
 
-			gridPotions = new UIGrid<UIContainerSlot>(9)
+			gridItems = new UIGrid<UIContainerSlot>(9)
 			{
 				Width = (0, 1),
 				Height = (-28, 1),
@@ -39,10 +39,10 @@ namespace PortableStorage.UI
 				OverflowHidden = true,
 				ListPadding = 4f
 			};
-			Append(gridPotions);
+			Append(gridItems);
 
 			BuilderReserve devNull = Bag;
-			for (int i = 0; i < Bag.Handler.stacks.Count; i++)
+			for (int i = 0; i < Bag.Handler.Slots; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(() => Bag.Handler, i);
 				slot.ClickOverride += () =>
@@ -61,7 +61,7 @@ namespace PortableStorage.UI
 				{
 					if (slot.Item.IsAir && slot.slot == devNull.selectedIndex) devNull.SetIndex(-1);
 				};
-				gridPotions.Add(slot);
+				gridItems.Add(slot);
 			}
 
 			RefreshTextures();
@@ -72,7 +72,7 @@ namespace PortableStorage.UI
 			BuilderReserve devNull = Bag;
 			if (devNull.selectedIndex >= 0)
 			{
-				foreach (UIContainerSlot slot in gridPotions.items) slot.backgroundTexture = devNull.selectedIndex == slot.slot ? Main.inventoryBack15Texture : Main.inventoryBackTexture;
+				foreach (UIContainerSlot slot in gridItems.items) slot.backgroundTexture = devNull.selectedIndex == slot.slot ? Main.inventoryBack15Texture : Main.inventoryBackTexture;
 			}
 		}
 	}

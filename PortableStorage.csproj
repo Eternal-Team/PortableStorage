@@ -68,6 +68,7 @@
     <Compile Include="UI\AlchemistBagPanel.cs" />
     <Compile Include="UI\FishingBeltPanel.cs" />
     <Compile Include="UI\MinersBackpackPanel.cs" />
+    <Compile Include="UI\MasterAmmoPouchPanel.cs" />
     <Compile Include="UI\NinjaArsenalBeltPanel.cs" />
     <Compile Include="UI\BuilderReservePanel.cs" />
     <Compile Include="UI\AmmoBagPanel.cs" />

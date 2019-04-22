@@ -35,7 +35,7 @@ namespace PortableStorage.UI
 			};
 			Append(textPotions);
 
-			gridPotions = new UIGrid<UIContainerSlot>(9)
+			gridItems = new UIGrid<UIContainerSlot>(9)
 			{
 				Width = (0, 1),
 				Height = (84, 0),
@@ -43,12 +43,12 @@ namespace PortableStorage.UI
 				OverflowHidden = true,
 				ListPadding = 4f
 			};
-			Append(gridPotions);
+			Append(gridItems);
 
 			for (int i = 0; i < Bag.Handler.Slots; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(() => Bag.Handler, i);
-				gridPotions.Add(slot);
+				gridItems.Add(slot);
 			}
 
 			UIText textIngredients = new UIText("Ingredients")

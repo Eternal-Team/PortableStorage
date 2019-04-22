@@ -38,7 +38,7 @@ namespace PortableStorage.Global
 				ItemHandler container = (panel as IBagPanel)?.Handler;
 				if (container == null) continue;
 
-				int index = container.stacks.FindIndex(other => other.type == item.type && other.stack < other.maxStack);
+				int index = container.Items.FindIndex(other => other.type == item.type && other.stack < other.maxStack);
 				if (index != -1)
 				{
 					item = container.InsertItem(index, item);

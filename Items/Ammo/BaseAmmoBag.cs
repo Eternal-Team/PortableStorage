@@ -27,7 +27,7 @@ namespace PortableStorage.Items.Ammo
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
-			Handler.IsItemValid += (handler, slot, item) => Utility.Ammos[AmmoType].Values.SelectMany(x => x).Contains(item.type);
+			Handler.IsItemValid += (slot, item) => Utility.Ammos[AmmoType].Values.SelectMany(x => x).Contains(item.type);
 		}
 	}
 }

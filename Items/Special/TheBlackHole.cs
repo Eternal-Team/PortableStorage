@@ -74,7 +74,7 @@ namespace PortableStorage.Items.Special
 			for (int i = 0; i < Main.item.Length; i++)
 			{
 				ref Item item = ref Main.item[i];
-				if (item == null || item.IsAir || item.IsCoin() || !Handler.stacks.HasSpace(item) || Vector2.Distance(item.Center, player.Center) > maxRange)
+				if (item == null || item.IsAir || item.IsCoin() || !Handler.Items.HasSpace(item) || Vector2.Distance(item.Center, player.Center) > maxRange)
 				{
 					if (item != null && PSItem.BlackHoleData.ContainsKey(i)) PSItem.BlackHoleData.Remove(i);
 					continue;
@@ -112,7 +112,7 @@ namespace PortableStorage.Items.Special
 					else
 					{
 						Item item1 = item;
-						int index = Handler.stacks.FindIndex(other => other.type == item1.type && other.stack < other.maxStack);
+						int index = Handler.Items.FindIndex(other => other.type == item1.type && other.stack < other.maxStack);
 						if (index != -1) item = Handler.InsertItem(index, item);
 						else
 						{

@@ -26,7 +26,7 @@ namespace PortableStorage.Items.Ammo
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
-			Handler.IsItemValid += (handler, slot, item) => item.type == ItemID.PlatinumCoin - slot;
+			Handler.IsItemValid += (slot, item) => item.type == ItemID.PlatinumCoin - slot;
 			Handler.GetSlotLimit += slot => int.MaxValue;
 		}
 

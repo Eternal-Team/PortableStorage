@@ -27,7 +27,7 @@ namespace PortableStorage.Items.Special
 					NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 				}
 			};
-			Handler.IsItemValid += (handler, slot, item) => (item.createTile > 0 || item.createWall > 0) && (handler.stacks.All(x => x.type != item.type) || handler.stacks[slot].type == item.type);
+			Handler.IsItemValid += (slot, item) => (item.createTile > 0 || item.createWall > 0) && (Handler.Items.All(x => x.type != item.type) || Handler.Items[slot].type == item.type);
 			Handler.GetSlotLimit += slot => int.MaxValue;
 
 			selectedIndex = -1;
@@ -56,7 +56,7 @@ namespace PortableStorage.Items.Special
 			item.useTurn = true;
 		}
 
-		public override bool CanUseItem(Player player) => selectedIndex >= 0 && Handler.stacks[selectedIndex].type > 0 && Handler.stacks[selectedIndex].stack > 1;
+		public override bool CanUseItem(Player player) => selectedIndex >= 0 && Handler.Items[selectedIndex].type > 0 && Handler.Items[selectedIndex].stack > 1;
 
 		public override bool UseItem(Player player) => false;
 
@@ -66,7 +66,7 @@ namespace PortableStorage.Items.Special
 			else
 			{
 				selectedIndex = index;
-				Item selectedItem = Handler.stacks[selectedIndex];
+				Item selectedItem = Handler.Items[selectedIndex];
 
 				if (selectedItem.createTile >= 0)
 				{

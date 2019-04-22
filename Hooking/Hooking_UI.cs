@@ -63,7 +63,7 @@ namespace PortableStorage.Hooking
 			long piggyCount = Utils.CoinsCount(out bool _, player.bank.item);
 			long safeCount = Utils.CoinsCount(out bool _, player.bank2.item);
 			long defendersCount = Utils.CoinsCount(out bool _, player.bank3.item);
-			long walletCount = player.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.stacks.CountCoins());
+			long walletCount = player.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins());
 
 			long combined = Utils.CoinsCombineStacks(out bool _, piggyCount, safeCount, defendersCount, walletCount);
 			if (combined > 0L)
@@ -342,7 +342,7 @@ namespace PortableStorage.Hooking
 							if (inv[j].ammo == useAmmo)
 								ammoCount += inv[j].stack;
 
-						ammoCount += player.inventory.OfType<BaseAmmoBag>().SelectMany(x => x.Handler.stacks).Where(x => x.ammo == useAmmo).Sum(x => x.stack);
+						ammoCount += player.inventory.OfType<BaseAmmoBag>().SelectMany(x => x.Handler.Items).Where(x => x.ammo == useAmmo).Sum(x => x.stack);
 					}
 
 					if (item.fishingPole > 0)
