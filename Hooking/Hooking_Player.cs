@@ -260,6 +260,7 @@ namespace PortableStorage.Hooking
 			Item item = new Item();
 
 			Item firstAmmo = self.inventory.OfType<BaseAmmoBag>().SelectMany(x => x.Handler.Items).FirstOrDefault(ammo => ammo.ammo == sItem.useAmmo && ammo.stack > 0);
+
 			if (firstAmmo != null)
 			{
 				item = firstAmmo;

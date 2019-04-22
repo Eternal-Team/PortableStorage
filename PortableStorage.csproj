@@ -48,7 +48,6 @@
     <Compile Include="Items\Special\NinjaArsenalBelt.cs" />
     <Compile Include="Items\Special\AlchemistBag.cs" />
     <Compile Include="Items\Ammo\BaseAmmoBag.cs" />
-    <Compile Include="Items\Ammo\MasterAmmoPouch.cs" />
     <Compile Include="Items\Ammo\AmmoPouch.cs" />
     <Compile Include="Items\Ammo\DartHolder.cs" />
     <Compile Include="Items\Ammo\ThePerfectSolution.cs" />
@@ -68,7 +67,6 @@
     <Compile Include="UI\AlchemistBagPanel.cs" />
     <Compile Include="UI\FishingBeltPanel.cs" />
     <Compile Include="UI\MinersBackpackPanel.cs" />
-    <Compile Include="UI\MasterAmmoPouchPanel.cs" />
     <Compile Include="UI\NinjaArsenalBeltPanel.cs" />
     <Compile Include="UI\BuilderReservePanel.cs" />
     <Compile Include="UI\AmmoBagPanel.cs" />
