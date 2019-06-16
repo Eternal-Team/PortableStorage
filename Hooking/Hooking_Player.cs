@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BaseLibrary;
+﻿using BaseLibrary;
 using Microsoft.Xna.Framework;
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using PortableStorage.Items;
 using PortableStorage.Items.Ammo;
 using PortableStorage.Items.Special;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.UI;
@@ -16,27 +19,6 @@ namespace PortableStorage.Hooking
 {
 	public static partial class Hooking
 	{
-		private static bool Player_CanBuyItem(Func<Player, int, int, bool> orig, Player self, int price, int customCurrency)
-		{
-			if (customCurrency != -1) return CustomCurrencyManager.BuyItem(self, price, customCurrency);
-
-			long inventoryCount = Utils.CoinsCount(out bool _, self.inventory, 58, 57, 56, 55, 54);
-			long piggyCount = Utils.CoinsCount(out bool _, self.bank.item);
-			long safeCount = Utils.CoinsCount(out bool _, self.bank2.item);
-			long defendersCount = Utils.CoinsCount(out bool _, self.bank3.item);
-			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins());
-			long combined = Utils.CoinsCombineStacks(out bool _, inventoryCount, piggyCount, safeCount, defendersCount, walletCount);
-
-			return combined >= price;
-		}
-
-		private static void Player_DropSelectedItem(On.Terraria.Player.orig_DropSelectedItem orig, Player self)
-		{
-			if (self.inventory[self.selectedItem].modItem is BaseBag bag && bag.UI != null) PortableStorage.Instance.PanelUI.UI.CloseUI(bag);
-
-			orig(self);
-		}
-
 		private static bool Player_BuyItem(On.Terraria.Player.orig_BuyItem orig, Player self, int price, int customCurrency)
 		{
 			if (customCurrency != -1) return CustomCurrencyManager.BuyItem(self, price, customCurrency);
@@ -45,8 +27,9 @@ namespace PortableStorage.Hooking
 			long piggyCount = Utils.CoinsCount(out bool _, self.bank.item);
 			long safeCount = Utils.CoinsCount(out bool _, self.bank2.item);
 			long defendersCount = Utils.CoinsCount(out bool _, self.bank3.item);
-			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins());
 
+			// here
+			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins());
 			long combined = Utils.CoinsCombineStacks(out bool _, inventoryCount, piggyCount, safeCount, defendersCount, walletCount);
 
 			if (combined < price) return false;
@@ -58,11 +41,15 @@ namespace PortableStorage.Hooking
 			List<Point> emptyPiggy = new List<Point>();
 			List<Point> emptySafe = new List<Point>();
 			List<Point> emptyDefenders = new List<Point>();
+
+			// here
 			List<Point> emptyWallet = new List<Point>();
 			list.Add(self.inventory);
 			list.Add(self.bank.item);
 			list.Add(self.bank2.item);
 			list.Add(self.bank3.item);
+
+			// here
 			list.AddRange(self.inventory.OfType<Wallet>().Select(x => x.Handler.Items.ToArray()));
 			for (int i = 0; i < list.Count; i++) ignoredSlots[i] = new List<int>();
 
@@ -109,6 +96,7 @@ namespace PortableStorage.Hooking
 				if (!ignoredSlots[num6].Contains(num7) && (list[num6][num7].type == 0 || list[num6][num7].stack == 0)) emptyDefenders.Add(new Point(num6, num7));
 			}
 
+			// here
 			num6 = 4;
 			for (int i = num6; i < list.Count - 4; i++)
 			{
@@ -121,138 +109,30 @@ namespace PortableStorage.Hooking
 			return !Player_TryPurchasing(price, list, coins, emptyInventory, emptyPiggy, emptySafe, emptyDefenders, emptyWallet);
 		}
 
-		private static bool Player_TryPurchasing(int price, List<Item[]> inv, List<Point> slotCoins, List<Point> slotsEmpty, List<Point> slotEmptyBank, List<Point> slotEmptyBank2, List<Point> slotEmptyBank3, List<Point> slotEmptyWallet)
+		private static void Player_CanBuyItem(ILContext il)
 		{
-			long priceRemaining = price;
-			Dictionary<Point, Item> dictionary = new Dictionary<Point, Item>();
+			ILCursor cursor = new ILCursor(il);
 
-			bool result = false;
-			while (priceRemaining > 0L)
+			if (cursor.TryGotoNext(i => i.MatchCall(typeof(Utils).GetMethod("CoinsCombineStacks", Utility.defaultFlags))))
 			{
-				long coinValue = 1000000L;
-				for (int coinIndex = 0; coinIndex < 4; coinIndex++)
+				cursor.Remove();
+				cursor.Emit(OpCodes.Ldarg_0);
+
+				cursor.EmitDelegate<Func<bool, long[], Player, long>>((overflowing, coinsCount, player) =>
 				{
-					if (priceRemaining >= coinValue)
-					{
-						foreach (Point current in slotCoins)
-						{
-							if (inv[current.X][current.Y].type == 74 - coinIndex)
-							{
-								long stack = priceRemaining / coinValue;
-								dictionary[current] = inv[current.X][current.Y].Clone();
-								if (stack < inv[current.X][current.Y].stack) inv[current.X][current.Y].stack -= (int)stack;
-								else
-								{
-									inv[current.X][current.Y].SetDefaults();
-									slotsEmpty.Add(current);
-								}
-
-								priceRemaining -= coinValue * (dictionary[current].stack - inv[current.X][current.Y].stack);
-							}
-						}
-					}
-
-					coinValue /= 100L;
-				}
-
-				if (priceRemaining > 0L)
-				{
-					if (slotsEmpty.Count <= 0)
-					{
-						foreach (KeyValuePair<Point, Item> current2 in dictionary) inv[current2.Key.X][current2.Key.Y] = current2.Value.Clone();
-						result = true;
-						break;
-					}
-
-					slotsEmpty.Sort(DelegateMethods.CompareYReverse);
-					Point item = new Point(-1, -1);
-					for (int j = 0; j < inv.Count; j++)
-					{
-						coinValue = 10000L;
-						for (int k = 0; k < 3; k++)
-						{
-							if (priceRemaining >= coinValue)
-							{
-								foreach (Point current3 in slotCoins)
-								{
-									if (current3.X == j && inv[current3.X][current3.Y].type == 74 - k && inv[current3.X][current3.Y].stack >= 1)
-									{
-										List<Point> list = slotsEmpty;
-										if (j == 1 && slotEmptyBank.Count > 0) list = slotEmptyBank;
-										if (j == 2 && slotEmptyBank2.Count > 0) list = slotEmptyBank2;
-										if (j > 3 && slotEmptyWallet.Count > 0) list = slotEmptyWallet;
-										if (--inv[current3.X][current3.Y].stack <= 0)
-										{
-											inv[current3.X][current3.Y].SetDefaults();
-											list.Add(current3);
-										}
-
-										dictionary[list[0]] = inv[list[0].X][list[0].Y].Clone();
-										inv[list[0].X][list[0].Y].SetDefaults(73 - k);
-										inv[list[0].X][list[0].Y].stack = 100;
-										item = list[0];
-										list.RemoveAt(0);
-										break;
-									}
-								}
-							}
-
-							if (item.X != -1 || item.Y != -1) break;
-							coinValue /= 100L;
-						}
-
-						for (int l = 0; l < 2; l++)
-						{
-							if (item.X == -1 && item.Y == -1)
-							{
-								foreach (Point current4 in slotCoins)
-								{
-									if (current4.X == j && inv[current4.X][current4.Y].type == 73 + l && inv[current4.X][current4.Y].stack >= 1)
-									{
-										List<Point> list2 = slotsEmpty;
-										if (j == 1 && slotEmptyBank.Count > 0) list2 = slotEmptyBank;
-										if (j == 2 && slotEmptyBank2.Count > 0) list2 = slotEmptyBank2;
-										if (j == 3 && slotEmptyBank3.Count > 0) list2 = slotEmptyBank3;
-										if (j > 3 && slotEmptyWallet.Count > 0) list2 = slotEmptyWallet;
-										if (--inv[current4.X][current4.Y].stack <= 0)
-										{
-											inv[current4.X][current4.Y].SetDefaults();
-											list2.Add(current4);
-										}
-
-										dictionary[list2[0]] = inv[list2[0].X][list2[0].Y].Clone();
-										inv[list2[0].X][list2[0].Y].SetDefaults(72 + l);
-										inv[list2[0].X][list2[0].Y].stack = 100;
-										item = list2[0];
-										list2.RemoveAt(0);
-										break;
-									}
-								}
-							}
-						}
-
-						if (item.X != -1 && item.Y != -1)
-						{
-							slotCoins.Add(item);
-							break;
-						}
-					}
-
-					slotsEmpty.Sort(DelegateMethods.CompareYReverse);
-					slotEmptyBank.Sort(DelegateMethods.CompareYReverse);
-					slotEmptyBank2.Sort(DelegateMethods.CompareYReverse);
-					slotEmptyBank3.Sort(DelegateMethods.CompareYReverse);
-					slotEmptyWallet.Sort(DelegateMethods.CompareYReverse);
-				}
+					long walletCount = player.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins());
+					Array.Resize(ref coinsCount, 5);
+					coinsCount[4] = walletCount;
+					return Utils.CoinsCombineStacks(out overflowing, coinsCount);
+				});
 			}
-
-			return result;
 		}
 
-		private static bool Player_HasAmmo(On.Terraria.Player.orig_HasAmmo orig, Player self, Item ammoUser, bool canUse)
+		private static void Player_DropSelectedItem(On.Terraria.Player.orig_DropSelectedItem orig, Player self)
 		{
-			if (ammoUser.useAmmo > 0) canUse = self.inventory.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0) || self.inventory.OfType<BaseAmmoBag>().Any(ammoBag => ammoBag.Handler.Items.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0));
-			return canUse;
+			if (self.inventory[self.selectedItem].modItem is BaseBag bag && bag.UI != null) PortableStorage.Instance.PanelUI.UI.CloseUI(bag);
+
+			orig(self);
 		}
 
 		private static void Player_PickAmmo(On.Terraria.Player.orig_PickAmmo orig, Player self, Item sItem, ref int shoot, ref float speed, ref bool canShoot, ref int Damage, ref float KnockBack, bool dontConsume)
@@ -357,7 +237,7 @@ namespace PortableStorage.Hooking
 				}
 
 				KnockBack += item.knockBack;
-				ItemLoader.PickAmmo(item, self, ref shoot, ref speed, ref Damage, ref KnockBack);
+				ItemLoader.PickAmmo(sItem, item, self, ref shoot, ref speed, ref Damage, ref KnockBack);
 				bool dontConsumeAmmo = dontConsume;
 				if (sItem.type == 3245)
 				{
@@ -385,7 +265,6 @@ namespace PortableStorage.Hooking
 				dontConsumeAmmo |= !PlayerHooks.ConsumeAmmo(self, sItem, item) | !ItemLoader.ConsumeAmmo(sItem, item, self);
 				if (!dontConsumeAmmo && item.consumable)
 				{
-					Main.NewText(item);
 					PlayerHooks.OnConsumeAmmo(self, sItem, item);
 					ItemLoader.OnConsumeAmmo(sItem, item, self);
 					item.stack--;
@@ -394,82 +273,6 @@ namespace PortableStorage.Hooking
 						item.active = false;
 						item.TurnToAir();
 					}
-				}
-			}
-		}
-
-		private static Item Player_QuickHeal_GetItemToUse(On.Terraria.Player.orig_QuickHeal_GetItemToUse orig, Player self)
-		{
-			int lostHealth = self.statLifeMax2 - self.statLife;
-			Item result = null;
-			int healtGain = -self.statLifeMax2;
-
-			foreach (Item item in self.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items).Concat(self.inventory))
-			{
-				if (item.stack > 0 && item.type > 0 && item.potion && item.healLife > 0 && ItemLoader.CanUseItem(item, self))
-				{
-					int healWaste = self.GetHealLife(item, true) - lostHealth;
-					if (healtGain < 0)
-					{
-						if (healWaste > healtGain)
-						{
-							result = item;
-							healtGain = healWaste;
-						}
-					}
-					else if (healWaste < healtGain && healWaste >= 0)
-					{
-						result = item;
-						healtGain = healWaste;
-					}
-				}
-			}
-
-			return result;
-		}
-
-		private static void Player_QuickMana(On.Terraria.Player.orig_QuickMana orig, Player self)
-		{
-			if (self.noItems || self.statMana == self.statManaMax2) return;
-
-			foreach (Item item in self.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items).Concat(self.inventory))
-			{
-				if (item.stack > 0 && item.type > 0 && item.healMana > 0 && (self.potionDelay == 0 || !item.potion) && ItemLoader.CanUseItem(item, self))
-				{
-					Main.PlaySound(item.UseSound, self.position);
-					if (item.potion)
-					{
-						if (item.type == ItemID.RestorationPotion)
-						{
-							self.potionDelay = self.restorationDelayTime;
-							self.AddBuff(BuffID.PotionSickness, self.potionDelay);
-						}
-						else
-						{
-							self.potionDelay = self.potionDelayTime;
-							self.AddBuff(BuffID.PotionSickness, self.potionDelay);
-						}
-					}
-
-					ItemLoader.UseItem(item, self);
-					int healLife = self.GetHealLife(item, true);
-					int healMana = self.GetHealMana(item, true);
-					self.statLife += healLife;
-					self.statMana += healMana;
-					if (self.statLife > self.statLifeMax2) self.statLife = self.statLifeMax2;
-					if (self.statMana > self.statManaMax2) self.statMana = self.statManaMax2;
-					if (healLife > 0 && Main.myPlayer == self.whoAmI) self.HealEffect(healLife);
-					if (healMana > 0)
-					{
-						self.AddBuff(BuffID.ManaSickness, Player.manaSickTime);
-						if (Main.myPlayer == self.whoAmI) self.ManaEffect(healMana);
-					}
-
-					if (ItemLoader.ConsumeItem(item, self)) item.stack--;
-					if (item.stack <= 0) item.TurnToAir();
-
-					Recipe.FindRecipes();
-					return;
 				}
 			}
 		}
@@ -558,6 +361,82 @@ namespace PortableStorage.Hooking
 			{
 				Main.PlaySound(sound, self.position);
 				Recipe.FindRecipes();
+			}
+		}
+
+		private static Item Player_QuickHeal_GetItemToUse(On.Terraria.Player.orig_QuickHeal_GetItemToUse orig, Player self)
+		{
+			int lostHealth = self.statLifeMax2 - self.statLife;
+			Item result = null;
+			int healtGain = -self.statLifeMax2;
+
+			foreach (Item item in self.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items).Concat(self.inventory))
+			{
+				if (item.stack > 0 && item.type > 0 && item.potion && item.healLife > 0 && ItemLoader.CanUseItem(item, self))
+				{
+					int healWaste = self.GetHealLife(item, true) - lostHealth;
+					if (healtGain < 0)
+					{
+						if (healWaste > healtGain)
+						{
+							result = item;
+							healtGain = healWaste;
+						}
+					}
+					else if (healWaste < healtGain && healWaste >= 0)
+					{
+						result = item;
+						healtGain = healWaste;
+					}
+				}
+			}
+
+			return result;
+		}
+
+		private static void Player_QuickMana(On.Terraria.Player.orig_QuickMana orig, Player self)
+		{
+			if (self.noItems || self.statMana == self.statManaMax2) return;
+
+			foreach (Item item in self.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items).Concat(self.inventory))
+			{
+				if (item.stack > 0 && item.type > 0 && item.healMana > 0 && (self.potionDelay == 0 || !item.potion) && ItemLoader.CanUseItem(item, self))
+				{
+					Main.PlaySound(item.UseSound, self.position);
+					if (item.potion)
+					{
+						if (item.type == ItemID.RestorationPotion)
+						{
+							self.potionDelay = self.restorationDelayTime;
+							self.AddBuff(BuffID.PotionSickness, self.potionDelay);
+						}
+						else
+						{
+							self.potionDelay = self.potionDelayTime;
+							self.AddBuff(BuffID.PotionSickness, self.potionDelay);
+						}
+					}
+
+					ItemLoader.UseItem(item, self);
+					int healLife = self.GetHealLife(item, true);
+					int healMana = self.GetHealMana(item, true);
+					self.statLife += healLife;
+					self.statMana += healMana;
+					if (self.statLife > self.statLifeMax2) self.statLife = self.statLifeMax2;
+					if (self.statMana > self.statManaMax2) self.statMana = self.statManaMax2;
+					if (healLife > 0 && Main.myPlayer == self.whoAmI) self.HealEffect(healLife);
+					if (healMana > 0)
+					{
+						self.AddBuff(BuffID.ManaSickness, Player.manaSickTime);
+						if (Main.myPlayer == self.whoAmI) self.ManaEffect(healMana);
+					}
+
+					if (ItemLoader.ConsumeItem(item, self)) item.stack--;
+					if (item.stack <= 0) item.TurnToAir();
+
+					Recipe.FindRecipes();
+					return;
+				}
 			}
 		}
 
@@ -762,6 +641,153 @@ namespace PortableStorage.Hooking
 			}
 
 			return true;
+		}
+
+		private static bool Player_TryPurchasing(int price, List<Item[]> inv, List<Point> slotCoins, List<Point> slotsEmpty, List<Point> slotEmptyBank, List<Point> slotEmptyBank2, List<Point> slotEmptyBank3, List<Point> slotEmptyWallet)
+		{
+			long priceRemaining = price;
+			Dictionary<Point, Item> dictionary = new Dictionary<Point, Item>();
+
+			bool result = false;
+			while (priceRemaining > 0L)
+			{
+				long coinValue = 1000000L;
+				for (int coinIndex = 0; coinIndex < 4; coinIndex++)
+				{
+					if (priceRemaining >= coinValue)
+					{
+						foreach (Point current in slotCoins)
+						{
+							if (inv[current.X][current.Y].type == 74 - coinIndex)
+							{
+								long stack = priceRemaining / coinValue;
+								dictionary[current] = inv[current.X][current.Y].Clone();
+								if (stack < inv[current.X][current.Y].stack) inv[current.X][current.Y].stack -= (int)stack;
+								else
+								{
+									inv[current.X][current.Y].SetDefaults();
+									slotsEmpty.Add(current);
+								}
+
+								priceRemaining -= coinValue * (dictionary[current].stack - inv[current.X][current.Y].stack);
+							}
+						}
+					}
+
+					coinValue /= 100L;
+				}
+
+				if (priceRemaining > 0L)
+				{
+					if (slotsEmpty.Count <= 0)
+					{
+						foreach (KeyValuePair<Point, Item> current2 in dictionary) inv[current2.Key.X][current2.Key.Y] = current2.Value.Clone();
+						result = true;
+						break;
+					}
+
+					slotsEmpty.Sort(DelegateMethods.CompareYReverse);
+					Point item = new Point(-1, -1);
+					for (int j = 0; j < inv.Count; j++)
+					{
+						coinValue = 10000L;
+						for (int k = 0; k < 3; k++)
+						{
+							if (priceRemaining >= coinValue)
+							{
+								foreach (Point current3 in slotCoins)
+								{
+									if (current3.X == j && inv[current3.X][current3.Y].type == 74 - k && inv[current3.X][current3.Y].stack >= 1)
+									{
+										List<Point> list = slotsEmpty;
+										if (j == 1 && slotEmptyBank.Count > 0) list = slotEmptyBank;
+										if (j == 2 && slotEmptyBank2.Count > 0) list = slotEmptyBank2;
+										if (j > 3 && slotEmptyWallet.Count > 0) list = slotEmptyWallet;
+										if (--inv[current3.X][current3.Y].stack <= 0)
+										{
+											inv[current3.X][current3.Y].SetDefaults();
+											list.Add(current3);
+										}
+
+										dictionary[list[0]] = inv[list[0].X][list[0].Y].Clone();
+										inv[list[0].X][list[0].Y].SetDefaults(73 - k);
+										inv[list[0].X][list[0].Y].stack = 100;
+										item = list[0];
+										list.RemoveAt(0);
+										break;
+									}
+								}
+							}
+
+							if (item.X != -1 || item.Y != -1) break;
+							coinValue /= 100L;
+						}
+
+						for (int l = 0; l < 2; l++)
+						{
+							if (item.X == -1 && item.Y == -1)
+							{
+								foreach (Point current4 in slotCoins)
+								{
+									if (current4.X == j && inv[current4.X][current4.Y].type == 73 + l && inv[current4.X][current4.Y].stack >= 1)
+									{
+										List<Point> list2 = slotsEmpty;
+										if (j == 1 && slotEmptyBank.Count > 0) list2 = slotEmptyBank;
+										if (j == 2 && slotEmptyBank2.Count > 0) list2 = slotEmptyBank2;
+										if (j == 3 && slotEmptyBank3.Count > 0) list2 = slotEmptyBank3;
+										if (j > 3 && slotEmptyWallet.Count > 0) list2 = slotEmptyWallet;
+										if (--inv[current4.X][current4.Y].stack <= 0)
+										{
+											inv[current4.X][current4.Y].SetDefaults();
+											list2.Add(current4);
+										}
+
+										dictionary[list2[0]] = inv[list2[0].X][list2[0].Y].Clone();
+										inv[list2[0].X][list2[0].Y].SetDefaults(72 + l);
+										inv[list2[0].X][list2[0].Y].stack = 100;
+										item = list2[0];
+										list2.RemoveAt(0);
+										break;
+									}
+								}
+							}
+						}
+
+						if (item.X != -1 && item.Y != -1)
+						{
+							slotCoins.Add(item);
+							break;
+						}
+					}
+
+					slotsEmpty.Sort(DelegateMethods.CompareYReverse);
+					slotEmptyBank.Sort(DelegateMethods.CompareYReverse);
+					slotEmptyBank2.Sort(DelegateMethods.CompareYReverse);
+					slotEmptyBank3.Sort(DelegateMethods.CompareYReverse);
+					slotEmptyWallet.Sort(DelegateMethods.CompareYReverse);
+				}
+			}
+
+			return result;
+		}
+
+		private static void Player_HasAmmo(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
+
+			if (cursor.TryGotoNext(
+				i => i.MatchLdloc(0),
+				i => i.MatchLdcI4(58)))
+			{
+				cursor.Index += 3;
+
+				cursor.Emit(OpCodes.Ldarg_0);
+				cursor.Emit(OpCodes.Ldarg_1);
+
+				cursor.EmitDelegate<Func<Player, Item, bool>>((player, ammoUser) => player.inventory.OfType<BaseAmmoBag>().Any(ammoBag => ammoBag.Handler.Items.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0)));
+
+				cursor.Emit(OpCodes.Starg, il.Method.Parameters.FirstOrDefault(x => x.Name == "canUse"));
+			}
 		}
 	}
 }

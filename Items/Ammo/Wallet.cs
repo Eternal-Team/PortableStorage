@@ -7,6 +7,8 @@ namespace PortableStorage.Items.Ammo
 {
 	public class Wallet : BaseAmmoBag
 	{
+		public override string Texture => "PortableStorage/Textures/Items/Wallet1";
+
 		public override string AmmoType => "Coin";
 
 		public Wallet()

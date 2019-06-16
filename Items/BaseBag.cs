@@ -8,7 +8,6 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using TerrariaOverhaul;
 
 namespace PortableStorage.Items
 {
@@ -36,7 +35,7 @@ namespace PortableStorage.Items
 
 		public void OverhaulInit()
 		{
-			this.SetTag(ItemTags.AllowQuickUse);
+			//this.SetTag(ItemTags.AllowQuickUse);
 		}
 
 		public override void SetDefaults()

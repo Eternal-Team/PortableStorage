@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ContainerLibrary;
+﻿using ContainerLibrary;
 using Microsoft.Xna.Framework;
-using MonoMod.Utils;
 using PortableStorage.Items.Special;
 using PortableStorage.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -79,7 +78,7 @@ namespace PortableStorage.Global
 		public override void Load(TagCompound tag)
 		{
 			UIPositions = new Dictionary<Guid, Vector2>();
-			UIPositions.AddRange(tag.GetList<TagCompound>("UIPositions").ToDictionary(c => Guid.Parse(c.Get<string>("ID")), c => c.Get<Vector2>("Position")));
+			//UIPositions.AddRange(tag.GetList<TagCompound>("UIPositions").ToDictionary(c => Guid.Parse(c.Get<string>("ID")), c => c.Get<Vector2>("Position")));
 		}
 	}
 }

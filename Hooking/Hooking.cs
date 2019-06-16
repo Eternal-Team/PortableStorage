@@ -1,8 +1,13 @@
-﻿using System;
-using BaseLibrary;
+﻿using BaseLibrary;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using MonoMod.RuntimeDetour.HookGen;
 using On.Terraria;
 using On.Terraria.UI;
+using PortableStorage.Items.Ammo;
+using System;
+using System.Linq;
+using Utils = Terraria.Utils;
 
 namespace PortableStorage.Hooking
 {
@@ -20,13 +25,14 @@ namespace PortableStorage.Hooking
 			Player.BuyItem += Player_BuyItem;
 			Player.SellItem += Player_SellItem;
 			Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
-			Player.HasAmmo += Player_HasAmmo;
 			Player.PickAmmo += Player_PickAmmo;
 			Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
 			Player.QuickMana += Player_QuickMana;
 			Player.QuickBuff += Player_QuickBuff;
 
-			HookEndpointManager.Add(typeof(Terraria.Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Func<Func<Terraria.Player, int, int, bool>, Terraria.Player, int, int, bool>(Player_CanBuyItem));
+			IL.Terraria.Player.HasAmmo += Player_HasAmmo;
+
+			HookEndpointManager.Modify(typeof(Terraria.Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Action<ILContext>(Player_CanBuyItem));
 		}
 	}
 }

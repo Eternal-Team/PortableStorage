@@ -8,4 +8,3 @@ includeSource = false
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, .git\*, .editorconfig, .gitignore, *.sln, *.md
 includePDB = true
 modReferences = BaseLibrary, ContainerLibrary, FluidLibrary
-weakReferences = TerrariaOverhaul

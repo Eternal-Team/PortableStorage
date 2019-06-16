@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using BaseLibrary;
 using BaseLibrary.UI;
@@ -12,11 +11,12 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
+using PanelUI = PortableStorage.UI.PanelUI;
 using Utility = PortableStorage.Global.Utility;
 
 namespace PortableStorage
 {
-	// todo: add bag slot
+	// note: add bag slot
 
 	public class PortableStorage : Mod
 	{
@@ -92,7 +92,7 @@ namespace PortableStorage
 
 		public override void UpdateUI(GameTime gameTime)
 		{
-			// note: central behaviour from BaseLibrary?
+			// note: central behaviour from BaseLibrary? interface (IItemUI) or attributes
 
 			if (!Main.playerInventory)
 			{
@@ -122,7 +122,5 @@ namespace PortableStorage
 			PanelUI?.UI.Elements.Clear();
 			BagCache.Clear();
 		}
-
-		public override void HandlePacket(BinaryReader reader, int whoAmI) => Utility.Networking.HandlePacket(reader, whoAmI);
 	}
 }

@@ -238,22 +238,5 @@ namespace PortableStorage.Global
 				NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
 			}
 		}
-
-		public static class Networking
-		{
-			private enum MessageType : byte
-			{
-				QEChest
-			}
-
-			public static void HandlePacket(BinaryReader reader, int whoAmI)
-			{
-				switch ((MessageType)reader.ReadByte())
-				{
-					case MessageType.QEChest:
-						break;
-				}
-			}
-		}
 	}
 }

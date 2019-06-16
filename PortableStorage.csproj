@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="C:\Users\Itorius\Documents\My Games\Terraria\ModLoader\references\tModLoader.targets" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -10,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PortableStorage</RootNamespace>
     <AssemblyName>PortableStorage</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -82,27 +82,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Libraries\BaseLibrary\BaseLibrary.csproj">
-      <Project>{0387FE69-7E77-4DC7-9867-EC3994E946D2}</Project>
+      <Project>{0387fe69-7e77-4dc7-9867-ec3994e946d2}</Project>
       <Name>BaseLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\Libraries\ContainerLibrary\ContainerLibrary.csproj">
-      <Project>{9FE1AF9C-346A-4106-8E05-CD9E271E2BEE}</Project>
+      <Project>{9fe1af9c-346a-4106-8e05-cd9e271e2bee}</Project>
       <Name>ContainerLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\FluidLibrary\FluidLibrary.csproj">
-      <Project>{240C41CC-7825-4323-A76C-4EFC23AD6600}</Project>
-      <Name>FluidLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="TerrariaHooks, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Users\Itorius\Documents\My Games\Terraria\ModLoader\references\TerrariaHooks.dll</HintPath>
-    </Reference>
-    <Reference Include="TerrariaOverhaul">
-      <HintPath>..\TerrariaOverhaul.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
