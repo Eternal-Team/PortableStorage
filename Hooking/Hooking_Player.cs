@@ -1,7 +1,9 @@
 ﻿using BaseLibrary;
 using Microsoft.Xna.Framework;
+using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using MonoMod.Utils;
 using PortableStorage.Items;
 using PortableStorage.Items.Ammo;
 using PortableStorage.Items.Special;
@@ -278,6 +280,8 @@ namespace PortableStorage.Hooking
 
 		private static void Player_QuickBuff(ILContext il)
 		{
+			il.Body.Variables.Add(new VariableDefinition(il.Import(typeof(ValueTuple<LegacySoundStyle, bool>))));
+
 			ILCursor cursor = new ILCursor(il);
 
 			if (cursor.TryGotoNext(
@@ -285,16 +289,17 @@ namespace PortableStorage.Hooking
 				i => i.MatchStloc(0)))
 			{
 				cursor.Index += 2;
+				ILLabel label = cursor.DefineLabel();
 
 				cursor.Emit(OpCodes.Ldarg_0);
 
-				cursor.EmitDelegate<Func<Player, LegacySoundStyle>>(player =>
+				cursor.EmitDelegate<Func<Player, ValueTuple<LegacySoundStyle, bool>>>(player =>
 				{
 					LegacySoundStyle legacySoundStyle = null;
 
 					foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
 					{
-						if (player.CountBuffs() == 22) return legacySoundStyle;
+						if (player.CountBuffs() == 22) return (null, true);
 
 						if (item.stack > 0 && item.type > 0 && item.buffType > 0 && !item.summon && item.buffType != 90)
 						{
@@ -367,9 +372,23 @@ namespace PortableStorage.Hooking
 						}
 					}
 
-					return legacySoundStyle;
+					return (legacySoundStyle, false);
 				});
+
+				Type type = typeof(ValueTuple<LegacySoundStyle, bool>);
+
+				cursor.Emit(OpCodes.Stloc, 7);
+
+				cursor.Emit(OpCodes.Ldloc, 7);
+				cursor.Emit(OpCodes.Ldfld, type.GetField("Item1", Utility.defaultFlags));
 				cursor.Emit(OpCodes.Stloc, 0);
+
+				cursor.Emit(OpCodes.Ldloc, 7);
+				cursor.Emit(OpCodes.Ldfld, type.GetField("Item2", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Brfalse, label);
+				cursor.Emit(OpCodes.Ret);
+
+				cursor.MarkLabel(label);
 			}
 		}
 

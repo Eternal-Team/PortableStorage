@@ -1,13 +1,9 @@
 ﻿using BaseLibrary;
-using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour.HookGen;
 using On.Terraria;
 using On.Terraria.UI;
-using PortableStorage.Items.Ammo;
 using System;
-using System.Linq;
-using Utils = Terraria.Utils;
 
 namespace PortableStorage.Hooking
 {
@@ -34,5 +30,5 @@ namespace PortableStorage.Hooking
 
 			HookEndpointManager.Modify(typeof(Terraria.Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Action<ILContext>(Player_CanBuyItem));
 		}
-		}
+	}
 }
