@@ -1,6 +1,5 @@
 ﻿using BaseLibrary;
 using Microsoft.Xna.Framework;
-using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using PortableStorage.Items;
@@ -277,90 +276,100 @@ namespace PortableStorage.Hooking
 			}
 		}
 
-		private static void Player_QuickBuff(On.Terraria.Player.orig_QuickBuff orig, Player self)
+		private static void Player_QuickBuff(ILContext il)
 		{
-			if (self.noItems) return;
+			ILCursor cursor = new ILCursor(il);
 
-			LegacySoundStyle sound = null;
-
-			foreach (Item item in self.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items).Concat(self.inventory))
+			if (cursor.TryGotoNext(
+				i => i.MatchLdnull(),
+				i => i.MatchStloc(0)))
 			{
-				if (self.CountBuffs() == 22) return;
-				if (item.stack > 0 && item.type > 0 && item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph)
+				cursor.Index += 2;
+
+				cursor.Emit(OpCodes.Ldarg_0);
+
+				cursor.EmitDelegate<Func<Player, LegacySoundStyle>>(player =>
 				{
-					int buffType = item.buffType;
-					bool canUseItem = ItemLoader.CanUseItem(item, self);
-					for (int j = 0; j < self.buffType.Length; j++)
+					LegacySoundStyle legacySoundStyle = null;
+
+					foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
 					{
-						if (buffType == BuffID.FairyBlue && (self.buffType[j] == buffType || self.buffType[j] == BuffID.FairyRed || self.buffType[j] == BuffID.FairyGreen))
-						{
-							canUseItem = false;
-							break;
-						}
+						if (player.CountBuffs() == 22) return legacySoundStyle;
 
-						if (self.buffType[j] == buffType)
+						if (item.stack > 0 && item.type > 0 && item.buffType > 0 && !item.summon && item.buffType != 90)
 						{
-							canUseItem = false;
-							break;
-						}
+							int buffType = item.buffType;
+							bool useItem = ItemLoader.CanUseItem(item, player);
+							for (int buffIndex = 0; buffIndex < 22; buffIndex++)
+							{
+								if (buffType == 27 && (player.buffType[buffIndex] == buffType || player.buffType[buffIndex] == 101 || player.buffType[buffIndex] == 102))
+								{
+									useItem = false;
+									break;
+								}
 
-						if (Main.meleeBuff[buffType] && Main.meleeBuff[self.buffType[j]])
-						{
-							canUseItem = false;
-							break;
+								if (player.buffType[buffIndex] == buffType)
+								{
+									useItem = false;
+									break;
+								}
+
+								if (Main.meleeBuff[buffType] && Main.meleeBuff[player.buffType[buffIndex]])
+								{
+									useItem = false;
+									break;
+								}
+							}
+
+							if (Main.lightPet[item.buffType] || Main.vanityPet[item.buffType])
+							{
+								for (int buffIndex = 0; buffIndex < 22; buffIndex++)
+								{
+									if (Main.lightPet[player.buffType[buffIndex]] && Main.lightPet[item.buffType]) useItem = false;
+									if (Main.vanityPet[player.buffType[buffIndex]] && Main.vanityPet[item.buffType]) useItem = false;
+								}
+							}
+
+							if (item.mana > 0 && useItem)
+							{
+								if (player.statMana >= (int)(item.mana * player.manaCost))
+								{
+									player.manaRegenDelay = (int)player.maxRegenDelay;
+									player.statMana -= (int)(item.mana * player.manaCost);
+								}
+								else useItem = false;
+							}
+
+							if (player.whoAmI == Main.myPlayer && item.type == 603 && !Main.cEd) useItem = false;
+
+							if (buffType == 27)
+							{
+								buffType = Main.rand.Next(3);
+								if (buffType == 0) buffType = 27;
+								if (buffType == 1) buffType = 101;
+								if (buffType == 2) buffType = 102;
+							}
+
+							if (useItem)
+							{
+								ItemLoader.UseItem(item, player);
+								legacySoundStyle = item.UseSound;
+								int buffTime = item.buffTime;
+								if (buffTime == 0) buffTime = 3600;
+
+								player.AddBuff(buffType, buffTime);
+								if (item.consumable)
+								{
+									if (ItemLoader.ConsumeItem(item, player)) item.stack--;
+									if (item.stack <= 0) item.TurnToAir();
+								}
+							}
 						}
 					}
 
-					if (Main.lightPet[item.buffType] || Main.vanityPet[item.buffType])
-					{
-						for (int k = 0; k < self.buffType.Length; k++)
-						{
-							if (Main.lightPet[self.buffType[k]] && Main.lightPet[item.buffType]) canUseItem = false;
-							if (Main.vanityPet[self.buffType[k]] && Main.vanityPet[item.buffType]) canUseItem = false;
-						}
-					}
-
-					if (item.mana > 0 && canUseItem)
-					{
-						if (self.statMana >= (int)(item.mana * self.manaCost))
-						{
-							self.manaRegenDelay = (int)self.maxRegenDelay;
-							self.statMana -= (int)(item.mana * self.manaCost);
-						}
-						else canUseItem = false;
-					}
-
-					if (self.whoAmI == Main.myPlayer && item.type == ItemID.Carrot && !Main.cEd) canUseItem = false;
-
-					if (buffType == BuffID.FairyBlue)
-					{
-						buffType = Main.rand.Next(3);
-						if (buffType == 0) buffType = BuffID.FairyBlue;
-						if (buffType == 1) buffType = BuffID.FairyRed;
-						if (buffType == 2) buffType = BuffID.FairyBlue;
-					}
-
-					if (canUseItem)
-					{
-						ItemLoader.UseItem(item, self);
-						sound = item.UseSound;
-						int buffTime = item.buffTime;
-						if (buffTime == 0) buffTime = 3600;
-
-						self.AddBuff(buffType, buffTime);
-						if (item.consumable)
-						{
-							if (ItemLoader.ConsumeItem(item, self)) item.stack--;
-							if (item.stack <= 0) item.TurnToAir();
-						}
-					}
-				}
-			}
-
-			if (sound != null)
-			{
-				Main.PlaySound(sound, self.position);
-				Recipe.FindRecipes();
+					return legacySoundStyle;
+				});
+				cursor.Emit(OpCodes.Stloc, 0);
 			}
 		}
 

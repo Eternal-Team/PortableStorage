@@ -28,11 +28,11 @@ namespace PortableStorage.Hooking
 			Player.PickAmmo += Player_PickAmmo;
 			Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
 			Player.QuickMana += Player_QuickMana;
-			Player.QuickBuff += Player_QuickBuff;
 
 			IL.Terraria.Player.HasAmmo += Player_HasAmmo;
+			IL.Terraria.Player.QuickBuff += Player_QuickBuff;
 
 			HookEndpointManager.Modify(typeof(Terraria.Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Action<ILContext>(Player_CanBuyItem));
 		}
-	}
+		}
 }
