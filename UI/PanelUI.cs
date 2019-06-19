@@ -45,6 +45,8 @@ namespace PortableStorage.UI
 
 		public void CloseUI(BaseBag bag)
 		{
+			if (bag.UI == null) return;
+
 			BaseElement element = (BaseElement)bag.UI;
 
 			ContainerLibrary.ContainerLibrary.ItemHandlerUI.Remove((IItemHandlerUI)element);

@@ -1,54 +1,25 @@
-﻿using System.Linq;
-using BaseLibrary;
+﻿using BaseLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.Items;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using On.Terraria.UI;
 using PortableStorage.Items.Ammo;
-using PortableStorage.UI;
+using System;
+using System.Linq;
 using Terraria;
 using Terraria.GameContent.UI;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.UI;
 using Terraria.UI.Chat;
 using Terraria.UI.Gamepad;
-using ItemSlot = On.Terraria.UI.ItemSlot;
 using Language = Terraria.Localization.Language;
 
 namespace PortableStorage.Hooking
 {
 	public static partial class Hooking
 	{
-		private static UIElement UIElement_GetElementAt(On.Terraria.UI.UIElement.orig_GetElementAt orig, UIElement self, Vector2 point)
-		{
-			if (self is PanelUI ui)
-			{
-				UIElement uIElement = null;
-				for (int i = ui.Elements.Count - 1; i >= 0; i--)
-				{
-					UIElement current = ui.Elements[i];
-					if (current.ContainsPoint(point))
-					{
-						uIElement = current;
-						break;
-					}
-				}
-
-				if (uIElement != null) return uIElement.GetElementAt(point);
-				return self.ContainsPoint(point) ? self : null;
-			}
-
-			return orig(self, point);
-		}
-
-		private static void ItemSlot_LeftClick(ItemSlot.orig_LeftClick_ItemArray_int_int orig, Item[] inv, int context, int slot)
-		{
-			if (inv[slot].modItem is BaseBag bag && bag.UI != null) PortableStorage.Instance.PanelUI.UI.CloseUI(bag);
-
-			orig(inv, context, slot);
-		}
-
 		private static void ItemSlot_DrawSavings(ItemSlot.orig_DrawSavings orig, SpriteBatch sb, float shopx, float shopy, bool horizontal)
 		{
 			Player player = Main.LocalPlayer;
@@ -422,6 +393,50 @@ namespace PortableStorage.Hooking
 			}
 
 			if (linkpointNav != -1) UILinkPointNavigator.SetPosition(linkpointNav, position + vector * 0.75f);
+		}
+
+		private static void ItemSlot_DrawSavings(ILContext il)
+		{
+			int walletIndex = il.AddVariable(typeof(long));
+
+			ILCursor cursor = new ILCursor(il);
+			
+			if (cursor.TryGotoNext(i => i.MatchStloc(4), i => i.MatchLdloca(1), i => i.MatchLdcI4(3)))
+			{
+				cursor.Index++;
+
+				cursor.EmitDelegate<Func<Player, long>>(player => player.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins()));
+				cursor.Emit(OpCodes.Stloc, walletIndex);
+
+				cursor.Index++;
+
+				cursor.Remove();
+				cursor.Emit(OpCodes.Ldc_I4, 4);
+			}
+
+			if (cursor.TryGotoNext(i => i.MatchLdloc(4), i => i.MatchStelemI8()))
+			{
+				cursor.Index += 2;
+
+				cursor.Emit(OpCodes.Dup);
+				cursor.Emit(OpCodes.Ldc_I4, 3);
+				cursor.Emit(OpCodes.Ldloc, walletIndex);
+				cursor.Emit(OpCodes.Stelem_I8);
+			}
+
+			//if (cursor.TryGotoNext(i => i.MatchLdarg(0), i => i.MatchLdsfld(typeof(Lang).GetField("inter", Utility.defaultFlags)), i => i.MatchLdcI4(66)))
+			//{
+			//	cursor.Emit(OpCodes.Ldarg, 1);
+			//	cursor.Emit(OpCodes.Ldloc, walletIndex);
+			//	cursor.Emit(OpCodes.Ldarg, 2);
+			//	cursor.Emit(OpCodes.Ldarg, 3);
+
+			//	cursor.EmitDelegate<Action<SpriteBatch, long, float, float>>((sb, walletCount, shopx, shopy) =>
+			//	{
+			//		int walletType = PortableStorage.Instance.ItemType<Wallet>();
+			//		if (walletCount > 0L) sb.Draw(Main.itemTexture[walletType], Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 40f), Main.itemTexture[walletType].Size() * 0.5f));
+			//	});
+			//}
 		}
 	}
 }

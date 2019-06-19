@@ -40,6 +40,7 @@
     <Compile Include="Global\PSTile.cs" />
     <Compile Include="Global\Utility.cs" />
     <Compile Include="Hooking\Hooking.cs" />
+    <Compile Include="Hooking\Hooking_On.cs" />
     <Compile Include="Hooking\Hooking_Player.cs" />
     <Compile Include="Hooking\Hooking_UI.cs" />
     <Compile Include="Items\Normal\SkeletalBag.cs" />

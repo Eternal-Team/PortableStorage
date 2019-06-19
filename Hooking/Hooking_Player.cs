@@ -1,14 +1,13 @@
 ﻿using BaseLibrary;
 using Microsoft.Xna.Framework;
-using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using MonoMod.Utils;
 using PortableStorage.Items;
 using PortableStorage.Items.Ammo;
 using PortableStorage.Items.Special;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
@@ -20,96 +19,7 @@ namespace PortableStorage.Hooking
 {
 	public static partial class Hooking
 	{
-		private static bool Player_BuyItem(On.Terraria.Player.orig_BuyItem orig, Player self, int price, int customCurrency)
-		{
-			if (customCurrency != -1) return CustomCurrencyManager.BuyItem(self, price, customCurrency);
-
-			long inventoryCount = Utils.CoinsCount(out bool _, self.inventory, 58, 57, 56, 55, 54);
-			long piggyCount = Utils.CoinsCount(out bool _, self.bank.item);
-			long safeCount = Utils.CoinsCount(out bool _, self.bank2.item);
-			long defendersCount = Utils.CoinsCount(out bool _, self.bank3.item);
-
-			// here
-			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins());
-			long combined = Utils.CoinsCombineStacks(out bool _, inventoryCount, piggyCount, safeCount, defendersCount, walletCount);
-
-			if (combined < price) return false;
-
-			List<Item[]> list = new List<Item[]>();
-			Dictionary<int, List<int>> ignoredSlots = new Dictionary<int, List<int>>();
-			List<Point> coins = new List<Point>();
-			List<Point> emptyInventory = new List<Point>();
-			List<Point> emptyPiggy = new List<Point>();
-			List<Point> emptySafe = new List<Point>();
-			List<Point> emptyDefenders = new List<Point>();
-
-			// here
-			List<Point> emptyWallet = new List<Point>();
-			list.Add(self.inventory);
-			list.Add(self.bank.item);
-			list.Add(self.bank2.item);
-			list.Add(self.bank3.item);
-
-			// here
-			list.AddRange(self.inventory.OfType<Wallet>().Select(x => x.Handler.Items.ToArray()));
-			for (int i = 0; i < list.Count; i++) ignoredSlots[i] = new List<int>();
-
-			ignoredSlots[0] = new List<int>
-			{
-				58,
-				57,
-				56,
-				55,
-				54
-			};
-			for (int j = 0; j < list.Count; j++)
-			{
-				for (int k = 0; k < list[j].Length; k++)
-				{
-					if (!ignoredSlots[j].Contains(k) && list[j][k].IsCoin())
-					{
-						coins.Add(new Point(j, k));
-					}
-				}
-			}
-
-			int num6 = 0;
-			for (int l = list[num6].Length - 1; l >= 0; l--)
-			{
-				if (!ignoredSlots[num6].Contains(l) && (list[num6][l].type == 0 || list[num6][l].stack == 0)) emptyInventory.Add(new Point(num6, l));
-			}
-
-			num6 = 1;
-			for (int m = list[num6].Length - 1; m >= 0; m--)
-			{
-				if (!ignoredSlots[num6].Contains(m) && (list[num6][m].type == 0 || list[num6][m].stack == 0)) emptyPiggy.Add(new Point(num6, m));
-			}
-
-			num6 = 2;
-			for (int n = list[num6].Length - 1; n >= 0; n--)
-			{
-				if (!ignoredSlots[num6].Contains(n) && (list[num6][n].type == 0 || list[num6][n].stack == 0)) emptySafe.Add(new Point(num6, n));
-			}
-
-			num6 = 3;
-			for (int num7 = list[num6].Length - 1; num7 >= 0; num7--)
-			{
-				if (!ignoredSlots[num6].Contains(num7) && (list[num6][num7].type == 0 || list[num6][num7].stack == 0)) emptyDefenders.Add(new Point(num6, num7));
-			}
-
-			// here
-			num6 = 4;
-			for (int i = num6; i < list.Count - 4; i++)
-			{
-				for (int n = list[i].Length - 1; n >= 0; n--)
-				{
-					if (!ignoredSlots[i].Contains(n) && (list[i][n].type == 0 || list[i][n].stack == 0)) emptyWallet.Add(new Point(i, n));
-				}
-			}
-
-			return !Player_TryPurchasing(price, list, coins, emptyInventory, emptyPiggy, emptySafe, emptyDefenders, emptyWallet);
-		}
-
+		#region IL
 		private static void Player_CanBuyItem(ILContext il)
 		{
 			ILCursor cursor = new ILCursor(il);
@@ -126,155 +36,6 @@ namespace PortableStorage.Hooking
 					coinsCount[4] = walletCount;
 					return Utils.CoinsCombineStacks(out overflowing, coinsCount);
 				});
-			}
-		}
-
-		private static void Player_DropSelectedItem(On.Terraria.Player.orig_DropSelectedItem orig, Player self)
-		{
-			if (self.inventory[self.selectedItem].modItem is BaseBag bag && bag.UI != null) PortableStorage.Instance.PanelUI.UI.CloseUI(bag);
-
-			orig(self);
-		}
-
-		private static void Player_PickAmmo(On.Terraria.Player.orig_PickAmmo orig, Player self, Item sItem, ref int shoot, ref float speed, ref bool canShoot, ref int Damage, ref float KnockBack, bool dontConsume)
-		{
-			Item item = new Item();
-
-			Item firstAmmo = self.inventory.OfType<BaseAmmoBag>().SelectMany(x => x.Handler.Items).FirstOrDefault(ammo => ammo.ammo == sItem.useAmmo && ammo.stack > 0);
-
-			if (firstAmmo != null)
-			{
-				item = firstAmmo;
-				canShoot = true;
-			}
-			else
-			{
-				bool hasInAmmoSlots = false;
-
-				for (int i = 54; i < 58; i++)
-				{
-					if (self.inventory[i].ammo == sItem.useAmmo && self.inventory[i].stack > 0)
-					{
-						item = self.inventory[i];
-						canShoot = true;
-						hasInAmmoSlots = true;
-						break;
-					}
-				}
-
-				if (!hasInAmmoSlots)
-				{
-					for (int j = 0; j < 54; j++)
-					{
-						if (self.inventory[j].ammo == sItem.useAmmo && self.inventory[j].stack > 0)
-						{
-							item = self.inventory[j];
-							canShoot = true;
-							break;
-						}
-					}
-				}
-			}
-
-			if (canShoot)
-			{
-				if (sItem.type == 1946)
-				{
-					shoot = 338 + item.type - 771;
-					if (shoot > ProjectileID.RocketSnowmanIV) shoot = ProjectileID.RocketSnowmanIV;
-				}
-				else if (sItem.useAmmo == AmmoID.Rocket) shoot += item.shoot;
-				else if (sItem.useAmmo == 780) shoot += item.shoot;
-				else if (item.shoot > 0) shoot = item.shoot;
-
-				if (sItem.type == 3019 && shoot == 1) shoot = 485;
-				if (sItem.type == 3052) shoot = 495;
-				if (sItem.type == 3245 && shoot == 21) shoot = 532;
-				if (shoot == 42)
-				{
-					if (item.type == 370)
-					{
-						shoot = 65;
-						Damage += 5;
-					}
-					else if (item.type == 408)
-					{
-						shoot = 68;
-						Damage += 5;
-					}
-					else if (item.type == 1246)
-					{
-						shoot = 354;
-						Damage += 5;
-					}
-				}
-
-				if (self.HeldItem.type == 2888 && shoot == 1) shoot = 469;
-				if (self.magicQuiver && (sItem.useAmmo == AmmoID.Arrow || sItem.useAmmo == AmmoID.Stake))
-				{
-					KnockBack = (int)(KnockBack * 1.1);
-					speed *= 1.1f;
-				}
-
-				speed += item.shootSpeed;
-				if (item.ranged)
-				{
-					if (item.damage > 0)
-					{
-						Damage += (int)(item.damage * self.rangedDamage);
-					}
-				}
-				else Damage += item.damage;
-
-				if (sItem.useAmmo == AmmoID.Arrow && self.archery)
-				{
-					if (speed < 20f)
-					{
-						speed *= 1.2f;
-						if (speed > 20f) speed = 20f;
-					}
-
-					Damage = (int)(Damage * 1.2);
-				}
-
-				KnockBack += item.knockBack;
-				ItemLoader.PickAmmo(sItem, item, self, ref shoot, ref speed, ref Damage, ref KnockBack);
-				bool dontConsumeAmmo = dontConsume;
-				if (sItem.type == 3245)
-				{
-					if (Main.rand.Next(3) == 0) dontConsumeAmmo = true;
-					else if (self.thrownCost33 && Main.rand.Next(100) < 33) dontConsumeAmmo = true;
-					else if (self.thrownCost50 && Main.rand.Next(100) < 50) dontConsumeAmmo = true;
-				}
-
-				if (sItem.type == 3475 && Main.rand.Next(3) != 0) dontConsumeAmmo = true;
-				if (sItem.type == 3540 && Main.rand.Next(3) != 0) dontConsumeAmmo = true;
-				if (self.magicQuiver && sItem.useAmmo == AmmoID.Arrow && Main.rand.Next(5) == 0) dontConsumeAmmo = true;
-				if (self.ammoBox && Main.rand.Next(5) == 0) dontConsumeAmmo = true;
-				if (self.ammoPotion && Main.rand.Next(5) == 0) dontConsumeAmmo = true;
-				if (sItem.type == 1782 && Main.rand.Next(3) == 0) dontConsumeAmmo = true;
-				if (sItem.type == 98 && Main.rand.Next(3) == 0) dontConsumeAmmo = true;
-				if (sItem.type == 2270 && Main.rand.Next(2) == 0) dontConsumeAmmo = true;
-				if (sItem.type == 533 && Main.rand.Next(2) == 0) dontConsumeAmmo = true;
-				if (sItem.type == 1929 && Main.rand.Next(2) == 0) dontConsumeAmmo = true;
-				if (sItem.type == 1553 && Main.rand.Next(2) == 0) dontConsumeAmmo = true;
-				if (sItem.type == 434 && self.itemAnimation < (int)(sItem.useAnimation / PlayerHooks.TotalMeleeSpeedMultiplier(self, sItem)) - 2) dontConsumeAmmo = true;
-				if (self.ammoCost80 && Main.rand.Next(5) == 0) dontConsumeAmmo = true;
-				if (self.ammoCost75 && Main.rand.Next(4) == 0) dontConsumeAmmo = true;
-				if (shoot == 85 && self.itemAnimation < self.itemAnimationMax - 6) dontConsumeAmmo = true;
-				if ((shoot == 145 || shoot == 146 || shoot == 147 || shoot == 148 || shoot == 149) && self.itemAnimation < self.itemAnimationMax - 5) dontConsumeAmmo = true;
-				dontConsumeAmmo |= !PlayerHooks.ConsumeAmmo(self, sItem, item) | !ItemLoader.ConsumeAmmo(sItem, item, self);
-				if (!dontConsumeAmmo && item.consumable)
-				{
-					PlayerHooks.OnConsumeAmmo(self, sItem, item);
-					ItemLoader.OnConsumeAmmo(sItem, item, self);
-					item.stack--;
-					if (item.stack <= 0)
-					{
-						item.active = false;
-						item.TurnToAir();
-					}
-				}
 			}
 		}
 
@@ -392,6 +153,155 @@ namespace PortableStorage.Hooking
 			}
 		}
 
+		private static void Player_HasAmmo(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
+
+			if (cursor.TryGotoNext(
+				i => i.MatchLdloc(0),
+				i => i.MatchLdcI4(58)))
+			{
+				cursor.Index += 3;
+
+				cursor.Emit(OpCodes.Ldarg_0);
+				cursor.Emit(OpCodes.Ldarg_1);
+
+				cursor.EmitDelegate<Func<Player, Item, bool>>((player, ammoUser) => player.inventory.OfType<BaseAmmoBag>().Any(ammoBag => ammoBag.Handler.Items.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0)));
+
+				cursor.Emit(OpCodes.Starg, il.Method.Parameters.FirstOrDefault(x => x.Name == "canUse"));
+			}
+		}
+
+		private static void Player_PickAmmo(ILContext il)
+		{
+			int firstAmmoIndex = il.AddVariable(typeof(Item));
+			int canShootIndex = il.GetArgumentIndex("canShoot");
+
+			ILCursor cursor = new ILCursor(il);
+			ILLabel elseLabel = cursor.DefineLabel();
+			ILLabel endLabel = cursor.DefineLabel();
+
+			cursor.Emit(OpCodes.Newobj, typeof(Item).GetConstructors()[0]);
+			cursor.Emit(OpCodes.Stloc, firstAmmoIndex);
+			
+			if (cursor.TryGotoNext(i => i.MatchNewobj(typeof(Item).GetConstructors()[0]), i => i.MatchStloc(0)))
+			{
+				cursor.Index += 2;
+
+				cursor.Emit(OpCodes.Ldarg, 0);
+				cursor.Emit(OpCodes.Ldarg, 1);
+				cursor.EmitDelegate<Func<Player, Item, Item>>((player, sItem) => player.inventory.OfType<BaseAmmoBag>().SelectMany(x => x.Handler.Items).FirstOrDefault(ammo => ammo.ammo == sItem.useAmmo && ammo.stack > 0));
+				cursor.Emit(OpCodes.Stloc, firstAmmoIndex);
+
+				cursor.Emit(OpCodes.Ldloc, firstAmmoIndex);
+				cursor.Emit(OpCodes.Brfalse, elseLabel);
+
+				cursor.Emit(OpCodes.Ldloc, firstAmmoIndex);
+				cursor.Emit(OpCodes.Stloc, 0);
+
+				cursor.Emit(OpCodes.Ldarg, canShootIndex);
+				cursor.Emit(OpCodes.Ldc_I4, 1);
+				cursor.Emit(OpCodes.Stind_I1);
+
+				cursor.Emit(OpCodes.Br, endLabel);
+			}
+
+			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(1), i => i.MatchLdcI4(54))) cursor.MarkLabel(elseLabel);
+
+			if (cursor.TryGotoNext(i => i.MatchLdarg(3), i => i.MatchLdindU1(), i => i.MatchBrfalse(out _))) cursor.MarkLabel(endLabel);
+		}
+		#endregion
+		
+		private static bool Player_BuyItem(On.Terraria.Player.orig_BuyItem orig, Player self, int price, int customCurrency)
+		{
+			if (customCurrency != -1) return CustomCurrencyManager.BuyItem(self, price, customCurrency);
+
+			long inventoryCount = Utils.CoinsCount(out bool _, self.inventory, 58, 57, 56, 55, 54);
+			long piggyCount = Utils.CoinsCount(out bool _, self.bank.item);
+			long safeCount = Utils.CoinsCount(out bool _, self.bank2.item);
+			long defendersCount = Utils.CoinsCount(out bool _, self.bank3.item);
+
+			// here
+			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins());
+			long combined = Utils.CoinsCombineStacks(out bool _, inventoryCount, piggyCount, safeCount, defendersCount, walletCount);
+
+			if (combined < price) return false;
+
+			List<Item[]> list = new List<Item[]>();
+			Dictionary<int, List<int>> ignoredSlots = new Dictionary<int, List<int>>();
+			List<Point> coins = new List<Point>();
+			List<Point> emptyInventory = new List<Point>();
+			List<Point> emptyPiggy = new List<Point>();
+			List<Point> emptySafe = new List<Point>();
+			List<Point> emptyDefenders = new List<Point>();
+
+			// here
+			List<Point> emptyWallet = new List<Point>();
+			list.Add(self.inventory);
+			list.Add(self.bank.item);
+			list.Add(self.bank2.item);
+			list.Add(self.bank3.item);
+
+			// here
+			list.AddRange(self.inventory.OfType<Wallet>().Select(x => x.Handler.Items.ToArray()));
+			for (int i = 0; i < list.Count; i++) ignoredSlots[i] = new List<int>();
+
+			ignoredSlots[0] = new List<int>
+			{
+				58,
+				57,
+				56,
+				55,
+				54
+			};
+			for (int j = 0; j < list.Count; j++)
+			{
+				for (int k = 0; k < list[j].Length; k++)
+				{
+					if (!ignoredSlots[j].Contains(k) && list[j][k].IsCoin())
+					{
+						coins.Add(new Point(j, k));
+					}
+				}
+			}
+
+			int num6 = 0;
+			for (int l = list[num6].Length - 1; l >= 0; l--)
+			{
+				if (!ignoredSlots[num6].Contains(l) && (list[num6][l].type == 0 || list[num6][l].stack == 0)) emptyInventory.Add(new Point(num6, l));
+			}
+
+			num6 = 1;
+			for (int m = list[num6].Length - 1; m >= 0; m--)
+			{
+				if (!ignoredSlots[num6].Contains(m) && (list[num6][m].type == 0 || list[num6][m].stack == 0)) emptyPiggy.Add(new Point(num6, m));
+			}
+
+			num6 = 2;
+			for (int n = list[num6].Length - 1; n >= 0; n--)
+			{
+				if (!ignoredSlots[num6].Contains(n) && (list[num6][n].type == 0 || list[num6][n].stack == 0)) emptySafe.Add(new Point(num6, n));
+			}
+
+			num6 = 3;
+			for (int num7 = list[num6].Length - 1; num7 >= 0; num7--)
+			{
+				if (!ignoredSlots[num6].Contains(num7) && (list[num6][num7].type == 0 || list[num6][num7].stack == 0)) emptyDefenders.Add(new Point(num6, num7));
+			}
+
+			// here
+			num6 = 4;
+			for (int i = num6; i < list.Count - 4; i++)
+			{
+				for (int n = list[i].Length - 1; n >= 0; n--)
+				{
+					if (!ignoredSlots[i].Contains(n) && (list[i][n].type == 0 || list[i][n].stack == 0)) emptyWallet.Add(new Point(i, n));
+				}
+			}
+
+			return !Player_TryPurchasing(price, list, coins, emptyInventory, emptyPiggy, emptySafe, emptyDefenders, emptyWallet);
+		}
+		
 		private static Item Player_QuickHeal_GetItemToUse(On.Terraria.Player.orig_QuickHeal_GetItemToUse orig, Player self)
 		{
 			int lostHealth = self.statLifeMax2 - self.statLife;
@@ -799,23 +709,6 @@ namespace PortableStorage.Hooking
 			return result;
 		}
 
-		private static void Player_HasAmmo(ILContext il)
-		{
-			ILCursor cursor = new ILCursor(il);
-
-			if (cursor.TryGotoNext(
-				i => i.MatchLdloc(0),
-				i => i.MatchLdcI4(58)))
-			{
-				cursor.Index += 3;
-
-				cursor.Emit(OpCodes.Ldarg_0);
-				cursor.Emit(OpCodes.Ldarg_1);
-
-				cursor.EmitDelegate<Func<Player, Item, bool>>((player, ammoUser) => player.inventory.OfType<BaseAmmoBag>().Any(ammoBag => ammoBag.Handler.Items.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0)));
-
-				cursor.Emit(OpCodes.Starg, il.Method.Parameters.FirstOrDefault(x => x.Name == "canUse"));
-			}
-		}
+		
 	}
 }
