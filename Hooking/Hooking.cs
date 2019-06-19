@@ -26,7 +26,6 @@ namespace PortableStorage.Hooking
 			HookEndpointManager.Modify(typeof(Terraria.Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Action<ILContext>(Player_CanBuyItem));
 			#endregion
 
-			//ItemSlot.DrawSavings += ItemSlot_DrawSavings;
 			ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color;
 
 			Player.BuyItem += Player_BuyItem;

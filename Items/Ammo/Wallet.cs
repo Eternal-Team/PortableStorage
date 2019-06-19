@@ -7,7 +7,7 @@ namespace PortableStorage.Items.Ammo
 {
 	public class Wallet : BaseAmmoBag
 	{
-		public override string Texture => "PortableStorage/Textures/Items/Wallet1";
+		public override string Texture => "PortableStorage/Textures/Items/Wallet";
 
 		public override string AmmoType => "Coin";
 
@@ -30,7 +30,7 @@ namespace PortableStorage.Items.Ammo
 			base.SetDefaults();
 
 			item.width = 28;
-			item.height = 14;
+			item.height = 28;
 			item.value = Item.buyPrice(gold: 5);
 		}
 	}

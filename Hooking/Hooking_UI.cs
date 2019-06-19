@@ -8,47 +8,16 @@ using PortableStorage.Items.Ammo;
 using System;
 using System.Linq;
 using Terraria;
-using Terraria.GameContent.UI;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
 using Terraria.UI.Gamepad;
-using Language = Terraria.Localization.Language;
 
 namespace PortableStorage.Hooking
 {
 	public static partial class Hooking
 	{
-		private static void ItemSlot_DrawSavings(ItemSlot.orig_DrawSavings orig, SpriteBatch sb, float shopx, float shopy, bool horizontal)
-		{
-			Player player = Main.LocalPlayer;
-			int customCurrencyForSavings = typeof(Terraria.UI.ItemSlot).GetValue<int>("_customCurrencyForSavings");
-
-			if (customCurrencyForSavings != -1)
-			{
-				CustomCurrencyManager.DrawSavings(sb, customCurrencyForSavings, shopx, shopy, horizontal);
-				return;
-			}
-
-			long piggyCount = Utils.CoinsCount(out bool _, player.bank.item);
-			long safeCount = Utils.CoinsCount(out bool _, player.bank2.item);
-			long defendersCount = Utils.CoinsCount(out bool _, player.bank3.item);
-			long walletCount = player.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins());
-
-			long combined = Utils.CoinsCombineStacks(out bool _, piggyCount, safeCount, defendersCount, walletCount);
-			if (combined > 0L)
-			{
-				int walletType = PortableStorage.Instance.ItemType<Wallet>();
-
-				if (defendersCount > 0L) sb.Draw(Main.itemTexture[ItemID.DefendersForge], Utils.CenteredRectangle(new Vector2(shopx + 92f, shopy + 45f), Main.itemTexture[ItemID.DefendersForge].Size() * 0.65f), null, Color.White);
-				if (walletCount > 0L) sb.Draw(Main.itemTexture[walletType], Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 40f), Main.itemTexture[walletType].Size() * 0.5f));
-				if (safeCount > 0L) sb.Draw(Main.itemTexture[ItemID.Safe], Utils.CenteredRectangle(new Vector2(shopx + 80f, shopy + 50f), Main.itemTexture[ItemID.Safe].Size() * 0.65f), null, Color.White);
-				if (piggyCount > 0L) sb.Draw(Main.itemTexture[ItemID.PiggyBank], Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 60f), Main.itemTexture[ItemID.PiggyBank].Size() * 0.65f), null, Color.White);
-				Terraria.UI.ItemSlot.DrawMoney(sb, Language.GetTextValue("LegacyInterface.66"), shopx, shopy, Utils.CoinsSplit(combined), horizontal);
-			}
-		}
-
 		private static int[] inventoryGlowTime;
 		private static float[] inventoryGlowHue;
 		private static int[] inventoryGlowTimeChest;
@@ -400,11 +369,13 @@ namespace PortableStorage.Hooking
 			int walletIndex = il.AddVariable(typeof(long));
 
 			ILCursor cursor = new ILCursor(il);
-			
+			ILLabel label = cursor.DefineLabel();
+
 			if (cursor.TryGotoNext(i => i.MatchStloc(4), i => i.MatchLdloca(1), i => i.MatchLdcI4(3)))
 			{
 				cursor.Index++;
 
+				cursor.Emit(OpCodes.Ldloc, 0);
 				cursor.EmitDelegate<Func<Player, long>>(player => player.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins()));
 				cursor.Emit(OpCodes.Stloc, walletIndex);
 
@@ -424,19 +395,29 @@ namespace PortableStorage.Hooking
 				cursor.Emit(OpCodes.Stelem_I8);
 			}
 
-			//if (cursor.TryGotoNext(i => i.MatchLdarg(0), i => i.MatchLdsfld(typeof(Lang).GetField("inter", Utility.defaultFlags)), i => i.MatchLdcI4(66)))
-			//{
-			//	cursor.Emit(OpCodes.Ldarg, 1);
-			//	cursor.Emit(OpCodes.Ldloc, walletIndex);
-			//	cursor.Emit(OpCodes.Ldarg, 2);
-			//	cursor.Emit(OpCodes.Ldarg, 3);
+			if (cursor.TryGotoNext(i => i.MatchLdloc(2), i => i.MatchLdcI4(0), i => i.MatchConvI8(), i => i.MatchBle(out _)))
+			{
+				cursor.Index += 3;
 
-			//	cursor.EmitDelegate<Action<SpriteBatch, long, float, float>>((sb, walletCount, shopx, shopy) =>
-			//	{
-			//		int walletType = PortableStorage.Instance.ItemType<Wallet>();
-			//		if (walletCount > 0L) sb.Draw(Main.itemTexture[walletType], Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 40f), Main.itemTexture[walletType].Size() * 0.5f));
-			//	});
-			//}
+				cursor.Remove();
+				cursor.Emit(OpCodes.Ble, label);
+			}
+
+			if (cursor.TryGotoNext(i => i.MatchLdarg(0), i => i.MatchLdsfld(typeof(Lang).GetField("inter", Utility.defaultFlags)), i => i.MatchLdcI4(66)))
+			{
+				cursor.MarkLabel(label);
+
+				cursor.Emit(OpCodes.Ldarg, 0);
+				cursor.Emit(OpCodes.Ldloc, walletIndex);
+				cursor.Emit(OpCodes.Ldarg, 1);
+				cursor.Emit(OpCodes.Ldarg, 2);
+
+				cursor.EmitDelegate<Action<SpriteBatch, long, float, float>>((sb, walletCount, shopx, shopy) =>
+				{
+					int walletType = PortableStorage.Instance.ItemType<Wallet>();
+					if (walletCount > 0L) sb.Draw(Main.itemTexture[walletType], Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 40f), Main.itemTexture[walletType].Size() * 0.5f));
+				});
+			}
 		}
 	}
 }
