@@ -275,7 +275,7 @@ namespace PortableStorage.Hooking
 
 				cursor.Emit(OpCodes.Ldarg, 0);
 
-				cursor.EmitDelegate<Func<Player,bool>>(player =>
+				cursor.EmitDelegate<Func<Player, bool>>(player =>
 				{
 					foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
 					{
@@ -325,6 +325,47 @@ namespace PortableStorage.Hooking
 				cursor.Emit(OpCodes.Ret);
 
 				if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(0), i => i.MatchBr(out _))) cursor.MarkLabel(jumpToFor);
+			}
+		}
+
+		private static void Player_SellItem(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
+			ILLabel label = cursor.DefineLabel();
+
+			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(2), i => i.MatchBr(out _)))
+			{
+				cursor.Emit(OpCodes.Ldarg, 0);
+				cursor.Emit(OpCodes.Ldloc, 1);
+
+				cursor.EmitDelegate<Func<Player, int, bool>>((player, price) =>
+				{
+					Wallet wallet = player.inventory.OfType<Wallet>().FirstOrDefault();
+
+					if (wallet != null)
+					{
+						long addedCoins = price + wallet.Handler.Items.CountCoins();
+
+						wallet.Handler.Items = Utils.CoinsSplit(addedCoins).Select((stack, index) =>
+						{
+							Item coin = new Item();
+							coin.SetDefaults(ItemID.CopperCoin + index);
+							coin.stack = stack;
+							return coin;
+						}).Reverse().ToList();
+
+						for (int i = 0; i < 4; i++) wallet.Handler.OnContentsChanged.Invoke(i);
+
+						return true;
+					}
+
+					return false;
+				});
+
+				cursor.Emit(OpCodes.Brfalse, label);
+				cursor.Emit(OpCodes.Ldc_I4, 1);
+				cursor.Emit(OpCodes.Ret);
+				cursor.MarkLabel(label);
 			}
 		}
 		#endregion
@@ -417,209 +458,6 @@ namespace PortableStorage.Hooking
 			}
 
 			return !Player_TryPurchasing(price, list, coins, emptyInventory, emptyPiggy, emptySafe, emptyDefenders, emptyWallet);
-		}
-
-		private static bool Player_SellItem(On.Terraria.Player.orig_SellItem orig, Player self, int price, int stack)
-		{
-			if (price <= 0) return false;
-
-			int actualPrice = price / 5;
-			if (actualPrice < 1) actualPrice = 1;
-			actualPrice *= stack;
-
-			Wallet wallet = self.inventory.OfType<Wallet>().FirstOrDefault();
-
-			if (wallet != null)
-			{
-				long addedCoins = actualPrice + wallet.Handler.Items.CountCoins();
-
-				wallet.Handler.Items = Utils.CoinsSplit(addedCoins).Select((s, index) =>
-				{
-					Item coin = new Item();
-					coin.SetDefaults(ItemID.CopperCoin + index);
-					coin.stack = s;
-					return coin;
-				}).Reverse().ToList();
-
-				for (int i = 0; i < 4; i++) wallet.Handler.OnContentsChanged.Invoke(i);
-
-				return true;
-			}
-
-			Item[] array = new Item[58];
-			for (int i = 0; i < 58; i++)
-			{
-				array[i] = new Item();
-				array[i] = self.inventory[i].Clone();
-			}
-
-			bool flag = false;
-			while (actualPrice >= 1000000)
-			{
-				if (flag) break;
-				int num = -1;
-				for (int k = 53; k >= 0; k--)
-				{
-					if (num == -1 && (self.inventory[k].type == 0 || self.inventory[k].stack == 0))
-					{
-						num = k;
-					}
-
-					while (self.inventory[k].type == 74 && self.inventory[k].stack < self.inventory[k].maxStack && actualPrice >= 1000000)
-					{
-						self.inventory[k].stack++;
-						actualPrice -= 1000000;
-						self.DoCoins(k);
-						if (self.inventory[k].stack == 0 && num == -1)
-						{
-							num = k;
-						}
-					}
-				}
-
-				if (actualPrice >= 1000000)
-				{
-					if (num == -1)
-					{
-						flag = true;
-					}
-					else
-					{
-						self.inventory[num].SetDefaults(74);
-						actualPrice -= 1000000;
-					}
-				}
-			}
-
-			while (actualPrice >= 10000)
-			{
-				if (flag)
-				{
-					break;
-				}
-
-				int num2 = -1;
-				for (int l = 53; l >= 0; l--)
-				{
-					if (num2 == -1 && (self.inventory[l].type == 0 || self.inventory[l].stack == 0))
-					{
-						num2 = l;
-					}
-
-					while (self.inventory[l].type == 73 && self.inventory[l].stack < self.inventory[l].maxStack && actualPrice >= 10000)
-					{
-						self.inventory[l].stack++;
-						actualPrice -= 10000;
-						self.DoCoins(l);
-						if (self.inventory[l].stack == 0 && num2 == -1)
-						{
-							num2 = l;
-						}
-					}
-				}
-
-				if (actualPrice >= 10000)
-				{
-					if (num2 == -1)
-					{
-						flag = true;
-					}
-					else
-					{
-						self.inventory[num2].SetDefaults(73);
-						actualPrice -= 10000;
-					}
-				}
-			}
-
-			while (actualPrice >= 100)
-			{
-				if (flag)
-				{
-					break;
-				}
-
-				int num3 = -1;
-				for (int m = 53; m >= 0; m--)
-				{
-					if (num3 == -1 && (self.inventory[m].type == 0 || self.inventory[m].stack == 0))
-					{
-						num3 = m;
-					}
-
-					while (self.inventory[m].type == 72 && self.inventory[m].stack < self.inventory[m].maxStack && actualPrice >= 100)
-					{
-						self.inventory[m].stack++;
-						actualPrice -= 100;
-						self.DoCoins(m);
-						if (self.inventory[m].stack == 0 && num3 == -1)
-						{
-							num3 = m;
-						}
-					}
-				}
-
-				if (actualPrice >= 100)
-				{
-					if (num3 == -1)
-					{
-						flag = true;
-					}
-					else
-					{
-						self.inventory[num3].SetDefaults(72);
-						actualPrice -= 100;
-					}
-				}
-			}
-
-			while (actualPrice >= 1 && !flag)
-			{
-				int num4 = -1;
-				for (int n = 53; n >= 0; n--)
-				{
-					if (num4 == -1 && (self.inventory[n].type == 0 || self.inventory[n].stack == 0))
-					{
-						num4 = n;
-					}
-
-					while (self.inventory[n].type == 71 && self.inventory[n].stack < self.inventory[n].maxStack && actualPrice >= 1)
-					{
-						self.inventory[n].stack++;
-						actualPrice--;
-						self.DoCoins(n);
-						if (self.inventory[n].stack == 0 && num4 == -1)
-						{
-							num4 = n;
-						}
-					}
-				}
-
-				if (actualPrice >= 1)
-				{
-					if (num4 == -1)
-					{
-						flag = true;
-					}
-					else
-					{
-						self.inventory[num4].SetDefaults(71);
-						actualPrice--;
-					}
-				}
-			}
-
-			if (flag)
-			{
-				for (int num5 = 0; num5 < 58; num5++)
-				{
-					self.inventory[num5] = array[num5].Clone();
-				}
-
-				return false;
-			}
-
-			return true;
 		}
 
 		private static bool Player_TryPurchasing(int price, List<Item[]> inv, List<Point> slotCoins, List<Point> slotsEmpty, List<Point> slotEmptyBank, List<Point> slotEmptyBank2, List<Point> slotEmptyBank3, List<Point> slotEmptyWallet)
