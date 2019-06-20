@@ -24,6 +24,7 @@ namespace PortableStorage.Hooking
 			IL.Terraria.UI.ItemSlot.DrawSavings += ItemSlot_DrawSavings;
 			IL.Terraria.UI.ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color;
 			IL.Terraria.Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
+			IL.Terraria.Player.QuickMana += Player_QuickMana;
 
 			HookEndpointManager.Modify(typeof(Terraria.Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Action<ILContext>(Player_CanBuyItem));
 			#endregion
@@ -31,7 +32,6 @@ namespace PortableStorage.Hooking
 			Player.BuyItem += Player_BuyItem;
 			Player.SellItem += Player_SellItem;
 			Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
-			Player.QuickMana += Player_QuickMana;
 		}
 	}
 }

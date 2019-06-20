@@ -2,12 +2,10 @@
 using Microsoft.Xna.Framework;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using PortableStorage.Items;
 using PortableStorage.Items.Ammo;
 using PortableStorage.Items.Special;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
@@ -45,7 +43,7 @@ namespace PortableStorage.Hooking
 
 			ILCursor cursor = new ILCursor(il);
 
-			if (cursor.TryGotoNext(i => i.MatchLdnull(),i => i.MatchStloc(0)))
+			if (cursor.TryGotoNext(i => i.MatchLdnull(), i => i.MatchStloc(0)))
 			{
 				cursor.Index += 2;
 				ILLabel label = cursor.DefineLabel();
@@ -155,7 +153,7 @@ namespace PortableStorage.Hooking
 		{
 			ILCursor cursor = new ILCursor(il);
 
-			if (cursor.TryGotoNext(i => i.MatchLdloc(0),i => i.MatchLdcI4(58)))
+			if (cursor.TryGotoNext(i => i.MatchLdloc(0), i => i.MatchLdcI4(58)))
 			{
 				cursor.Index += 3;
 
@@ -179,7 +177,7 @@ namespace PortableStorage.Hooking
 
 			cursor.Emit(OpCodes.Newobj, typeof(Item).GetConstructors()[0]);
 			cursor.Emit(OpCodes.Stloc, firstAmmoIndex);
-			
+
 			if (cursor.TryGotoNext(i => i.MatchNewobj(typeof(Item).GetConstructors()[0]), i => i.MatchStloc(0)))
 			{
 				cursor.Index += 2;
@@ -257,6 +255,76 @@ namespace PortableStorage.Hooking
 				cursor.Emit(OpCodes.Ldloc, tupleIndex);
 				cursor.Emit(OpCodes.Ldfld, type.GetField("Item2", Utility.defaultFlags));
 				cursor.Emit(OpCodes.Stloc, 3);
+			}
+		}
+
+		private static void Player_QuickMana(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
+			ILLabel jumpToFor = cursor.DefineLabel();
+			ILLabel jumpToMyCode = cursor.DefineLabel();
+
+			if (cursor.TryGotoNext(i => i.MatchBneUn(out _), i => i.MatchRet()))
+			{
+				cursor.Remove();
+				cursor.Emit(OpCodes.Bne_Un, jumpToMyCode);
+
+				cursor.Index++;
+
+				cursor.MarkLabel(jumpToMyCode);
+
+				cursor.Emit(OpCodes.Ldarg, 0);
+
+				cursor.EmitDelegate<Func<Player,bool>>(player =>
+				{
+					foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
+					{
+						if (item.stack > 0 && item.type > 0 && item.healMana > 0 && (player.potionDelay == 0 || !item.potion) && ItemLoader.CanUseItem(item, player))
+						{
+							Main.PlaySound(item.UseSound, player.position);
+							if (item.potion)
+							{
+								if (item.type == ItemID.RestorationPotion)
+								{
+									player.potionDelay = player.restorationDelayTime;
+									player.AddBuff(BuffID.PotionSickness, player.potionDelay);
+								}
+								else
+								{
+									player.potionDelay = player.potionDelayTime;
+									player.AddBuff(BuffID.PotionSickness, player.potionDelay);
+								}
+							}
+
+							ItemLoader.UseItem(item, player);
+							int healLife = player.GetHealLife(item, true);
+							int healMana = player.GetHealMana(item, true);
+							player.statLife += healLife;
+							player.statMana += healMana;
+							if (player.statLife > player.statLifeMax2) player.statLife = player.statLifeMax2;
+							if (player.statMana > player.statManaMax2) player.statMana = player.statManaMax2;
+							if (healLife > 0 && Main.myPlayer == player.whoAmI) player.HealEffect(healLife);
+							if (healMana > 0)
+							{
+								player.AddBuff(BuffID.ManaSickness, Player.manaSickTime);
+								if (Main.myPlayer == player.whoAmI) player.ManaEffect(healMana);
+							}
+
+							if (ItemLoader.ConsumeItem(item, player)) item.stack--;
+							if (item.stack <= 0) item.TurnToAir();
+
+							Recipe.FindRecipes();
+							return true;
+						}
+					}
+
+					return false;
+				});
+
+				cursor.Emit(OpCodes.Brfalse, jumpToFor);
+				cursor.Emit(OpCodes.Ret);
+
+				if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(0), i => i.MatchBr(out _))) cursor.MarkLabel(jumpToFor);
 			}
 		}
 		#endregion
@@ -349,52 +417,6 @@ namespace PortableStorage.Hooking
 			}
 
 			return !Player_TryPurchasing(price, list, coins, emptyInventory, emptyPiggy, emptySafe, emptyDefenders, emptyWallet);
-		}
-		
-		private static void Player_QuickMana(On.Terraria.Player.orig_QuickMana orig, Player self)
-		{
-			if (self.noItems || self.statMana == self.statManaMax2) return;
-
-			foreach (Item item in self.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items).Concat(self.inventory))
-			{
-				if (item.stack > 0 && item.type > 0 && item.healMana > 0 && (self.potionDelay == 0 || !item.potion) && ItemLoader.CanUseItem(item, self))
-				{
-					Main.PlaySound(item.UseSound, self.position);
-					if (item.potion)
-					{
-						if (item.type == ItemID.RestorationPotion)
-						{
-							self.potionDelay = self.restorationDelayTime;
-							self.AddBuff(BuffID.PotionSickness, self.potionDelay);
-						}
-						else
-						{
-							self.potionDelay = self.potionDelayTime;
-							self.AddBuff(BuffID.PotionSickness, self.potionDelay);
-						}
-					}
-
-					ItemLoader.UseItem(item, self);
-					int healLife = self.GetHealLife(item, true);
-					int healMana = self.GetHealMana(item, true);
-					self.statLife += healLife;
-					self.statMana += healMana;
-					if (self.statLife > self.statLifeMax2) self.statLife = self.statLifeMax2;
-					if (self.statMana > self.statManaMax2) self.statMana = self.statManaMax2;
-					if (healLife > 0 && Main.myPlayer == self.whoAmI) self.HealEffect(healLife);
-					if (healMana > 0)
-					{
-						self.AddBuff(BuffID.ManaSickness, Player.manaSickTime);
-						if (Main.myPlayer == self.whoAmI) self.ManaEffect(healMana);
-					}
-
-					if (ItemLoader.ConsumeItem(item, self)) item.stack--;
-					if (item.stack <= 0) item.TurnToAir();
-
-					Recipe.FindRecipes();
-					return;
-				}
-			}
 		}
 
 		private static bool Player_SellItem(On.Terraria.Player.orig_SellItem orig, Player self, int price, int stack)
