@@ -5,7 +5,8 @@ namespace PortableStorage.Items.Normal
 {
 	public class CapillaryBag : BaseNormalBag
 	{
-		public override string Texture => "PortableStorage/Textures/Items/StoragemasterBag";
+		public override string Texture => "PortableStorage/Textures/Items/CapillaryBag";
+
 		public override int SlotCount => 54;
 		public override string Name => "Capillary";
 
@@ -13,6 +14,8 @@ namespace PortableStorage.Items.Normal
 		{
 			base.SetDefaults();
 
+			item.width = 26;
+			item.height = 30;
 			item.rare = 5;
 		}
 

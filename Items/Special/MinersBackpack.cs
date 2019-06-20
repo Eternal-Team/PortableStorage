@@ -6,6 +6,8 @@ namespace PortableStorage.Items.Special
 {
 	public class MinersBackpack : BaseBag
 	{
+		public override string Texture => "PortableStorage/Textures/Items/MinersBackpack";
+
 		public MinersBackpack()
 		{
 			Handler = new ItemHandler(18);

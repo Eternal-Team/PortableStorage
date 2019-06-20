@@ -6,6 +6,8 @@ namespace PortableStorage.Items.Special
 {
 	public class FishingBelt : BaseBag
 	{
+		public override string Texture => "PortableStorage/Textures/Items/FishingBelt";
+
 		public FishingBelt()
 		{
 			Handler = new ItemHandler(18);
@@ -24,7 +26,7 @@ namespace PortableStorage.Items.Special
 			base.SetDefaults();
 
 			item.width = 32;
-			item.height = 32;
+			item.height = 26;
 		}
 	}
 }

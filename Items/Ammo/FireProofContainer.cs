@@ -4,6 +4,8 @@ namespace PortableStorage.Items.Ammo
 {
 	public class FireProofContainer : BaseAmmoBag
 	{
+		public override string Texture => "PortableStorage/Textures/Items/FireProofContainer";
+
 		public override string AmmoType => "Flameable";
 
 		public override void SetStaticDefaults()
@@ -16,8 +18,8 @@ namespace PortableStorage.Items.Ammo
 		{
 			base.SetDefaults();
 
-			item.width = 32;
-			item.height = 32;
+			item.width = 28;
+			item.height = 26;
 			item.value = Item.buyPrice(gold: 20);
 		}
 	}

@@ -5,6 +5,8 @@ namespace PortableStorage.Items.Ammo
 {
 	public class ThePerfectSolution : BaseAmmoBag
 	{
+		public override string Texture => "PortableStorage/Textures/Items/ThePerfectSolution";
+
 		public override string AmmoType => "Solution";
 
 		public override void SetStaticDefaults()
@@ -17,7 +19,7 @@ namespace PortableStorage.Items.Ammo
 		{
 			base.SetDefaults();
 
-			item.width = 18;
+			item.width = 32;
 			item.height = 32;
 		}
 

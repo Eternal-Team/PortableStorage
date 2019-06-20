@@ -9,6 +9,8 @@ namespace PortableStorage.Items.Special
 {
 	public class BuilderReserve : BaseBag
 	{
+		public override string Texture => "PortableStorage/Textures/Items/BuilderReserve";
+
 		public int selectedIndex;
 
 		public BuilderReserve()

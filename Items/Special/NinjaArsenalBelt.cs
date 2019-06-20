@@ -12,6 +12,8 @@ namespace PortableStorage.Items.Special
 	{
 		// note: if I'm not lazy implement ammo-like system where Ninja's Arsenal Belt doesn't replenish throwable items instead when player uses it it checks whether any bag has it and use it from that, also draw the amount in the bottom-right corner of the slot
 
+		public override string Texture => "PortableStorage/Textures/Items/NinjaArsenalBelt";
+			
 		public NinjaArsenalBelt()
 		{
 			Handler = new ItemHandler(9);
@@ -29,8 +31,8 @@ namespace PortableStorage.Items.Special
 		{
 			base.SetDefaults();
 
-			item.width = 32;
-			item.height = 32;
+			item.width = 26;
+			item.height = 30;
 		}
 
 		public override void UpdateInventory(Player player)

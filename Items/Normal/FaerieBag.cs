@@ -6,6 +6,7 @@ namespace PortableStorage.Items.Normal
 	public class FaerieBag : BaseNormalBag
 	{
 		public override string Texture => "PortableStorage/Textures/Items/FaerieBag";
+
 		public override int SlotCount => 36;
 		public override string Name => "Faerie";
 
@@ -13,6 +14,8 @@ namespace PortableStorage.Items.Normal
 		{
 			base.SetDefaults();
 
+			item.width = 28;
+			item.height = 26;
 			item.rare = 3;
 		}
 

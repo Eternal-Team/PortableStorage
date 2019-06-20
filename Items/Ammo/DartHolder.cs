@@ -2,6 +2,8 @@
 {
 	public class DartHolder : BaseAmmoBag
 	{
+		public override string Texture => "PortableStorage/Textures/Items/DartHolder";
+
 		public override string AmmoType => "Dart";
 
 		public override void SetStaticDefaults()
@@ -15,7 +17,7 @@
 			base.SetDefaults();
 
 			item.width = 32;
-			item.height = 32;
+			item.height = 28;
 		}
 	}
 }

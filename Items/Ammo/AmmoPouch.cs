@@ -4,6 +4,8 @@ namespace PortableStorage.Items.Ammo
 {
 	public class AmmoPouch : BaseAmmoBag
 	{
+		public override string Texture => "PortableStorage/Textures/Items/AmmoPouch";
+
 		public override string AmmoType => "Misc";
 
 		public override void SetStaticDefaults()
@@ -16,8 +18,8 @@ namespace PortableStorage.Items.Ammo
 		{
 			base.SetDefaults();
 
-			item.width = 32;
-			item.height = 32;
+			item.width = 28;
+			item.height = 30;
 			item.value = Item.buyPrice(gold: 3);
 		}
 	}

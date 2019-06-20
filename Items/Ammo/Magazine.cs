@@ -18,8 +18,8 @@ namespace PortableStorage.Items.Ammo
 		{
 			base.SetDefaults();
 
-			item.width = 18;
-			item.height = 32;
+			item.width = 24;
+			item.height = 28;
 		}
 
 		public override void AddRecipes()

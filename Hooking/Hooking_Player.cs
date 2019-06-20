@@ -45,9 +45,7 @@ namespace PortableStorage.Hooking
 
 			ILCursor cursor = new ILCursor(il);
 
-			if (cursor.TryGotoNext(
-				i => i.MatchLdnull(),
-				i => i.MatchStloc(0)))
+			if (cursor.TryGotoNext(i => i.MatchLdnull(),i => i.MatchStloc(0)))
 			{
 				cursor.Index += 2;
 				ILLabel label = cursor.DefineLabel();
@@ -157,9 +155,7 @@ namespace PortableStorage.Hooking
 		{
 			ILCursor cursor = new ILCursor(il);
 
-			if (cursor.TryGotoNext(
-				i => i.MatchLdloc(0),
-				i => i.MatchLdcI4(58)))
+			if (cursor.TryGotoNext(i => i.MatchLdloc(0),i => i.MatchLdcI4(58)))
 			{
 				cursor.Index += 3;
 
@@ -210,8 +206,61 @@ namespace PortableStorage.Hooking
 
 			if (cursor.TryGotoNext(i => i.MatchLdarg(3), i => i.MatchLdindU1(), i => i.MatchBrfalse(out _))) cursor.MarkLabel(endLabel);
 		}
+
+		private static void Player_QuickHeal_GetItemToUse(ILContext il)
+		{
+			Type type = typeof(ValueTuple<Item, int>);
+			int tupleIndex = il.AddVariable(type);
+
+			ILCursor cursor = new ILCursor(il);
+
+			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(3), i => i.MatchBr(out _)))
+			{
+				cursor.Emit(OpCodes.Ldarg, 0);
+				cursor.Emit(OpCodes.Ldloc, 0);
+				cursor.Emit(OpCodes.Ldloc, 2);
+
+				cursor.EmitDelegate<Func<Player, int, int, ValueTuple<Item, int>>>((player, lostHealth, healthGain) =>
+				{
+					Item result = null;
+
+					foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
+					{
+						if (item.stack > 0 && item.type > 0 && item.potion && item.healLife > 0 && ItemLoader.CanUseItem(item, player))
+						{
+							int healWaste = player.GetHealLife(item, true) - lostHealth;
+							if (healthGain < 0)
+							{
+								if (healWaste > healthGain)
+								{
+									result = item;
+									healthGain = healWaste;
+								}
+							}
+							else if (healWaste < healthGain && healWaste >= 0)
+							{
+								result = item;
+								healthGain = healWaste;
+							}
+						}
+					}
+
+					return (result, healthGain);
+				});
+
+				cursor.Emit(OpCodes.Stloc, tupleIndex);
+
+				cursor.Emit(OpCodes.Ldloc, tupleIndex);
+				cursor.Emit(OpCodes.Ldfld, type.GetField("Item1", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Stloc, 1);
+
+				cursor.Emit(OpCodes.Ldloc, tupleIndex);
+				cursor.Emit(OpCodes.Ldfld, type.GetField("Item2", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Stloc, 3);
+			}
+		}
 		#endregion
-		
+
 		private static bool Player_BuyItem(On.Terraria.Player.orig_BuyItem orig, Player self, int price, int customCurrency)
 		{
 			if (customCurrency != -1) return CustomCurrencyManager.BuyItem(self, price, customCurrency);
@@ -302,36 +351,6 @@ namespace PortableStorage.Hooking
 			return !Player_TryPurchasing(price, list, coins, emptyInventory, emptyPiggy, emptySafe, emptyDefenders, emptyWallet);
 		}
 		
-		private static Item Player_QuickHeal_GetItemToUse(On.Terraria.Player.orig_QuickHeal_GetItemToUse orig, Player self)
-		{
-			int lostHealth = self.statLifeMax2 - self.statLife;
-			Item result = null;
-			int healtGain = -self.statLifeMax2;
-
-			foreach (Item item in self.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items).Concat(self.inventory))
-			{
-				if (item.stack > 0 && item.type > 0 && item.potion && item.healLife > 0 && ItemLoader.CanUseItem(item, self))
-				{
-					int healWaste = self.GetHealLife(item, true) - lostHealth;
-					if (healtGain < 0)
-					{
-						if (healWaste > healtGain)
-						{
-							result = item;
-							healtGain = healWaste;
-						}
-					}
-					else if (healWaste < healtGain && healWaste >= 0)
-					{
-						result = item;
-						healtGain = healWaste;
-					}
-				}
-			}
-
-			return result;
-		}
-
 		private static void Player_QuickMana(On.Terraria.Player.orig_QuickMana orig, Player self)
 		{
 			if (self.noItems || self.statMana == self.statManaMax2) return;
@@ -708,7 +727,5 @@ namespace PortableStorage.Hooking
 
 			return result;
 		}
-
-		
 	}
 }

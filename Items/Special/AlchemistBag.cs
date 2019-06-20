@@ -11,6 +11,8 @@ namespace PortableStorage.Items.Special
 {
 	public class AlchemistBag : BaseBag, ICraftingStorage
 	{
+		public override string Texture => "PortableStorage/Textures/Items/AlchemistBag";
+
 		public ItemHandler HandlerIngredients;
 
 		public new ItemHandler CraftingHandler => HandlerIngredients;

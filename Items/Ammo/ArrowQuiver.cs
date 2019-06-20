@@ -6,7 +6,7 @@ namespace PortableStorage.Items.Ammo
 {
 	public class ArrowQuiver : BaseAmmoBag
 	{
-		public override string Texture => "PortableStorage/Textures/Items/Quiver";
+		public override string Texture => "PortableStorage/Textures/Items/ArrowQuiver";
 
 		public override string AmmoType => "Arrow";
 
@@ -20,8 +20,8 @@ namespace PortableStorage.Items.Ammo
 		{
 			base.SetDefaults();
 
-			item.width = 28;
-			item.height = 26;
+			item.width = 32;
+			item.height = 32;
 		}
 
 		public override void AddRecipes()
