@@ -17,7 +17,128 @@ namespace PortableStorage.Hooking
 {
 	public static partial class Hooking
 	{
-		#region IL
+		private static bool Player_BuyItem(On.Terraria.Player.orig_BuyItem orig, Player self, int price, int customCurrency)
+		{
+			if (customCurrency != -1) return CustomCurrencyManager.BuyItem(self, price, customCurrency);
+
+			long inventoryCount = Utils.CoinsCount(out bool _, self.inventory, 58, 57, 56, 55, 54);
+			long piggyCount = Utils.CoinsCount(out bool _, self.bank.item);
+			long safeCount = Utils.CoinsCount(out bool _, self.bank2.item);
+			long defendersCount = Utils.CoinsCount(out bool _, self.bank3.item);
+
+			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins());
+			long combined = Utils.CoinsCombineStacks(out bool _, inventoryCount, piggyCount, safeCount, defendersCount, walletCount);
+
+			if (combined < price) return false;
+
+			List<Item[]> list = new List<Item[]>();
+			Dictionary<int, List<int>> ignoredSlots = new Dictionary<int, List<int>>();
+			List<Point> coins = new List<Point>();
+			List<Point> emptyInventory = new List<Point>();
+			List<Point> emptyPiggy = new List<Point>();
+			List<Point> emptySafe = new List<Point>();
+			List<Point> emptyDefenders = new List<Point>();
+
+			list.Add(self.inventory);
+			list.Add(self.bank.item);
+			list.Add(self.bank2.item);
+			list.Add(self.bank3.item);
+
+			list.AddRange(self.inventory.OfType<Wallet>().Select(x => x.Handler.Items.ToArray()));
+			for (int i = 0; i < list.Count; i++) ignoredSlots[i] = new List<int>();
+
+			ignoredSlots[0] = new List<int>
+			{
+				58,
+				57,
+				56,
+				55,
+				54
+			};
+			for (int j = 0; j < list.Count; j++)
+			{
+				for (int k = 0; k < list[j].Length; k++)
+				{
+					if (!ignoredSlots[j].Contains(k) && list[j][k].IsCoin())
+					{
+						coins.Add(new Point(j, k));
+					}
+				}
+			}
+
+			int num6 = 0;
+			for (int l = list[num6].Length - 1; l >= 0; l--)
+			{
+				if (!ignoredSlots[num6].Contains(l) && (list[num6][l].type == 0 || list[num6][l].stack == 0)) emptyInventory.Add(new Point(num6, l));
+			}
+
+			num6 = 1;
+			for (int m = list[num6].Length - 1; m >= 0; m--)
+			{
+				if (!ignoredSlots[num6].Contains(m) && (list[num6][m].type == 0 || list[num6][m].stack == 0)) emptyPiggy.Add(new Point(num6, m));
+			}
+
+			num6 = 2;
+			for (int n = list[num6].Length - 1; n >= 0; n--)
+			{
+				if (!ignoredSlots[num6].Contains(n) && (list[num6][n].type == 0 || list[num6][n].stack == 0)) emptySafe.Add(new Point(num6, n));
+			}
+
+			num6 = 3;
+			for (int num7 = list[num6].Length - 1; num7 >= 0; num7--)
+			{
+				if (!ignoredSlots[num6].Contains(num7) && (list[num6][num7].type == 0 || list[num6][num7].stack == 0)) emptyDefenders.Add(new Point(num6, num7));
+			}
+
+			// todo
+			List<Point> emptyWallet = new List<Point>();
+			num6 = 4;
+			for (int i = num6; i < list.Count - 4; i++)
+			{
+				for (int n = list[i].Length - 1; n >= 0; n--)
+				{
+					if (!ignoredSlots[i].Contains(n) && (list[i][n].type == 0 || list[i][n].stack == 0)) emptyWallet.Add(new Point(i, n));
+				}
+			}
+
+			return !Player_TryPurchasing(price, list, coins, emptyInventory, emptyPiggy, emptySafe, emptyDefenders, emptyWallet);
+		}
+
+		private static void Player_BuyItem(ILContext il)
+		{
+			int emptyWalletIndex = il.AddVariable(typeof(List<Point>));
+
+			ILCursor cursor = new ILCursor(il);
+
+			if (cursor.TryGotoNext(i => i.MatchCall(typeof(Utils).GetMethod("CoinsCombineStacks", Utility.defaultFlags))))
+			{
+				cursor.Remove();
+				cursor.Emit(OpCodes.Ldarg_0);
+
+				cursor.EmitDelegate<Func<bool, long[], Player, long>>((overflowing, coinsCount, player) =>
+				{
+					long walletCount = player.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins());
+					Array.Resize(ref coinsCount, 5);
+					coinsCount[4] = walletCount;
+					return Utils.CoinsCombineStacks(out overflowing, coinsCount);
+				});
+			}
+
+			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(13), i => i.MatchBr(out _)))
+			{
+				cursor.Emit(OpCodes.Ldarg, 0);
+				cursor.Emit(OpCodes.Ldloc, 5);
+
+				cursor.EmitDelegate<Func<Player, List<Item[]>, List<Item[]>>>((player, list) =>
+				{
+					list.AddRange(player.inventory.OfType<Wallet>().Select(x => x.Handler.Items.ToArray()));
+					return list;
+				});
+
+				cursor.Emit(OpCodes.Stloc, 5);
+			}
+		}
+
 		private static void Player_CanBuyItem(ILContext il)
 		{
 			ILCursor cursor = new ILCursor(il);
@@ -35,6 +156,62 @@ namespace PortableStorage.Hooking
 					return Utils.CoinsCombineStacks(out overflowing, coinsCount);
 				});
 			}
+		}
+
+		private static void Player_HasAmmo(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
+
+			if (cursor.TryGotoNext(i => i.MatchLdloc(0), i => i.MatchLdcI4(58)))
+			{
+				cursor.Index += 3;
+
+				cursor.Emit(OpCodes.Ldarg_0);
+				cursor.Emit(OpCodes.Ldarg_1);
+
+				cursor.EmitDelegate<Func<Player, Item, bool>>((player, ammoUser) => player.inventory.OfType<BaseAmmoBag>().Any(ammoBag => ammoBag.Handler.Items.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0)));
+
+				cursor.Emit(OpCodes.Starg, il.Method.Parameters.FirstOrDefault(x => x.Name == "canUse"));
+			}
+		}
+
+		private static void Player_PickAmmo(ILContext il)
+		{
+			int firstAmmoIndex = il.AddVariable(typeof(Item));
+			int canShootIndex = il.GetArgumentIndex("canShoot");
+
+			ILCursor cursor = new ILCursor(il);
+			ILLabel elseLabel = cursor.DefineLabel();
+			ILLabel endLabel = cursor.DefineLabel();
+
+			cursor.Emit(OpCodes.Newobj, typeof(Item).GetConstructors()[0]);
+			cursor.Emit(OpCodes.Stloc, firstAmmoIndex);
+
+			if (cursor.TryGotoNext(i => i.MatchNewobj(typeof(Item).GetConstructors()[0]), i => i.MatchStloc(0)))
+			{
+				cursor.Index += 2;
+
+				cursor.Emit(OpCodes.Ldarg, 0);
+				cursor.Emit(OpCodes.Ldarg, 1);
+				cursor.EmitDelegate<Func<Player, Item, Item>>((player, sItem) => player.inventory.OfType<BaseAmmoBag>().SelectMany(x => x.Handler.Items).FirstOrDefault(ammo => ammo.ammo == sItem.useAmmo && ammo.stack > 0));
+				cursor.Emit(OpCodes.Stloc, firstAmmoIndex);
+
+				cursor.Emit(OpCodes.Ldloc, firstAmmoIndex);
+				cursor.Emit(OpCodes.Brfalse, elseLabel);
+
+				cursor.Emit(OpCodes.Ldloc, firstAmmoIndex);
+				cursor.Emit(OpCodes.Stloc, 0);
+
+				cursor.Emit(OpCodes.Ldarg, canShootIndex);
+				cursor.Emit(OpCodes.Ldc_I4, 1);
+				cursor.Emit(OpCodes.Stind_I1);
+
+				cursor.Emit(OpCodes.Br, endLabel);
+			}
+
+			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(1), i => i.MatchLdcI4(54))) cursor.MarkLabel(elseLabel);
+
+			if (cursor.TryGotoNext(i => i.MatchLdarg(3), i => i.MatchLdindU1(), i => i.MatchBrfalse(out _))) cursor.MarkLabel(endLabel);
 		}
 
 		private static void Player_QuickBuff(ILContext il)
@@ -147,62 +324,6 @@ namespace PortableStorage.Hooking
 
 				cursor.MarkLabel(label);
 			}
-		}
-
-		private static void Player_HasAmmo(ILContext il)
-		{
-			ILCursor cursor = new ILCursor(il);
-
-			if (cursor.TryGotoNext(i => i.MatchLdloc(0), i => i.MatchLdcI4(58)))
-			{
-				cursor.Index += 3;
-
-				cursor.Emit(OpCodes.Ldarg_0);
-				cursor.Emit(OpCodes.Ldarg_1);
-
-				cursor.EmitDelegate<Func<Player, Item, bool>>((player, ammoUser) => player.inventory.OfType<BaseAmmoBag>().Any(ammoBag => ammoBag.Handler.Items.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0)));
-
-				cursor.Emit(OpCodes.Starg, il.Method.Parameters.FirstOrDefault(x => x.Name == "canUse"));
-			}
-		}
-
-		private static void Player_PickAmmo(ILContext il)
-		{
-			int firstAmmoIndex = il.AddVariable(typeof(Item));
-			int canShootIndex = il.GetArgumentIndex("canShoot");
-
-			ILCursor cursor = new ILCursor(il);
-			ILLabel elseLabel = cursor.DefineLabel();
-			ILLabel endLabel = cursor.DefineLabel();
-
-			cursor.Emit(OpCodes.Newobj, typeof(Item).GetConstructors()[0]);
-			cursor.Emit(OpCodes.Stloc, firstAmmoIndex);
-
-			if (cursor.TryGotoNext(i => i.MatchNewobj(typeof(Item).GetConstructors()[0]), i => i.MatchStloc(0)))
-			{
-				cursor.Index += 2;
-
-				cursor.Emit(OpCodes.Ldarg, 0);
-				cursor.Emit(OpCodes.Ldarg, 1);
-				cursor.EmitDelegate<Func<Player, Item, Item>>((player, sItem) => player.inventory.OfType<BaseAmmoBag>().SelectMany(x => x.Handler.Items).FirstOrDefault(ammo => ammo.ammo == sItem.useAmmo && ammo.stack > 0));
-				cursor.Emit(OpCodes.Stloc, firstAmmoIndex);
-
-				cursor.Emit(OpCodes.Ldloc, firstAmmoIndex);
-				cursor.Emit(OpCodes.Brfalse, elseLabel);
-
-				cursor.Emit(OpCodes.Ldloc, firstAmmoIndex);
-				cursor.Emit(OpCodes.Stloc, 0);
-
-				cursor.Emit(OpCodes.Ldarg, canShootIndex);
-				cursor.Emit(OpCodes.Ldc_I4, 1);
-				cursor.Emit(OpCodes.Stind_I1);
-
-				cursor.Emit(OpCodes.Br, endLabel);
-			}
-
-			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(1), i => i.MatchLdcI4(54))) cursor.MarkLabel(elseLabel);
-
-			if (cursor.TryGotoNext(i => i.MatchLdarg(3), i => i.MatchLdindU1(), i => i.MatchBrfalse(out _))) cursor.MarkLabel(endLabel);
 		}
 
 		private static void Player_QuickHeal_GetItemToUse(ILContext il)
@@ -368,97 +489,6 @@ namespace PortableStorage.Hooking
 				cursor.MarkLabel(label);
 			}
 		}
-		#endregion
-
-		private static bool Player_BuyItem(On.Terraria.Player.orig_BuyItem orig, Player self, int price, int customCurrency)
-		{
-			if (customCurrency != -1) return CustomCurrencyManager.BuyItem(self, price, customCurrency);
-
-			long inventoryCount = Utils.CoinsCount(out bool _, self.inventory, 58, 57, 56, 55, 54);
-			long piggyCount = Utils.CoinsCount(out bool _, self.bank.item);
-			long safeCount = Utils.CoinsCount(out bool _, self.bank2.item);
-			long defendersCount = Utils.CoinsCount(out bool _, self.bank3.item);
-
-			// here
-			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins());
-			long combined = Utils.CoinsCombineStacks(out bool _, inventoryCount, piggyCount, safeCount, defendersCount, walletCount);
-
-			if (combined < price) return false;
-
-			List<Item[]> list = new List<Item[]>();
-			Dictionary<int, List<int>> ignoredSlots = new Dictionary<int, List<int>>();
-			List<Point> coins = new List<Point>();
-			List<Point> emptyInventory = new List<Point>();
-			List<Point> emptyPiggy = new List<Point>();
-			List<Point> emptySafe = new List<Point>();
-			List<Point> emptyDefenders = new List<Point>();
-
-			// here
-			List<Point> emptyWallet = new List<Point>();
-			list.Add(self.inventory);
-			list.Add(self.bank.item);
-			list.Add(self.bank2.item);
-			list.Add(self.bank3.item);
-
-			// here
-			list.AddRange(self.inventory.OfType<Wallet>().Select(x => x.Handler.Items.ToArray()));
-			for (int i = 0; i < list.Count; i++) ignoredSlots[i] = new List<int>();
-
-			ignoredSlots[0] = new List<int>
-			{
-				58,
-				57,
-				56,
-				55,
-				54
-			};
-			for (int j = 0; j < list.Count; j++)
-			{
-				for (int k = 0; k < list[j].Length; k++)
-				{
-					if (!ignoredSlots[j].Contains(k) && list[j][k].IsCoin())
-					{
-						coins.Add(new Point(j, k));
-					}
-				}
-			}
-
-			int num6 = 0;
-			for (int l = list[num6].Length - 1; l >= 0; l--)
-			{
-				if (!ignoredSlots[num6].Contains(l) && (list[num6][l].type == 0 || list[num6][l].stack == 0)) emptyInventory.Add(new Point(num6, l));
-			}
-
-			num6 = 1;
-			for (int m = list[num6].Length - 1; m >= 0; m--)
-			{
-				if (!ignoredSlots[num6].Contains(m) && (list[num6][m].type == 0 || list[num6][m].stack == 0)) emptyPiggy.Add(new Point(num6, m));
-			}
-
-			num6 = 2;
-			for (int n = list[num6].Length - 1; n >= 0; n--)
-			{
-				if (!ignoredSlots[num6].Contains(n) && (list[num6][n].type == 0 || list[num6][n].stack == 0)) emptySafe.Add(new Point(num6, n));
-			}
-
-			num6 = 3;
-			for (int num7 = list[num6].Length - 1; num7 >= 0; num7--)
-			{
-				if (!ignoredSlots[num6].Contains(num7) && (list[num6][num7].type == 0 || list[num6][num7].stack == 0)) emptyDefenders.Add(new Point(num6, num7));
-			}
-
-			// here
-			num6 = 4;
-			for (int i = num6; i < list.Count - 4; i++)
-			{
-				for (int n = list[i].Length - 1; n >= 0; n--)
-				{
-					if (!ignoredSlots[i].Contains(n) && (list[i][n].type == 0 || list[i][n].stack == 0)) emptyWallet.Add(new Point(i, n));
-				}
-			}
-
-			return !Player_TryPurchasing(price, list, coins, emptyInventory, emptyPiggy, emptySafe, emptyDefenders, emptyWallet);
-		}
 
 		private static bool Player_TryPurchasing(int price, List<Item[]> inv, List<Point> slotCoins, List<Point> slotsEmpty, List<Point> slotEmptyBank, List<Point> slotEmptyBank2, List<Point> slotEmptyBank3, List<Point> slotEmptyWallet)
 		{
@@ -494,6 +524,7 @@ namespace PortableStorage.Hooking
 					coinValue /= 100L;
 				}
 
+				// todo: this seems to handle change, try adding all to wallet
 				if (priceRemaining > 0L)
 				{
 					if (slotsEmpty.Count <= 0)
@@ -586,6 +617,11 @@ namespace PortableStorage.Hooking
 			}
 
 			return result;
+		}
+
+		private static void Player_TryPurchasing(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
 		}
 	}
 }

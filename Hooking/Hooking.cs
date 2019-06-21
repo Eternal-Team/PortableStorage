@@ -26,11 +26,12 @@ namespace PortableStorage.Hooking
 			IL.Terraria.Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
 			IL.Terraria.Player.QuickMana += Player_QuickMana;
 			IL.Terraria.Player.SellItem += Player_SellItem;
+			IL.Terraria.Player.BuyItem += Player_BuyItem;
+			IL.Terraria.Player.TryPurchasing += Player_TryPurchasing;
 
 			HookEndpointManager.Modify(typeof(Terraria.Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Action<ILContext>(Player_CanBuyItem));
 			#endregion
 
-			Player.BuyItem += Player_BuyItem;
 			Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
 		}
 	}
