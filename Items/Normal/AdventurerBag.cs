@@ -14,8 +14,8 @@ namespace PortableStorage.Items.Normal
 		{
 			base.SetDefaults();
 
-			item.width = 22;
-			item.height = 24;
+			item.width = 26;
+			item.height = 32;
 			item.rare = 1;
 		}
 
