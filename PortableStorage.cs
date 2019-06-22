@@ -32,8 +32,8 @@ namespace PortableStorage
 				//PanelUI = Utility.SetupGUI<PanelUI>();
 				//PanelUI.Visible += () => PanelUI.UI.Elements.Count > 0;
 
-				ContainerLibrary.ContainerLibrary.CheckAlchemy += () => (33, Main.LocalPlayer.inventory.OfType<AlchemistBag>().Any());
-				ContainerLibrary.ContainerLibrary.ModifyAdjTiles += () => Main.LocalPlayer.adjTile[TileID.Bottles] = true;
+				//ContainerLibrary.ContainerLibrary.CheckAlchemy += () => (33, Main.LocalPlayer.inventory.OfType<AlchemistBag>().Any());
+				//ContainerLibrary.ContainerLibrary.ModifyAdjTiles += () => Main.LocalPlayer.adjTile[TileID.Bottles] = true;
 			}
 		}
 

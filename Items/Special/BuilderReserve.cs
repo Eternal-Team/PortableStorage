@@ -112,7 +112,7 @@ namespace PortableStorage.Items.Special
 		public override void Load(TagCompound tag)
 		{
 			base.Load(tag);
-			selectedIndex = tag.GetInt("SelectedIndex");
+			SetIndex(tag.GetInt("SelectedIndex"));
 		}
 
 		public override void AddRecipes()

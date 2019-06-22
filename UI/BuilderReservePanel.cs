@@ -43,7 +43,7 @@ namespace PortableStorage.UI
 
 			for (int i = 0; i < Container.Handler.Slots; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i);
+				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i) { ShortStackSize = true };
 				slot.ClickOverride += () =>
 				{
 					if (!slot.Item.IsAir && Main.keyState.IsKeyDown(Keys.LeftAlt))

@@ -21,6 +21,7 @@ namespace PortableStorage.Global
 		private static Dictionary<int, (float scale, float angle)> _blackHoleData;
 		public static Dictionary<int, (float scale, float angle)> BlackHoleData => _blackHoleData ?? (_blackHoleData = new Dictionary<int, (float, float)>());
 
+		// todo: tiles/walls don't go inside Builder's Reserve
 		public override bool OnPickup(Item item, Player player)
 		{
 			if (item.IsCoin())
@@ -102,6 +103,23 @@ namespace PortableStorage.Global
 						item = alchemistBag.Handler.InsertItem(j, item);
 
 						if (item.IsAir || !item.active) return false;
+					}
+				}
+			}
+			else if (item.createTile >= 0 || item.createWall >= 0)
+			{
+				BuilderReserve builderReserve = player.inventory.OfType<BuilderReserve>().FirstOrDefault(reserve => reserve.Handler.Items.Any(i => i.type == item.type));
+				if (builderReserve != null)
+				{
+					int index = builderReserve.Handler.Items.FindIndex(i => i.type == item.type);
+					if (index != -1)
+					{
+						item = builderReserve.Handler.InsertItem(index, item);
+						item.TurnToAir();
+
+						Main.PlaySound(SoundID.Grab);
+
+						return false;
 					}
 				}
 			}
