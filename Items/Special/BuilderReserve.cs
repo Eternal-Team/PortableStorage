@@ -25,7 +25,7 @@ namespace PortableStorage.Items.Special
 
 		public override ModItem Clone()
 		{
-			BuilderReserve clone = (BuilderReserve) base.Clone();
+			BuilderReserve clone = (BuilderReserve)base.Clone();
 			clone.selectedIndex = selectedIndex;
 			return clone;
 		}

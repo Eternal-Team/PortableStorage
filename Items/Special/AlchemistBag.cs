@@ -29,7 +29,7 @@ namespace PortableStorage.Items.Special
 
 		public override ModItem Clone()
 		{
-			AlchemistBag clone = (AlchemistBag) base.Clone();
+			AlchemistBag clone = (AlchemistBag)base.Clone();
 			clone.HandlerIngredients = HandlerIngredients.Clone();
 			return clone;
 		}

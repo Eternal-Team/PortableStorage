@@ -176,10 +176,10 @@ namespace PortableStorage.Hooking
 
 							if (item.mana > 0 && useItem)
 							{
-								if (player.statMana >= (int) (item.mana * player.manaCost))
+								if (player.statMana >= (int)(item.mana * player.manaCost))
 								{
-									player.manaRegenDelay = (int) player.maxRegenDelay;
-									player.statMana -= (int) (item.mana * player.manaCost);
+									player.manaRegenDelay = (int)player.maxRegenDelay;
+									player.statMana -= (int)(item.mana * player.manaCost);
 								}
 								else useItem = false;
 							}
@@ -416,7 +416,7 @@ namespace PortableStorage.Hooking
 							{
 								long stack = priceRemaining / coinValue;
 								dictionary[current] = inv[current.X][current.Y].Clone();
-								if (stack < inv[current.X][current.Y].stack) inv[current.X][current.Y].stack -= (int) stack;
+								if (stack < inv[current.X][current.Y].stack) inv[current.X][current.Y].stack -= (int)stack;
 								else
 								{
 									inv[current.X][current.Y].SetDefaults();
@@ -520,6 +520,146 @@ namespace PortableStorage.Hooking
 			}
 
 			return result;
+		}
+
+		private static void Player_ItemCheck(ILContext il)
+		{
+			Type type = typeof(ValueTuple<int, bool>);
+			int tupleIndex = il.AddVariable(type);
+
+			ILCursor cursor = new ILCursor(il);
+			ILLabel label = cursor.DefineLabel();
+
+			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(29)))
+			{
+				cursor.Index += 2;
+
+				cursor.Emit(OpCodes.Ldarg, 0);
+				cursor.Emit(OpCodes.Ldloc, 26);
+
+				;
+				cursor.EmitDelegate<Func<Player, int, ValueTuple<int, bool>>>((player, index) =>
+				{
+					bool foundBait = false;
+					int baitType = 0;
+
+					foreach (Item item in player.inventory.OfType<FishingBelt>().SelectMany(belt => belt.Handler.Items))
+					{
+						if (item.stack > 0 && item.bait > 0)
+						{
+							bool consumeBait = false;
+							int baitPower = 1 + item.bait / 5;
+
+							if (baitPower < 1) baitPower = 1;
+							if (player.accTackleBox) baitPower++;
+							if (Main.rand.Next(baitPower) == 0) consumeBait = true;
+							if (Main.projectile[index].localAI[1] < 0f) consumeBait = true;
+
+							if (Main.projectile[index].localAI[1] > 0f)
+							{
+								Item fish = new Item();
+								fish.SetDefaults((int)Main.projectile[index].localAI[1]);
+								if (fish.rare < 0) consumeBait = false;
+							}
+
+							if (consumeBait)
+							{
+								baitType = item.type;
+								if (ItemLoader.ConsumeItem(item, player)) item.stack--;
+								if (item.stack <= 0) item.SetDefaults();
+							}
+
+							foundBait = true;
+							break;
+						}
+					}
+
+					return (baitType, foundBait);
+				});
+
+				cursor.Emit(OpCodes.Stloc, tupleIndex);
+
+				cursor.Emit(OpCodes.Ldloc, tupleIndex);
+				cursor.Emit(OpCodes.Ldfld, type.GetField("Item1", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Stloc, 29);
+
+				cursor.Emit(OpCodes.Ldloc, tupleIndex);
+				cursor.Emit(OpCodes.Ldfld, type.GetField("Item2", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Stloc, 28);
+
+				cursor.Emit(OpCodes.Ldloc, 28);
+				cursor.Emit(OpCodes.Brtrue, label);
+			}
+
+			if (cursor.TryGotoNext(i => i.MatchLdloc(28), i => i.MatchBrfalse(out _))) cursor.MarkLabel(label);
+		}
+
+		private static void Player_FishingLevel(ILContext il)
+		{
+			Type tupleType = typeof(ValueTuple<Item, int>);
+			int tupleIndex = il.AddVariable(tupleType);
+
+			int itemIndex = il.AddVariable(typeof(Item));
+
+			ILCursor cursor = new ILCursor(il);
+			ILLabel label = cursor.DefineLabel();
+
+			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(3)))
+			{
+				cursor.Index += 2;
+
+				cursor.Emit(OpCodes.Ldarg, 0);
+
+				cursor.EmitDelegate<Func<Player, ValueTuple<Item, int>>>(player =>
+				{
+					foreach (Item item in player.inventory.OfType<FishingBelt>().SelectMany(belt => belt.Handler.Items))
+					{
+						if (item.stack > 0 && item.bait > 0)
+						{
+							if (item.type == 2673) return (null, -1);
+							return (item, item.bait);
+						}
+					}
+
+					return (null, 0);
+				});
+
+				cursor.Emit(OpCodes.Stloc, tupleIndex);
+
+				cursor.Emit(OpCodes.Ldloc, tupleIndex);
+				cursor.Emit(OpCodes.Ldfld, tupleType.GetField("Item1", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Stloc, itemIndex);
+
+				cursor.Emit(OpCodes.Ldloc, tupleIndex);
+				cursor.Emit(OpCodes.Ldfld, tupleType.GetField("Item2", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Stloc, 0);
+
+				cursor.Emit(OpCodes.Ldloc, 0);
+				cursor.Emit(OpCodes.Ldc_I4, -1);
+				cursor.Emit(OpCodes.Ceq);
+				cursor.Emit(OpCodes.Brfalse, label);
+				cursor.Emit(OpCodes.Ldc_I4, -1);
+				cursor.Emit(OpCodes.Ret);
+
+				cursor.MarkLabel(label);
+			}
+
+			if (cursor.TryGotoNext(i => i.MatchLdsfld(typeof(Item).GetField("bait", Utility.defaultFlags)), i => i.MatchStloc(0), i => i.MatchBr(out _)))
+			{
+				cursor.Index += 2;
+
+				cursor.Emit(OpCodes.Ldarg, 0);
+				cursor.Emit(OpCodes.Ldfld, typeof(Player).GetField("inventory", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Ldloc, 3);
+				cursor.Emit(OpCodes.Ldelem_Ref);
+				cursor.Emit(OpCodes.Stloc, itemIndex);
+			}
+
+			if (cursor.TryGotoNext(i => i.MatchLdarg(0), i => i.MatchLdfld(typeof(Player).GetField("inventory", Utility.defaultFlags)), i => i.MatchLdloc(3), i => i.MatchLdelemRef(), i => i.MatchLdloca(4)))
+			{
+				cursor.RemoveRange(4);
+				cursor.Emit(OpCodes.Ldloc, itemIndex);
+			}
 		}
 	}
 }

@@ -10,7 +10,7 @@ namespace PortableStorage.Global
 		{
 			if (item.type == mod.ItemType<BuilderReserve>())
 			{
-				BuilderReserve builderReserve = (BuilderReserve) item.modItem;
+				BuilderReserve builderReserve = (BuilderReserve)item.modItem;
 				Item usedItem = builderReserve.Handler.Items[builderReserve.selectedIndex];
 				usedItem.stack--;
 				if (usedItem.stack <= 0)

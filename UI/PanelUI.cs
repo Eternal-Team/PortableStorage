@@ -47,9 +47,9 @@ namespace PortableStorage.UI
 		{
 			if (bag.UI == null) return;
 
-			BaseElement element = (BaseElement) bag.UI;
+			BaseElement element = (BaseElement)bag.UI;
 
-			ContainerLibrary.ContainerLibrary.ItemHandlerUI.Remove((IItemHandlerUI) element);
+			ContainerLibrary.ContainerLibrary.ItemHandlerUI.Remove((IItemHandlerUI)element);
 			Main.LocalPlayer.GetModPlayer<PSPlayer>().UIPositions[bag.ID] = element.Position;
 			Elements.Remove(element);
 			bag.UI = null;
@@ -61,10 +61,10 @@ namespace PortableStorage.UI
 		{
 			Type bagType = UICache.ContainsKey(bag.GetType()) ? bag.GetType() : bag.GetType().BaseType;
 
-			bag.UI = (IBagPanel) Activator.CreateInstance(UICache[bagType]);
+			bag.UI = (IBagPanel)Activator.CreateInstance(UICache[bagType]);
 			bag.UI.ID = bag.ID;
 
-			BaseElement element = (BaseElement) bag.UI;
+			BaseElement element = (BaseElement)bag.UI;
 
 			element.Activate();
 
@@ -75,7 +75,7 @@ namespace PortableStorage.UI
 			}
 
 			Append(element);
-			ContainerLibrary.ContainerLibrary.ItemHandlerUI.Add((IItemHandlerUI) element);
+			ContainerLibrary.ContainerLibrary.ItemHandlerUI.Add((IItemHandlerUI)element);
 
 			Main.PlaySound(bag.OpenSound);
 		}

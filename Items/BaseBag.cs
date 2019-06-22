@@ -27,7 +27,7 @@ namespace PortableStorage.Items
 
 		public override ModItem Clone()
 		{
-			BaseBag clone = (BaseBag) base.Clone();
+			BaseBag clone = (BaseBag)base.Clone();
 			clone.Handler = Handler.Clone();
 			clone.ID = ID;
 			return clone;

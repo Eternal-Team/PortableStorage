@@ -28,7 +28,7 @@ namespace PortableStorage.Items.Special
 
 		public override ModItem Clone()
 		{
-			TheBlackHole clone = (TheBlackHole) base.Clone();
+			TheBlackHole clone = (TheBlackHole)base.Clone();
 			clone.active = active;
 			return clone;
 		}
