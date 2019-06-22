@@ -20,6 +20,8 @@ namespace PortableStorage.Hooking
 		private static void Player_DropSelectedItem(Player.orig_DropSelectedItem orig, Terraria.Player self)
 		{
 			if (self.HeldItem.modItem is BaseBag bag) PortableStorage.Instance.PanelUI.UI.CloseUI(bag);
+
+			orig(self);
 		}
 
 		private static UIElement UIElement_GetElementAt(On.Terraria.UI.UIElement.orig_GetElementAt orig, UIElement self, Vector2 point)

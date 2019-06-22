@@ -54,10 +54,7 @@ namespace PortableStorage.Items
 			return true;
 		}
 
-		public override bool CanRightClick()
-		{
-			return true;
-		}
+		public override bool CanRightClick() => true;
 
 		public override void RightClick(Player player)
 		{
@@ -66,14 +63,11 @@ namespace PortableStorage.Items
 			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.PanelUI.UI.HandleUI(this);
 		}
 
-		public override TagCompound Save()
+		public override TagCompound Save() => new TagCompound
 		{
-			return new TagCompound
-			{
-				["ID"] = ID.ToString(),
-				["Items"] = Handler.Save()
-			};
-		}
+			["ID"] = ID.ToString(),
+			["Items"] = Handler.Save()
+		};
 
 		public override void Load(TagCompound tag)
 		{

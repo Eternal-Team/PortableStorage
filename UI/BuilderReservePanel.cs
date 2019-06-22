@@ -47,7 +47,7 @@ namespace PortableStorage.UI
 				UIContainerSlot slot = new UIContainerSlot(() => Bag.Handler, i);
 				slot.ClickOverride += () =>
 				{
-					if (!slot.Item.IsAir && Main.keyState.IsKeyDown(Keys.RightShift))
+					if (!slot.Item.IsAir && Main.keyState.IsKeyDown(Keys.LeftAlt))
 					{
 						if (devNull.selectedIndex == slot.slot) devNull.SetIndex(-1);
 						else devNull.SetIndex(slot.slot);
