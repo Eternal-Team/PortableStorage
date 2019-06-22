@@ -1,4 +1,6 @@
-﻿namespace PortableStorage.Items.Ammo
+﻿using Terraria;
+
+namespace PortableStorage.Items.Ammo
 {
 	public class DartHolder : BaseAmmoBag
 	{
@@ -18,6 +20,7 @@
 
 			item.width = 32;
 			item.height = 28;
+			item.value = Item.buyPrice(gold: 15);
 		}
 	}
 }

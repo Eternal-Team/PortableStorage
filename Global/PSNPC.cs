@@ -31,6 +31,10 @@ namespace PortableStorage.Global
 					shop.item[nextSlot].SetDefaults(mod.ItemType<SkeletalBag>());
 					nextSlot++;
 					break;
+				case NPCID.WitchDoctor when Main.LocalPlayer.ZoneJungle:
+					shop.item[nextSlot].SetDefaults(mod.ItemType<DartHolder>());
+					nextSlot++;
+					break;
 			}
 		}
 

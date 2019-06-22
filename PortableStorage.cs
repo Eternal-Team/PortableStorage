@@ -1,4 +1,5 @@
 ﻿using BaseLibrary;
+using BaseLibrary.UI;
 using Microsoft.Xna.Framework;
 using PortableStorage.Items;
 using PortableStorage.Items.Special;
@@ -10,16 +11,18 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
+using PanelUI = PortableStorage.UI.PanelUI;
 
 namespace PortableStorage
 {
-	// note: add bag slot
+	// todo: add bag slot
+	// todo: add fluid + energy addons
 
 	public class PortableStorage : Mod
 	{
 		public static PortableStorage Instance;
 
-		public BaseLibrary.UI.GUI<PanelUI> PanelUI;
+		public GUI<PanelUI> PanelUI;
 		internal List<Guid> BagCache = new List<Guid>();
 
 		public override void Load()
