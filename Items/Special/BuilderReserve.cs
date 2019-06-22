@@ -3,6 +3,7 @@ using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Global;
+using PortableStorage.UI;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
@@ -23,7 +24,7 @@ namespace PortableStorage.Items.Special
 		{
 			Handler = new ItemHandler(9);
 			Handler.OnContentsChanged += slot => item.SyncBag();
-			Handler.IsItemValid += (slot, item) => { return (item.createTile >= 0 || item.createWall > 0) && (Handler.Items.All(x => x.type != item.type) || Handler.Items[slot].type == item.type); };
+			Handler.IsItemValid += (slot, item) => { return (item.createTile >= 0 || item.createWall >= 0) && (Handler.Items.All(x => x.type != item.type) || Handler.Items[slot].type == item.type); };
 			Handler.GetSlotLimit += slot => int.MaxValue;
 
 			selectedIndex = -1;
@@ -78,7 +79,7 @@ namespace PortableStorage.Items.Special
 				}
 			}
 
-			//(UI as DevNullPanel)?.RefreshTextures();
+			(UI as BuilderReservePanel)?.RefreshTextures();
 		}
 
 		public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)

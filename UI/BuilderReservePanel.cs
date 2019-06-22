@@ -41,7 +41,6 @@ namespace PortableStorage.UI
 			};
 			Append(gridItems);
 
-			BuilderReserve devNull = Bag;
 			for (int i = 0; i < Bag.Handler.Slots; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(() => Bag.Handler, i);
@@ -49,8 +48,8 @@ namespace PortableStorage.UI
 				{
 					if (!slot.Item.IsAir && Main.keyState.IsKeyDown(Keys.LeftAlt))
 					{
-						if (devNull.selectedIndex == slot.slot) devNull.SetIndex(-1);
-						else devNull.SetIndex(slot.slot);
+						if (Bag.selectedIndex == slot.slot) Bag.SetIndex(-1);
+						else Bag.SetIndex(slot.slot);
 
 						return true;
 					}
@@ -59,7 +58,7 @@ namespace PortableStorage.UI
 				};
 				slot.OnInteract += () =>
 				{
-					if (slot.Item.IsAir && slot.slot == devNull.selectedIndex) devNull.SetIndex(-1);
+					if (slot.Item.IsAir && slot.slot == Bag.selectedIndex) Bag.SetIndex(-1);
 				};
 				gridItems.Add(slot);
 			}
@@ -69,11 +68,7 @@ namespace PortableStorage.UI
 
 		public void RefreshTextures()
 		{
-			BuilderReserve devNull = Bag;
-			if (devNull.selectedIndex >= 0)
-			{
-				foreach (UIContainerSlot slot in gridItems.items) slot.backgroundTexture = devNull.selectedIndex == slot.slot ? Main.inventoryBack15Texture : Main.inventoryBackTexture;
-			}
+			foreach (UIContainerSlot slot in gridItems.items) slot.backgroundTexture = Bag.selectedIndex == slot.slot ? Main.inventoryBack15Texture : Main.inventoryBackTexture;
 		}
 	}
 }
