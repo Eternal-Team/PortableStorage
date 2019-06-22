@@ -1,10 +1,10 @@
-﻿using BaseLibrary.UI;
+﻿using BaseLibrary;
+using BaseLibrary.UI;
 using BaseLibrary.UI.Elements;
 using ContainerLibrary;
-using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Items;
 using System;
-using Terraria.ModLoader;
+using Terraria;
 
 namespace PortableStorage.UI
 {
@@ -14,7 +14,7 @@ namespace PortableStorage.UI
 		Guid ID { get; set; }
 	}
 
-	public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IBagPanel, IItemHandlerUI where T : BaseBag
+	public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IBagPanel, IItemHandlerUI, IHasCursorOverride where T : BaseBag
 	{
 		//public T Bag => Main.LocalPlayer.inventory.Concat(Main.mouseItem).OfType<T>().FirstOrDefault(x => x.ID == ID);
 
@@ -24,6 +24,7 @@ namespace PortableStorage.UI
 		public UITextButton buttonClose;
 		public UIGrid<UIContainerSlot> gridItems;
 		public ItemHandler Handler => Container.Handler;
-		public Texture2D ShiftClickIcon => ModContent.GetTexture("PortableStorage/Textures/MouseCursor");
+
+		public string GetTexture(Item item) => Handler.IsItemValid(0, item) ? Container.Texture : "";
 	}
 }
