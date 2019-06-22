@@ -1,9 +1,9 @@
 ﻿using BaseLibrary.UI;
 using Microsoft.Xna.Framework;
-using On.Terraria;
 using On.Terraria.UI;
 using PortableStorage.Items;
-using Item = Terraria.Item;
+using Terraria;
+using Player = On.Terraria.Player;
 using UIElement = Terraria.UI.UIElement;
 
 namespace PortableStorage.Hooking

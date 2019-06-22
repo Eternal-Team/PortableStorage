@@ -1,9 +1,9 @@
-﻿using System.IO;
-using BaseLibrary;
+﻿using BaseLibrary;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Global;
+using System.IO;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -28,7 +28,7 @@ namespace PortableStorage.Items.Special
 
 		public override ModItem Clone()
 		{
-			TheBlackHole clone = (TheBlackHole)base.Clone();
+			TheBlackHole clone = (TheBlackHole) base.Clone();
 			clone.active = active;
 			return clone;
 		}

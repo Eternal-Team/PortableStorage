@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using ContainerLibrary;
+﻿using ContainerLibrary;
 using PortableStorage.Global;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -25,7 +25,7 @@ namespace PortableStorage.Items.Special
 
 		public override ModItem Clone()
 		{
-			BuilderReserve clone = (BuilderReserve)base.Clone();
+			BuilderReserve clone = (BuilderReserve) base.Clone();
 			clone.selectedIndex = selectedIndex;
 			return clone;
 		}
@@ -46,9 +46,15 @@ namespace PortableStorage.Items.Special
 			item.useTurn = true;
 		}
 
-		public override bool CanUseItem(Player player) => selectedIndex >= 0 && Handler.Items[selectedIndex].type > 0 && Handler.Items[selectedIndex].stack > 1;
+		public override bool CanUseItem(Player player)
+		{
+			return selectedIndex >= 0 && Handler.Items[selectedIndex].type > 0 && Handler.Items[selectedIndex].stack > 1;
+		}
 
-		public override bool UseItem(Player player) => false;
+		public override bool UseItem(Player player)
+		{
+			return false;
+		}
 
 		public void SetIndex(int index)
 		{

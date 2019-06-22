@@ -1,7 +1,6 @@
-﻿using System.IO;
-using ContainerLibrary;
+﻿using ContainerLibrary;
 using PortableStorage.Global;
-using Terraria;
+using System.IO;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -30,7 +29,7 @@ namespace PortableStorage.Items.Special
 
 		public override ModItem Clone()
 		{
-			AlchemistBag clone = (AlchemistBag)base.Clone();
+			AlchemistBag clone = (AlchemistBag) base.Clone();
 			clone.HandlerIngredients = HandlerIngredients.Clone();
 			return clone;
 		}

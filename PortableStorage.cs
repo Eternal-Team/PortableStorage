@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BaseLibrary;
-using BaseLibrary.UI;
+﻿using BaseLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.Items;
 using PortableStorage.Items.Special;
 using PortableStorage.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
-using PanelUI = PortableStorage.UI.PanelUI;
-using Utility = PortableStorage.Global.Utility;
 
 namespace PortableStorage
 {
@@ -22,18 +19,18 @@ namespace PortableStorage
 	{
 		public static PortableStorage Instance;
 
-		public GUI<PanelUI> PanelUI;
+		public BaseLibrary.UI.GUI<PanelUI> PanelUI;
 		internal List<Guid> BagCache = new List<Guid>();
 
 		public override void Load()
 		{
 			Instance = this;
-			
+
 			Hooking.Hooking.Initialize();
 
 			if (!Main.dedServ)
 			{
-				PanelUI = BaseLibrary.Utility.SetupGUI<PanelUI>();
+				PanelUI = Utility.SetupGUI<PanelUI>();
 				PanelUI.Visible += () => PanelUI.UI.Elements.Count > 0;
 
 				ContainerLibrary.ContainerLibrary.CheckAlchemy += () => (33, Main.LocalPlayer.inventory.OfType<AlchemistBag>().Any());
@@ -43,12 +40,18 @@ namespace PortableStorage
 
 		public override void Unload()
 		{
-			BaseLibrary.Utility.UnloadNullableTypes();
+			Utility.UnloadNullableTypes();
 		}
 
-		public override void AddRecipeGroups() => Utility.AddRecipeGroups();
+		public override void AddRecipeGroups()
+		{
+			Global.Utility.AddRecipeGroups();
+		}
 
-		public override void PostSetupContent() => Utility.PostSetupContent();
+		public override void PostSetupContent()
+		{
+			Global.Utility.PostSetupContent();
+		}
 
 		public override object Call(params object[] args)
 		{
@@ -56,16 +59,16 @@ namespace PortableStorage
 
 			switch (command)
 			{
-				case "RegisterIngredient" when args[1] is short ID && !Utility.AlchemistBagWhitelist.Contains(ID):
+				case "RegisterIngredient" when args[1] is short ID && !Global.Utility.AlchemistBagWhitelist.Contains(ID):
 				{
-					Utility.AlchemistBagWhitelist.Add(ID);
+					Global.Utility.AlchemistBagWhitelist.Add(ID);
 					Logger.Info($"Ingredient '{ID}' added to Alchemist's Bag whitelist!");
 					break;
 				}
 
-				case "RegisterOre" when args[1] is short ID && !Utility.OreWhitelist.Contains(ID):
+				case "RegisterOre" when args[1] is short ID && !Global.Utility.OreWhitelist.Contains(ID):
 				{
-					Utility.OreWhitelist.Add(ID);
+					Global.Utility.OreWhitelist.Add(ID);
 					Logger.Info($"Ore '{ID}' added to Ore whitelist!");
 					break;
 				}

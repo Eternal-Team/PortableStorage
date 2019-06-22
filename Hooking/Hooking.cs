@@ -12,12 +12,16 @@ namespace PortableStorage.Hooking
 		public static void Initialize()
 		{
 			#region On
+
 			UIElement.GetElementAt += UIElement_GetElementAt;
 			ItemSlot.LeftClick_ItemArray_int_int += ItemSlot_LeftClick;
 			Player.DropSelectedItem += Player_DropSelectedItem;
+			Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
+
 			#endregion
 
 			#region IL
+
 			IL.Terraria.Player.HasAmmo += Player_HasAmmo;
 			IL.Terraria.Player.QuickBuff += Player_QuickBuff;
 			IL.Terraria.Player.PickAmmo += Player_PickAmmo;
@@ -27,12 +31,10 @@ namespace PortableStorage.Hooking
 			IL.Terraria.Player.QuickMana += Player_QuickMana;
 			IL.Terraria.Player.SellItem += Player_SellItem;
 			IL.Terraria.Player.BuyItem += Player_BuyItem;
-			IL.Terraria.Player.TryPurchasing += Player_TryPurchasing;
 
 			HookEndpointManager.Modify(typeof(Terraria.Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Action<ILContext>(Player_CanBuyItem));
-			#endregion
 
-			Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
+			#endregion
 		}
 	}
 }

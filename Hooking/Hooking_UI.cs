@@ -53,7 +53,7 @@ namespace PortableStorage.Hooking
 				cursor.Index++;
 
 				cursor.Emit(OpCodes.Ldloc, 0);
-				cursor.EmitDelegate<Func<Player, long>>(player => player.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins()));
+				cursor.EmitDelegate<Func<Player, long>>(player => player.inventory.OfType<Wallet>().Sum(wallet => wallet.Coins));
 				cursor.Emit(OpCodes.Stloc, walletIndex);
 
 				cursor.Index++;

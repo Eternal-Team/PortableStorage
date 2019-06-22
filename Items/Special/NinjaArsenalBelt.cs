@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using ContainerLibrary;
+﻿using ContainerLibrary;
 using PortableStorage.Global;
+using System;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,7 +13,7 @@ namespace PortableStorage.Items.Special
 		// note: if I'm not lazy implement ammo-like system where Ninja's Arsenal Belt doesn't replenish throwable items instead when player uses it it checks whether any bag has it and use it from that, also draw the amount in the bottom-right corner of the slot
 
 		public override string Texture => "PortableStorage/Textures/Items/NinjaArsenalBelt";
-			
+
 		public NinjaArsenalBelt()
 		{
 			Handler = new ItemHandler(9);

@@ -1,5 +1,7 @@
-﻿using ContainerLibrary;
+﻿using BaseLibrary;
+using ContainerLibrary;
 using PortableStorage.Global;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 
@@ -10,6 +12,23 @@ namespace PortableStorage.Items.Ammo
 		public override string Texture => "PortableStorage/Textures/Items/Wallet";
 
 		public override string AmmoType => "Coin";
+
+		public long Coins
+		{
+			get => Handler.Items.CountCoins();
+			set
+			{
+				Handler.Items = Utils.CoinsSplit(value).Select((stack, index) =>
+				{
+					Item coin = new Item();
+					coin.SetDefaults(ItemID.CopperCoin + index);
+					coin.stack = stack;
+					return coin;
+				}).Reverse().ToList();
+
+				item.SyncBag();
+			}
+		}
 
 		public Wallet()
 		{

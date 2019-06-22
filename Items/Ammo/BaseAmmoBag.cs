@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using ContainerLibrary;
+﻿using ContainerLibrary;
 using PortableStorage.Global;
+using System.Linq;
 using Utility = PortableStorage.Global.Utility;
 
 namespace PortableStorage.Items.Ammo

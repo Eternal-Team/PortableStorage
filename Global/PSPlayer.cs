@@ -1,5 +1,6 @@
 ﻿using ContainerLibrary;
 using Microsoft.Xna.Framework;
+using MonoMod.Utils;
 using PortableStorage.Items.Special;
 using PortableStorage.UI;
 using System;
@@ -28,7 +29,7 @@ namespace PortableStorage.Global
 
 			if (context != ItemSlot.Context.InventoryItem && context != ItemSlot.Context.InventoryCoin && context != ItemSlot.Context.InventoryAmmo) return false;
 
-			if (!PortableStorage.Instance.PanelUI.UI.Elements.Any(panel => ((IBagPanel)panel).Handler.HasSpace(item))) return false;
+			if (!PortableStorage.Instance.PanelUI.UI.Elements.Any(panel => ((IBagPanel) panel).Handler.HasSpace(item))) return false;
 
 			foreach (UIElement panel in PortableStorage.Instance.PanelUI.UI.Elements)
 			{
@@ -47,7 +48,7 @@ namespace PortableStorage.Global
 				for (int i = 0; i < container.Slots; i++)
 				{
 					inventory[slot] = container.InsertItem(i, item);
-					if (inventory[slot].IsAir) break;
+					if (inventory[slot].IsAir) return false;
 				}
 			}
 
@@ -78,7 +79,7 @@ namespace PortableStorage.Global
 		public override void Load(TagCompound tag)
 		{
 			UIPositions = new Dictionary<Guid, Vector2>();
-			//UIPositions.AddRange(tag.GetList<TagCompound>("UIPositions").ToDictionary(c => Guid.Parse(c.Get<string>("ID")), c => c.Get<Vector2>("Position")));
+			UIPositions.AddRange(tag.GetList<TagCompound>("UIPositions").ToDictionary(c => Guid.Parse(c.Get<string>("ID")), c => c.Get<Vector2>("Position")));
 		}
 	}
 }

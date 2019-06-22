@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using BaseLibrary;
+﻿using BaseLibrary;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Items.Ammo;
 using PortableStorage.Items.Special;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -29,17 +29,7 @@ namespace PortableStorage.Global
 
 				if (wallet != null)
 				{
-					long addedCoins = Utils.CoinsCount(out bool _, new[] { item }) + wallet.Handler.Items.CountCoins();
-
-					wallet.Handler.Items = Utils.CoinsSplit(addedCoins).Select((stack, index) =>
-					{
-						Item coin = new Item();
-						coin.SetDefaults(ItemID.CopperCoin + index);
-						coin.stack = stack;
-						return coin;
-					}).Reverse().ToList();
-
-					for (int i = 0; i < 4; i++) wallet.Handler.OnContentsChanged.Invoke(i);
+					wallet.Coins += Utils.CoinsCount(out bool _, new[] {item});
 
 					Main.PlaySound(SoundID.CoinPickup);
 

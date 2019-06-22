@@ -7,9 +7,9 @@ using PortableStorage.Items.Special;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent.UI;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -17,97 +17,8 @@ namespace PortableStorage.Hooking
 {
 	public static partial class Hooking
 	{
-		private static bool Player_BuyItem(On.Terraria.Player.orig_BuyItem orig, Player self, int price, int customCurrency)
-		{
-			if (customCurrency != -1) return CustomCurrencyManager.BuyItem(self, price, customCurrency);
-
-			long inventoryCount = Utils.CoinsCount(out bool _, self.inventory, 58, 57, 56, 55, 54);
-			long piggyCount = Utils.CoinsCount(out bool _, self.bank.item);
-			long safeCount = Utils.CoinsCount(out bool _, self.bank2.item);
-			long defendersCount = Utils.CoinsCount(out bool _, self.bank3.item);
-
-			long walletCount = self.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins());
-			long combined = Utils.CoinsCombineStacks(out bool _, inventoryCount, piggyCount, safeCount, defendersCount, walletCount);
-
-			if (combined < price) return false;
-
-			List<Item[]> list = new List<Item[]>();
-			Dictionary<int, List<int>> ignoredSlots = new Dictionary<int, List<int>>();
-			List<Point> coins = new List<Point>();
-			List<Point> emptyInventory = new List<Point>();
-			List<Point> emptyPiggy = new List<Point>();
-			List<Point> emptySafe = new List<Point>();
-			List<Point> emptyDefenders = new List<Point>();
-
-			list.Add(self.inventory);
-			list.Add(self.bank.item);
-			list.Add(self.bank2.item);
-			list.Add(self.bank3.item);
-
-			list.AddRange(self.inventory.OfType<Wallet>().Select(x => x.Handler.Items.ToArray()));
-			for (int i = 0; i < list.Count; i++) ignoredSlots[i] = new List<int>();
-
-			ignoredSlots[0] = new List<int>
-			{
-				58,
-				57,
-				56,
-				55,
-				54
-			};
-			for (int j = 0; j < list.Count; j++)
-			{
-				for (int k = 0; k < list[j].Length; k++)
-				{
-					if (!ignoredSlots[j].Contains(k) && list[j][k].IsCoin())
-					{
-						coins.Add(new Point(j, k));
-					}
-				}
-			}
-
-			int num6 = 0;
-			for (int l = list[num6].Length - 1; l >= 0; l--)
-			{
-				if (!ignoredSlots[num6].Contains(l) && (list[num6][l].type == 0 || list[num6][l].stack == 0)) emptyInventory.Add(new Point(num6, l));
-			}
-
-			num6 = 1;
-			for (int m = list[num6].Length - 1; m >= 0; m--)
-			{
-				if (!ignoredSlots[num6].Contains(m) && (list[num6][m].type == 0 || list[num6][m].stack == 0)) emptyPiggy.Add(new Point(num6, m));
-			}
-
-			num6 = 2;
-			for (int n = list[num6].Length - 1; n >= 0; n--)
-			{
-				if (!ignoredSlots[num6].Contains(n) && (list[num6][n].type == 0 || list[num6][n].stack == 0)) emptySafe.Add(new Point(num6, n));
-			}
-
-			num6 = 3;
-			for (int num7 = list[num6].Length - 1; num7 >= 0; num7--)
-			{
-				if (!ignoredSlots[num6].Contains(num7) && (list[num6][num7].type == 0 || list[num6][num7].stack == 0)) emptyDefenders.Add(new Point(num6, num7));
-			}
-
-			// todo
-			List<Point> emptyWallet = new List<Point>();
-			num6 = 4;
-			for (int i = num6; i < list.Count - 4; i++)
-			{
-				for (int n = list[i].Length - 1; n >= 0; n--)
-				{
-					if (!ignoredSlots[i].Contains(n) && (list[i][n].type == 0 || list[i][n].stack == 0)) emptyWallet.Add(new Point(i, n));
-				}
-			}
-
-			return !Player_TryPurchasing(price, list, coins, emptyInventory, emptyPiggy, emptySafe, emptyDefenders, emptyWallet);
-		}
-
 		private static void Player_BuyItem(ILContext il)
 		{
-			int emptyWalletIndex = il.AddVariable(typeof(List<Point>));
-
 			ILCursor cursor = new ILCursor(il);
 
 			if (cursor.TryGotoNext(i => i.MatchCall(typeof(Utils).GetMethod("CoinsCombineStacks", Utility.defaultFlags))))
@@ -117,25 +28,19 @@ namespace PortableStorage.Hooking
 
 				cursor.EmitDelegate<Func<bool, long[], Player, long>>((overflowing, coinsCount, player) =>
 				{
-					long walletCount = player.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins());
+					long walletCount = player.inventory.OfType<Wallet>().Sum(wallet => wallet.Coins);
 					Array.Resize(ref coinsCount, 5);
 					coinsCount[4] = walletCount;
 					return Utils.CoinsCombineStacks(out overflowing, coinsCount);
 				});
 			}
 
-			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(13), i => i.MatchBr(out _)))
+			MethodInfo info = typeof(Player).GetMethod("TryPurchasing", Utility.defaultFlags);
+			if (cursor.TryGotoNext(i => i.MatchCall(info)))
 			{
 				cursor.Emit(OpCodes.Ldarg, 0);
-				cursor.Emit(OpCodes.Ldloc, 5);
-
-				cursor.EmitDelegate<Func<Player, List<Item[]>, List<Item[]>>>((player, list) =>
-				{
-					list.AddRange(player.inventory.OfType<Wallet>().Select(x => x.Handler.Items.ToArray()));
-					return list;
-				});
-
-				cursor.Emit(OpCodes.Stloc, 5);
+				cursor.Remove();
+				cursor.EmitDelegate<Func<int, List<Item[]>, List<Point>, List<Point>, List<Point>, List<Point>, List<Point>, Player, bool>>(Player_TryPurchasing);
 			}
 		}
 
@@ -150,7 +55,7 @@ namespace PortableStorage.Hooking
 
 				cursor.EmitDelegate<Func<bool, long[], Player, long>>((overflowing, coinsCount, player) =>
 				{
-					long walletCount = player.inventory.OfType<Wallet>().Sum(wallet => wallet.Handler.Items.CountCoins());
+					long walletCount = player.inventory.OfType<Wallet>().Sum(wallet => wallet.Coins);
 					Array.Resize(ref coinsCount, 5);
 					coinsCount[4] = walletCount;
 					return Utils.CoinsCombineStacks(out overflowing, coinsCount);
@@ -271,10 +176,10 @@ namespace PortableStorage.Hooking
 
 							if (item.mana > 0 && useItem)
 							{
-								if (player.statMana >= (int)(item.mana * player.manaCost))
+								if (player.statMana >= (int) (item.mana * player.manaCost))
 								{
-									player.manaRegenDelay = (int)player.maxRegenDelay;
-									player.statMana -= (int)(item.mana * player.manaCost);
+									player.manaRegenDelay = (int) player.maxRegenDelay;
+									player.statMana -= (int) (item.mana * player.manaCost);
 								}
 								else useItem = false;
 							}
@@ -465,17 +370,8 @@ namespace PortableStorage.Hooking
 
 					if (wallet != null)
 					{
-						long addedCoins = price + wallet.Handler.Items.CountCoins();
-
-						wallet.Handler.Items = Utils.CoinsSplit(addedCoins).Select((stack, index) =>
-						{
-							Item coin = new Item();
-							coin.SetDefaults(ItemID.CopperCoin + index);
-							coin.stack = stack;
-							return coin;
-						}).Reverse().ToList();
-
-						for (int i = 0; i < 4; i++) wallet.Handler.OnContentsChanged.Invoke(i);
+						long addedCoins = price + wallet.Coins;
+						wallet.Coins = addedCoins;
 
 						return true;
 					}
@@ -490,9 +386,20 @@ namespace PortableStorage.Hooking
 			}
 		}
 
-		private static bool Player_TryPurchasing(int price, List<Item[]> inv, List<Point> slotCoins, List<Point> slotsEmpty, List<Point> slotEmptyBank, List<Point> slotEmptyBank2, List<Point> slotEmptyBank3, List<Point> slotEmptyWallet)
+		private static bool Player_TryPurchasing(int price, List<Item[]> inv, List<Point> slotCoins, List<Point> slotsEmpty, List<Point> slotEmptyBank, List<Point> slotEmptyBank2, List<Point> slotEmptyBank3, Player player)
 		{
 			long priceRemaining = price;
+
+			foreach (Wallet wallet in player.inventory.OfType<Wallet>())
+			{
+				long walletCoins = wallet.Coins;
+				long sub = Math.Min(walletCoins, priceRemaining);
+				priceRemaining -= sub;
+				wallet.Coins -= sub;
+
+				if (priceRemaining <= 0) return false;
+			}
+
 			Dictionary<Point, Item> dictionary = new Dictionary<Point, Item>();
 
 			bool result = false;
@@ -509,7 +416,7 @@ namespace PortableStorage.Hooking
 							{
 								long stack = priceRemaining / coinValue;
 								dictionary[current] = inv[current.X][current.Y].Clone();
-								if (stack < inv[current.X][current.Y].stack) inv[current.X][current.Y].stack -= (int)stack;
+								if (stack < inv[current.X][current.Y].stack) inv[current.X][current.Y].stack -= (int) stack;
 								else
 								{
 									inv[current.X][current.Y].SetDefaults();
@@ -524,7 +431,6 @@ namespace PortableStorage.Hooking
 					coinValue /= 100L;
 				}
 
-				// todo: this seems to handle change, try adding all to wallet
 				if (priceRemaining > 0L)
 				{
 					if (slotsEmpty.Count <= 0)
@@ -550,7 +456,6 @@ namespace PortableStorage.Hooking
 										List<Point> list = slotsEmpty;
 										if (j == 1 && slotEmptyBank.Count > 0) list = slotEmptyBank;
 										if (j == 2 && slotEmptyBank2.Count > 0) list = slotEmptyBank2;
-										if (j > 3 && slotEmptyWallet.Count > 0) list = slotEmptyWallet;
 										if (--inv[current3.X][current3.Y].stack <= 0)
 										{
 											inv[current3.X][current3.Y].SetDefaults();
@@ -583,7 +488,6 @@ namespace PortableStorage.Hooking
 										if (j == 1 && slotEmptyBank.Count > 0) list2 = slotEmptyBank;
 										if (j == 2 && slotEmptyBank2.Count > 0) list2 = slotEmptyBank2;
 										if (j == 3 && slotEmptyBank3.Count > 0) list2 = slotEmptyBank3;
-										if (j > 3 && slotEmptyWallet.Count > 0) list2 = slotEmptyWallet;
 										if (--inv[current4.X][current4.Y].stack <= 0)
 										{
 											inv[current4.X][current4.Y].SetDefaults();
@@ -612,16 +516,10 @@ namespace PortableStorage.Hooking
 					slotEmptyBank.Sort(DelegateMethods.CompareYReverse);
 					slotEmptyBank2.Sort(DelegateMethods.CompareYReverse);
 					slotEmptyBank3.Sort(DelegateMethods.CompareYReverse);
-					slotEmptyWallet.Sort(DelegateMethods.CompareYReverse);
 				}
 			}
 
 			return result;
-		}
-
-		private static void Player_TryPurchasing(ILContext il)
-		{
-			ILCursor cursor = new ILCursor(il);
 		}
 	}
 }

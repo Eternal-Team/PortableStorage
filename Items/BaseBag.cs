@@ -1,8 +1,8 @@
-﻿using System;
-using System.IO;
-using BaseLibrary.Items;
+﻿using BaseLibrary.Items;
 using ContainerLibrary;
 using PortableStorage.UI;
+using System;
+using System.IO;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -27,7 +27,7 @@ namespace PortableStorage.Items
 
 		public override ModItem Clone()
 		{
-			BaseBag clone = (BaseBag)base.Clone();
+			BaseBag clone = (BaseBag) base.Clone();
 			clone.Handler = Handler.Clone();
 			clone.ID = ID;
 			return clone;
@@ -54,7 +54,10 @@ namespace PortableStorage.Items
 			return true;
 		}
 
-		public override bool CanRightClick() => true;
+		public override bool CanRightClick()
+		{
+			return true;
+		}
 
 		public override void RightClick(Player player)
 		{

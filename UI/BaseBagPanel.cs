@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
-using BaseLibrary;
+﻿using BaseLibrary;
 using BaseLibrary.UI.Elements;
 using ContainerLibrary;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Items;
+using System;
+using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 
