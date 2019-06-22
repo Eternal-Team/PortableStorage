@@ -1,6 +1,6 @@
 ﻿using BaseLibrary.Items;
+using BaseLibrary.UI;
 using ContainerLibrary;
-using PortableStorage.UI;
 using System;
 using System.IO;
 using Terraria;
@@ -11,18 +11,16 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items
 {
-	public abstract class BaseBag : BaseItem, IItemHandler, ICraftingStorage
+	public abstract class BaseBag : BaseItem, IItemHandler, ICraftingStorage, IHasUI
 	{
 		public override bool CloneNewInstances => true;
 
 		public ItemHandler Handler { get; set; }
 		public ItemHandler CraftingHandler => Handler;
 
-		public IBagPanel UI;
-
-		public Guid ID;
-
 		public virtual LegacySoundStyle OpenSound => SoundID.Item1;
+		public Guid ID { get; set; }
+		public BaseUIPanel UI { get; set; }
 		public virtual LegacySoundStyle CloseSound => SoundID.Item1;
 
 		public override ModItem Clone()
@@ -49,7 +47,7 @@ namespace PortableStorage.Items
 
 		public override bool UseItem(Player player)
 		{
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.PanelUI.UI.HandleUI(this);
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) BaseLibrary.BaseLibrary.PanelGUI.UI.HandleUI(this);
 
 			return true;
 		}
@@ -60,7 +58,7 @@ namespace PortableStorage.Items
 		{
 			item.stack++;
 
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) PortableStorage.Instance.PanelUI.UI.HandleUI(this);
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) BaseLibrary.BaseLibrary.PanelGUI.UI.HandleUI(this);
 		}
 
 		public override TagCompound Save() => new TagCompound
@@ -71,7 +69,8 @@ namespace PortableStorage.Items
 
 		public override void Load(TagCompound tag)
 		{
-			if (!Guid.TryParse(tag.GetString("ID"), out ID)) ID = Guid.NewGuid();
+			if (!Guid.TryParse(tag.GetString("ID"), out Guid temp)) temp = Guid.NewGuid();
+			ID = temp;
 			Handler.Load(tag.GetCompound("Items"));
 		}
 

@@ -1,9 +1,6 @@
 ﻿using BaseLibrary;
-using BaseLibrary.UI;
 using Microsoft.Xna.Framework;
-using PortableStorage.Items;
 using PortableStorage.Items.Special;
-using PortableStorage.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +8,6 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
-using PanelUI = PortableStorage.UI.PanelUI;
 
 namespace PortableStorage
 {
@@ -22,7 +18,7 @@ namespace PortableStorage
 	{
 		public static PortableStorage Instance;
 
-		public GUI<PanelUI> PanelUI;
+		//public GUI<PanelUI> PanelUI;
 		internal List<Guid> BagCache = new List<Guid>();
 
 		public override void Load()
@@ -33,8 +29,8 @@ namespace PortableStorage
 
 			if (!Main.dedServ)
 			{
-				PanelUI = Utility.SetupGUI<PanelUI>();
-				PanelUI.Visible += () => PanelUI.UI.Elements.Count > 0;
+				//PanelUI = Utility.SetupGUI<PanelUI>();
+				//PanelUI.Visible += () => PanelUI.UI.Elements.Count > 0;
 
 				ContainerLibrary.ContainerLibrary.CheckAlchemy += () => (33, Main.LocalPlayer.inventory.OfType<AlchemistBag>().Any());
 				ContainerLibrary.ContainerLibrary.ModifyAdjTiles += () => Main.LocalPlayer.adjTile[TileID.Bottles] = true;
@@ -93,39 +89,39 @@ namespace PortableStorage
 		{
 			int HotbarIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Hotbar"));
 
-			if (HotbarIndex != -1 && PanelUI != null) layers.Insert(HotbarIndex + 1, PanelUI.InterfaceLayer);
+			//if (HotbarIndex != -1 && PanelUI != null) layers.Insert(HotbarIndex + 1, PanelUI.InterfaceLayer);
 		}
 
 		public override void UpdateUI(GameTime gameTime)
 		{
 			// note: central behaviour from BaseLibrary? interface (IItemUI) or attributes
 
-			if (!Main.playerInventory)
-			{
-				List<IBagPanel> bagPanels = PanelUI.UI.Elements.Cast<IBagPanel>().ToList();
-				for (int i = 0; i < bagPanels.Count; i++)
-				{
-					BaseBag panel = Main.LocalPlayer.inventory.OfType<BaseBag>().FirstOrDefault(x => x.ID == bagPanels[i].ID);
-					BagCache.Add(bagPanels[i].ID);
-					PanelUI.UI.CloseUI(panel);
-				}
-			}
-			else
-			{
-				while (BagCache.Count > 0)
-				{
-					BaseBag panel = Main.LocalPlayer.inventory.OfType<BaseBag>().FirstOrDefault(x => x.ID == BagCache[0]);
-					PanelUI.UI.OpenUI(panel);
-					BagCache.RemoveAt(0);
-				}
-			}
+			//if (!Main.playerInventory)
+			//{
+			//	List<IBagPanel> bagPanels = PanelUI.UI.Elements.Cast<IBagPanel>().ToList();
+			//	for (int i = 0; i < bagPanels.Count; i++)
+			//	{
+			//		BaseBag panel = Main.LocalPlayer.inventory.OfType<BaseBag>().FirstOrDefault(x => x.ID == bagPanels[i].ID);
+			//		BagCache.Add(bagPanels[i].ID);
+			//		PanelUI.UI.CloseUI(panel);
+			//	}
+			//}
+			//else
+			//{
+			//	while (BagCache.Count > 0)
+			//	{
+			//		BaseBag panel = Main.LocalPlayer.inventory.OfType<BaseBag>().FirstOrDefault(x => x.ID == BagCache[0]);
+			//		PanelUI.UI.OpenUI(panel);
+			//		BagCache.RemoveAt(0);
+			//	}
+			//}
 
-			PanelUI?.Update(gameTime);
+			//PanelUI?.Update(gameTime);
 		}
 
 		public override void PreSaveAndQuit()
 		{
-			PanelUI?.UI.Elements.Clear();
+			//PanelUI?.UI.Elements.Clear();
 			BagCache.Clear();
 		}
 	}

@@ -19,19 +19,19 @@ namespace PortableStorage.UI
 			UIAnimatedTexture textureActivation = new UIAnimatedTexture(ModContent.GetTexture("PortableStorage/Textures/Items/TheBlackHole"), new DrawAnimationVertical(8, 8), ScaleMode.Stretch)
 			{
 				Size = new Vector2(20),
-				Animate = Bag.active
+				Animate = Container.active
 			};
-			textureActivation.GetHoverText += () => Bag.active ? "Deactivate" : "Activate";
+			textureActivation.GetHoverText += () => Container.active ? "Deactivate" : "Activate";
 			textureActivation.OnClick += (evt, element) =>
 			{
-				Bag.active = !Bag.active;
-				textureActivation.Animate = Bag.active;
+				Container.active = !Container.active;
+				textureActivation.Animate = Container.active;
 
-				Bag.Handler.OnContentsChanged?.Invoke(-1);
+				Container.Handler.OnContentsChanged?.Invoke(-1);
 			};
 			Append(textureActivation);
 
-			textLabel = new UIText(Bag.DisplayName.GetTranslation())
+			textLabel = new UIText(Container.DisplayName.GetTranslation())
 			{
 				HAlign = 0.5f
 			};
@@ -43,7 +43,7 @@ namespace PortableStorage.UI
 				Left = (-20, 1),
 				RenderPanel = false
 			};
-			buttonClose.OnClick += (evt, element) => PortableStorage.Instance.PanelUI.UI.CloseUI(Bag);
+			buttonClose.OnClick += (evt, element) => BaseLibrary.BaseLibrary.PanelGUI.UI.CloseUI(Container);
 			Append(buttonClose);
 
 			gridItems = new UIGrid<UIContainerSlot>(9)
@@ -56,9 +56,9 @@ namespace PortableStorage.UI
 			};
 			Append(gridItems);
 
-			for (int i = 0; i < Bag.Handler.Slots; i++)
+			for (int i = 0; i < Container.Handler.Slots; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(() => Bag.Handler, i);
+				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i);
 				gridItems.Add(slot);
 			}
 		}

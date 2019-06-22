@@ -14,7 +14,7 @@ namespace PortableStorage.UI
 			Height = (84, 0);
 			this.Center();
 
-			textLabel = new UIText(Bag.DisplayName.GetTranslation())
+			textLabel = new UIText(Container.DisplayName.GetTranslation())
 			{
 				HAlign = 0.5f
 			};
@@ -26,7 +26,7 @@ namespace PortableStorage.UI
 				Left = (-20, 1),
 				RenderPanel = false
 			};
-			buttonClose.OnClick += (evt, element) => PortableStorage.Instance.PanelUI.UI.CloseUI(Bag);
+			buttonClose.OnClick += (evt, element) => BaseLibrary.BaseLibrary.PanelGUI.UI.CloseUI(Container);
 			Append(buttonClose);
 
 			gridItems = new UIGrid<UIContainerSlot>(9)
@@ -39,9 +39,9 @@ namespace PortableStorage.UI
 			};
 			Append(gridItems);
 
-			for (int i = 0; i < Bag.Handler.Slots; i++)
+			for (int i = 0; i < Container.Handler.Slots; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(() => Bag.Handler, i);
+				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i);
 				gridItems.Add(slot);
 			}
 		}

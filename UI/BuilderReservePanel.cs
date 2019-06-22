@@ -13,10 +13,10 @@ namespace PortableStorage.UI
 		public override void OnInitialize()
 		{
 			Width = (408, 0);
-			Height = (40 + Bag.Handler.Slots / 9 * 44, 0);
+			Height = (40 + Container.Handler.Slots / 9 * 44, 0);
 			this.Center();
 
-			textLabel = new UIText(Bag.DisplayName.GetTranslation())
+			textLabel = new UIText(Container.DisplayName.GetTranslation())
 			{
 				HAlign = 0.5f
 			};
@@ -28,7 +28,7 @@ namespace PortableStorage.UI
 				Left = (-20, 1),
 				RenderPanel = false
 			};
-			buttonClose.OnClick += (evt, element) => PortableStorage.Instance.PanelUI.UI.CloseUI(Bag);
+			buttonClose.OnClick += (evt, element) => BaseLibrary.BaseLibrary.PanelGUI.UI.CloseUI(Container);
 			Append(buttonClose);
 
 			gridItems = new UIGrid<UIContainerSlot>(9)
@@ -41,15 +41,15 @@ namespace PortableStorage.UI
 			};
 			Append(gridItems);
 
-			for (int i = 0; i < Bag.Handler.Slots; i++)
+			for (int i = 0; i < Container.Handler.Slots; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(() => Bag.Handler, i);
+				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i);
 				slot.ClickOverride += () =>
 				{
 					if (!slot.Item.IsAir && Main.keyState.IsKeyDown(Keys.LeftAlt))
 					{
-						if (Bag.selectedIndex == slot.slot) Bag.SetIndex(-1);
-						else Bag.SetIndex(slot.slot);
+						if (Container.selectedIndex == slot.slot) Container.SetIndex(-1);
+						else Container.SetIndex(slot.slot);
 
 						return true;
 					}
@@ -58,7 +58,7 @@ namespace PortableStorage.UI
 				};
 				slot.OnInteract += () =>
 				{
-					if (slot.Item.IsAir && slot.slot == Bag.selectedIndex) Bag.SetIndex(-1);
+					if (slot.Item.IsAir && slot.slot == Container.selectedIndex) Container.SetIndex(-1);
 				};
 				gridItems.Add(slot);
 			}
@@ -68,7 +68,7 @@ namespace PortableStorage.UI
 
 		public void RefreshTextures()
 		{
-			foreach (UIContainerSlot slot in gridItems.items) slot.backgroundTexture = Bag.selectedIndex == slot.slot ? Main.inventoryBack15Texture : Main.inventoryBackTexture;
+			foreach (UIContainerSlot slot in gridItems.items) slot.backgroundTexture = Container.selectedIndex == slot.slot ? Main.inventoryBack15Texture : Main.inventoryBackTexture;
 		}
 	}
 }

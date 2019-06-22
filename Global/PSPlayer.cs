@@ -29,9 +29,9 @@ namespace PortableStorage.Global
 
 			if (context != ItemSlot.Context.InventoryItem && context != ItemSlot.Context.InventoryCoin && context != ItemSlot.Context.InventoryAmmo) return false;
 
-			if (!PortableStorage.Instance.PanelUI.UI.Elements.Any(panel => ((IBagPanel)panel).Handler.HasSpace(item))) return false;
+			if (!BaseLibrary.BaseLibrary.PanelGUI.UI.Elements.Any(panel => ((IBagPanel)panel).Handler.HasSpace(item))) return false;
 
-			foreach (UIElement panel in PortableStorage.Instance.PanelUI.UI.Elements)
+			foreach (UIElement panel in BaseLibrary.BaseLibrary.PanelGUI.UI.Elements)
 			{
 				if (item.favorited || item.IsAir) return false;
 
