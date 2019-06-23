@@ -9,7 +9,7 @@ namespace PortableStorage.Hooking
 {
 	public static partial class Hooking
 	{
-		public static void Initialize()
+		public static void Load()
 		{
 			#region On
 

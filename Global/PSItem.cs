@@ -21,7 +21,6 @@ namespace PortableStorage.Global
 		private static Dictionary<int, (float scale, float angle)> _blackHoleData;
 		public static Dictionary<int, (float scale, float angle)> BlackHoleData => _blackHoleData ?? (_blackHoleData = new Dictionary<int, (float, float)>());
 
-		// todo: tiles/walls don't go inside Builder's Reserve
 		public override bool OnPickup(Item item, Player player)
 		{
 			if (item.IsCoin())
