@@ -2,7 +2,6 @@
 using BaseLibrary.UI.Elements;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PortableStorage.Items.Special;
 using Terraria;
@@ -44,7 +43,7 @@ namespace PortableStorage.UI
 
 			for (int i = 0; i < Container.Handler.Slots; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i) { ShortStackSize = true };
+				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i) {ShortStackSize = true};
 				slot.ClickOverride += () =>
 				{
 					if (!slot.Item.IsAir && Main.keyState.IsKeyDown(Keys.LeftAlt))
@@ -63,11 +62,7 @@ namespace PortableStorage.UI
 				};
 				slot.OnPostDraw += spriteBatch =>
 				{
-					if (slot.IsMouseHovering&& !slot.Item.IsAir && Main.keyState.IsKeyDown(Keys.LeftAlt))
-					{
-						Main.cursorOverride = BaseLibrary.Hooking.CustomCursorOverride;
-						BaseLibrary.Hooking.CurrrentShiftClickIcon = "PortableStorage/Textures/Items/BuilderReserve"; 
-					}
+					if (slot.IsMouseHovering && !slot.Item.IsAir && Main.keyState.IsKeyDown(Keys.LeftAlt)) BaseLibrary.Hooking.SetCursor("PortableStorage/Textures/Items/BuilderReserve");
 				};
 				gridItems.Add(slot);
 			}

@@ -1,7 +1,9 @@
 ﻿using BaseLibrary;
+using PortableStorage.Items.Special;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace PortableStorage
@@ -16,6 +18,9 @@ namespace PortableStorage
 		public override void Load()
 		{
 			Instance = this;
+
+			ContainerLibrary.Hooking.AlchemyApplyChance += () => Main.LocalPlayer.inventory.Any(item => item.modItem is AlchemistBag);
+			ContainerLibrary.Hooking.ModifyAdjTiles += player => player.adjTile[TileID.Bottles] = player.inventory.Any(item => item.modItem is AlchemistBag);
 
 			Hooking.Hooking.Load();
 		}

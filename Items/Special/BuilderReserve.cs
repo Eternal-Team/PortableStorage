@@ -12,8 +12,6 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Special
 {
-	// todo: custom mouse icon for selecting tiles
-
 	public class BuilderReserve : BaseBag
 	{
 		public override string Texture => "PortableStorage/Textures/Items/BuilderReserve";
