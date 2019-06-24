@@ -10,7 +10,7 @@ namespace PortableStorage.Global
 		{
 			if (junk) return;
 
-			if (liquidType == 0 && worldLayer == 3 && Main.rand.NextBool(200 / (power / 100))) caughtType = mod.ItemType<FishingBelt>();
+			if (liquidType == 0 && worldLayer == 3 && Main.rand.NextBool((int)(200 / (power / 100f)))) caughtType = mod.ItemType<FishingBelt>();
 		}
 	}
 }

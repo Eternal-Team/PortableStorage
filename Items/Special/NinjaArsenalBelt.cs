@@ -58,7 +58,7 @@ namespace PortableStorage.Items.Special
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.NinjaShirt);
-			recipe.AddIngredient(ItemID.IronChainmail, 3);
+			recipe.AddIngredient(ItemID.Chain, 3);
 			recipe.AddTile(TileID.Anvils);
 			recipe.SetResult(this);
 			recipe.AddRecipe();

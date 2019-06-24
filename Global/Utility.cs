@@ -204,11 +204,11 @@ namespace PortableStorage.Global
 			Add("Misc", AmmoID.CandyCorn);
 			Add("Misc", AmmoID.Stake);
 
-			Add("Flameable", AmmoID.Rocket);
-			Add("Flameable", AmmoID.Gel);
-			Add("Flameable", AmmoID.Flare);
-			Add("Flameable", AmmoID.StyngerBolt);
-			Add("Flameable", AmmoID.JackOLantern);
+			Add("Flammable", AmmoID.Rocket);
+			Add("Flammable", AmmoID.Gel);
+			Add("Flammable", AmmoID.Flare);
+			Add("Flammable", AmmoID.StyngerBolt);
+			Add("Flammable", AmmoID.JackOLantern);
 
 			Add("Bullet", AmmoID.Bullet);
 			Add("Arrow", AmmoID.Arrow);
@@ -219,17 +219,11 @@ namespace PortableStorage.Global
 		}
 
 		public static RecipeGroup yoyoStringGroup;
-		public static RecipeGroup tier1HMBarsGroup;
-		public static RecipeGroup ichorFlameGroup;
 
 		internal static void AddRecipeGroups()
 		{
 			yoyoStringGroup = new RecipeGroup(() => "Any string", ItemID.RedString, ItemID.OrangeString, ItemID.YellowString, ItemID.LimeString, ItemID.GreenString, ItemID.TealString, ItemID.CyanString, ItemID.SkyBlueString, ItemID.BlueString, ItemID.PurpleString, ItemID.VioletString, ItemID.PinkString, ItemID.BrownString, ItemID.WhiteString, ItemID.RainbowString, ItemID.BlackString);
 			RecipeGroup.RegisterGroup("PortableStorage:YoYoStrings", yoyoStringGroup);
-			tier1HMBarsGroup = new RecipeGroup(() => "PortableStorage:T1HMBars", ItemID.CobaltBar, ItemID.PalladiumBar);
-			RecipeGroup.RegisterGroup("PortableStorage:T1HMBars", tier1HMBarsGroup);
-			ichorFlameGroup = new RecipeGroup(() => "PortableStorage:IchorCursedFlame", ItemID.Ichor, ItemID.CursedFlame);
-			RecipeGroup.RegisterGroup("PortableStorage:IchorCursedFlame", ichorFlameGroup);
 		}
 
 		public static void SyncBag(this Item item)

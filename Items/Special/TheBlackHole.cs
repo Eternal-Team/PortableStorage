@@ -52,7 +52,7 @@ namespace PortableStorage.Items.Special
 			item.noUseGraphic = true;
 		}
 
-		// todo: put items into their respective bags
+		// todo: put items into their respective bags - don't have its own inventory
 		public override void UpdateInventory(Player player)
 		{
 			if (!active) return;
@@ -98,7 +98,7 @@ namespace PortableStorage.Items.Special
 					else
 					{
 						Handler.InsertItem(ref item);
-						if (item.IsAir || !item.active) break;
+						if (item.IsAir || !item.active) continue;
 					}
 
 					if (Main.netMode == NetmodeID.MultiplayerClient) NetMessage.SendData(MessageID.SyncItem, -1, -1, null, i);
