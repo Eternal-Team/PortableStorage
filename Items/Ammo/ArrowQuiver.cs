@@ -28,7 +28,7 @@ namespace PortableStorage.Items.Ammo
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.Leather, 8);
-			recipe.AddRecipeGroup(Utility.yoyoStringGroup.GetText());
+			recipe.AddRecipeGroup("PortableStorage:YoYoStrings");
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.SetResult(this);
 			recipe.AddRecipe();

@@ -52,6 +52,7 @@ namespace PortableStorage.Items.Special
 			item.noUseGraphic = true;
 		}
 
+		// todo: put items into their respective bags
 		public override void UpdateInventory(Player player)
 		{
 			if (!active) return;

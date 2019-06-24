@@ -224,7 +224,7 @@ namespace PortableStorage.Global
 
 		internal static void AddRecipeGroups()
 		{
-			yoyoStringGroup = new RecipeGroup(() => "PortableStorage:YoYoStrings", ItemID.RedString, ItemID.OrangeString, ItemID.YellowString, ItemID.LimeString, ItemID.GreenString, ItemID.TealString, ItemID.CyanString, ItemID.SkyBlueString, ItemID.BlueString, ItemID.PurpleString, ItemID.VioletString, ItemID.PinkString, ItemID.BrownString, ItemID.WhiteString, ItemID.RainbowString, ItemID.BlackString);
+			yoyoStringGroup = new RecipeGroup(() => "Any string", ItemID.RedString, ItemID.OrangeString, ItemID.YellowString, ItemID.LimeString, ItemID.GreenString, ItemID.TealString, ItemID.CyanString, ItemID.SkyBlueString, ItemID.BlueString, ItemID.PurpleString, ItemID.VioletString, ItemID.PinkString, ItemID.BrownString, ItemID.WhiteString, ItemID.RainbowString, ItemID.BlackString);
 			RecipeGroup.RegisterGroup("PortableStorage:YoYoStrings", yoyoStringGroup);
 			tier1HMBarsGroup = new RecipeGroup(() => "PortableStorage:T1HMBars", ItemID.CobaltBar, ItemID.PalladiumBar);
 			RecipeGroup.RegisterGroup("PortableStorage:T1HMBars", tier1HMBarsGroup);

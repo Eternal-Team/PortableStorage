@@ -3,7 +3,8 @@ using Terraria.ModLoader;
 
 namespace PortableStorage.Items.Normal
 {
-	public class CapillaryBag : BaseNormalBag
+	public class 
+		CapillaryBag : BaseNormalBag
 	{
 		public override string Texture => "PortableStorage/Textures/Items/CapillaryBag";
 
@@ -25,7 +26,7 @@ namespace PortableStorage.Items.Normal
 			recipe.AddIngredient(ItemID.Leather, 20);
 			recipe.AddIngredient(ItemID.ChlorophyteBar, 15);
 			recipe.AddIngredient(ItemID.Vine, 7);
-			recipe.AddIngredient(ItemID.Heart);
+			recipe.AddIngredient(ItemID.LifeFruit);
 			recipe.AddTile(TileID.LivingLoom);
 			recipe.SetResult(this);
 			recipe.AddRecipe();

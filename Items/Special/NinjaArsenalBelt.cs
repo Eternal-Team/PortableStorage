@@ -39,9 +39,8 @@ namespace PortableStorage.Items.Special
 		{
 			if (UI != null) return;
 
-			for (int i = 0; i < player.inventory.Length; i++)
+			foreach (Item item in player.inventory)
 			{
-				Item item = player.inventory[i];
 				if (item == null || item.IsAir || !item.thrown || item.stack == item.maxStack) continue;
 
 				Item itemBag = Handler.Items.FirstOrDefault(x => x.type == item.type && x.stack > 1);
