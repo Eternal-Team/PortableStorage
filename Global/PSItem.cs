@@ -44,19 +44,20 @@ namespace PortableStorage.Global
 				{
 					Main.PlaySound(SoundID.Grab);
 
-					int index = ammoBag.Handler.Items.FindIndex(other => other.type == item.type && other.stack < other.maxStack);
-					if (index != -1)
-					{
-						item = ammoBag.Handler.InsertItem(index, item);
-						if (item.IsAir || !item.active) return false;
-					}
+					ammoBag.Handler.InsertItem(ref item);
+					if (item.IsAir || !item.active) return false;
+				}
+			}
+			else if (item.thrown)
+			{
+				NinjaArsenalBelt belt = player.inventory.OfType<NinjaArsenalBelt>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
 
-					for (int j = 0; j < ammoBag.Handler.Slots; j++)
-					{
-						item = ammoBag.Handler.InsertItem(j, item);
+				if (belt != null)
+				{
+					Main.PlaySound(SoundID.Grab);
 
-						if (item.IsAir || !item.active) return false;
-					}
+					belt.Handler.InsertItem(ref item);
+					if (item.IsAir || !item.active) return false;
 				}
 			}
 			else if (Utility.OreWhitelist.Contains(item.type))
@@ -67,22 +68,23 @@ namespace PortableStorage.Global
 				{
 					Main.PlaySound(SoundID.Grab);
 
-					int index = minersBackpack.Handler.Items.FindIndex(other => other.type == item.type && other.stack < other.maxStack);
-					if (index != -1)
-					{
-						item = minersBackpack.Handler.InsertItem(index, item);
-						if (item.IsAir || !item.active) return false;
-					}
-
-					for (int j = 0; j < minersBackpack.Handler.Slots; j++)
-					{
-						item = minersBackpack.Handler.InsertItem(j, item);
-
-						if (item.IsAir || !item.active) return false;
-					}
+					minersBackpack.Handler.InsertItem(ref item);
+					if (item.IsAir || !item.active) return false;
 				}
 			}
 			else if (Utility.AlchemistBagWhitelist.Contains(item.type))
+			{
+				AlchemistBag alchemistBag = player.inventory.OfType<AlchemistBag>().FirstOrDefault(bag => bag.HandlerIngredients.HasSpace(item));
+
+				if (alchemistBag != null)
+				{
+					Main.PlaySound(SoundID.Grab);
+
+					alchemistBag.HandlerIngredients.InsertItem(ref item);
+					if (item.IsAir || !item.active) return false;
+				}
+			}
+			else if (item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph || item.potion && item.healLife > 0 || item.healMana > 0)
 			{
 				AlchemistBag alchemistBag = player.inventory.OfType<AlchemistBag>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
 
@@ -90,19 +92,8 @@ namespace PortableStorage.Global
 				{
 					Main.PlaySound(SoundID.Grab);
 
-					int index = alchemistBag.Handler.Items.FindIndex(other => other.type == item.type && other.stack < other.maxStack);
-					if (index != -1)
-					{
-						item = alchemistBag.Handler.InsertItem(index, item);
-						if (item.IsAir || !item.active) return false;
-					}
-
-					for (int j = 0; j < alchemistBag.Handler.Slots; j++)
-					{
-						item = alchemistBag.Handler.InsertItem(j, item);
-
-						if (item.IsAir || !item.active) return false;
-					}
+					alchemistBag.Handler.InsertItem(ref item);
+					if (item.IsAir || !item.active) return false;
 				}
 			}
 			else if (item.createTile >= 0 || item.createWall >= 0)
@@ -120,6 +111,18 @@ namespace PortableStorage.Global
 
 						return false;
 					}
+				}
+			}
+			else if (item.bait > 0 || Utility.FishingWhitelist.Contains(item.type))
+			{
+				FishingBelt belt = player.inventory.OfType<FishingBelt>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
+
+				if (belt != null)
+				{
+					Main.PlaySound(SoundID.Grab);
+
+					belt.Handler.InsertItem(ref item);
+					if (item.IsAir || !item.active) return false;
 				}
 			}
 

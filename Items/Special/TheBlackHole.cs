@@ -96,18 +96,8 @@ namespace PortableStorage.Items.Special
 					}
 					else
 					{
-						Item item1 = item;
-						int index = Handler.Items.FindIndex(other => other.type == item1.type && other.stack < other.maxStack);
-						if (index != -1) item = Handler.InsertItem(index, item);
-						else
-						{
-							for (int j = 0; j < Handler.Slots; j++)
-							{
-								item = Handler.InsertItem(j, item);
-
-								if (item.IsAir || !item.active) break;
-							}
-						}
+						Handler.InsertItem(ref item);
+						if (item.IsAir || !item.active) break;
 					}
 
 					if (Main.netMode == NetmodeID.MultiplayerClient) NetMessage.SendData(MessageID.SyncItem, -1, -1, null, i);

@@ -69,7 +69,7 @@ namespace PortableStorage
 			foreach (ModItem item in this.GetValue<Dictionary<string, ModItem>>("items").Values)
 			{
 				Recipe recipe = Main.recipe.FirstOrDefault(x => x.createItem.type == item.item.type);
-				if (recipe != null) item.item.value = recipe.requiredItem.Sum(x => x.value);
+				if (recipe != null) item.item.value = recipe.requiredItem.Sum(x => x.value*x.stack);
 			}
 		}
 	}

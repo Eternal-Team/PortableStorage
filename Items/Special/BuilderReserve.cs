@@ -22,7 +22,7 @@ namespace PortableStorage.Items.Special
 		{
 			Handler = new ItemHandler(9);
 			Handler.OnContentsChanged += slot => item.SyncBag();
-			Handler.IsItemValid += (slot, item) => { return (item.createTile >= 0 || item.createWall >= 0) && (Handler.Items.All(x => x.type != item.type) || Handler.Items[slot].type == item.type); };
+			Handler.IsItemValid += (slot, item) => (item.createTile >= 0 || item.createWall >= 0) && (Handler.Items.All(x => x.type != item.type) || Handler.Items[slot].type == item.type);
 			Handler.GetSlotLimit += slot => int.MaxValue;
 
 			selectedIndex = -1;
