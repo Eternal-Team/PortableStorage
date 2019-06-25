@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace PortableStorage.Items.Normal
 {
-	public class 
+	public class
 		CapillaryBag : BaseNormalBag
 	{
 		public override string Texture => "PortableStorage/Textures/Items/CapillaryBag";

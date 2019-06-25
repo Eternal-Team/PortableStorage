@@ -1,5 +1,4 @@
-﻿using PortableStorage.Global;
-using Terraria.ID;
+﻿using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace PortableStorage.Items.Ammo

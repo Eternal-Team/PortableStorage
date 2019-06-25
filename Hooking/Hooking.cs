@@ -32,6 +32,7 @@ namespace PortableStorage.Hooking
 			IL.Terraria.Player.BuyItem += Player_BuyItem;
 			IL.Terraria.Player.ItemCheck += Player_ItemCheck;
 			IL.Terraria.Player.FishingLevel += Player_FishingLevel;
+			IL.Terraria.Player.GetItem += Player_GetItem;
 			HookEndpointManager.Modify(typeof(Terraria.Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Action<ILContext>(Player_CanBuyItem));
 
 			#endregion

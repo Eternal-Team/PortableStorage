@@ -35,7 +35,7 @@ namespace PortableStorage.Items
 		{
 			//this.SetTag(ItemTags.AllowQuickUse);
 		}
-		
+
 		public override void SetDefaults()
 		{
 			ID = Guid.NewGuid();

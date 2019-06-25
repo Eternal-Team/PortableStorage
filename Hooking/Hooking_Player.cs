@@ -661,5 +661,58 @@ namespace PortableStorage.Hooking
 				cursor.Emit(OpCodes.Ldloc, itemIndex);
 			}
 		}
+
+		private static void Player_GetItem(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
+			ILLabel myCode = cursor.DefineLabel();
+
+			ILLabel label = null;
+			while (cursor.TryGotoNext(i => i.MatchBneUn(out label)))
+			{
+				if (label.Target.Offset == 187)
+				{
+					cursor.Remove();
+					cursor.Emit(OpCodes.Bne_Un, myCode);
+				}
+			}
+
+			while (cursor.TryGotoNext(i => i.MatchBrtrue(out label)))
+			{
+				if (label.Target.Offset == 187)
+				{
+					cursor.Remove();
+					cursor.Emit(OpCodes.Brtrue, myCode);
+				}
+			}
+
+			if (cursor.TryGotoPrev(i => i.MatchLdloc(3), i => i.MatchStloc(4)))
+			{
+				cursor.MarkLabel(myCode);
+
+				cursor.Emit(OpCodes.Ldarg, 0);
+				cursor.Emit(OpCodes.Ldarg, 2);
+
+				cursor.EmitDelegate<Func<Player, Item, Item>>((player, item) =>
+				{
+					if (item.bait > 0 || Global.Utility.FishingWhitelist.Contains(item.type))
+					{
+						FishingBelt belt = player.inventory.OfType<FishingBelt>().FirstOrDefault(bag => ContainerLibrary.Utility.HasSpace(bag.Handler, item));
+
+						if (belt != null)
+						{
+							Main.PlaySound(SoundID.Grab);
+
+							belt.Handler.InsertItem(ref item);
+							if (item.IsAir || !item.active) return item;
+						}
+					}
+
+					return item;
+				});
+
+				cursor.Emit(OpCodes.Starg, 2);
+			}
+		}
 	}
 }

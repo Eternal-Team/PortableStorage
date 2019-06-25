@@ -36,7 +36,8 @@ namespace PortableStorage.Global
 					return false;
 				}
 			}
-			else if (item.ammo > 0)
+
+			if (item.ammo > 0)
 			{
 				BaseAmmoBag ammoBag = player.inventory.OfType<BaseAmmoBag>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
 
@@ -48,7 +49,8 @@ namespace PortableStorage.Global
 					if (item.IsAir || !item.active) return false;
 				}
 			}
-			else if (item.thrown)
+
+			if (item.thrown)
 			{
 				NinjaArsenalBelt belt = player.inventory.OfType<NinjaArsenalBelt>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
 
@@ -60,7 +62,21 @@ namespace PortableStorage.Global
 					if (item.IsAir || !item.active) return false;
 				}
 			}
-			else if (Utility.OreWhitelist.Contains(item.type))
+
+			if (item.bait > 0 || Utility.FishingWhitelist.Contains(item.type))
+			{
+				FishingBelt belt = player.inventory.OfType<FishingBelt>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
+
+				if (belt != null)
+				{
+					Main.PlaySound(SoundID.Grab);
+
+					belt.Handler.InsertItem(ref item);
+					if (item.IsAir || !item.active) return false;
+				}
+			}
+
+			if (Utility.OreWhitelist.Contains(item.type))
 			{
 				MinersBackpack minersBackpack = player.inventory.OfType<MinersBackpack>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
 
@@ -72,7 +88,8 @@ namespace PortableStorage.Global
 					if (item.IsAir || !item.active) return false;
 				}
 			}
-			else if (Utility.AlchemistBagWhitelist.Contains(item.type))
+
+			if (Utility.AlchemistBagWhitelist.Contains(item.type))
 			{
 				AlchemistBag alchemistBag = player.inventory.OfType<AlchemistBag>().FirstOrDefault(bag => bag.HandlerIngredients.HasSpace(item));
 
@@ -84,7 +101,8 @@ namespace PortableStorage.Global
 					if (item.IsAir || !item.active) return false;
 				}
 			}
-			else if (item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph || item.potion && item.healLife > 0 || item.healMana > 0)
+
+			if (item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph || item.potion && item.healLife > 0 || item.healMana > 0)
 			{
 				AlchemistBag alchemistBag = player.inventory.OfType<AlchemistBag>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
 
@@ -96,7 +114,8 @@ namespace PortableStorage.Global
 					if (item.IsAir || !item.active) return false;
 				}
 			}
-			else if (item.createTile >= 0 || item.createWall >= 0)
+
+			if (item.createTile >= 0 || item.createWall >= 0)
 			{
 				BuilderReserve builderReserve = player.inventory.OfType<BuilderReserve>().FirstOrDefault(reserve => reserve.Handler.Items.Any(i => i.type == item.type));
 				if (builderReserve != null)
@@ -111,18 +130,6 @@ namespace PortableStorage.Global
 
 						return false;
 					}
-				}
-			}
-			else if (item.bait > 0 || Utility.FishingWhitelist.Contains(item.type))
-			{
-				FishingBelt belt = player.inventory.OfType<FishingBelt>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
-
-				if (belt != null)
-				{
-					Main.PlaySound(SoundID.Grab);
-
-					belt.Handler.InsertItem(ref item);
-					if (item.IsAir || !item.active) return false;
 				}
 			}
 
