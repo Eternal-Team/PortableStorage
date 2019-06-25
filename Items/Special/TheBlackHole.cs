@@ -1,9 +1,12 @@
 ﻿using BaseLibrary;
+using BaseLibrary.Items;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Global;
+using PortableStorage.Items.Normal;
 using System.IO;
+using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -12,19 +15,13 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items.Special
 {
-	public class TheBlackHole : BaseBag
+	public class TheBlackHole : BaseItem
 	{
 		public override string Texture => "PortableStorage/Textures/Items/TheBlackHole";
 
 		private const int maxRange = 160;
 
 		public bool active;
-
-		public TheBlackHole()
-		{
-			Handler = new ItemHandler(27);
-			Handler.OnContentsChanged += slot => item.SyncBag();
-		}
 
 		public override ModItem Clone()
 		{
@@ -36,7 +33,7 @@ namespace PortableStorage.Items.Special
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("The Black Hole");
-			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of items\nCollects them in a {maxRange / 16} block radius");
+			Tooltip.SetDefault($"Collects items in a {maxRange / 16} block radius and puts them in bags");
 
 			ItemID.Sets.ItemNoGravity[item.type] = true;
 			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(8, 8));
@@ -52,7 +49,15 @@ namespace PortableStorage.Items.Special
 			item.noUseGraphic = true;
 		}
 
-		// todo: put items into their respective bags - don't have its own inventory
+		public override bool CanRightClick() => true;
+
+		public override void RightClick(Player player)
+		{
+			item.stack++;
+
+			active = !active;
+		}
+
 		public override void UpdateInventory(Player player)
 		{
 			if (!active) return;
@@ -60,7 +65,7 @@ namespace PortableStorage.Items.Special
 			for (int i = 0; i < Main.item.Length; i++)
 			{
 				ref Item item = ref Main.item[i];
-				if (item == null || item.IsAir || item.IsCoin() || !Handler.Items.HasSpace(item) || Vector2.Distance(item.Center, player.Center) > maxRange)
+				if (item == null || item.IsAir || Vector2.Distance(item.Center, player.Center) > maxRange)
 				{
 					if (item != null && PSItem.BlackHoleData.ContainsKey(i)) PSItem.BlackHoleData.Remove(i);
 					continue;
@@ -97,8 +102,14 @@ namespace PortableStorage.Items.Special
 					}
 					else
 					{
-						Handler.InsertItem(ref item);
-						if (item.IsAir || !item.active) continue;
+						foreach (BaseBag bag in player.inventory.OfType<BaseBag>().OrderBy(bag => !bag.GetType().IsSubclassOf(typeof(BaseNormalBag))))
+						{
+							if (bag.Handler.HasSpace(item))
+							{
+								bag.Handler.InsertItem(ref item);
+								if (item.IsAir || !item.active) break;
+							}
+						}
 					}
 
 					if (Main.netMode == NetmodeID.MultiplayerClient) NetMessage.SendData(MessageID.SyncItem, -1, -1, null, i);
@@ -124,16 +135,13 @@ namespace PortableStorage.Items.Special
 			return false;
 		}
 
-		public override TagCompound Save()
+		public override TagCompound Save() => new TagCompound
 		{
-			TagCompound tag = base.Save();
-			tag["Active"] = active;
-			return tag;
-		}
+			["Active"] = active
+		};
 
 		public override void Load(TagCompound tag)
 		{
-			base.Load(tag);
 			active = tag.GetBool("Active");
 		}
 

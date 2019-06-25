@@ -71,11 +71,9 @@
     <Compile Include="UI\NinjaArsenalBeltPanel.cs" />
     <Compile Include="UI\BuilderReservePanel.cs" />
     <Compile Include="UI\AmmoBagPanel.cs" />
-    <Compile Include="UI\PanelUI.cs" />
     <Compile Include="UI\BagPanel.cs" />
     <Compile Include="UI\BaseBagPanel.cs" />
     <Compile Include="UI\WalletPanel.cs" />
-    <Compile Include="UI\TheBlackHolePanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="build.txt" />
