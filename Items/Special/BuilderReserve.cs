@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Global;
 using PortableStorage.UI;
+using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
@@ -38,7 +39,7 @@ namespace PortableStorage.Items.Special
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Builder's Reserve");
-			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of tiles or walls");
+			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of tiles or walls\nRight-click to open UI, use to place tiles/walls");
 		}
 
 		public override void SetDefaults()
@@ -54,6 +55,10 @@ namespace PortableStorage.Items.Special
 		public override bool CanUseItem(Player player) => selectedIndex >= 0 && Handler.Items[selectedIndex].type > 0 && Handler.Items[selectedIndex].stack > 1;
 
 		public override bool UseItem(Player player) => false;
+
+		public override void ModifyTooltips(List<TooltipLine> tooltips)
+		{
+		}
 
 		public void SetIndex(int index)
 		{

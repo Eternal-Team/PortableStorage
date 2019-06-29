@@ -2,6 +2,7 @@
 using BaseLibrary.UI;
 using ContainerLibrary;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Terraria;
 using Terraria.Audio;
@@ -59,6 +60,11 @@ namespace PortableStorage.Items
 			item.stack++;
 
 			if (player.whoAmI == Main.LocalPlayer.whoAmI) BaseLibrary.BaseLibrary.PanelGUI.UI.HandleUI(this);
+		}
+
+		public override void ModifyTooltips(List<TooltipLine> tooltips)
+		{
+			tooltips.Add(new TooltipLine(mod, "PortableStorage:BagInfo", "Right-click or use to open"));
 		}
 
 		public override TagCompound Save() => new TagCompound

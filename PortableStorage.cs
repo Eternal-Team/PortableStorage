@@ -8,7 +8,6 @@ using Terraria.ModLoader;
 
 namespace PortableStorage
 {
-	// todo: add bag slot
 	// todo: add fluid + energy addons
 
 	public class PortableStorage : Mod
