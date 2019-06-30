@@ -39,7 +39,7 @@ namespace PortableStorage.Items.Special
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Builder's Reserve");
-			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of tiles or walls\nRight-click to open UI, use to place tiles/walls");
+			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of tiles or walls\nRight-click to open UI, use to place tiles/walls\nAlt+Left-Click on slot to select");
 		}
 
 		public override void SetDefaults()

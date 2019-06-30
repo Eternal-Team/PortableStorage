@@ -666,20 +666,21 @@ namespace PortableStorage.Hooking
 		{
 			ILCursor cursor = new ILCursor(il);
 			ILLabel myCode = cursor.DefineLabel();
+			ILLabel label = cursor.DefineLabel();
 
-			ILLabel label = null;
-			while (cursor.TryGotoNext(i => i.MatchBneUn(out label)))
+			ILLabel l = null;
+			while (cursor.TryGotoNext(i => i.MatchBneUn(out l)))
 			{
-				if (label.Target.Offset == 187)
+				if (l.Target.Offset == 187)
 				{
 					cursor.Remove();
 					cursor.Emit(OpCodes.Bne_Un, myCode);
 				}
 			}
 
-			while (cursor.TryGotoNext(i => i.MatchBrtrue(out label)))
+			while (cursor.TryGotoNext(i => i.MatchBrtrue(out l)))
 			{
-				if (label.Target.Offset == 187)
+				if (l.Target.Offset == 187)
 				{
 					cursor.Remove();
 					cursor.Emit(OpCodes.Brtrue, myCode);
@@ -704,14 +705,21 @@ namespace PortableStorage.Hooking
 							Main.PlaySound(SoundID.Grab);
 
 							belt.Handler.InsertItem(ref item);
-							if (item.IsAir || !item.active) return item;
+							if (item.IsAir || !item.active)return item;
 						}
 					}
 
 					return item;
 				});
-
+				
 				cursor.Emit(OpCodes.Starg, 2);
+
+				cursor.Emit(OpCodes.Ldarg, 2);
+				cursor.Emit(OpCodes.Callvirt, typeof(Item).GetProperty("IsAir", Utility.defaultFlags).GetGetMethod());
+				cursor.Emit(OpCodes.Brfalse, label);
+				cursor.Emit(OpCodes.Ldarg, 2);
+				cursor.Emit(OpCodes.Ret);
+				cursor.MarkLabel(label);
 			}
 		}
 	}

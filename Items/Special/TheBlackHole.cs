@@ -33,7 +33,7 @@ namespace PortableStorage.Items.Special
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("The Black Hole");
-			Tooltip.SetDefault($"Collects items in a {maxRange / 16} block radius and puts them in bags");
+			Tooltip.SetDefault($"Collects items in a {maxRange / 16} block radius and puts them in bags\nRight-click to activate");
 
 			ItemID.Sets.ItemNoGravity[item.type] = true;
 			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(8, 8));

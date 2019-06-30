@@ -153,5 +153,13 @@ namespace PortableStorage.Global
 
 			return base.PreDrawInWorld(item, spriteBatch, lightColor, alphaColor, ref rotation, ref itemScale, whoAmI);
 		}
+
+		public override void OpenVanillaBag(string context, Player player, int arg)
+		{
+			if (context == "crate")
+			{
+				if (arg == ItemID.IronCrate && Main.rand.NextBool(20) || arg == ItemID.GoldenCrate && Main.rand.NextBool(10)) player.QuickSpawnItem(mod.ItemType<FishingBelt>());
+			}
+		}
 	}
 }

@@ -11,8 +11,11 @@ namespace PortableStorage.Global
 	{
 		public override void SetupTravelShop(int[] shop, ref int nextSlot)
 		{
-			shop[nextSlot] = mod.ItemType<Wallet>();
-			nextSlot++;
+			if (Main.rand.NextBool(10))
+			{
+				shop[nextSlot] = mod.ItemType<Wallet>();
+				nextSlot++; 
+			}
 		}
 
 		public override void SetupShop(int type, Chest shop, ref int nextSlot)
