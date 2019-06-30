@@ -89,19 +89,6 @@ namespace PortableStorage.Global
 				}
 			}
 
-			if (Utility.AlchemistBagWhitelist.Contains(item.type))
-			{
-				AlchemistBag alchemistBag = player.inventory.OfType<AlchemistBag>().FirstOrDefault(bag => bag.HandlerIngredients.HasSpace(item));
-
-				if (alchemistBag != null)
-				{
-					Main.PlaySound(SoundID.Grab);
-
-					alchemistBag.HandlerIngredients.InsertItem(ref item);
-					if (item.IsAir || !item.active) return false;
-				}
-			}
-
 			if (item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph || item.potion && item.healLife > 0 || item.healMana > 0)
 			{
 				AlchemistBag alchemistBag = player.inventory.OfType<AlchemistBag>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
@@ -115,6 +102,19 @@ namespace PortableStorage.Global
 				}
 			}
 
+			if (Utility.AlchemistBagWhitelist.Contains(item.type))
+			{
+				AlchemistBag alchemistBag = player.inventory.OfType<AlchemistBag>().FirstOrDefault(bag => bag.HandlerIngredients.HasSpace(item));
+
+				if (alchemistBag != null)
+				{
+					Main.PlaySound(SoundID.Grab);
+
+					alchemistBag.HandlerIngredients.InsertItem(ref item);
+					if (item.IsAir || !item.active) return false;
+				}
+			}
+			
 			if (item.createTile >= 0 || item.createWall >= 0)
 			{
 				BuilderReserve builderReserve = player.inventory.OfType<BuilderReserve>().FirstOrDefault(reserve => reserve.Handler.Items.Any(i => i.type == item.type));

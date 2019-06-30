@@ -12,6 +12,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Utility = BaseLibrary.Utility;
 
 namespace PortableStorage.Items.Special
 {
@@ -36,15 +37,15 @@ namespace PortableStorage.Items.Special
 			Tooltip.SetDefault($"Collects items in a {maxRange / 16} block radius and puts them in bags\nRight-click to activate");
 
 			ItemID.Sets.ItemNoGravity[item.type] = true;
-			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(8, 8));
+			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(1, 360));
 		}
 
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
 
-			item.width = 28;
-			item.height = 28;
+			item.width = 32;
+			item.height = 32;
 			item.rare = ItemRarityID.Purple;
 			item.noUseGraphic = true;
 		}
@@ -121,7 +122,7 @@ namespace PortableStorage.Items.Special
 		{
 			Texture2D texture = ModContent.GetTexture("PortableStorage/Textures/Items/TheBlackHole");
 
-			spriteBatch.Draw(texture, position, new Rectangle(0, 28 * (active ? Main.itemAnimations[item.type].Frame : 6), 28, 28), drawColor, 0f, origin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture, position+new Vector2(16,0)*scale, null, drawColor, active ? -Utility.ToRadians(Main.itemAnimations[item.type].Frame*2) : 0f, new Vector2(16), scale, SpriteEffects.None, 0f);
 
 			return false;
 		}
@@ -130,7 +131,7 @@ namespace PortableStorage.Items.Special
 		{
 			Texture2D texture = ModContent.GetTexture("PortableStorage/Textures/Items/TheBlackHole");
 
-			spriteBatch.Draw(texture, item.position - Main.screenPosition + new Vector2(14, 14), new Rectangle(0, 28 * (active ? Main.itemAnimations[item.type].Frame : 6), 28, 28), lightColor, rotation, new Vector2(14), scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture, item.position - Main.screenPosition + new Vector2(16, 16), null, lightColor, (active ? -Utility.ToRadians(Main.itemAnimations[item.type].Frame*2) : 0f) + rotation, new Vector2(16), scale, SpriteEffects.None, 0f);
 
 			return false;
 		}

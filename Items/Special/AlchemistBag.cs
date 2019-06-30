@@ -20,7 +20,7 @@ namespace PortableStorage.Items.Special
 		{
 			Handler = new ItemHandler(18);
 			Handler.OnContentsChanged += slot => item.SyncBag();
-			Handler.IsItemValid += (slot, item) => item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph || item.potion && item.healLife > 0 || item.healMana > 0;
+			Handler.IsItemValid += (slot, item) => item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph && item.buffType != BuffID.MiniMinotaur || item.potion && (item.healLife > 0 || item.healMana > 0);
 
 			HandlerIngredients = new ItemHandler(63);
 			HandlerIngredients.OnContentsChanged += slot => item.SyncBag();
