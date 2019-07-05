@@ -9,18 +9,14 @@ namespace PortableStorage.Items.Ammo
 
 		public override string AmmoType => "Solution";
 
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("The Perfect Solution");
-			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of solutions");
-		}
-
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
 
 			item.width = 32;
 			item.height = 32;
+			item.rare = ItemRarityID.Pink;
+			item.value = 75000 * 5;
 		}
 
 		public override void AddRecipes()

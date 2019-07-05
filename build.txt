@@ -1,4 +1,4 @@
-﻿author = Itorius & team
+﻿author = Itorius, orian34 & team
 version = 2.0
 displayName = Portable Storage
 homepage = http://forums.terraria.org/index.php?threads/itorius-mods.42289/

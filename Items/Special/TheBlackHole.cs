@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Global;
 using PortableStorage.Items.Normal;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Terraria;
@@ -12,6 +13,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Language = Terraria.Localization.Language;
 using Utility = BaseLibrary.Utility;
 
 namespace PortableStorage.Items.Special
@@ -33,9 +35,6 @@ namespace PortableStorage.Items.Special
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("The Black Hole");
-			Tooltip.SetDefault($"Collects items in a {maxRange / 16} block radius and puts them in bags\nRight-click to activate");
-
 			ItemID.Sets.ItemNoGravity[item.type] = true;
 			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(1, 360));
 		}
@@ -48,6 +47,12 @@ namespace PortableStorage.Items.Special
 			item.height = 32;
 			item.rare = ItemRarityID.Purple;
 			item.noUseGraphic = true;
+			item.value = 55555 * 5;
+		}
+
+		public override void ModifyTooltips(List<TooltipLine> tooltips)
+		{
+			tooltips.Add(new TooltipLine(mod, "PortableStorage:BagTooltip", Language.GetText("Mods.PortableStorage.BagTooltip." + GetType().Name).Format(maxRange / 16)));
 		}
 
 		public override bool CanRightClick() => true;
@@ -122,7 +127,7 @@ namespace PortableStorage.Items.Special
 		{
 			Texture2D texture = ModContent.GetTexture("PortableStorage/Textures/Items/TheBlackHole");
 
-			spriteBatch.Draw(texture, position+new Vector2(16,0)*scale, null, drawColor, active ? -Utility.ToRadians(Main.itemAnimations[item.type].Frame*2) : 0f, new Vector2(16), scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture, position + new Vector2(16, 0) * scale, null, drawColor, active ? -Utility.ToRadians(Main.itemAnimations[item.type].Frame * 2) : 0f, new Vector2(16), scale, SpriteEffects.None, 0f);
 
 			return false;
 		}
@@ -131,7 +136,7 @@ namespace PortableStorage.Items.Special
 		{
 			Texture2D texture = ModContent.GetTexture("PortableStorage/Textures/Items/TheBlackHole");
 
-			spriteBatch.Draw(texture, item.position - Main.screenPosition + new Vector2(16, 16), null, lightColor, (active ? -Utility.ToRadians(Main.itemAnimations[item.type].Frame*2) : 0f) + rotation, new Vector2(16), scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture, item.position - Main.screenPosition + new Vector2(16, 16), null, lightColor, (active ? -Utility.ToRadians(Main.itemAnimations[item.type].Frame * 2) : 0f) + rotation, new Vector2(16), scale, SpriteEffects.None, 0f);
 
 			return false;
 		}

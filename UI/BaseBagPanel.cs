@@ -1,5 +1,4 @@
-﻿using BaseLibrary;
-using BaseLibrary.UI;
+﻿using BaseLibrary.UI;
 using BaseLibrary.UI.Elements;
 using ContainerLibrary;
 using PortableStorage.Items;
@@ -14,7 +13,7 @@ namespace PortableStorage.UI
 		Guid ID { get; set; }
 	}
 
-	public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IBagPanel, IItemHandlerUI, IHasCursorOverride where T : BaseBag
+	public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IBagPanel, IItemHandlerUI where T : BaseBag
 	{
 		public Guid ID { get; set; }
 

@@ -9,18 +9,14 @@ namespace PortableStorage.Items.Ammo
 
 		public override string AmmoType => "Arrow";
 
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Arrow Quiver");
-			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of arrows");
-		}
-
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
 
 			item.width = 32;
 			item.height = 32;
+			item.rare = ItemRarityID.Blue;
+			item.value = 6000 * 5;
 		}
 
 		public override void AddRecipes()

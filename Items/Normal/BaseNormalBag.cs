@@ -15,12 +15,6 @@ namespace PortableStorage.Items.Normal
 			Handler.IsItemValid += (slot, item) => !(item.modItem is BaseBag);
 		}
 
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault($"{Name} Bag");
-			Tooltip.SetDefault($"Stores {SlotCount} stacks of items");
-		}
-
 		public override void SetDefaults()
 		{
 			base.SetDefaults();

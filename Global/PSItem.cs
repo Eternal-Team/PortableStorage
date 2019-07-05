@@ -114,7 +114,7 @@ namespace PortableStorage.Global
 					if (item.IsAir || !item.active) return false;
 				}
 			}
-			
+
 			if (item.createTile >= 0 || item.createWall >= 0)
 			{
 				BuilderReserve builderReserve = player.inventory.OfType<BuilderReserve>().FirstOrDefault(reserve => reserve.Handler.Items.Any(i => i.type == item.type));

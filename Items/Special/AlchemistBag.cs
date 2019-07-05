@@ -1,7 +1,9 @@
 ﻿using ContainerLibrary;
 using PortableStorage.Global;
+using System.Collections.Generic;
 using System.IO;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Utility = PortableStorage.Global.Utility;
@@ -34,18 +36,19 @@ namespace PortableStorage.Items.Special
 			return clone;
 		}
 
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Alchemist's Bag");
-			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of potions and {HandlerIngredients.Slots} stacks of potion ingredients");
-		}
-
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
 
 			item.width = 32;
 			item.height = 32;
+			item.rare = ItemRarityID.Orange;
+			item.value = 30000 * 5;
+		}
+
+		public override void ModifyTooltips(List<TooltipLine> tooltips)
+		{
+			tooltips.Add(new TooltipLine(mod, "PortableStorage:BagTooltip", Language.GetText("Mods.PortableStorage.BagTooltip." + GetType().Name).Format(Handler.Slots, HandlerIngredients.Slots)));
 		}
 
 		public override TagCompound Save()

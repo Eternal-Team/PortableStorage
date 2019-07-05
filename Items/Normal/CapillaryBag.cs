@@ -17,7 +17,8 @@ namespace PortableStorage.Items.Normal
 
 			item.width = 26;
 			item.height = 30;
-			item.rare = 5;
+			item.rare = ItemRarityID.Lime;
+			item.value = 150000 * 5;
 		}
 
 		public override void AddRecipes()

@@ -1,4 +1,5 @@
 ﻿using Terraria;
+using Terraria.ID;
 
 namespace PortableStorage.Items.Ammo
 {
@@ -8,12 +9,6 @@ namespace PortableStorage.Items.Ammo
 
 		public override string AmmoType => "Dart";
 
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Dart Holder");
-			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of darts");
-		}
-
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
@@ -21,6 +16,7 @@ namespace PortableStorage.Items.Ammo
 			item.width = 32;
 			item.height = 28;
 			item.value = Item.buyPrice(gold: 15);
+			item.rare = ItemRarityID.Orange;
 		}
 	}
 }

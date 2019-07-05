@@ -1,4 +1,5 @@
 ﻿using Terraria;
+using Terraria.ID;
 
 namespace PortableStorage.Items.Ammo
 {
@@ -8,12 +9,6 @@ namespace PortableStorage.Items.Ammo
 
 		public override string AmmoType => "Misc";
 
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Ammo Pouch");
-			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of misc. ammo");
-		}
-
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
@@ -21,6 +16,7 @@ namespace PortableStorage.Items.Ammo
 			item.width = 28;
 			item.height = 30;
 			item.value = Item.buyPrice(gold: 3);
+			item.rare = ItemRarityID.White;
 		}
 	}
 }

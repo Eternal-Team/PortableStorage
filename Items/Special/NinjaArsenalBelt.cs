@@ -21,18 +21,14 @@ namespace PortableStorage.Items.Special
 			Handler.IsItemValid += (slot, item) => item.thrown;
 		}
 
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Ninja's Arsenal Belt");
-			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of throwing supplies");
-		}
-
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
 
 			item.width = 26;
 			item.height = 30;
+			item.rare = ItemRarityID.Blue;
+			item.value = 9000 * 5;
 		}
 
 		public override void UpdateInventory(Player player)

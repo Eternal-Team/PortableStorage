@@ -1,5 +1,6 @@
 ﻿using ContainerLibrary;
 using PortableStorage.Global;
+using Terraria.ID;
 using Utility = PortableStorage.Global.Utility;
 
 namespace PortableStorage.Items.Special
@@ -15,18 +16,14 @@ namespace PortableStorage.Items.Special
 			Handler.IsItemValid += (slot, item) => item.fishingPole > 0 || item.bait > 0 || Utility.FishingWhitelist.Contains(item.type);
 		}
 
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Fishing Belt");
-			Tooltip.SetDefault("Stores fishing poles, bait and fish");
-		}
-
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
 
 			item.width = 32;
 			item.height = 26;
+			item.rare = ItemRarityID.Orange;
+			item.value = 25000 * 5;
 		}
 	}
 }

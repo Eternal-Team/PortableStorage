@@ -1,3 +1,5 @@
+using Terraria.ID;
+
 namespace PortableStorage.Items.Normal
 {
 	public class SkeletalBag : BaseNormalBag
@@ -13,7 +15,8 @@ namespace PortableStorage.Items.Normal
 
 			item.width = 26;
 			item.headSlot = 32;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
+			item.value = 25000 * 5;
 		}
 	}
 }

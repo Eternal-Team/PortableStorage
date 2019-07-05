@@ -705,13 +705,13 @@ namespace PortableStorage.Hooking
 							Main.PlaySound(SoundID.Grab);
 
 							belt.Handler.InsertItem(ref item);
-							if (item.IsAir || !item.active)return item;
+							if (item.IsAir || !item.active) return item;
 						}
 					}
 
 					return item;
 				});
-				
+
 				cursor.Emit(OpCodes.Starg, 2);
 
 				cursor.Emit(OpCodes.Ldarg, 2);

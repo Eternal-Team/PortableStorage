@@ -38,12 +38,6 @@ namespace PortableStorage.Items.Ammo
 			Handler.GetSlotLimit += slot => int.MaxValue;
 		}
 
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Wallet");
-			Tooltip.SetDefault("Stores coins\nIt is seemingly bottomless!");
-		}
-
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
@@ -51,6 +45,7 @@ namespace PortableStorage.Items.Ammo
 			item.width = 28;
 			item.height = 28;
 			item.value = Item.buyPrice(gold: 5);
+			item.rare = ItemRarityID.Blue;
 		}
 	}
 }

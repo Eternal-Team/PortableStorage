@@ -14,7 +14,7 @@ namespace PortableStorage.Global
 			if (Main.rand.NextBool(10))
 			{
 				shop[nextSlot] = mod.ItemType<Wallet>();
-				nextSlot++; 
+				nextSlot++;
 			}
 		}
 

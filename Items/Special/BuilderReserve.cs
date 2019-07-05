@@ -10,6 +10,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Language = Terraria.Localization.Language;
 
 namespace PortableStorage.Items.Special
 {
@@ -36,12 +37,6 @@ namespace PortableStorage.Items.Special
 			return clone;
 		}
 
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Builder's Reserve");
-			Tooltip.SetDefault($"Stores {Handler.Slots} stacks of tiles or walls\nRight-click to open UI, use to place tiles/walls\nAlt+Left-Click on slot to select");
-		}
-
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
@@ -50,6 +45,8 @@ namespace PortableStorage.Items.Special
 			item.height = 32;
 			item.autoReuse = true;
 			item.useTurn = true;
+			item.rare = ItemRarityID.Orange;
+			item.value = 12000 * 5;
 		}
 
 		public override bool CanUseItem(Player player) => selectedIndex >= 0 && Handler.Items[selectedIndex].type > 0 && Handler.Items[selectedIndex].stack > 1;
@@ -58,6 +55,7 @@ namespace PortableStorage.Items.Special
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
+			tooltips.Add(new TooltipLine(mod, "PortableStorage:BagTooltip", Language.GetText("Mods.PortableStorage.BagTooltip." + GetType().Name).Format(Handler.Slots)));
 		}
 
 		public void SetIndex(int index)
