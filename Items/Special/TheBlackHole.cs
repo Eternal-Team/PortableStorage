@@ -11,9 +11,9 @@ using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Language = Terraria.Localization.Language;
 using Utility = BaseLibrary.Utility;
 
 namespace PortableStorage.Items.Special

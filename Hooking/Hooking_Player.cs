@@ -1,4 +1,5 @@
 ﻿using BaseLibrary;
+using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -698,7 +699,7 @@ namespace PortableStorage.Hooking
 				{
 					if (item.bait > 0 || Global.Utility.FishingWhitelist.Contains(item.type))
 					{
-						FishingBelt belt = player.inventory.OfType<FishingBelt>().FirstOrDefault(bag => ContainerLibrary.Utility.HasSpace(bag.Handler, item));
+						FishingBelt belt = player.inventory.OfType<FishingBelt>().FirstOrDefault(bag => ItemUtility.HasSpace(bag.Handler, item));
 
 						if (belt != null)
 						{

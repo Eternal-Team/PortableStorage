@@ -6,7 +6,6 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Utility = PortableStorage.Global.Utility;
 
 namespace PortableStorage.Items.Special
 {
@@ -22,7 +21,10 @@ namespace PortableStorage.Items.Special
 		{
 			Handler = new ItemHandler(18);
 			Handler.OnContentsChanged += slot => item.SyncBag();
-			Handler.IsItemValid += (slot, item) => item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph && item.buffType != BuffID.MiniMinotaur || item.potion && (item.healLife > 0 || item.healMana > 0);
+			Handler.IsItemValid += (slot, item) =>
+				item.potion && item.healLife > 0 ||
+				item.healMana > 0 && !item.potion ||
+				item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph;
 
 			HandlerIngredients = new ItemHandler(63);
 			HandlerIngredients.OnContentsChanged += slot => item.SyncBag();

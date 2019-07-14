@@ -8,9 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Language = Terraria.Localization.Language;
 
 namespace PortableStorage.Items.Special
 {
