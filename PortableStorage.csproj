@@ -19,4 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Libraries\ContainerLibrary\ContainerLibrary.csproj" />
   </ItemGroup>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="&quot;G:\C#\TerrariaCompiler\Builds\Debug\Binaries\TerrariaCompiler.exe&quot; &quot;$(ProjectDir)\&quot;" />
+  </Target>
 </Project>

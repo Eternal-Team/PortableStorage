@@ -76,8 +76,7 @@ namespace PortableStorage.Items
 
 		public override void Load(TagCompound tag)
 		{
-			if (!Guid.TryParse(tag.GetString("ID"), out Guid temp)) temp = Guid.NewGuid();
-			ID = temp;
+			ID = Guid.Parse(tag.GetString("ID"));
 			Handler.Load(tag.GetCompound("Items"));
 		}
 

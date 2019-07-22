@@ -71,7 +71,9 @@ namespace PortableStorage.Items.Special
 			for (int i = 0; i < Main.item.Length; i++)
 			{
 				ref Item item = ref Main.item[i];
-				if (item == null || item.IsAir || Vector2.Distance(item.Center, player.Center) > maxRange)
+
+				var item1 = item;
+				if (item == null || item.IsAir || Vector2.Distance(item.Center, player.Center) > maxRange || player.Inventory().OfType<BaseBag>().All(bag => !bag.Handler.HasSpace(item1)))
 				{
 					if (item != null && PSItem.BlackHoleData.ContainsKey(i)) PSItem.BlackHoleData.Remove(i);
 					continue;
