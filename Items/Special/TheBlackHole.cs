@@ -55,12 +55,12 @@ namespace PortableStorage.Items.Special
 			tooltips.Add(new TooltipLine(mod, "PortableStorage:BagTooltip", Language.GetText("Mods.PortableStorage.BagTooltip." + GetType().Name).Format(maxRange / 16)));
 		}
 
+		public override bool ConsumeItem(Player player) => false;
+		
 		public override bool CanRightClick() => true;
 
 		public override void RightClick(Player player)
 		{
-			item.stack++;
-
 			active = !active;
 		}
 
