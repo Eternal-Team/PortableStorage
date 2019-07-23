@@ -11,13 +11,7 @@ namespace PortableStorage.Hooking
 	{
 		public static void Load()
 		{
-			#region On
-
-			ItemSlot.LeftClick_ItemArray_int_int += ItemSlot_LeftClick;
-			Player.DropSelectedItem += Player_DropSelectedItem;
 			Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
-
-			#endregion
 
 			#region IL
 
