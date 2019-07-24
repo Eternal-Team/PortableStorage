@@ -1,8 +1,8 @@
 ﻿using BaseLibrary;
+using IL.Terraria.UI;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour.HookGen;
 using On.Terraria;
-using On.Terraria.UI;
 using System;
 
 namespace PortableStorage.Hooking
@@ -18,8 +18,8 @@ namespace PortableStorage.Hooking
 			IL.Terraria.Player.HasAmmo += Player_HasAmmo;
 			IL.Terraria.Player.QuickBuff += Player_QuickBuff;
 			IL.Terraria.Player.PickAmmo += Player_PickAmmo;
-			IL.Terraria.UI.ItemSlot.DrawSavings += ItemSlot_DrawSavings;
-			IL.Terraria.UI.ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color;
+			ItemSlot.DrawSavings += ItemSlot_DrawSavings;
+			ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color;
 			IL.Terraria.Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
 			IL.Terraria.Player.QuickMana += Player_QuickMana;
 			IL.Terraria.Player.SellItem += Player_SellItem;

@@ -84,7 +84,7 @@ namespace PortableStorage.Hooking
 		private static void Player_PickAmmo(ILContext il)
 		{
 			int firstAmmoIndex = il.AddVariable(typeof(Item));
-			int canShootIndex = il.GetArgumentIndex("canShoot");
+			int canShootIndex = il.GetParameterIndex("canShoot");
 
 			ILCursor cursor = new ILCursor(il);
 			ILLabel elseLabel = cursor.DefineLabel();
@@ -699,7 +699,7 @@ namespace PortableStorage.Hooking
 				{
 					if (item.bait > 0 || Global.Utility.FishingWhitelist.Contains(item.type))
 					{
-						FishingBelt belt = player.inventory.OfType<FishingBelt>().FirstOrDefault(bag => ItemUtility.HasSpace(bag.Handler, item));
+						FishingBelt belt = player.inventory.OfType<FishingBelt>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
 
 						if (belt != null)
 						{

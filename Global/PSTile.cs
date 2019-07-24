@@ -13,6 +13,8 @@ namespace PortableStorage.Global
 				BuilderReserve builderReserve = (BuilderReserve)item.modItem;
 				Item usedItem = builderReserve.Handler.Items[builderReserve.selectedIndex];
 				usedItem.stack--;
+
+				// todo: use shrink
 				if (usedItem.stack <= 0)
 				{
 					usedItem.TurnToAir();

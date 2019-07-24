@@ -24,7 +24,7 @@ namespace PortableStorage.Items.Ammo
 					coin.SetDefaults(ItemID.CopperCoin + index);
 					coin.stack = stack;
 					return coin;
-				}).Reverse().ToList();
+				}).Reverse().ToArray();
 
 				item.SyncBag();
 			}

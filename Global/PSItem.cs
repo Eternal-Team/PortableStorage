@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Items.Ammo;
 using PortableStorage.Items.Special;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -120,7 +121,7 @@ namespace PortableStorage.Global
 				BuilderReserve builderReserve = player.inventory.OfType<BuilderReserve>().FirstOrDefault(reserve => reserve.Handler.Items.Any(i => i.type == item.type));
 				if (builderReserve != null)
 				{
-					int index = builderReserve.Handler.Items.FindIndex(i => i.type == item.type);
+					int index = Array.FindIndex(builderReserve.Handler.Items, i => i.type == item.type);
 					if (index != -1)
 					{
 						item = builderReserve.Handler.InsertItem(index, item);
