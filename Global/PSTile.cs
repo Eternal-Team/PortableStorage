@@ -1,4 +1,5 @@
-﻿using PortableStorage.Items.Special;
+﻿using ContainerLibrary;
+using PortableStorage.Items.Special;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -11,15 +12,7 @@ namespace PortableStorage.Global
 			if (item.type == mod.ItemType<BuilderReserve>())
 			{
 				BuilderReserve builderReserve = (BuilderReserve)item.modItem;
-				Item usedItem = builderReserve.Handler.Items[builderReserve.selectedIndex];
-				usedItem.stack--;
-
-				// todo: use shrink
-				if (usedItem.stack <= 0)
-				{
-					usedItem.TurnToAir();
-					builderReserve.SetIndex(-1);
-				}
+				builderReserve.Handler.Shrink(builderReserve.selectedIndex, 1);
 			}
 		}
 	}

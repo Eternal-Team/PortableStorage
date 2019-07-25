@@ -58,6 +58,7 @@ namespace PortableStorage.UI
 				};
 				slot.OnInteract += () =>
 				{
+					// todo: if items have been swapped set index to -1 or change placeTile/placeWall
 					if (slot.Item.IsAir && slot.slot == Container.selectedIndex) Container.SetIndex(-1);
 				};
 				slot.OnPostDraw += spriteBatch =>
