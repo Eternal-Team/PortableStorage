@@ -1,4 +1,5 @@
-﻿using BaseLibrary.Items;
+﻿using BaseLibrary;
+using BaseLibrary.Items;
 using BaseLibrary.UI;
 using ContainerLibrary;
 using System;
@@ -21,7 +22,7 @@ namespace PortableStorage.Items
 		public ItemHandler CraftingHandler => Handler;
 
 		public virtual LegacySoundStyle OpenSound => SoundID.Item1;
-		public Guid ID { get; set; }
+		public Guid UUID { get; set; }
 		public BaseUIPanel UI { get; set; }
 		public virtual LegacySoundStyle CloseSound => SoundID.Item1;
 
@@ -29,7 +30,7 @@ namespace PortableStorage.Items
 		{
 			BaseBag clone = (BaseBag)base.Clone();
 			clone.Handler = Handler.Clone();
-			clone.ID = ID;
+			clone.UUID = UUID;
 			return clone;
 		}
 
@@ -40,7 +41,7 @@ namespace PortableStorage.Items
 
 		public override void SetDefaults()
 		{
-			ID = Guid.NewGuid();
+			UUID = Guid.NewGuid();
 			item.useTime = 5;
 			item.useAnimation = 5;
 			item.useStyle = 1;
@@ -70,26 +71,26 @@ namespace PortableStorage.Items
 
 		public override TagCompound Save() => new TagCompound
 		{
-			["ID"] = ID.ToString(),
+			["UUID"] = UUID,
 			["Items"] = Handler.Save()
 		};
 
 		public override void Load(TagCompound tag)
 		{
-			ID = Guid.Parse(tag.GetString("ID"));
+			UUID = tag.Get<Guid>("UUID");
 			Handler.Load(tag.GetCompound("Items"));
 		}
 
 		public override void NetSend(BinaryWriter writer)
 		{
-			writer.Write(ID.ToString());
-			Handler.Serialize(writer);
+			writer.Write(UUID);
+			Handler.Write(writer);
 		}
 
 		public override void NetRecieve(BinaryReader reader)
 		{
-			ID = Guid.Parse(reader.ReadString());
-			Handler.Deserialize(reader);
+			UUID = reader.ReadGUID();
+			Handler.Read(reader);
 		}
 	}
 }

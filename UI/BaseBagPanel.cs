@@ -10,12 +10,12 @@ namespace PortableStorage.UI
 	public interface IBagPanel
 	{
 		ItemHandler Handler { get; }
-		Guid ID { get; set; }
+		Guid UUID { get; set; }
 	}
 
 	public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IBagPanel, IItemHandlerUI where T : BaseBag
 	{
-		public Guid ID { get; set; }
+		public Guid UUID { get; set; }
 
 		public UIText textLabel;
 		public UITextButton buttonClose;

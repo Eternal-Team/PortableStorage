@@ -69,13 +69,13 @@ namespace PortableStorage.Items.Special
 		public override void NetSend(BinaryWriter writer)
 		{
 			base.NetSend(writer);
-			HandlerIngredients.Serialize(writer);
+			HandlerIngredients.Write(writer);
 		}
 
 		public override void NetRecieve(BinaryReader reader)
 		{
 			base.NetRecieve(reader);
-			HandlerIngredients.Deserialize(reader);
+			HandlerIngredients.Read(reader);
 		}
 
 		public override void AddRecipes()
