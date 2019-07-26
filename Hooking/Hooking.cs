@@ -1,9 +1,12 @@
-﻿using BaseLibrary;
-using IL.Terraria.UI;
+﻿using IL.Terraria.UI;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour.HookGen;
-using On.Terraria;
+using PortableStorage.Items.Special;
 using System;
+using System.Linq;
+using Terraria;
+using Terraria.ID;
+using Player = On.Terraria.Player;
 
 namespace PortableStorage.Hooking
 {
@@ -11,6 +14,9 @@ namespace PortableStorage.Hooking
 	{
 		public static void Load()
 		{
+			ContainerLibrary.Hooking.AlchemyApplyChance += () => Main.LocalPlayer.inventory.Any(item => item.modItem is AlchemistBag);
+			ContainerLibrary.Hooking.ModifyAdjTiles += player => player.adjTile[TileID.Bottles] = player.inventory.Any(item => item.modItem is AlchemistBag);
+
 			Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
 
 			#region IL
@@ -27,7 +33,7 @@ namespace PortableStorage.Hooking
 			IL.Terraria.Player.ItemCheck += Player_ItemCheck;
 			IL.Terraria.Player.FishingLevel += Player_FishingLevel;
 			IL.Terraria.Player.GetItem += Player_GetItem;
-			HookEndpointManager.Modify(typeof(Terraria.Player).GetMethod("CanBuyItem", Utility.defaultFlags), new Action<ILContext>(Player_CanBuyItem));
+			HookEndpointManager.Modify(typeof(Terraria.Player).GetMethod("CanBuyItem", BaseLibrary.Utility.defaultFlags), new Action<ILContext>(Player_CanBuyItem));
 
 			#endregion
 		}

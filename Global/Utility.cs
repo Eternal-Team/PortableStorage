@@ -4,7 +4,7 @@ using System.Linq;
 using Terraria;
 using Terraria.ID;
 
-namespace PortableStorage.Global
+namespace PortableStorage
 {
 	public static class Utility
 	{

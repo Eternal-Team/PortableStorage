@@ -1,6 +1,5 @@
 ﻿using BaseLibrary;
 using ContainerLibrary;
-using PortableStorage.Global;
 using System.Linq;
 using Terraria;
 using Terraria.ID;

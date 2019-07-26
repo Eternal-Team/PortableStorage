@@ -22,7 +22,7 @@ namespace PortableStorage.Hooking
 		{
 			ILCursor cursor = new ILCursor(il);
 
-			if (cursor.TryGotoNext(i => i.MatchCall(typeof(Utils).GetMethod("CoinsCombineStacks", Utility.defaultFlags))))
+			if (cursor.TryGotoNext(i => i.MatchCall(typeof(Utils).GetMethod("CoinsCombineStacks", BaseLibrary.Utility.defaultFlags))))
 			{
 				cursor.Remove();
 				cursor.Emit(OpCodes.Ldarg_0);
@@ -36,7 +36,7 @@ namespace PortableStorage.Hooking
 				});
 			}
 
-			MethodInfo info = typeof(Player).GetMethod("TryPurchasing", Utility.defaultFlags);
+			MethodInfo info = typeof(Player).GetMethod("TryPurchasing", BaseLibrary.Utility.defaultFlags);
 			if (cursor.TryGotoNext(i => i.MatchCall(info)))
 			{
 				cursor.Emit(OpCodes.Ldarg, 0);
@@ -49,7 +49,7 @@ namespace PortableStorage.Hooking
 		{
 			ILCursor cursor = new ILCursor(il);
 
-			if (cursor.TryGotoNext(i => i.MatchCall(typeof(Utils).GetMethod("CoinsCombineStacks", Utility.defaultFlags))))
+			if (cursor.TryGotoNext(i => i.MatchCall(typeof(Utils).GetMethod("CoinsCombineStacks", BaseLibrary.Utility.defaultFlags))))
 			{
 				cursor.Remove();
 				cursor.Emit(OpCodes.Ldarg_0);
@@ -220,11 +220,11 @@ namespace PortableStorage.Hooking
 				cursor.Emit(OpCodes.Stloc, 7);
 
 				cursor.Emit(OpCodes.Ldloc, 7);
-				cursor.Emit(OpCodes.Ldfld, type.GetField("Item1", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Ldfld, type.GetField("Item1", BaseLibrary.Utility.defaultFlags));
 				cursor.Emit(OpCodes.Stloc, 0);
 
 				cursor.Emit(OpCodes.Ldloc, 7);
-				cursor.Emit(OpCodes.Ldfld, type.GetField("Item2", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Ldfld, type.GetField("Item2", BaseLibrary.Utility.defaultFlags));
 				cursor.Emit(OpCodes.Brfalse, label);
 				cursor.Emit(OpCodes.Ret);
 
@@ -276,11 +276,11 @@ namespace PortableStorage.Hooking
 				cursor.Emit(OpCodes.Stloc, tupleIndex);
 
 				cursor.Emit(OpCodes.Ldloc, tupleIndex);
-				cursor.Emit(OpCodes.Ldfld, type.GetField("Item1", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Ldfld, type.GetField("Item1", BaseLibrary.Utility.defaultFlags));
 				cursor.Emit(OpCodes.Stloc, 1);
 
 				cursor.Emit(OpCodes.Ldloc, tupleIndex);
-				cursor.Emit(OpCodes.Ldfld, type.GetField("Item2", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Ldfld, type.GetField("Item2", BaseLibrary.Utility.defaultFlags));
 				cursor.Emit(OpCodes.Stloc, 3);
 			}
 		}
@@ -581,11 +581,11 @@ namespace PortableStorage.Hooking
 				cursor.Emit(OpCodes.Stloc, tupleIndex);
 
 				cursor.Emit(OpCodes.Ldloc, tupleIndex);
-				cursor.Emit(OpCodes.Ldfld, type.GetField("Item1", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Ldfld, type.GetField("Item1", BaseLibrary.Utility.defaultFlags));
 				cursor.Emit(OpCodes.Stloc, 29);
 
 				cursor.Emit(OpCodes.Ldloc, tupleIndex);
-				cursor.Emit(OpCodes.Ldfld, type.GetField("Item2", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Ldfld, type.GetField("Item2", BaseLibrary.Utility.defaultFlags));
 				cursor.Emit(OpCodes.Stloc, 28);
 
 				cursor.Emit(OpCodes.Ldloc, 28);
@@ -628,11 +628,11 @@ namespace PortableStorage.Hooking
 				cursor.Emit(OpCodes.Stloc, tupleIndex);
 
 				cursor.Emit(OpCodes.Ldloc, tupleIndex);
-				cursor.Emit(OpCodes.Ldfld, tupleType.GetField("Item1", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Ldfld, tupleType.GetField("Item1", BaseLibrary.Utility.defaultFlags));
 				cursor.Emit(OpCodes.Stloc, itemIndex);
 
 				cursor.Emit(OpCodes.Ldloc, tupleIndex);
-				cursor.Emit(OpCodes.Ldfld, tupleType.GetField("Item2", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Ldfld, tupleType.GetField("Item2", BaseLibrary.Utility.defaultFlags));
 				cursor.Emit(OpCodes.Stloc, 0);
 
 				cursor.Emit(OpCodes.Ldloc, 0);
@@ -645,18 +645,18 @@ namespace PortableStorage.Hooking
 				cursor.MarkLabel(label);
 			}
 
-			if (cursor.TryGotoNext(i => i.MatchLdsfld(typeof(Item).GetField("bait", Utility.defaultFlags)), i => i.MatchStloc(0), i => i.MatchBr(out _)))
+			if (cursor.TryGotoNext(i => i.MatchLdsfld(typeof(Item).GetField("bait", BaseLibrary.Utility.defaultFlags)), i => i.MatchStloc(0), i => i.MatchBr(out _)))
 			{
 				cursor.Index += 2;
 
 				cursor.Emit(OpCodes.Ldarg, 0);
-				cursor.Emit(OpCodes.Ldfld, typeof(Player).GetField("inventory", Utility.defaultFlags));
+				cursor.Emit(OpCodes.Ldfld, typeof(Player).GetField("inventory", BaseLibrary.Utility.defaultFlags));
 				cursor.Emit(OpCodes.Ldloc, 3);
 				cursor.Emit(OpCodes.Ldelem_Ref);
 				cursor.Emit(OpCodes.Stloc, itemIndex);
 			}
 
-			if (cursor.TryGotoNext(i => i.MatchLdarg(0), i => i.MatchLdfld(typeof(Player).GetField("inventory", Utility.defaultFlags)), i => i.MatchLdloc(3), i => i.MatchLdelemRef(), i => i.MatchLdloca(4)))
+			if (cursor.TryGotoNext(i => i.MatchLdarg(0), i => i.MatchLdfld(typeof(Player).GetField("inventory", BaseLibrary.Utility.defaultFlags)), i => i.MatchLdloc(3), i => i.MatchLdelemRef(), i => i.MatchLdloca(4)))
 			{
 				cursor.RemoveRange(4);
 				cursor.Emit(OpCodes.Ldloc, itemIndex);
@@ -697,7 +697,7 @@ namespace PortableStorage.Hooking
 
 				cursor.EmitDelegate<Func<Player, Item, Item>>((player, item) =>
 				{
-					if (item.bait > 0 || Global.Utility.FishingWhitelist.Contains(item.type))
+					if (item.bait > 0 || Utility.FishingWhitelist.Contains(item.type))
 					{
 						FishingBelt belt = player.inventory.OfType<FishingBelt>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
 
@@ -716,7 +716,7 @@ namespace PortableStorage.Hooking
 				cursor.Emit(OpCodes.Starg, 2);
 
 				cursor.Emit(OpCodes.Ldarg, 2);
-				cursor.Emit(OpCodes.Callvirt, typeof(Item).GetProperty("IsAir", Utility.defaultFlags).GetGetMethod());
+				cursor.Emit(OpCodes.Callvirt, typeof(Item).GetProperty("IsAir", BaseLibrary.Utility.defaultFlags).GetGetMethod());
 				cursor.Emit(OpCodes.Brfalse, label);
 				cursor.Emit(OpCodes.Ldarg, 2);
 				cursor.Emit(OpCodes.Ret);

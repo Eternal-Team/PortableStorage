@@ -80,7 +80,7 @@ namespace PortableStorage.Hooking
 				cursor.Emit(OpCodes.Ble, label);
 			}
 
-			if (cursor.TryGotoNext(i => i.MatchLdarg(0), i => i.MatchLdsfld(typeof(Lang).GetField("inter", Utility.defaultFlags)), i => i.MatchLdcI4(66)))
+			if (cursor.TryGotoNext(i => i.MatchLdarg(0), i => i.MatchLdsfld(typeof(Lang).GetField("inter", BaseLibrary.Utility.defaultFlags)), i => i.MatchLdcI4(66)))
 			{
 				cursor.MarkLabel(label);
 

@@ -1,5 +1,4 @@
 ﻿using ContainerLibrary;
-using PortableStorage.Global;
 using System.Collections.Generic;
 using System.IO;
 using Terraria.ID;

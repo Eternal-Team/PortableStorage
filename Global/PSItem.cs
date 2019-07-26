@@ -11,7 +11,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace PortableStorage.Global
+namespace PortableStorage
 {
 	public class PSItem : GlobalItem
 	{

@@ -3,7 +3,6 @@ using BaseLibrary.Items;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PortableStorage.Global;
 using PortableStorage.Items.Normal;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +13,6 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Utility = BaseLibrary.Utility;
 
 namespace PortableStorage.Items.Special
 {
@@ -127,18 +125,14 @@ namespace PortableStorage.Items.Special
 
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			Texture2D texture = ModContent.GetTexture("PortableStorage/Textures/Items/TheBlackHole");
-
-			spriteBatch.Draw(texture, position + new Vector2(16, 0) * scale, null, drawColor, active ? -Utility.ToRadians(Main.itemAnimations[item.type].Frame * 2) : 0f, new Vector2(16), scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PortableStorage.textureBlackHole, position + new Vector2(16, 0) * scale, null, drawColor, active ? -BaseLibrary.Utility.ToRadians(Main.itemAnimations[item.type].Frame * 2) : 0f, new Vector2(16), scale, SpriteEffects.None, 0f);
 
 			return false;
 		}
 
 		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
 		{
-			Texture2D texture = ModContent.GetTexture("PortableStorage/Textures/Items/TheBlackHole");
-
-			spriteBatch.Draw(texture, item.position - Main.screenPosition + new Vector2(16, 16), null, lightColor, (active ? -Utility.ToRadians(Main.itemAnimations[item.type].Frame * 2) : 0f) + rotation, new Vector2(16), scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PortableStorage.textureBlackHole, item.position - Main.screenPosition + new Vector2(16, 16), null, lightColor, (active ? -BaseLibrary.Utility.ToRadians(Main.itemAnimations[item.type].Frame * 2) : 0f) + rotation, new Vector2(16), scale, SpriteEffects.None, 0f);
 
 			return false;
 		}

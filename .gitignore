@@ -30,6 +30,8 @@
 *.suo
 *.dll
 
+*.xnb
+
 packages/*
 bin/*
 obj/*

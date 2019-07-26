@@ -1,5 +1,4 @@
 ﻿using ContainerLibrary;
-using PortableStorage.Global;
 using Terraria.ID;
 
 namespace PortableStorage.Items.Special

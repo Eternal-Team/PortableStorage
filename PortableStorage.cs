@@ -1,5 +1,5 @@
 ﻿using BaseLibrary;
-using PortableStorage.Items.Special;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -14,30 +14,29 @@ namespace PortableStorage
 	{
 		internal static PortableStorage Instance;
 
+		internal static Texture2D textureBlackHole;
+		internal static Texture2D textureLootAll;
+		internal static Texture2D textureDepositAll;
+
 		public override void Load()
 		{
 			Instance = this;
 
-			ContainerLibrary.Hooking.AlchemyApplyChance += () => Main.LocalPlayer.inventory.Any(item => item.modItem is AlchemistBag);
-			ContainerLibrary.Hooking.ModifyAdjTiles += player => player.adjTile[TileID.Bottles] = player.inventory.Any(item => item.modItem is AlchemistBag);
-
 			Hooking.Hooking.Load();
+
+			if (!Main.dedServ)
+			{
+				textureBlackHole = ModContent.GetTexture("PortableStorage/Textures/Items/TheBlackHole");
+				textureLootAll = ModContent.GetTexture("BaseLibrary/Textures/UI/LootAll");
+				textureDepositAll = ModContent.GetTexture("BaseLibrary/Textures/UI/DepositAll");
+			}
 		}
 
-		public override void Unload()
-		{
-			Utility.UnloadNullableTypes();
-		}
+		public override void Unload() => BaseLibrary.Utility.UnloadNullableTypes();
 
-		public override void AddRecipeGroups()
-		{
-			Global.Utility.AddRecipeGroups();
-		}
+		public override void AddRecipeGroups() => Utility.AddRecipeGroups();
 
-		public override void PostSetupContent()
-		{
-			Global.Utility.PostSetupContent();
-		}
+		public override void PostSetupContent() => Utility.PostSetupContent();
 
 		public override object Call(params object[] args)
 		{
@@ -45,22 +44,30 @@ namespace PortableStorage
 
 			switch (command)
 			{
-				case "RegisterIngredient" when args[1] is short ID && !Global.Utility.AlchemistBagWhitelist.Contains(ID):
+				case "RegisterIngredient" when args[1] is short ID && !Utility.AlchemistBagWhitelist.Contains(ID):
 				{
-					Global.Utility.AlchemistBagWhitelist.Add(ID);
+					Utility.AlchemistBagWhitelist.Add(ID);
 					Logger.Info($"Ingredient '{ID}' added to Alchemist's Bag whitelist!");
 					break;
 				}
 
-				case "RegisterOre" when args[1] is short ID && !Global.Utility.OreWhitelist.Contains(ID):
+				case "RegisterOre" when args[1] is short ID && !Utility.OreWhitelist.Contains(ID):
 				{
-					Global.Utility.OreWhitelist.Add(ID);
+					Utility.OreWhitelist.Add(ID);
 					Logger.Info($"Ore '{ID}' added to Ore whitelist!");
 					break;
 				}
 			}
 
 			return base.Call(args);
+		}
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(this);
+			recipe.AddIngredient(ItemID.Vertebrae, 5);
+			recipe.SetResult(ItemID.Leather);
+			recipe.AddRecipe();
 		}
 
 		public override void PostAddRecipes()

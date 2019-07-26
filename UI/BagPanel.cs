@@ -3,6 +3,8 @@ using BaseLibrary.UI.Elements;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.Items.Normal;
+using Terraria;
+using Terraria.Localization;
 
 namespace PortableStorage.UI
 {
@@ -19,6 +21,23 @@ namespace PortableStorage.UI
 				HAlign = 0.5f
 			};
 			Append(textLabel);
+
+			UIButton buttonLootAll = new UIButton(PortableStorage.textureLootAll)
+			{
+				Size = new Vector2(20)
+			};
+			buttonLootAll.OnClick += (evt, element) => ItemUtility.LootAll(Container.Handler, Main.LocalPlayer);
+			buttonLootAll.GetHoverText += () => Language.GetText("LegacyInterface.29").ToString();
+			Append(buttonLootAll);
+
+			UIButton buttonDepositAll = new UIButton(PortableStorage.textureDepositAll)
+			{
+				Size = new Vector2(20),
+				Left = (28, 0)
+			};
+			buttonDepositAll.OnClick += (evt, element) => ItemUtility.DepositAll(Container.Handler, Main.LocalPlayer);
+			buttonDepositAll.GetHoverText += () => Language.GetText("LegacyInterface.30").ToString();
+			Append(buttonDepositAll);
 
 			buttonClose = new UITextButton("X")
 			{

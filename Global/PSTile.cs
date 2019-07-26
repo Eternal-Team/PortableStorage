@@ -3,7 +3,7 @@ using PortableStorage.Items.Special;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace PortableStorage.Global
+namespace PortableStorage
 {
 	public class PSTile : GlobalTile
 	{

@@ -1,5 +1,4 @@
 ﻿using ContainerLibrary;
-using PortableStorage.Global;
 
 namespace PortableStorage.Items.Normal
 {
