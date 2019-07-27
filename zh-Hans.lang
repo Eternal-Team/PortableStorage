@@ -1,0 +1,35 @@
+ItemName.AdventurerBag=冒险家袋子
+ItemName.CapillaryBag=毛细管提包
+ItemName.FaerieBag=仙灵袋
+ItemName.SkeletalBag=骨袋
+ItemName.AmmoPouch=弹药袋
+ItemName.TheBlackHole=黑洞
+ItemName.ThePerfectSolution=完美溶液
+ItemName.FireProofContainer=防火箱
+ItemName.Wallet=钱包
+ItemName.Magazine=弹匣
+ItemName.DartHolder=飞镖架
+ItemName.ArrowQuiver=箭袋
+ItemName.AlchemistBag=炼金术师提包
+ItemName.BuilderReserve=建筑师储库
+ItemName.FishingBelt=钓鱼腰带
+ItemName.MinersBackpack=矿工背包
+ItemName.NinjaArsenalBelt=忍者武具带
+
+BagTooltip.AmmoPouch=储存 {0} 组杂物或弹药\n右键点击或直接使用来打开\n"能装很多东西, 大多是随机的垃圾."
+BagTooltip.ArrowQuiver=储存 {0} 组弓箭\n右键点击或直接使用来打开\n"储量足以击溃数支军队."
+BagTooltip.DartHolder=储存 {0} 组飞镖\n右键点击或直接使用来打开\n"令人惊叹的收藏."
+BagTooltip.FireProofContainer=储存 {0} 组爆炸物或可燃弹药\n右键点击或直接使用来打开\n"防止任何危险, 除了使用者."
+BagTooltip.Magazine=储存 {0} 组子弹\n右键点击或直接使用来打开\n"大射爆."
+BagTooltip.ThePerfectSolution=储存 {0} 组溶液\n右键点击或直接使用来打开\n"唯一能够干净利落解决问题的方法."
+BagTooltip.Wallet=储存钱币\n右键点击或直接使用来打开\n"无法让你从打折特卖中幸免."
+BagTooltip.AdventurerBag=储存 {0} 组物品\n右键点击或直接使用来打开\n"探险时最好的朋友."
+BagTooltip.CapillaryBag=储存 {0} 组物品\n右键点击或直接使用来打开\n"就像有生命一样."
+BagTooltip.FaerieBag=储存 {0} 组物品\n右键点击或直接使用来打开\n"容量魔法般地扩大来满足你的需求."
+BagTooltip.SkeletalBag=储存 {0} 组物品\n右键点击或直接使用来打开\n"会导致存在主义问题."
+BagTooltip.AlchemistBag=储存 {0} 组药剂和 {1} 组药剂材料\n拥有炼药桌的效果\n右键点击或直接使用来打开\n"药剂师的最爱, 让一切触手可及."
+BagTooltip.BuilderReserve=储存 {0} 组物块或墙壁\n右键打开UI, 左键放置物块/墙壁\nUI界面中用Alt+左键来选择所放置物块\n"建造你梦想的王国."
+BagTooltip.FishingBelt=储存 {0} 组鱼竿, 鱼饵和鱼\n右键点击或直接使用来打开\n"每天都是钓鱼的好日子!"
+BagTooltip.MinersBackpack=储存 {0} 组矿物\n右键点击或直接使用来打开\n"从往昔废墟中抢救出来的."
+BagTooltip.NinjaArsenalBelt=储存 {0} 组投掷物\n右键点击或直接使用来打开\n"忠告 = 避免绊倒!"
+BagTooltip.TheBlackHole=拾取半径 {0} 格内的物品放入对应袋子里\n右键激活\n"似乎是个无底洞."
