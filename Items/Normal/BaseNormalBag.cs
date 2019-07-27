@@ -1,4 +1,6 @@
-﻿using ContainerLibrary;
+﻿using BaseLibrary;
+using ContainerLibrary;
+using PortableStorage.Items.Special;
 
 namespace PortableStorage.Items.Normal
 {
@@ -11,7 +13,7 @@ namespace PortableStorage.Items.Normal
 		{
 			Handler = new ItemHandler(SlotCount);
 			Handler.OnContentsChanged += slot => item.SyncBag();
-			Handler.IsItemValid += (slot, item) => !(item.modItem is BaseBag);
+			Handler.IsItemValid += (slot, item) => !(item.modItem is BaseBag) || !item.IsCoin() || !(item.modItem is TheBlackHole);
 		}
 
 		public override void SetDefaults()
