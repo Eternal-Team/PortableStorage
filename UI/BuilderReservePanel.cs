@@ -128,7 +128,7 @@ namespace PortableStorage.UI
 					if (ItemSlot.ShiftInUse)
 					{
 						ItemUtility.Loot(Handler, slot, Main.LocalPlayer);
-						if (Item.IsAir&&builderReserve.selectedIndex==slot) builderReserve.SetIndex(-1);
+						if (Item.IsAir && builderReserve.selectedIndex == slot) builderReserve.SetIndex(-1);
 
 						base.Click(evt);
 
@@ -145,7 +145,7 @@ namespace PortableStorage.UI
 						if (Item.IsTheSameAs(Main.mouseItem)) Main.mouseItem = Handler.InsertItem(slot, Main.mouseItem);
 						else
 						{
-							if(builderReserve.selectedIndex == slot)builderReserve.SetIndex(-1);
+							if (builderReserve.selectedIndex == slot) builderReserve.SetIndex(-1);
 
 							if (Item.stack <= Item.maxStack)
 							{
