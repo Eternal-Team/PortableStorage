@@ -78,8 +78,6 @@ namespace PortableStorage.Items.Special
 					item.placeStyle = selectedItem.placeStyle;
 				}
 			}
-
-			(UI as BuilderReservePanel)?.RefreshTextures();
 		}
 
 		public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
