@@ -9,8 +9,6 @@ namespace PortableStorage.Items.Special
 {
 	public class NinjaArsenalBelt : BaseBag
 	{
-		// NOTE: if I'm not lazy implement ammo-like system where Ninja's Arsenal Belt doesn't replenish throwable items instead when player uses it it checks whether any bag has it and use it from that, also draw the amount in the bottom-right corner of the slot
-
 		public override string Texture => "PortableStorage/Textures/Items/NinjaArsenalBelt";
 
 		public NinjaArsenalBelt()
@@ -34,17 +32,21 @@ namespace PortableStorage.Items.Special
 		{
 			if (UI != null) return;
 
-			foreach (Item item in player.inventory)
+			for (int i = 0; i < 10; i++)
 			{
+				ref Item item = ref player.inventory[i];
+
 				if (item == null || item.IsAir || !item.thrown || item.stack == item.maxStack) continue;
 
-				Item itemBag = Handler.Items.FirstOrDefault(x => x.type == item.type && x.stack > 1);
-				if (itemBag != null)
+				foreach (Item handlerItem in Handler.Items.OrderBy(x => x.stack))
 				{
-					int count = Math.Min(item.maxStack - item.stack, itemBag.stack - 1);
-					item.stack += count;
-					itemBag.stack -= count;
-					if (itemBag.stack <= 0) itemBag.TurnToAir();
+					if (handlerItem.type == item.type)
+					{
+						int count = Math.Min(item.maxStack - item.stack, handlerItem.stack);
+						item.stack += count;
+						handlerItem.stack -= count;
+						if (handlerItem.stack <= 0) handlerItem.TurnToAir();
+					}
 				}
 			}
 		}
