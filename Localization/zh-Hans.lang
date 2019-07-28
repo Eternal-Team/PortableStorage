@@ -16,7 +16,7 @@ ItemName.FishingBelt=钓鱼腰带
 ItemName.MinersBackpack=矿工背包
 ItemName.NinjaArsenalBelt=忍者武具带
 
-BagTooltip.AmmoPouch=储存 {0} 组杂物或弹药\n右键点击或直接使用来打开\n"能装很多东西, 大多是随机的垃圾."
+BagTooltip.AmmoPouch=储存 {0} 组杂类弹药\n右键点击或直接使用来打开\n"能装很多东西, 大多是随机的垃圾."
 BagTooltip.ArrowQuiver=储存 {0} 组弓箭\n右键点击或直接使用来打开\n"储量足以击溃数支军队."
 BagTooltip.DartHolder=储存 {0} 组飞镖\n右键点击或直接使用来打开\n"令人惊叹的收藏."
 BagTooltip.FireProofContainer=储存 {0} 组爆炸物或可燃弹药\n右键点击或直接使用来打开\n"防止任何危险, 除了使用者."

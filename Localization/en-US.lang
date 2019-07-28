@@ -1,0 +1,35 @@
+ItemName.AdventurerBag=Adventurer's Bag
+ItemName.CapillaryBag=Capillary Bag
+ItemName.FaerieBag=Faerie Bag
+ItemName.SkeletalBag=Skeletal Bag
+ItemName.AmmoPouch=Ammo Pouch
+ItemName.TheBlackHole=The Black Hole
+ItemName.ThePerfectSolution=The Perfect Solution
+ItemName.FireProofContainer=Fire-Proof Container
+ItemName.Wallet=Wallet
+ItemName.Magazine=Magazine
+ItemName.DartHolder=Dart Holder
+ItemName.ArrowQuiver=Arrow Quiver
+ItemName.AlchemistBag=Alchemist's Bag
+ItemName.BuilderReserve=Builder's Reserve
+ItemName.FishingBelt=Fishing Belt
+ItemName.MinersBackpack=Miner's Backpack
+ItemName.NinjaArsenalBelt=Ninja's Arsenal Belt
+
+BagTooltip.AmmoPouch=Stores {0} stacks of misc. ammo\nRight-click or use to open\n"Can hold many things, mostly random junk."
+BagTooltip.ArrowQuiver=Stores {0} stacks of arrows\nRight-click or use to open\n"Contains enough to take down several armies."
+BagTooltip.DartHolder=Stores {0} stacks of darts\nRight-click or use to open\n"A breathtaking collection to pin down."
+BagTooltip.FireProofContainer=Stores {0} stacks of explosive or flammable ammo\nRight-click or use to open\n"Made to protect against any hazard, except the user."
+BagTooltip.Magazine=Stores {0} stacks of bullets\nRight-click or use to open\n"High capacity for trigger happy havocs."
+BagTooltip.ThePerfectSolution=Stores {0} stacks of solutions\nRight-click or use to open\n"The only way to solve this cleanly."
+BagTooltip.Wallet=Stores coins\nRight-click or use to open\n"The only things savings aren't safe from are discounts."
+BagTooltip.AdventurerBag=Stores {0} stacks of items\nRight-click or use to open\n"Your best friend when going on expeditions."
+BagTooltip.CapillaryBag=Stores {0} stacks of items\nRight-click or use to open\n"It almost feels like it's alive."
+BagTooltip.FaerieBag=Stores {0} stacks of items\nRight-click or use to open\n"Magically expanding to fit your needs."
+BagTooltip.SkeletalBag=Stores {0} stacks of items\nRight-click or use to open\n"Can lead to existential questions."
+BagTooltip.AlchemistBag=Stores {0} stacks of potions and {1} stacks of potion ingredients\nWorks like an Alchemy Table\nRight-click or use to open\n"The favorite of apothecaries to keep all at hand's reach."
+BagTooltip.BuilderReserve=Stores {0} stacks of tiles or walls\nRight-click to open UI, use to place tiles/walls\nAlt+Left-Click on slot to select\n"To build the realm of your dreams."
+BagTooltip.FishingBelt=Stores {0} stacks of fishing poles, bait and fish\nRight-click or use to open\n"Every day is a nice day for fishing!"
+BagTooltip.MinersBackpack=Stores {0} stacks of ore\nRight-click or use to open\n"Salvaged from the remnants of the past."
+BagTooltip.NinjaArsenalBelt=Stores {0} stacks of throwing supplies\nRight-click or use to open\n"Cautionary Advisement= Avoid Tripping!"
+BagTooltip.TheBlackHole=Collects items in a {0} block radius and puts them in bags\nRight-click to activate\n"It is seemingly bottomless."
