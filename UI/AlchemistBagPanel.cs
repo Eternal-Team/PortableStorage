@@ -24,28 +24,28 @@ namespace PortableStorage.UI
 
 			UIButton buttonLootAll = new UIButton(PortableStorage.textureLootAll)
 			{
-				Size = new Vector2(20)
+				Size = new Vector2(20),
+				HoverText = Language.GetText("LegacyInterface.29")
 			};
 			buttonLootAll.OnClick += (evt, element) =>
 			{
 				ItemUtility.LootAll(Container.HandlerIngredients, Main.LocalPlayer);
 				ItemUtility.LootAll(Container.Handler, Main.LocalPlayer);
 			};
-			buttonLootAll.GetHoverText += () => Language.GetText("LegacyInterface.29").ToString();
 			Append(buttonLootAll);
 
 			UIButton buttonDepositAll = new UIButton(PortableStorage.textureDepositAll)
 			{
 				Size = new Vector2(20),
-				Left = (28, 0)
+				Left = (28, 0),
+				HoverText = Language.GetText("LegacyInterface.30")
 			};
 			buttonDepositAll.OnClick += (evt, element) =>
 			{
 				ItemUtility.DepositAll(Container.Handler, Main.LocalPlayer);
 				ItemUtility.DepositAll(Container.HandlerIngredients, Main.LocalPlayer);
 			};
-			buttonDepositAll.GetHoverText += () => Language.GetText("LegacyInterface.30").ToString();
-			Append(buttonDepositAll);
+		Append(buttonDepositAll);
 
 			buttonClose = new UITextButton("X")
 			{
