@@ -52,7 +52,7 @@ namespace PortableStorage.UI
 				HoverText = Language.GetText("LegacyInterface.30")
 			};
 			buttonDepositAll.OnClick += (evt, element) => ItemUtility.DepositAll(Container.Handler, Main.LocalPlayer);
-		Append(buttonDepositAll);
+			Append(buttonDepositAll);
 
 			buttonClose = new UITextButton("X")
 			{
@@ -106,7 +106,7 @@ namespace PortableStorage.UI
 
 		public override void Click(UIMouseEvent evt)
 		{
-			UIBuilderReserveSlot otherSlot = Grid.items.FirstOrDefault(x => x.Item.type == Main.mouseItem.type);
+			UIBuilderReserveSlot otherSlot = Grid.Items.FirstOrDefault(x => x.Item.type == Main.mouseItem.type);
 			if (otherSlot != null && otherSlot != this && !otherSlot.Item.IsAir)
 			{
 				otherSlot.Click(evt);

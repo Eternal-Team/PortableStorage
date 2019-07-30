@@ -18,7 +18,8 @@ namespace PortableStorage.UI
 
 			textLabel = new UIText(Container.DisplayName.GetTranslation())
 			{
-				HAlign = 0.5f
+				HAlign = 0.5f,
+				HorizontalAlignment = HorizontalAlignment.Center
 			};
 			Append(textLabel);
 
@@ -37,7 +38,7 @@ namespace PortableStorage.UI
 				HoverText = Language.GetText("LegacyInterface.30")
 			};
 			buttonDepositAll.OnClick += (evt, element) => ItemUtility.DepositAll(Container.Handler, Main.LocalPlayer);
-		Append(buttonDepositAll);
+			Append(buttonDepositAll);
 
 			buttonClose = new UITextButton("X")
 			{

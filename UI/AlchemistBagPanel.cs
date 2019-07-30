@@ -45,7 +45,7 @@ namespace PortableStorage.UI
 				ItemUtility.DepositAll(Container.Handler, Main.LocalPlayer);
 				ItemUtility.DepositAll(Container.HandlerIngredients, Main.LocalPlayer);
 			};
-		Append(buttonDepositAll);
+			Append(buttonDepositAll);
 
 			buttonClose = new UITextButton("X")
 			{

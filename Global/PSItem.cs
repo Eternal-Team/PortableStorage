@@ -30,7 +30,7 @@ namespace PortableStorage
 
 				if (wallet != null)
 				{
-					wallet.Coins += Utils.CoinsCount(out bool _, new[] {item});
+					wallet.Coins += Utils.CoinsCount(out bool _, new[] { item });
 
 					Main.PlaySound(SoundID.CoinPickup);
 
