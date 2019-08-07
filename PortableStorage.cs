@@ -8,8 +8,6 @@ using Terraria.ModLoader;
 
 namespace PortableStorage
 {
-	// todo: add fluid + energy addons
-
 	public class PortableStorage : Mod
 	{
 		internal static PortableStorage Instance;
@@ -22,7 +20,7 @@ namespace PortableStorage
 		{
 			Instance = this;
 
-			Hooking.Hooking.Load();
+			Hooking.Load();
 
 			if (!Main.dedServ)
 			{

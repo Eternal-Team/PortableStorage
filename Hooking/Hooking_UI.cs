@@ -9,7 +9,7 @@ using System;
 using System.Linq;
 using Terraria;
 
-namespace PortableStorage.Hooking
+namespace PortableStorage
 {
 	public static partial class Hooking
 	{

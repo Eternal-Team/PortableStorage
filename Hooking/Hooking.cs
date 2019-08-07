@@ -2,13 +2,14 @@
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour.HookGen;
 using PortableStorage.Items.Special;
+using ReLogic.OS;
 using System;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Player = On.Terraria.Player;
 
-namespace PortableStorage.Hooking
+namespace PortableStorage
 {
 	public static partial class Hooking
 	{
@@ -19,8 +20,6 @@ namespace PortableStorage.Hooking
 
 			Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
 
-			#region IL
-
 			IL.Terraria.Player.HasAmmo += Player_HasAmmo;
 			IL.Terraria.Player.QuickBuff += Player_QuickBuff;
 			IL.Terraria.Player.PickAmmo += Player_PickAmmo;
@@ -29,13 +28,11 @@ namespace PortableStorage.Hooking
 			IL.Terraria.Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
 			IL.Terraria.Player.QuickMana += Player_QuickMana;
 			IL.Terraria.Player.SellItem += Player_SellItem;
-			IL.Terraria.Player.BuyItem += Player_BuyItem;
+			 IL.Terraria.Player.BuyItem += Player_BuyItem;
 			IL.Terraria.Player.ItemCheck += Player_ItemCheck;
 			IL.Terraria.Player.FishingLevel += Player_FishingLevel;
 			IL.Terraria.Player.GetItem += Player_GetItem;
-			HookEndpointManager.Modify(typeof(Terraria.Player).GetMethod("CanBuyItem", BaseLibrary.Utility.defaultFlags), new Action<ILContext>(Player_CanBuyItem));
-
-			#endregion
+			 HookEndpointManager.Modify(typeof(Terraria.Player).GetMethod("CanBuyItem", BaseLibrary.Utility.defaultFlags), new Action<ILContext>(Player_CanBuyItem));
 		}
 	}
 }

@@ -8,13 +8,12 @@ using PortableStorage.Items.Special;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace PortableStorage.Hooking
+namespace PortableStorage
 {
 	public static partial class Hooking
 	{
@@ -22,25 +21,31 @@ namespace PortableStorage.Hooking
 		{
 			ILCursor cursor = new ILCursor(il);
 
-			if (cursor.TryGotoNext(i => i.MatchCall(typeof(Utils).GetMethod("CoinsCombineStacks", BaseLibrary.Utility.defaultFlags))))
+			if (cursor.TryGotoNext(i => i.MatchLdloca(0), i => i.MatchLdcI4(4)))
 			{
-				cursor.Remove();
-				cursor.Emit(OpCodes.Ldarg_0);
+				cursor.RemoveRange(20);
 
-				cursor.EmitDelegate<Func<bool, long[], Player, long>>((overflowing, coinsCount, player) =>
+				cursor.Emit(OpCodes.Ldarg_0);
+				cursor.Emit(OpCodes.Ldloc, 1);
+				cursor.Emit(OpCodes.Ldloc, 2);
+				cursor.Emit(OpCodes.Ldloc, 3);
+				cursor.Emit(OpCodes.Ldloc, 4);
+
+				cursor.EmitDelegate<Func<Player, long, long, long, long, long>>((player, inventory, bank, bank2, bank3) =>
 				{
-					long walletCount = player.inventory.OfType<Wallet>().Sum(wallet => wallet.Coins);
-					Array.Resize(ref coinsCount, 5);
-					coinsCount[4] = walletCount;
-					return Utils.CoinsCombineStacks(out overflowing, coinsCount);
+					long coins = player.inventory.OfType<Wallet>().Sum(wallet => wallet.Coins);
+					coins += inventory;
+					coins += bank;
+					coins += bank2;
+					coins += bank3;
+					return coins;
 				});
 			}
 
-			MethodInfo info = typeof(Player).GetMethod("TryPurchasing", BaseLibrary.Utility.defaultFlags);
-			if (cursor.TryGotoNext(i => i.MatchCall(info)))
+			if (cursor.TryGotoNext(i => i.MatchCall<Player>("TryPurchasing")))
 			{
-				cursor.Emit(OpCodes.Ldarg, 0);
 				cursor.Remove();
+				cursor.Emit(OpCodes.Ldarg, 0);
 				cursor.EmitDelegate<Func<int, List<Item[]>, List<Point>, List<Point>, List<Point>, List<Point>, List<Point>, Player, bool>>(Player_TryPurchasing);
 			}
 		}
@@ -49,17 +54,24 @@ namespace PortableStorage.Hooking
 		{
 			ILCursor cursor = new ILCursor(il);
 
-			if (cursor.TryGotoNext(i => i.MatchCall(typeof(Utils).GetMethod("CoinsCombineStacks", BaseLibrary.Utility.defaultFlags))))
+			if (cursor.TryGotoNext(i => i.MatchLdloca(0), i => i.MatchLdcI4(4)))
 			{
-				cursor.Remove();
-				cursor.Emit(OpCodes.Ldarg_0);
+				cursor.RemoveRange(20);
 
-				cursor.EmitDelegate<Func<bool, long[], Player, long>>((overflowing, coinsCount, player) =>
+				cursor.Emit(OpCodes.Ldarg_0);
+				cursor.Emit(OpCodes.Ldloc, 1);
+				cursor.Emit(OpCodes.Ldloc, 2);
+				cursor.Emit(OpCodes.Ldloc, 3);
+				cursor.Emit(OpCodes.Ldloc, 4);
+
+				cursor.EmitDelegate<Func<Player, long, long, long, long, long>>((player, inventory, bank, bank2, bank3) =>
 				{
-					long walletCount = player.inventory.OfType<Wallet>().Sum(wallet => wallet.Coins);
-					Array.Resize(ref coinsCount, 5);
-					coinsCount[4] = walletCount;
-					return Utils.CoinsCombineStacks(out overflowing, coinsCount);
+					long coins = player.inventory.OfType<Wallet>().Sum(wallet => wallet.Coins);
+					coins += inventory;
+					coins += bank;
+					coins += bank2;
+					coins += bank3;
+					return coins;
 				});
 			}
 		}
