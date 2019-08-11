@@ -2,7 +2,6 @@
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour.HookGen;
 using PortableStorage.Items.Special;
-using ReLogic.OS;
 using System;
 using System.Linq;
 using Terraria;
@@ -28,11 +27,11 @@ namespace PortableStorage
 			IL.Terraria.Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
 			IL.Terraria.Player.QuickMana += Player_QuickMana;
 			IL.Terraria.Player.SellItem += Player_SellItem;
-			 IL.Terraria.Player.BuyItem += Player_BuyItem;
+			IL.Terraria.Player.BuyItem += Player_BuyItem;
 			IL.Terraria.Player.ItemCheck += Player_ItemCheck;
 			IL.Terraria.Player.FishingLevel += Player_FishingLevel;
 			IL.Terraria.Player.GetItem += Player_GetItem;
-			 HookEndpointManager.Modify(typeof(Terraria.Player).GetMethod("CanBuyItem", BaseLibrary.Utility.defaultFlags), new Action<ILContext>(Player_CanBuyItem));
+			HookEndpointManager.Modify(typeof(Terraria.Player).GetMethod("CanBuyItem", BaseLibrary.Utility.defaultFlags), new Action<ILContext>(Player_CanBuyItem));
 		}
 	}
 }

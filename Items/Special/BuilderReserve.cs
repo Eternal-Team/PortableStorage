@@ -96,7 +96,7 @@ namespace PortableStorage.Items.Special
 			Item selectedItem = Handler.Items[selectedIndex];
 			if (selectedItem.IsAir) return;
 
-			spriteBatch.DrawItem(selectedItem, item.position - Main.screenPosition + new Vector2(16) * scale + new Vector2(0, 2), new Vector2(16) * scale, rotation, scale, Color.White);
+			spriteBatch.DrawItemInWorld(selectedItem, item.position - Main.screenPosition + new Vector2(16) * scale + new Vector2(0, 2), new Vector2(16) * scale, rotation);
 		}
 
 		public override TagCompound Save()
