@@ -18,7 +18,8 @@ namespace PortableStorage.UI
 
 			textLabel = new UIText(Container.DisplayName.GetTranslation())
 			{
-				HAlign = 0.5f
+				HAlign = 0.5f,
+				HorizontalAlignment = HorizontalAlignment.Center
 			};
 			Append(textLabel);
 
