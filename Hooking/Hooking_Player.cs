@@ -709,6 +709,8 @@ namespace PortableStorage
 
 				cursor.EmitDelegate<Func<Player, Item, Item>>((player, item) =>
 				{
+					if (ItemUtility.BlockGetItem) return item;
+
 					if (item.bait > 0 || Utility.FishingWhitelist.Contains(item.type))
 					{
 						FishingBelt belt = player.inventory.OfType<FishingBelt>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
