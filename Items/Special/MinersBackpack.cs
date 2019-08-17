@@ -11,7 +11,7 @@ namespace PortableStorage.Items.Special
 		{
 			Handler = new ItemHandler(18);
 			Handler.OnContentsChanged += slot => item.SyncBag();
-			Handler.IsItemValid += (slot, item) => Utility.OreWhitelist.Contains(item.type);
+			Handler.IsItemValid += (slot, item) => Utility.OreWhitelist.Contains(item.type) || Utility.ExplosiveWhitelist.Contains(item.type);
 		}
 
 		public override void SetDefaults()

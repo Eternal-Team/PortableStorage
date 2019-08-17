@@ -14,6 +14,8 @@ namespace PortableStorage
 
 		public static List<int> OreWhitelist { get; internal set; }
 
+		public static List<int> ExplosiveWhitelist { get; internal set; }
+
 		public static List<int> FishingWhitelist { get; internal set; }
 
 		internal static void PostSetupContent()
@@ -186,6 +188,16 @@ namespace PortableStorage
 				2337,
 				2338,
 				2339
+			};
+
+			ExplosiveWhitelist = new List<int>
+			{
+				ItemID.Bomb,
+				ItemID.StickyBomb,
+				ItemID.BouncyBomb,
+				ItemID.Dynamite,
+				ItemID.StickyDynamite,
+				ItemID.BouncyDynamite
 			};
 
 			void Add(string key, int ammoType)
