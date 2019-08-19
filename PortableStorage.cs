@@ -35,31 +35,6 @@ namespace PortableStorage
 
 		public override void PostSetupContent() => Utility.PostSetupContent();
 
-		// todo: improve this API
-		public override object Call(params object[] args)
-		{
-			if (args.Length != 2 || !(args[0] is string command)) return base.Call(args);
-
-			switch (command)
-			{
-				case "RegisterIngredient" when args[1] is short ID && !Utility.AlchemistBagWhitelist.Contains(ID):
-				{
-					Utility.AlchemistBagWhitelist.Add(ID);
-					Logger.Info($"Ingredient '{ID}' added to Alchemist's Bag whitelist!");
-					break;
-				}
-
-				case "RegisterOre" when args[1] is short ID && !Utility.OreWhitelist.Contains(ID):
-				{
-					Utility.OreWhitelist.Add(ID);
-					Logger.Info($"Ore '{ID}' added to Ore whitelist!");
-					break;
-				}
-			}
-
-			return base.Call(args);
-		}
-
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(this);

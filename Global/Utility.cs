@@ -8,15 +8,45 @@ namespace PortableStorage
 {
 	public static class Utility
 	{
-		public static readonly Dictionary<string, MultiValueDictionary<int, int>> Ammos = new Dictionary<string, MultiValueDictionary<int, int>>();
+		public static class API
+		{
+			public enum WhitelistType
+			{
+				AlchemyIngredient,
+				Ore,
+				Explosive,
+				Fishing
+			}
 
-		public static List<int> AlchemistBagWhitelist { get; internal set; }
+			public static void Register(WhitelistType type, int itemID)
+			{
+				switch (type)
+				{
+					case WhitelistType.AlchemyIngredient:
+						if (!AlchemistBagWhitelist.Contains(itemID)) AlchemistBagWhitelist.Add(itemID);
+						break;
+					case WhitelistType.Ore:
+						if (!OreWhitelist.Contains(itemID)) OreWhitelist.Add(itemID);
+						break;
+					case WhitelistType.Explosive:
+						if (!ExplosiveWhitelist.Contains(itemID)) ExplosiveWhitelist.Add(itemID);
+						break;
+					case WhitelistType.Fishing:
+						if (!FishingWhitelist.Contains(itemID)) FishingWhitelist.Add(itemID);
+						break;
+				}
+			}
+		}
 
-		public static List<int> OreWhitelist { get; internal set; }
+		internal static readonly Dictionary<string, MultiValueDictionary<int, int>> Ammos = new Dictionary<string, MultiValueDictionary<int, int>>();
 
-		public static List<int> ExplosiveWhitelist { get; internal set; }
+		internal static List<int> AlchemistBagWhitelist;
 
-		public static List<int> FishingWhitelist { get; internal set; }
+		internal static List<int> OreWhitelist;
+
+		internal static List<int> ExplosiveWhitelist;
+
+		internal static List<int> FishingWhitelist;
 
 		internal static void PostSetupContent()
 		{
@@ -230,7 +260,7 @@ namespace PortableStorage
 			Add("Coin", AmmoID.Coin);
 		}
 
-		public static RecipeGroup yoyoStringGroup;
+		internal static RecipeGroup yoyoStringGroup;
 
 		internal static void AddRecipeGroups()
 		{
@@ -238,7 +268,7 @@ namespace PortableStorage
 			RecipeGroup.RegisterGroup("PortableStorage:YoYoStrings", yoyoStringGroup);
 		}
 
-		public static void SyncBag(this Item item)
+		internal static void SyncBag(this Item item)
 		{
 			if (Main.netMode == NetmodeID.MultiplayerClient)
 			{
