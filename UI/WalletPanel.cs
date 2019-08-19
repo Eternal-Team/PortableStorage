@@ -16,7 +16,7 @@ namespace PortableStorage.UI
 			Height = (84, 0);
 			this.Center();
 
-			textLabel = new UIText(Container.DisplayName.GetTranslation())
+			UIText textLabel = new UIText(Container.DisplayName.GetTranslation())
 			{
 				HAlign = 0.5f,
 				HorizontalAlignment = HorizontalAlignment.Center
@@ -40,7 +40,7 @@ namespace PortableStorage.UI
 			buttonDepositAll.OnClick += (evt, element) => ItemUtility.DepositAll(Container.Handler, Main.LocalPlayer);
 			Append(buttonDepositAll);
 
-			buttonClose = new UITextButton("X")
+			UITextButton buttonClose = new UITextButton("X")
 			{
 				Size = new Vector2(20),
 				Left = (-20, 1),
@@ -50,7 +50,7 @@ namespace PortableStorage.UI
 			buttonClose.OnClick += (evt, element) => BaseLibrary.BaseLibrary.PanelGUI.UI.CloseUI(Container);
 			Append(buttonClose);
 
-			gridItems = new UIGrid<UIContainerSlot>(9)
+			UIGrid<UIContainerSlot> gridItems = new UIGrid<UIContainerSlot>(9)
 			{
 				Width = (0, 1),
 				Height = (-28, 1),

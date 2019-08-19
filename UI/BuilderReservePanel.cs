@@ -10,7 +10,6 @@ using System.Linq;
 using Terraria;
 using Terraria.GameContent.Achievements;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
@@ -19,52 +18,15 @@ namespace PortableStorage.UI
 {
 	public class BuilderReservePanel : BaseBagPanel<BuilderReserve>
 	{
-		private new UIGrid<UIBuilderReserveSlot> gridItems;
-
 		public override void OnInitialize()
 		{
+			base.OnInitialize();
+
 			Width = (408, 0);
 			Height = (40 + Container.Handler.Slots / 9 * 44, 0);
 			this.Center();
 
-			textLabel = new UIText(Container.DisplayName.GetTranslation())
-			{
-				HAlign = 0.5f
-			};
-			Append(textLabel);
-
-			UIButton buttonLootAll = new UIButton(PortableStorage.textureLootAll)
-			{
-				Size = new Vector2(20),
-				HoverText = Language.GetText("LegacyInterface.29")
-			};
-			buttonLootAll.OnClick += (evt, element) =>
-			{
-				ItemUtility.LootAll(Container.Handler, Main.LocalPlayer);
-				if (Container.Handler.GetItemInSlot(Container.selectedIndex).IsAir) Container.SetIndex(-1);
-			};
-			Append(buttonLootAll);
-
-			UIButton buttonDepositAll = new UIButton(PortableStorage.textureDepositAll)
-			{
-				Size = new Vector2(20),
-				Left = (28, 0),
-				HoverText = Language.GetText("LegacyInterface.30")
-			};
-			buttonDepositAll.OnClick += (evt, element) => ItemUtility.DepositAll(Container.Handler, Main.LocalPlayer);
-			Append(buttonDepositAll);
-
-			buttonClose = new UITextButton("X")
-			{
-				Size = new Vector2(20),
-				Left = (-20, 1),
-				Padding = (0, 0, 0, 0),
-				RenderPanel = false
-			};
-			buttonClose.OnClick += (evt, element) => BaseLibrary.BaseLibrary.PanelGUI.UI.CloseUI(Container);
-			Append(buttonClose);
-
-			gridItems = new UIGrid<UIBuilderReserveSlot>(9)
+			UIGrid<UIBuilderReserveSlot> gridItems = new UIGrid<UIBuilderReserveSlot>(9)
 			{
 				Width = (0, 1),
 				Height = (-28, 1),
