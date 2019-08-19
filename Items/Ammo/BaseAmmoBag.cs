@@ -9,7 +9,7 @@ namespace PortableStorage.Items.Ammo
 
 		public BaseAmmoBag()
 		{
-			Handler = new ItemHandler(27);
+			Handler = new ItemHandler(9);
 			Handler.OnContentsChanged += slot => item.SyncBag();
 			Handler.IsItemValid += (slot, item) => Utility.Ammos[AmmoType].Values.SelectMany(x => x).Contains(item.type);
 		}
