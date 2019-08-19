@@ -3,12 +3,12 @@ using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria.UI.Chat;
 
 namespace PortableStorage.Items.Special
 {
@@ -17,12 +17,13 @@ namespace PortableStorage.Items.Special
 		public override string Texture => "PortableStorage/Textures/Items/BuilderReserve";
 
 		public int selectedIndex;
+		public Item SelectedItem => selectedIndex >= 0 ? Handler.GetItemInSlot(selectedIndex) : null;
 
 		public BuilderReserve()
 		{
 			Handler = new ItemHandler(9);
 			Handler.OnContentsChanged += slot => item.SyncBag();
-			Handler.IsItemValid += (slot, item) => (item.createTile >= 0 || item.createWall >= 0) && (Handler.Items.All(x => x.type != item.type) || Handler.Items[slot].type == item.type);
+			Handler.IsItemValid += (slot, item) => (item.createTile >= 0 || item.createWall >= 0) && (Handler.GetItemInSlot(slot).type == item.type || !Handler.Contains(item.type));
 			Handler.GetSlotLimit += slot => int.MaxValue;
 
 			selectedIndex = -1;
@@ -47,7 +48,7 @@ namespace PortableStorage.Items.Special
 			item.value = 12000 * 5;
 		}
 
-		public override bool CanUseItem(Player player) => selectedIndex >= 0 && Handler.Items[selectedIndex].type > 0 && Handler.Items[selectedIndex].stack > 1;
+		public override bool CanUseItem(Player player) => SelectedItem != null && SelectedItem.type > 0 && SelectedItem.stack > 1;
 
 		public override bool UseItem(Player player) => false;
 
@@ -62,41 +63,45 @@ namespace PortableStorage.Items.Special
 			else
 			{
 				selectedIndex = index;
-				Item selectedItem = Handler.Items[selectedIndex];
-
-				if (selectedItem.createTile >= 0)
+				if (SelectedItem.createTile >= 0)
 				{
-					item.createTile = selectedItem.createTile;
+					item.createTile = SelectedItem.createTile;
 					item.createWall = -1;
-					item.placeStyle = selectedItem.placeStyle;
+					item.placeStyle = SelectedItem.placeStyle;
 				}
-				else if (selectedItem.createWall >= 0)
+				else if (SelectedItem.createWall >= 0)
 				{
 					item.createTile = -1;
-					item.createWall = selectedItem.createWall;
-					item.placeStyle = selectedItem.placeStyle;
+					item.createWall = SelectedItem.createWall;
+					item.placeStyle = SelectedItem.placeStyle;
 				}
 			}
 		}
 
 		public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			if (selectedIndex < 0) return;
+			if (SelectedItem == null || SelectedItem.IsAir) return;
 
-			Item selectedItem = Handler.Items[selectedIndex];
-			if (selectedItem.IsAir) return;
+			spriteBatch.DrawItemInInventory(SelectedItem, position + new Vector2(16) * scale, new Vector2(16) * scale, false);
 
-			spriteBatch.DrawItemInInventory(selectedItem, position + new Vector2(16) * scale, new Vector2(16) * scale, false);
+			string text = SelectedItem.stack < 1000 ? SelectedItem.stack.ToString() : SelectedItem.stack.ToSI("N1");
+			Vector2 size = Main.fontMouseText.MeasureString(text);
+
+			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, Main.fontMouseText, text, position + new Vector2(16, 32) * scale, Color.White, 0f, size * 0.5f, new Vector2(0.8f) * scale);
 		}
 
 		public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
 		{
-			if (selectedIndex < 0) return;
+			if (SelectedItem == null || SelectedItem.IsAir) return;
 
-			Item selectedItem = Handler.Items[selectedIndex];
-			if (selectedItem.IsAir) return;
+			Vector2 position = item.position - Main.screenPosition + new Vector2(16) * scale + new Vector2(0, 2);
 
-			spriteBatch.DrawItemInWorld(selectedItem, item.position - Main.screenPosition + new Vector2(16) * scale + new Vector2(0, 2), new Vector2(16) * scale, rotation);
+			spriteBatch.DrawItemInWorld(SelectedItem, position, new Vector2(16) * scale, rotation);
+
+			string text = SelectedItem.stack < 1000 ? SelectedItem.stack.ToString() : SelectedItem.stack.ToSI("N1");
+			Vector2 size = Main.fontMouseText.MeasureString(text);
+
+			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, Main.fontMouseText, text, position, Color.White, rotation, new Vector2(size.X * 0.5f, -8f), new Vector2(0.75f) * scale);
 		}
 
 		public override TagCompound Save()

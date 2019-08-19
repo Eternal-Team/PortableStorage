@@ -1,6 +1,5 @@
 ﻿using ContainerLibrary;
 using System;
-using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -38,8 +37,10 @@ namespace PortableStorage.Items.Special
 
 				if (item == null || item.IsAir || !item.thrown || item.stack == item.maxStack) continue;
 
-				foreach (Item handlerItem in Handler.Items.OrderBy(x => x.stack))
+				for (int j = 0; j < Handler.Slots; j++)
 				{
+					Item handlerItem = Handler.GetItemInSlot(i);
+
 					if (handlerItem.type == item.type)
 					{
 						int count = Math.Min(item.maxStack - item.stack, handlerItem.stack);

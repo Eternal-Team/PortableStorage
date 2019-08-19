@@ -1,5 +1,4 @@
-﻿using BaseLibrary;
-using ContainerLibrary;
+﻿using ContainerLibrary;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
@@ -14,16 +13,18 @@ namespace PortableStorage.Items.Ammo
 
 		public long Coins
 		{
-			get => Handler.Items.CountCoins();
+			get => Handler.CoinsValue();
 			set
 			{
-				Handler.Items = Utils.CoinsSplit(value).Select((stack, index) =>
+				Item[] coins = Utils.CoinsSplit(value).Select((stack, index) =>
 				{
 					Item coin = new Item();
 					coin.SetDefaults(ItemID.CopperCoin + index);
 					coin.stack = stack;
 					return coin;
 				}).Reverse().ToArray();
+
+				for (int i = 0; i < Handler.Slots; i++) Handler.SetItemInSlot(i, coins[i]);
 
 				item.SyncBag();
 			}

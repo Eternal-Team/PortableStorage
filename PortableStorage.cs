@@ -1,7 +1,4 @@
-﻿using BaseLibrary;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -15,6 +12,7 @@ namespace PortableStorage
 		internal static Texture2D textureBlackHole;
 		internal static Texture2D textureLootAll;
 		internal static Texture2D textureDepositAll;
+		internal static Texture2D textureQuickStack;
 
 		public override void Load()
 		{
@@ -27,6 +25,7 @@ namespace PortableStorage
 				textureBlackHole = ModContent.GetTexture("PortableStorage/Textures/Items/TheBlackHole");
 				textureLootAll = ModContent.GetTexture("BaseLibrary/Textures/UI/LootAll");
 				textureDepositAll = ModContent.GetTexture("BaseLibrary/Textures/UI/DepositAll");
+				textureQuickStack = ModContent.GetTexture("BaseLibrary/Textures/UI/QuickStack");
 			}
 		}
 
@@ -36,6 +35,7 @@ namespace PortableStorage
 
 		public override void PostSetupContent() => Utility.PostSetupContent();
 
+		// todo: improve this API
 		public override object Call(params object[] args)
 		{
 			if (args.Length != 2 || !(args[0] is string command)) return base.Call(args);
@@ -66,15 +66,6 @@ namespace PortableStorage
 			recipe.AddIngredient(ItemID.Vertebrae, 5);
 			recipe.SetResult(ItemID.Leather);
 			recipe.AddRecipe();
-		}
-
-		public override void PostAddRecipes()
-		{
-			foreach (ModItem item in this.GetValue<Dictionary<string, ModItem>>("items").Values)
-			{
-				Recipe recipe = Main.recipe.FirstOrDefault(x => x.createItem.type == item.item.type);
-				if (recipe != null) item.item.value = recipe.requiredItem.Sum(x => x.value * x.stack);
-			}
 		}
 	}
 }

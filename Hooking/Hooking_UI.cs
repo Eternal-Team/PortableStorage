@@ -1,4 +1,5 @@
 ﻿using BaseLibrary;
+using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Mono.Cecil.Cil;
@@ -24,7 +25,7 @@ namespace PortableStorage
 				cursor.Emit(OpCodes.Ldloc, 35);
 				cursor.Emit(OpCodes.Ldloc, 33);
 
-				cursor.EmitDelegate<Func<int, int, int>>((useAmmo, ammoCount) => ammoCount + Main.LocalPlayer.inventory.OfType<BaseAmmoBag>().SelectMany(ammoBag => ammoBag.Handler.Items).Where(item => item.ammo == useAmmo).Sum(item => item.stack));
+				cursor.EmitDelegate<Func<int, int, int>>((useAmmo, ammoCount) => ammoCount + Main.LocalPlayer.inventory.OfType<BaseAmmoBag>().Sum(bag => bag.Handler.CountItems(item => item.ammo == useAmmo)));
 
 				cursor.Emit(OpCodes.Stloc, 33);
 			}
@@ -35,7 +36,7 @@ namespace PortableStorage
 
 				cursor.Emit(OpCodes.Ldloc, 33);
 
-				cursor.EmitDelegate<Func<int, int>>(baitCount => baitCount + Main.LocalPlayer.inventory.OfType<FishingBelt>().SelectMany(ammoBag => ammoBag.Handler.Items).Where(item => item.bait > 0).Sum(item => item.stack));
+				cursor.EmitDelegate<Func<int, int>>(baitCount => baitCount + Main.LocalPlayer.inventory.OfType<FishingBelt>().Sum(bag => bag.Handler.CountItems(item => item.bait > 0)));
 
 				cursor.Emit(OpCodes.Stloc, 33);
 			}

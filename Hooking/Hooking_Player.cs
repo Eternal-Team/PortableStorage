@@ -111,7 +111,7 @@ namespace PortableStorage
 
 				cursor.Emit(OpCodes.Ldarg, 0);
 				cursor.Emit(OpCodes.Ldarg, 1);
-				cursor.EmitDelegate<Func<Player, Item, Item>>((player, sItem) => player.inventory.OfType<BaseAmmoBag>().SelectMany(x => x.Handler.Items).FirstOrDefault(ammo => ammo.ammo == sItem.useAmmo && ammo.stack > 0));
+				cursor.EmitDelegate<Func<Player, Item, Item>>((player, sItem) => player.inventory.OfType<BaseAmmoBag>().SelectMany(bag => bag.Handler.Items).FirstOrDefault(ammo => ammo.ammo == sItem.useAmmo && ammo.stack > 0));
 				cursor.Emit(OpCodes.Stloc, firstAmmoIndex);
 
 				cursor.Emit(OpCodes.Ldloc, firstAmmoIndex);
