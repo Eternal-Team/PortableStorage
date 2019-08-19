@@ -95,7 +95,7 @@ namespace PortableStorage
 
 		private static void Player_PickAmmo(ILContext il)
 		{
-			int firstAmmoIndex = il.AddVariable(typeof(Item));
+			int firstAmmoIndex = il.AddVariable<Item>();
 			int canShootIndex = il.GetParameterIndex("canShoot");
 
 			ILCursor cursor = new ILCursor(il);
@@ -134,7 +134,8 @@ namespace PortableStorage
 
 		private static void Player_QuickBuff(ILContext il)
 		{
-			il.Body.Variables.Add(new VariableDefinition(il.Import(typeof(ValueTuple<LegacySoundStyle, bool>))));
+			il.AddVariable<ValueTuple<LegacySoundStyle, bool>>();
+			//il.Body.Variables.Add(new VariableDefinition(il.Import(typeof(ValueTuple<LegacySoundStyle, bool>))));
 
 			ILCursor cursor = new ILCursor(il);
 
@@ -246,8 +247,7 @@ namespace PortableStorage
 
 		private static void Player_QuickHeal_GetItemToUse(ILContext il)
 		{
-			Type type = typeof(ValueTuple<Item, int>);
-			int tupleIndex = il.AddVariable(type);
+			int tupleIndex = il.AddVariable<ValueTuple<Item, int>>();
 
 			ILCursor cursor = new ILCursor(il);
 
@@ -287,6 +287,7 @@ namespace PortableStorage
 
 				cursor.Emit(OpCodes.Stloc, tupleIndex);
 
+				Type type = typeof(ValueTuple<Item, int>);
 				cursor.Emit(OpCodes.Ldloc, tupleIndex);
 				cursor.Emit(OpCodes.Ldfld, type.GetField("Item1", BaseLibrary.Utility.defaultFlags));
 				cursor.Emit(OpCodes.Stloc, 1);
@@ -537,8 +538,7 @@ namespace PortableStorage
 
 		private static void Player_ItemCheck(ILContext il)
 		{
-			Type type = typeof(ValueTuple<int, bool>);
-			int tupleIndex = il.AddVariable(type);
+			int tupleIndex = il.AddVariable<ValueTuple<int, bool>>();
 
 			ILCursor cursor = new ILCursor(il);
 			ILLabel label = cursor.DefineLabel();
@@ -550,7 +550,6 @@ namespace PortableStorage
 				cursor.Emit(OpCodes.Ldarg, 0);
 				cursor.Emit(OpCodes.Ldloc, 26);
 
-				;
 				cursor.EmitDelegate<Func<Player, int, ValueTuple<int, bool>>>((player, index) =>
 				{
 					bool foundBait = false;
@@ -592,6 +591,7 @@ namespace PortableStorage
 
 				cursor.Emit(OpCodes.Stloc, tupleIndex);
 
+				Type type = typeof(ValueTuple<int, bool>);
 				cursor.Emit(OpCodes.Ldloc, tupleIndex);
 				cursor.Emit(OpCodes.Ldfld, type.GetField("Item1", BaseLibrary.Utility.defaultFlags));
 				cursor.Emit(OpCodes.Stloc, 29);
@@ -609,10 +609,8 @@ namespace PortableStorage
 
 		private static void Player_FishingLevel(ILContext il)
 		{
-			Type tupleType = typeof(ValueTuple<Item, int>);
-			int tupleIndex = il.AddVariable(tupleType);
-
-			int itemIndex = il.AddVariable(typeof(Item));
+			int tupleIndex = il.AddVariable<ValueTuple<Item, int>>();
+			int itemIndex = il.AddVariable<Item>();
 
 			ILCursor cursor = new ILCursor(il);
 			ILLabel label = cursor.DefineLabel();
@@ -627,11 +625,7 @@ namespace PortableStorage
 				{
 					foreach (Item item in player.inventory.OfType<FishingBelt>().SelectMany(belt => belt.Handler.Items))
 					{
-						if (item.stack > 0 && item.bait > 0)
-						{
-							if (item.type == 2673) return (null, -1);
-							return (item, item.bait);
-						}
+						if (item.stack > 0 && item.bait > 0) return item.type == 2673 ? (null, -1) : (item, item.bait);
 					}
 
 					return (null, 0);
@@ -639,6 +633,7 @@ namespace PortableStorage
 
 				cursor.Emit(OpCodes.Stloc, tupleIndex);
 
+				Type tupleType = typeof(ValueTuple<Item, int>);
 				cursor.Emit(OpCodes.Ldloc, tupleIndex);
 				cursor.Emit(OpCodes.Ldfld, tupleType.GetField("Item1", BaseLibrary.Utility.defaultFlags));
 				cursor.Emit(OpCodes.Stloc, itemIndex);
@@ -678,31 +673,31 @@ namespace PortableStorage
 		private static void Player_GetItem(ILContext il)
 		{
 			ILCursor cursor = new ILCursor(il);
-			ILLabel myCode = cursor.DefineLabel();
+			//ILLabel myCode = cursor.DefineLabel();
 			ILLabel label = cursor.DefineLabel();
 
-			ILLabel l = null;
-			while (cursor.TryGotoNext(i => i.MatchBneUn(out l)))
-			{
-				if (l.Target.Offset == 187)
-				{
-					cursor.Remove();
-					cursor.Emit(OpCodes.Bne_Un, myCode);
-				}
-			}
+			//ILLabel l = null;
+			//while (cursor.TryGotoNext(i => i.MatchBneUn(out l)))
+			//{
+			//	if (l.Target.Offset == 187)
+			//	{
+			//		cursor.Remove();
+			//		cursor.Emit(OpCodes.Bne_Un, myCode);
+			//	}
+			//}
 
-			while (cursor.TryGotoNext(i => i.MatchBrtrue(out l)))
-			{
-				if (l.Target.Offset == 187)
-				{
-					cursor.Remove();
-					cursor.Emit(OpCodes.Brtrue, myCode);
-				}
-			}
+			//while (cursor.TryGotoNext(i => i.MatchBrtrue(out l)))
+			//{
+			//	if (l.Target.Offset == 187)
+			//	{
+			//		cursor.Remove();
+			//		cursor.Emit(OpCodes.Brtrue, myCode);
+			//	}
+			//}
 
-			if (cursor.TryGotoPrev(i => i.MatchLdloc(3), i => i.MatchStloc(4)))
+			if (cursor.TryGotoPrev(MoveType.AfterLabel, i => i.MatchLdloc(3), i => i.MatchStloc(4)))
 			{
-				cursor.MarkLabel(myCode);
+				//cursor.MarkLabel(myCode);
 
 				cursor.Emit(OpCodes.Ldarg, 0);
 				cursor.Emit(OpCodes.Ldarg, 2);

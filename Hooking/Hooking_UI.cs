@@ -44,10 +44,10 @@ namespace PortableStorage
 
 		private static void ItemSlot_DrawSavings(ILContext il)
 		{
-			int walletIndex = il.AddVariable(typeof(long));
+			int walletIndex = il.AddVariable<long>();
 
 			ILCursor cursor = new ILCursor(il);
-			ILLabel label = cursor.DefineLabel();
+			//ILLabel label = cursor.DefineLabel();
 
 			if (cursor.TryGotoNext(i => i.MatchStloc(4), i => i.MatchLdloca(1), i => i.MatchLdcI4(3)))
 			{
@@ -73,17 +73,17 @@ namespace PortableStorage
 				cursor.Emit(OpCodes.Stelem_I8);
 			}
 
-			if (cursor.TryGotoNext(i => i.MatchLdloc(2), i => i.MatchLdcI4(0), i => i.MatchConvI8(), i => i.MatchBle(out _)))
-			{
-				cursor.Index += 3;
+			//if (cursor.TryGotoNext(i => i.MatchLdloc(2), i => i.MatchLdcI4(0), i => i.MatchConvI8(), i => i.MatchBle(out _)))
+			//{
+			//	cursor.Index += 3;
 
-				cursor.Remove();
-				cursor.Emit(OpCodes.Ble, label);
-			}
+			//	cursor.Remove();
+			//	cursor.Emit(OpCodes.Ble, label);
+			//}
 
-			if (cursor.TryGotoNext(i => i.MatchLdarg(0), i => i.MatchLdsfld(typeof(Lang).GetField("inter", BaseLibrary.Utility.defaultFlags)), i => i.MatchLdcI4(66)))
+			if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdarg(0), i => i.MatchLdsfld(typeof(Lang).GetField("inter", BaseLibrary.Utility.defaultFlags)), i => i.MatchLdcI4(66)))
 			{
-				cursor.MarkLabel(label);
+				//cursor.MarkLabel(label);
 
 				cursor.Emit(OpCodes.Ldarg, 0);
 				cursor.Emit(OpCodes.Ldloc, walletIndex);
