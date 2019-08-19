@@ -2,6 +2,7 @@
 using BaseLibrary.UI.Elements;
 using ContainerLibrary;
 using PortableStorage.Items.Special;
+using Terraria;
 
 namespace PortableStorage.UI
 {
@@ -21,6 +22,8 @@ namespace PortableStorage.UI
 			};
 			Append(textPotions);
 
+			buttonQuickStack.OnClick += (evt, element) => ItemUtility.QuickStack(Container.HandlerIngredients, Main.LocalPlayer);
+			
 			UIGrid<UIContainerSlot> gridItems = new UIGrid<UIContainerSlot>(9)
 			{
 				Width = (0, 1),

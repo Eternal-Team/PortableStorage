@@ -24,6 +24,8 @@ namespace PortableStorage.UI
 
 		public string GetTexture(Item item) => Handler.IsItemValid(0, item) ? Container.Texture : "";
 
+		protected UIButton buttonQuickStack;
+
 		public override void OnInitialize()
 		{
 			UIText textLabel = new UIText(Container.DisplayName.GetTranslation())
@@ -50,7 +52,7 @@ namespace PortableStorage.UI
 			buttonDepositAll.OnClick += (evt, element) => ItemUtility.DepositAll(Container.Handler, Main.LocalPlayer);
 			Append(buttonDepositAll);
 
-			UIButton buttonQuickStack = new UIButton(PortableStorage.textureQuickStack)
+			buttonQuickStack = new UIButton(PortableStorage.textureQuickStack)
 			{
 				Size = new Vector2(20),
 				Left = (56, 0),
