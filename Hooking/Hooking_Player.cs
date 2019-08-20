@@ -17,6 +17,7 @@ namespace PortableStorage
 {
 	public static partial class Hooking
 	{
+		#region Wallet
 		private static void Player_BuyItem(ILContext il)
 		{
 			ILCursor cursor = new ILCursor(il);
@@ -73,298 +74,6 @@ namespace PortableStorage
 					coins += bank3;
 					return coins;
 				});
-			}
-		}
-
-		private static void Player_HasAmmo(ILContext il)
-		{
-			ILCursor cursor = new ILCursor(il);
-
-			if (cursor.TryGotoNext(i => i.MatchLdloc(0), i => i.MatchLdcI4(58)))
-			{
-				cursor.Index += 3;
-
-				cursor.Emit(OpCodes.Ldarg_0);
-				cursor.Emit(OpCodes.Ldarg_1);
-
-				cursor.EmitDelegate<Func<Player, Item, bool>>((player, ammoUser) => player.inventory.OfType<BaseAmmoBag>().Any(ammoBag => ammoBag.Handler.Items.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0)));
-
-				cursor.Emit(OpCodes.Starg, il.Method.Parameters.FirstOrDefault(x => x.Name == "canUse"));
-			}
-		}
-
-		private static void Player_PickAmmo(ILContext il)
-		{
-			int firstAmmoIndex = il.AddVariable<Item>();
-			int canShootIndex = il.GetParameterIndex("canShoot");
-
-			ILCursor cursor = new ILCursor(il);
-			ILLabel elseLabel = cursor.DefineLabel();
-			ILLabel endLabel = cursor.DefineLabel();
-
-			cursor.Emit(OpCodes.Newobj, typeof(Item).GetConstructors()[0]);
-			cursor.Emit(OpCodes.Stloc, firstAmmoIndex);
-
-			if (cursor.TryGotoNext(i => i.MatchNewobj(typeof(Item).GetConstructors()[0]), i => i.MatchStloc(0)))
-			{
-				cursor.Index += 2;
-
-				cursor.Emit(OpCodes.Ldarg, 0);
-				cursor.Emit(OpCodes.Ldarg, 1);
-				cursor.EmitDelegate<Func<Player, Item, Item>>((player, sItem) => player.inventory.OfType<BaseAmmoBag>().SelectMany(bag => bag.Handler.Items).FirstOrDefault(ammo => ammo.ammo == sItem.useAmmo && ammo.stack > 0));
-				cursor.Emit(OpCodes.Stloc, firstAmmoIndex);
-
-				cursor.Emit(OpCodes.Ldloc, firstAmmoIndex);
-				cursor.Emit(OpCodes.Brfalse, elseLabel);
-
-				cursor.Emit(OpCodes.Ldloc, firstAmmoIndex);
-				cursor.Emit(OpCodes.Stloc, 0);
-
-				cursor.Emit(OpCodes.Ldarg, canShootIndex);
-				cursor.Emit(OpCodes.Ldc_I4, 1);
-				cursor.Emit(OpCodes.Stind_I1);
-
-				cursor.Emit(OpCodes.Br, endLabel);
-			}
-
-			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(1), i => i.MatchLdcI4(54))) cursor.MarkLabel(elseLabel);
-
-			if (cursor.TryGotoNext(i => i.MatchLdarg(3), i => i.MatchLdindU1(), i => i.MatchBrfalse(out _))) cursor.MarkLabel(endLabel);
-		}
-
-		private static void Player_QuickBuff(ILContext il)
-		{
-			il.AddVariable<ValueTuple<LegacySoundStyle, bool>>();
-			//il.Body.Variables.Add(new VariableDefinition(il.Import(typeof(ValueTuple<LegacySoundStyle, bool>))));
-
-			ILCursor cursor = new ILCursor(il);
-
-			if (cursor.TryGotoNext(i => i.MatchLdnull(), i => i.MatchStloc(0)))
-			{
-				cursor.Index += 2;
-				ILLabel label = cursor.DefineLabel();
-
-				cursor.Emit(OpCodes.Ldarg_0);
-
-				cursor.EmitDelegate<Func<Player, ValueTuple<LegacySoundStyle, bool>>>(player =>
-				{
-					LegacySoundStyle legacySoundStyle = null;
-
-					foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
-					{
-						if (player.CountBuffs() == 22) return (null, true);
-
-						if (item.stack > 0 && item.type > 0 && item.buffType > 0 && !item.summon && item.buffType != 90)
-						{
-							int buffType = item.buffType;
-							bool useItem = ItemLoader.CanUseItem(item, player);
-							for (int buffIndex = 0; buffIndex < 22; buffIndex++)
-							{
-								if (buffType == 27 && (player.buffType[buffIndex] == buffType || player.buffType[buffIndex] == 101 || player.buffType[buffIndex] == 102))
-								{
-									useItem = false;
-									break;
-								}
-
-								if (player.buffType[buffIndex] == buffType)
-								{
-									useItem = false;
-									break;
-								}
-
-								if (Main.meleeBuff[buffType] && Main.meleeBuff[player.buffType[buffIndex]])
-								{
-									useItem = false;
-									break;
-								}
-							}
-
-							if (Main.lightPet[item.buffType] || Main.vanityPet[item.buffType])
-							{
-								for (int buffIndex = 0; buffIndex < 22; buffIndex++)
-								{
-									if (Main.lightPet[player.buffType[buffIndex]] && Main.lightPet[item.buffType]) useItem = false;
-									if (Main.vanityPet[player.buffType[buffIndex]] && Main.vanityPet[item.buffType]) useItem = false;
-								}
-							}
-
-							if (item.mana > 0 && useItem)
-							{
-								if (player.statMana >= (int)(item.mana * player.manaCost))
-								{
-									player.manaRegenDelay = (int)player.maxRegenDelay;
-									player.statMana -= (int)(item.mana * player.manaCost);
-								}
-								else useItem = false;
-							}
-
-							if (player.whoAmI == Main.myPlayer && item.type == 603 && !Main.cEd) useItem = false;
-
-							if (buffType == 27)
-							{
-								buffType = Main.rand.Next(3);
-								if (buffType == 0) buffType = 27;
-								if (buffType == 1) buffType = 101;
-								if (buffType == 2) buffType = 102;
-							}
-
-							if (useItem)
-							{
-								ItemLoader.UseItem(item, player);
-								legacySoundStyle = item.UseSound;
-								int buffTime = item.buffTime;
-								if (buffTime == 0) buffTime = 3600;
-
-								player.AddBuff(buffType, buffTime);
-								if (item.consumable)
-								{
-									if (ItemLoader.ConsumeItem(item, player)) item.stack--;
-									if (item.stack <= 0) item.TurnToAir();
-								}
-							}
-						}
-					}
-
-					return (legacySoundStyle, false);
-				});
-
-				Type type = typeof(ValueTuple<LegacySoundStyle, bool>);
-
-				cursor.Emit(OpCodes.Stloc, 7);
-
-				cursor.Emit(OpCodes.Ldloc, 7);
-				cursor.Emit(OpCodes.Ldfld, type.GetField("Item1", BaseLibrary.Utility.defaultFlags));
-				cursor.Emit(OpCodes.Stloc, 0);
-
-				cursor.Emit(OpCodes.Ldloc, 7);
-				cursor.Emit(OpCodes.Ldfld, type.GetField("Item2", BaseLibrary.Utility.defaultFlags));
-				cursor.Emit(OpCodes.Brfalse, label);
-				cursor.Emit(OpCodes.Ret);
-
-				cursor.MarkLabel(label);
-			}
-		}
-
-		private static void Player_QuickHeal_GetItemToUse(ILContext il)
-		{
-			int tupleIndex = il.AddVariable<ValueTuple<Item, int>>();
-
-			ILCursor cursor = new ILCursor(il);
-
-			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(3), i => i.MatchBr(out _)))
-			{
-				cursor.Emit(OpCodes.Ldarg, 0);
-				cursor.Emit(OpCodes.Ldloc, 0);
-				cursor.Emit(OpCodes.Ldloc, 2);
-
-				cursor.EmitDelegate<Func<Player, int, int, ValueTuple<Item, int>>>((player, lostHealth, healthGain) =>
-				{
-					Item result = null;
-
-					foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
-					{
-						if (item.stack > 0 && item.type > 0 && item.potion && item.healLife > 0 && ItemLoader.CanUseItem(item, player))
-						{
-							int healWaste = player.GetHealLife(item, true) - lostHealth;
-							if (healthGain < 0)
-							{
-								if (healWaste > healthGain)
-								{
-									result = item;
-									healthGain = healWaste;
-								}
-							}
-							else if (healWaste < healthGain && healWaste >= 0)
-							{
-								result = item;
-								healthGain = healWaste;
-							}
-						}
-					}
-
-					return (result, healthGain);
-				});
-
-				cursor.Emit(OpCodes.Stloc, tupleIndex);
-
-				Type type = typeof(ValueTuple<Item, int>);
-				cursor.Emit(OpCodes.Ldloc, tupleIndex);
-				cursor.Emit(OpCodes.Ldfld, type.GetField("Item1", BaseLibrary.Utility.defaultFlags));
-				cursor.Emit(OpCodes.Stloc, 1);
-
-				cursor.Emit(OpCodes.Ldloc, tupleIndex);
-				cursor.Emit(OpCodes.Ldfld, type.GetField("Item2", BaseLibrary.Utility.defaultFlags));
-				cursor.Emit(OpCodes.Stloc, 3);
-			}
-		}
-
-		private static void Player_QuickMana(ILContext il)
-		{
-			ILCursor cursor = new ILCursor(il);
-			ILLabel jumpToFor = cursor.DefineLabel();
-			ILLabel jumpToMyCode = cursor.DefineLabel();
-
-			if (cursor.TryGotoNext(i => i.MatchBneUn(out _), i => i.MatchRet()))
-			{
-				cursor.Remove();
-				cursor.Emit(OpCodes.Bne_Un, jumpToMyCode);
-
-				cursor.Index++;
-
-				cursor.MarkLabel(jumpToMyCode);
-
-				cursor.Emit(OpCodes.Ldarg, 0);
-
-				cursor.EmitDelegate<Func<Player, bool>>(player =>
-				{
-					foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
-					{
-						if (item.stack > 0 && item.type > 0 && item.healMana > 0 && (player.potionDelay == 0 || !item.potion) && ItemLoader.CanUseItem(item, player))
-						{
-							Main.PlaySound(item.UseSound, player.position);
-							if (item.potion)
-							{
-								if (item.type == ItemID.RestorationPotion)
-								{
-									player.potionDelay = player.restorationDelayTime;
-									player.AddBuff(BuffID.PotionSickness, player.potionDelay);
-								}
-								else
-								{
-									player.potionDelay = player.potionDelayTime;
-									player.AddBuff(BuffID.PotionSickness, player.potionDelay);
-								}
-							}
-
-							ItemLoader.UseItem(item, player);
-							int healLife = player.GetHealLife(item, true);
-							int healMana = player.GetHealMana(item, true);
-							player.statLife += healLife;
-							player.statMana += healMana;
-							if (player.statLife > player.statLifeMax2) player.statLife = player.statLifeMax2;
-							if (player.statMana > player.statManaMax2) player.statMana = player.statManaMax2;
-							if (healLife > 0 && Main.myPlayer == player.whoAmI) player.HealEffect(healLife);
-							if (healMana > 0)
-							{
-								player.AddBuff(BuffID.ManaSickness, Player.manaSickTime);
-								if (Main.myPlayer == player.whoAmI) player.ManaEffect(healMana);
-							}
-
-							if (ItemLoader.ConsumeItem(item, player)) item.stack--;
-							if (item.stack <= 0) item.TurnToAir();
-
-							Recipe.FindRecipes();
-							return true;
-						}
-					}
-
-					return false;
-				});
-
-				cursor.Emit(OpCodes.Brfalse, jumpToFor);
-				cursor.Emit(OpCodes.Ret);
-
-				if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(0), i => i.MatchBr(out _))) cursor.MarkLabel(jumpToFor);
 			}
 		}
 
@@ -535,11 +244,422 @@ namespace PortableStorage
 
 			return result;
 		}
+		#endregion
+
+		#region Ammo
+		private static void Player_HasAmmo(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
+
+			if (cursor.TryGotoNext(i => i.MatchLdloc(0), i => i.MatchLdcI4(58)))
+			{
+				cursor.Index += 3;
+
+				cursor.Emit(OpCodes.Ldarg_0);
+				cursor.Emit(OpCodes.Ldarg_1);
+
+				cursor.EmitDelegate<Func<Player, Item, bool>>((player, ammoUser) => player.inventory.OfType<BaseAmmoBag>().Any(ammoBag => ammoBag.Handler.Items.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0)));
+
+				cursor.Emit(OpCodes.Starg, il.Method.Parameters.FirstOrDefault(x => x.Name == "canUse"));
+			}
+		}
+
+		private static void Player_PickAmmo(ILContext il)
+		{
+			int firstAmmoIndex = il.AddVariable<Item>();
+			int canShootIndex = il.GetParameterIndex("canShoot");
+
+			ILCursor cursor = new ILCursor(il);
+			ILLabel elseLabel = cursor.DefineLabel();
+			ILLabel endLabel = cursor.DefineLabel();
+
+			cursor.Emit(OpCodes.Newobj, typeof(Item).GetConstructors()[0]);
+			cursor.Emit(OpCodes.Stloc, firstAmmoIndex);
+
+			if (cursor.TryGotoNext(i => i.MatchNewobj(typeof(Item).GetConstructors()[0]), i => i.MatchStloc(0)))
+			{
+				cursor.Index += 2;
+
+				cursor.Emit(OpCodes.Ldarg, 0);
+				cursor.Emit(OpCodes.Ldarg, 1);
+				cursor.EmitDelegate<Func<Player, Item, Item>>((player, sItem) => player.inventory.OfType<BaseAmmoBag>().SelectMany(bag => bag.Handler.Items).FirstOrDefault(ammo => ammo.ammo == sItem.useAmmo && ammo.stack > 0));
+				cursor.Emit(OpCodes.Stloc, firstAmmoIndex);
+
+				cursor.Emit(OpCodes.Ldloc, firstAmmoIndex);
+				cursor.Emit(OpCodes.Brfalse, elseLabel);
+
+				cursor.Emit(OpCodes.Ldloc, firstAmmoIndex);
+				cursor.Emit(OpCodes.Stloc, 0);
+
+				cursor.Emit(OpCodes.Ldarg, canShootIndex);
+				cursor.Emit(OpCodes.Ldc_I4, 1);
+				cursor.Emit(OpCodes.Stind_I1);
+
+				cursor.Emit(OpCodes.Br, endLabel);
+			}
+
+			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(1), i => i.MatchLdcI4(54))) cursor.MarkLabel(elseLabel);
+
+			if (cursor.TryGotoNext(i => i.MatchLdarg(3), i => i.MatchLdindU1(), i => i.MatchBrfalse(out _))) cursor.MarkLabel(endLabel);
+		}
+		#endregion
+
+		#region Alchemist's Bag
+		private delegate bool QuickBuffDelegate(Player player, ref LegacySoundStyle sound);
+
+		private static bool QuickBuff(Player player, ref LegacySoundStyle sound)
+		{
+			foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
+			{
+				if (player.CountBuffs() == player.buffType.Length) return true;
+
+				if (item.stack > 0 && item.type > 0 && item.buffType > 0 && !item.summon && item.buffType != 90)
+				{
+					int buffType = item.buffType;
+					bool useItem = ItemLoader.CanUseItem(item, player);
+					for (int i = 0; i < player.buffType.Length; i++)
+					{
+						if (buffType == 27 && (player.buffType[i] == buffType || player.buffType[i] == 101 || player.buffType[i] == 102))
+						{
+							useItem = false;
+							break;
+						}
+
+						if (player.buffType[i] == buffType)
+						{
+							useItem = false;
+							break;
+						}
+
+						if (Main.meleeBuff[buffType] && Main.meleeBuff[player.buffType[i]])
+						{
+							useItem = false;
+							break;
+						}
+					}
+
+					if (Main.lightPet[item.buffType] || Main.vanityPet[item.buffType])
+					{
+						for (int buffIndex = 0; buffIndex < 22; buffIndex++)
+						{
+							if (Main.lightPet[player.buffType[buffIndex]] && Main.lightPet[item.buffType]) useItem = false;
+							if (Main.vanityPet[player.buffType[buffIndex]] && Main.vanityPet[item.buffType]) useItem = false;
+						}
+					}
+
+					if (item.mana > 0 && useItem)
+					{
+						if (player.statMana >= (int)(item.mana * player.manaCost))
+						{
+							player.manaRegenDelay = (int)player.maxRegenDelay;
+							player.statMana -= (int)(item.mana * player.manaCost);
+						}
+						else useItem = false;
+					}
+
+					if (player.whoAmI == Main.myPlayer && item.type == 603 && !Main.cEd) useItem = false;
+
+					if (buffType == 27)
+					{
+						buffType = Main.rand.Next(3);
+						if (buffType == 0) buffType = 27;
+						if (buffType == 1) buffType = 101;
+						if (buffType == 2) buffType = 102;
+					}
+
+					if (useItem)
+					{
+						ItemLoader.UseItem(item, player);
+						sound = item.UseSound;
+						int buffTime = item.buffTime;
+						if (buffTime == 0) buffTime = 3600;
+
+						player.AddBuff(buffType, buffTime);
+						if (item.consumable)
+						{
+							if (ItemLoader.ConsumeItem(item, player)) item.stack--;
+							if (item.stack <= 0) item.TurnToAir();
+						}
+					}
+				}
+			}
+
+			return false;
+		}
+
+		private static void Player_QuickBuff(ILContext il)
+		{
+			//il.AddVariable<ValueTuple<LegacySoundStyle, bool>>();
+			//il.Body.Variables.Add(new VariableDefinition(il.Import(typeof(ValueTuple<LegacySoundStyle, bool>))));
+
+			ILCursor cursor = new ILCursor(il);
+			ILLabel label = cursor.DefineLabel();
+
+			if (cursor.TryGotoNext(i => i.MatchLdnull(), i => i.MatchStloc(0)))
+			{
+				cursor.Index += 2;
+
+				cursor.Emit(OpCodes.Ldarg_0);
+				cursor.Emit(OpCodes.Ldloca, 0);
+
+				cursor.EmitDelegate<QuickBuffDelegate>(QuickBuff);
+
+				cursor.Emit(OpCodes.Brfalse, label);
+				cursor.Emit(OpCodes.Ret);
+				cursor.MarkLabel(label);
+
+				//cursor.EmitDelegate<Func<Player, ValueTuple<LegacySoundStyle, bool>>>(player =>
+				//{
+				//	LegacySoundStyle legacySoundStyle = null;
+
+				//	foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
+				//	{
+				//		if (player.CountBuffs() == 22)
+				//			return (null, true);
+
+				//		if (item.stack > 0 && item.type > 0 && item.buffType > 0 && !item.summon && item.buffType != 90)
+				//		{
+				//			int buffType = item.buffType;
+				//			bool useItem = ItemLoader.CanUseItem(item, player);
+				//			for (int buffIndex = 0; buffIndex < 22; buffIndex++)
+				//			{
+				//				if (buffType == 27 && (player.buffType[buffIndex] == buffType || player.buffType[buffIndex] == 101 || player.buffType[buffIndex] == 102))
+				//				{
+				//					useItem = false;
+				//					break;
+				//				}
+
+				//				if (player.buffType[buffIndex] == buffType)
+				//				{
+				//					useItem = false;
+				//					break;
+				//				}
+
+				//				if (Main.meleeBuff[buffType] && Main.meleeBuff[player.buffType[buffIndex]])
+				//				{
+				//					useItem = false;
+				//					break;
+				//				}
+				//			}
+
+				//			if (Main.lightPet[item.buffType] || Main.vanityPet[item.buffType])
+				//			{
+				//				for (int buffIndex = 0; buffIndex < 22; buffIndex++)
+				//				{
+				//					if (Main.lightPet[player.buffType[buffIndex]] && Main.lightPet[item.buffType])
+				//						useItem = false;
+				//					if (Main.vanityPet[player.buffType[buffIndex]] && Main.vanityPet[item.buffType])
+				//						useItem = false;
+				//				}
+				//			}
+
+				//			if (item.mana > 0 && useItem)
+				//			{
+				//				if (player.statMana >= (int)(item.mana * player.manaCost))
+				//				{
+				//					player.manaRegenDelay = (int)player.maxRegenDelay;
+				//					player.statMana -= (int)(item.mana * player.manaCost);
+				//				}
+				//				else
+				//					useItem = false;
+				//			}
+
+				//			if (player.whoAmI == Main.myPlayer && item.type == 603 && !Main.cEd)
+				//				useItem = false;
+
+				//			if (buffType == 27)
+				//			{
+				//				buffType = Main.rand.Next(3);
+				//				if (buffType == 0)
+				//					buffType = 27;
+				//				if (buffType == 1)
+				//					buffType = 101;
+				//				if (buffType == 2)
+				//					buffType = 102;
+				//			}
+
+				//			if (useItem)
+				//			{
+				//				ItemLoader.UseItem(item, player);
+				//				legacySoundStyle = item.UseSound;
+				//				int buffTime = item.buffTime;
+				//				if (buffTime == 0)
+				//					buffTime = 3600;
+
+				//				player.AddBuff(buffType, buffTime);
+				//				if (item.consumable)
+				//				{
+				//					if (ItemLoader.ConsumeItem(item, player))
+				//						item.stack--;
+				//					if (item.stack <= 0)
+				//						item.TurnToAir();
+				//				}
+				//			}
+				//		}
+				//	}
+
+				//	return (legacySoundStyle, false);
+				//});
+
+				//Type type = typeof(ValueTuple<LegacySoundStyle, bool>);
+
+				//cursor.Emit(OpCodes.Stloc, 7);
+
+				//cursor.Emit(OpCodes.Ldloc, 7);
+				//cursor.Emit(OpCodes.Ldfld, type.GetField("Item1", BaseLibrary.Utility.defaultFlags));
+				//cursor.Emit(OpCodes.Stloc, 0);
+
+				//cursor.Emit(OpCodes.Ldloc, 7);
+				//cursor.Emit(OpCodes.Ldfld, type.GetField("Item2", BaseLibrary.Utility.defaultFlags));
+				//cursor.Emit(OpCodes.Brfalse, label);
+				//cursor.Emit(OpCodes.Ret);
+
+				//cursor.MarkLabel(label);
+			}
+		}
+
+		private delegate void QuickHealDelegate(Player player, int lostHealth, ref int healthGain, ref Item result);
+
+		private static void QuickHeal(Player player, int lostHealth, ref int healthGain, ref Item result)
+		{
+			foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
+			{
+				if (item.stack > 0 && item.type > 0 && item.potion && item.healLife > 0 && ItemLoader.CanUseItem(item, player))
+				{
+					int healWaste = player.GetHealLife(item, true) - lostHealth;
+					if (healthGain < 0)
+					{
+						if (healWaste > healthGain)
+						{
+							result = item;
+							healthGain = healWaste;
+						}
+					}
+					else if (healWaste < healthGain && healWaste >= 0)
+					{
+						result = item;
+						healthGain = healWaste;
+					}
+				}
+			}
+		}
+
+		private static void Player_QuickHeal_GetItemToUse(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
+
+			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(3), i => i.MatchBr(out _)))
+			{
+				cursor.Emit(OpCodes.Ldarg, 0);
+				cursor.Emit(OpCodes.Ldloc, 0);
+				cursor.Emit(OpCodes.Ldloca, 2);
+				cursor.Emit(OpCodes.Ldloca, 1);
+
+				cursor.EmitDelegate<QuickHealDelegate>(QuickHeal);
+			}
+		}
+
+		private static void Player_QuickMana(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
+			ILLabel label = cursor.DefineLabel();
+
+			if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdcI4(0), i => i.MatchStloc(0)))
+			{
+				cursor.Emit(OpCodes.Ldarg, 0);
+
+				cursor.EmitDelegate<Func<Player, bool>>(player =>
+				{
+					foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
+					{
+						if (item.stack > 0 && item.type > 0 && item.healMana > 0 && (player.potionDelay == 0 || !item.potion) && ItemLoader.CanUseItem(item, player))
+						{
+							Main.PlaySound(item.UseSound, player.position);
+							if (item.potion)
+							{
+								if (item.type == ItemID.RestorationPotion)
+								{
+									player.potionDelay = player.restorationDelayTime;
+									player.AddBuff(BuffID.PotionSickness, player.potionDelay);
+								}
+								else
+								{
+									player.potionDelay = player.potionDelayTime;
+									player.AddBuff(BuffID.PotionSickness, player.potionDelay);
+								}
+							}
+
+							ItemLoader.UseItem(item, player);
+							int healLife = player.GetHealLife(item, true);
+							int healMana = player.GetHealMana(item, true);
+							player.statLife += healLife;
+							player.statMana += healMana;
+							if (player.statLife > player.statLifeMax2) player.statLife = player.statLifeMax2;
+							if (player.statMana > player.statManaMax2) player.statMana = player.statManaMax2;
+							if (healLife > 0 && Main.myPlayer == player.whoAmI) player.HealEffect(healLife);
+							if (healMana > 0)
+							{
+								player.AddBuff(BuffID.ManaSickness, Player.manaSickTime);
+								if (Main.myPlayer == player.whoAmI) player.ManaEffect(healMana);
+							}
+
+							if (ItemLoader.ConsumeItem(item, player)) item.stack--;
+							if (item.stack <= 0) item.TurnToAir();
+
+							Recipe.FindRecipes();
+							return true;
+						}
+					}
+
+					return false;
+				});
+
+				cursor.Emit(OpCodes.Brfalse, label);
+				cursor.Emit(OpCodes.Ret);
+				cursor.MarkLabel(label);
+			}
+		}
+		#endregion
+
+		#region Fishing
+		private delegate void ItemCheckDelegate(Player player, int index, ref bool foundBait, ref int baitType);
+
+		private static void ItemCheck(Player player, int index, ref bool foundBait, ref int baitType)
+		{
+			foreach (Item item in player.inventory.OfType<FishingBelt>().SelectMany(belt => belt.Handler.Items))
+			{
+				if (item.stack > 0 && item.bait > 0)
+				{
+					bool consumeBait = false;
+					int baitPower = 1 + item.bait / 5;
+
+					if (baitPower < 1) baitPower = 1;
+					if (player.accTackleBox) baitPower++;
+					if (Main.rand.Next(baitPower) == 0) consumeBait = true;
+					if (Main.projectile[index].localAI[1] < 0f) consumeBait = true;
+
+					if (Main.projectile[index].localAI[1] > 0f)
+					{
+						Item fish = new Item();
+						fish.SetDefaults((int)Main.projectile[index].localAI[1]);
+						if (fish.rare < 0) consumeBait = false;
+					}
+
+					if (consumeBait)
+					{
+						baitType = item.type;
+						if (ItemLoader.ConsumeItem(item, player)) item.stack--;
+						if (item.stack <= 0) item.SetDefaults();
+					}
+
+					foundBait = true;
+					break;
+				}
+			}
+		}
 
 		private static void Player_ItemCheck(ILContext il)
 		{
-			int tupleIndex = il.AddVariable<ValueTuple<int, bool>>();
-
 			ILCursor cursor = new ILCursor(il);
 			ILLabel label = cursor.DefineLabel();
 
@@ -549,56 +669,10 @@ namespace PortableStorage
 
 				cursor.Emit(OpCodes.Ldarg, 0);
 				cursor.Emit(OpCodes.Ldloc, 26);
+				cursor.Emit(OpCodes.Ldloca, 28);
+				cursor.Emit(OpCodes.Ldloca, 29);
 
-				cursor.EmitDelegate<Func<Player, int, ValueTuple<int, bool>>>((player, index) =>
-				{
-					bool foundBait = false;
-					int baitType = 0;
-
-					foreach (Item item in player.inventory.OfType<FishingBelt>().SelectMany(belt => belt.Handler.Items))
-					{
-						if (item.stack > 0 && item.bait > 0)
-						{
-							bool consumeBait = false;
-							int baitPower = 1 + item.bait / 5;
-
-							if (baitPower < 1) baitPower = 1;
-							if (player.accTackleBox) baitPower++;
-							if (Main.rand.Next(baitPower) == 0) consumeBait = true;
-							if (Main.projectile[index].localAI[1] < 0f) consumeBait = true;
-
-							if (Main.projectile[index].localAI[1] > 0f)
-							{
-								Item fish = new Item();
-								fish.SetDefaults((int)Main.projectile[index].localAI[1]);
-								if (fish.rare < 0) consumeBait = false;
-							}
-
-							if (consumeBait)
-							{
-								baitType = item.type;
-								if (ItemLoader.ConsumeItem(item, player)) item.stack--;
-								if (item.stack <= 0) item.SetDefaults();
-							}
-
-							foundBait = true;
-							break;
-						}
-					}
-
-					return (baitType, foundBait);
-				});
-
-				cursor.Emit(OpCodes.Stloc, tupleIndex);
-
-				Type type = typeof(ValueTuple<int, bool>);
-				cursor.Emit(OpCodes.Ldloc, tupleIndex);
-				cursor.Emit(OpCodes.Ldfld, type.GetField("Item1", BaseLibrary.Utility.defaultFlags));
-				cursor.Emit(OpCodes.Stloc, 29);
-
-				cursor.Emit(OpCodes.Ldloc, tupleIndex);
-				cursor.Emit(OpCodes.Ldfld, type.GetField("Item2", BaseLibrary.Utility.defaultFlags));
-				cursor.Emit(OpCodes.Stloc, 28);
+				cursor.EmitDelegate<ItemCheckDelegate>(ItemCheck);
 
 				cursor.Emit(OpCodes.Ldloc, 28);
 				cursor.Emit(OpCodes.Brtrue, label);
@@ -607,98 +681,73 @@ namespace PortableStorage
 			if (cursor.TryGotoNext(i => i.MatchLdloc(28), i => i.MatchBrfalse(out _))) cursor.MarkLabel(label);
 		}
 
-		private static void Player_FishingLevel(ILContext il)
+		private static int Player_FishingLevel(On.Terraria.Player.orig_FishingLevel orig, Player self)
 		{
-			int tupleIndex = il.AddVariable<ValueTuple<Item, int>>();
-			int itemIndex = il.AddVariable<Item>();
+			Item fishingPole = self.inventory[self.selectedItem];
 
-			ILCursor cursor = new ILCursor(il);
-			ILLabel label = cursor.DefineLabel();
-
-			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(3)))
+			if (fishingPole.fishingPole == 0)
 			{
-				cursor.Index += 2;
-
-				cursor.Emit(OpCodes.Ldarg, 0);
-
-				cursor.EmitDelegate<Func<Player, ValueTuple<Item, int>>>(player =>
+				for (int i = 0; i < 58; i++)
 				{
-					foreach (Item item in player.inventory.OfType<FishingBelt>().SelectMany(belt => belt.Handler.Items))
+					if (self.inventory[i].fishingPole > fishingPole.fishingPole) fishingPole = self.inventory[i];
+				}
+
+				foreach (Item item in self.inventory.OfType<FishingBelt>().SelectMany(belt => belt.Handler.Items))
+				{
+					if (item.fishingPole > fishingPole.fishingPole) fishingPole = item;
+				}
+			}
+
+			Item bait = new Item();
+			for (int i = 0; i < 58; i++)
+			{
+				if (self.inventory[i].stack > 0 && self.inventory[i].bait > 0)
+				{
+					if (self.inventory[i].type == 2673) return -1;
+
+					bait = self.inventory[i];
+					break;
+				}
+			}
+
+			if (bait.IsAir)
+			{
+				foreach (Item item in self.inventory.OfType<FishingBelt>().SelectMany(belt => belt.Handler.Items))
+				{
+					if (item.stack > 0 && item.bait > 0)
 					{
-						if (item.stack > 0 && item.bait > 0) return item.type == 2673 ? (null, -1) : (item, item.bait);
+						if (item.type == 2673) return -1;
+
+						bait = item;
+						break;
 					}
-
-					return (null, 0);
-				});
-
-				cursor.Emit(OpCodes.Stloc, tupleIndex);
-
-				Type tupleType = typeof(ValueTuple<Item, int>);
-				cursor.Emit(OpCodes.Ldloc, tupleIndex);
-				cursor.Emit(OpCodes.Ldfld, tupleType.GetField("Item1", BaseLibrary.Utility.defaultFlags));
-				cursor.Emit(OpCodes.Stloc, itemIndex);
-
-				cursor.Emit(OpCodes.Ldloc, tupleIndex);
-				cursor.Emit(OpCodes.Ldfld, tupleType.GetField("Item2", BaseLibrary.Utility.defaultFlags));
-				cursor.Emit(OpCodes.Stloc, 0);
-
-				cursor.Emit(OpCodes.Ldloc, 0);
-				cursor.Emit(OpCodes.Ldc_I4, -1);
-				cursor.Emit(OpCodes.Ceq);
-				cursor.Emit(OpCodes.Brfalse, label);
-				cursor.Emit(OpCodes.Ldc_I4, -1);
-				cursor.Emit(OpCodes.Ret);
-
-				cursor.MarkLabel(label);
+				}
 			}
 
-			if (cursor.TryGotoNext(i => i.MatchLdsfld(typeof(Item).GetField("bait", BaseLibrary.Utility.defaultFlags)), i => i.MatchStloc(0), i => i.MatchBr(out _)))
-			{
-				cursor.Index += 2;
+			if (bait.IsAir || fishingPole.fishingPole == 0) return 0;
 
-				cursor.Emit(OpCodes.Ldarg, 0);
-				cursor.Emit(OpCodes.Ldfld, typeof(Player).GetField("inventory", BaseLibrary.Utility.defaultFlags));
-				cursor.Emit(OpCodes.Ldloc, 3);
-				cursor.Emit(OpCodes.Ldelem_Ref);
-				cursor.Emit(OpCodes.Stloc, itemIndex);
-			}
+			int fishingLevel = bait.bait + fishingPole.fishingPole + self.fishingSkill;
+			if (Main.raining) fishingLevel = (int)(fishingLevel * 1.2f);
+			if (Main.cloudBGAlpha > 0f) fishingLevel = (int)(fishingLevel * 1.1f);
+			if (Main.dayTime && (Main.time < 5400.0 || Main.time > 48600.0)) fishingLevel = (int)(fishingLevel * 1.3f);
+			if (Main.dayTime && Main.time > 16200.0 && Main.time < 37800.0) fishingLevel = (int)(fishingLevel * 0.8f);
+			if (!Main.dayTime && Main.time > 6480.0 && Main.time < 25920.0) fishingLevel = (int)(fishingLevel * 0.8f);
+			if (Main.moonPhase == 0) fishingLevel = (int)(fishingLevel * 1.1f);
+			if (Main.moonPhase == 1 || Main.moonPhase == 7) fishingLevel = (int)(fishingLevel * 1.05f);
+			if (Main.moonPhase == 3 || Main.moonPhase == 5) fishingLevel = (int)(fishingLevel * 0.95f);
+			if (Main.moonPhase == 4) fishingLevel = (int)(fishingLevel * 0.9f);
 
-			if (cursor.TryGotoNext(i => i.MatchLdarg(0), i => i.MatchLdfld(typeof(Player).GetField("inventory", BaseLibrary.Utility.defaultFlags)), i => i.MatchLdloc(3), i => i.MatchLdelemRef(), i => i.MatchLdloca(4)))
-			{
-				cursor.RemoveRange(4);
-				cursor.Emit(OpCodes.Ldloc, itemIndex);
-			}
+			PlayerHooks.GetFishingLevel(self, fishingPole, bait, ref fishingLevel);
+			return fishingLevel;
 		}
 
 		private static void Player_GetItem(ILContext il)
 		{
 			ILCursor cursor = new ILCursor(il);
-			//ILLabel myCode = cursor.DefineLabel();
 			ILLabel label = cursor.DefineLabel();
 
-			//ILLabel l = null;
-			//while (cursor.TryGotoNext(i => i.MatchBneUn(out l)))
-			//{
-			//	if (l.Target.Offset == 187)
-			//	{
-			//		cursor.Remove();
-			//		cursor.Emit(OpCodes.Bne_Un, myCode);
-			//	}
-			//}
-
-			//while (cursor.TryGotoNext(i => i.MatchBrtrue(out l)))
-			//{
-			//	if (l.Target.Offset == 187)
-			//	{
-			//		cursor.Remove();
-			//		cursor.Emit(OpCodes.Brtrue, myCode);
-			//	}
-			//}
-
-			if (cursor.TryGotoPrev(MoveType.AfterLabel, i => i.MatchLdloc(3), i => i.MatchStloc(4)))
+			if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdloc(3), i => i.MatchStloc(4)))
 			{
-				//cursor.MarkLabel(myCode);
-
 				cursor.Emit(OpCodes.Ldarg, 0);
 				cursor.Emit(OpCodes.Ldarg, 2);
 
@@ -732,5 +781,6 @@ namespace PortableStorage
 				cursor.MarkLabel(label);
 			}
 		}
+		#endregion
 	}
 }
