@@ -16,8 +16,7 @@ namespace PortableStorage
 	public class PSItem : GlobalItem
 	{
 		private const float angleDecrement = 0.06981317f;
-		private const float scaleDecrement = 0.015f;
-		private static readonly Vector2 origin = new Vector2(30);
+		private const float scaleDecrement = 0.03f;
 
 		private static Dictionary<int, (float scale, float angle)> _blackHoleData;
 		public static Dictionary<int, (float scale, float angle)> BlackHoleData => _blackHoleData ?? (_blackHoleData = new Dictionary<int, (float, float)>());
@@ -147,7 +146,7 @@ namespace PortableStorage
 				if (scale > 0f) scale -= scaleDecrement;
 
 				itemScale *= scale.Clamp(0, 1);
-				spriteBatch.Draw(Main.extraTexture[50], Main.itemAnimationsRegistered.Contains(item.type) ? new Vector2(item.position.X - Main.screenPosition.X + item.width * 0.5f, item.position.Y - Main.screenPosition.Y + item.height - Main.itemTexture[item.type].Height * 0.5f / Main.itemAnimations[item.type].FrameCount + 2f) : new Vector2(item.position.X - Main.screenPosition.X + item.width * 0.5f, item.position.Y - Main.screenPosition.Y + item.height - Main.itemTexture[item.type].Height * 0.5f + 2f), null, lightColor, angle + rotation, origin, itemScale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(Main.extraTexture[50], Main.itemAnimationsRegistered.Contains(item.type) ? new Vector2(item.position.X - Main.screenPosition.X + item.width * 0.5f, item.position.Y - Main.screenPosition.Y + item.height - Main.itemTexture[item.type].Height * 0.5f / Main.itemAnimations[item.type].FrameCount + 2f) : new Vector2(item.position.X - Main.screenPosition.X + item.width * 0.5f, item.position.Y - Main.screenPosition.Y + item.height - Main.itemTexture[item.type].Height * 0.5f + 2f), null, lightColor, angle + rotation, new Vector2(30), itemScale, SpriteEffects.None, 0f);
 
 				BlackHoleData[whoAmI] = (scale, angle);
 			}

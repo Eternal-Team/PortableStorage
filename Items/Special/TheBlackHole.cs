@@ -20,7 +20,7 @@ namespace PortableStorage.Items.Special
 	{
 		public override string Texture => "PortableStorage/Textures/Items/TheBlackHole";
 
-		private const int maxRange = 160;
+		private const int maxRange = 480;
 
 		public bool active;
 
@@ -132,7 +132,7 @@ namespace PortableStorage.Items.Special
 
 		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
 		{
-			spriteBatch.Draw(PortableStorage.textureBlackHole, item.position - Main.screenPosition + new Vector2(16, 16), null, lightColor, (active ? -BaseLibrary.Utility.ToRadians(Main.itemAnimations[item.type].Frame * 2) : 0f) + rotation, new Vector2(16), scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PortableStorage.textureBlackHole, item.position - Main.screenPosition + new Vector2(16), null, lightColor, (active ? -BaseLibrary.Utility.ToRadians(Main.itemAnimations[item.type].Frame * 2) : 0f) + rotation, new Vector2(16), scale, SpriteEffects.None, 0f);
 
 			return false;
 		}
@@ -142,22 +142,11 @@ namespace PortableStorage.Items.Special
 			["Active"] = active
 		};
 
-		public override void Load(TagCompound tag)
-		{
-			active = tag.GetBool("Active");
-		}
+		public override void Load(TagCompound tag) => active = tag.GetBool("Active");
 
-		public override void NetSend(BinaryWriter writer)
-		{
-			base.NetSend(writer);
-			writer.Write(active);
-		}
+		public override void NetSend(BinaryWriter writer) => writer.Write(active);
 
-		public override void NetRecieve(BinaryReader reader)
-		{
-			base.NetRecieve(reader);
-			active = reader.ReadBoolean();
-		}
+		public override void NetRecieve(BinaryReader reader) => active = reader.ReadBoolean();
 
 		public override void AddRecipes()
 		{
