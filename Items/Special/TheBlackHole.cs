@@ -31,6 +31,13 @@ namespace PortableStorage.Items.Special
 			return clone;
 		}
 
+		public override ModItem Clone(Item item)
+		{
+			var clone = Clone();
+			clone.SetValue("item", item);
+			return clone;
+		}
+
 		public override void SetStaticDefaults()
 		{
 			ItemID.Sets.ItemNoGravity[item.type] = true;
@@ -68,12 +75,12 @@ namespace PortableStorage.Items.Special
 
 			for (int i = 0; i < Main.item.Length; i++)
 			{
-				ref Item item = ref Main.item[i];
+				ref Item it = ref Main.item[i];
 
-				var item1 = item;
-				if (item == null || item.IsAir || Vector2.Distance(item.Center, player.Center) > maxRange || player.Inventory().OfType<BaseBag>().All(bag => !bag.Handler.HasSpace(item1)))
+				var item1 = it;
+				if (it == null || it.IsAir || Vector2.Distance(it.Center, player.Center) > maxRange || player.Inventory().OfType<BaseBag>().All(bag => !bag.Handler.HasSpace(item1)))
 				{
-					if (item != null && PSItem.BlackHoleData.ContainsKey(i)) PSItem.BlackHoleData.Remove(i);
+					if (it != null && PSItem.BlackHoleData.ContainsKey(i)) PSItem.BlackHoleData.Remove(i);
 					continue;
 				}
 
@@ -81,39 +88,39 @@ namespace PortableStorage.Items.Special
 
 				if (PSItem.BlackHoleData[i].scale <= 0f)
 				{
-					if (!ItemLoader.OnPickup(item, player)) item = new Item();
-					else if (ItemID.Sets.NebulaPickup[item.type])
+					if (!ItemLoader.OnPickup(it, player)) it = new Item();
+					else if (ItemID.Sets.NebulaPickup[it.type])
 					{
-						int buffType = item.buffType;
-						item = new Item();
+						int buffType = it.buffType;
+						it = new Item();
 
 						if (Main.netMode == 1) NetMessage.SendData(MessageID.NebulaLevelupRequest, -1, -1, null, player.whoAmI, buffType, player.Center.X, player.Center.Y);
 						else player.NebulaLevelup(buffType);
 					}
-					else if (item.type == 58 || item.type == 1734 || item.type == 1867)
+					else if (it.type == 58 || it.type == 1734 || it.type == 1867)
 					{
 						player.statLife += 20;
 						if (Main.myPlayer == player.whoAmI) player.HealEffect(20);
 						if (player.statLife > player.statLifeMax2) player.statLife = player.statLifeMax2;
 
-						item = new Item();
+						it = new Item();
 					}
-					else if (item.type == 184 || item.type == 1735 || item.type == 1868)
+					else if (it.type == 184 || it.type == 1735 || it.type == 1868)
 					{
 						player.statMana += 100;
 						if (Main.myPlayer == player.whoAmI) player.ManaEffect(100);
 						if (player.statMana > player.statManaMax2) player.statMana = player.statManaMax2;
 
-						item = new Item();
+						it = new Item();
 					}
 					else
 					{
 						foreach (BaseBag bag in player.inventory.OfType<BaseBag>().OrderBy(bag => !bag.GetType().IsSubclassOf(typeof(BaseNormalBag))))
 						{
-							if (bag.Handler.HasSpace(item))
+							if (bag.Handler.HasSpace(it))
 							{
-								bag.Handler.InsertItem(ref item);
-								if (item.IsAir || !item.active) break;
+								bag.Handler.InsertItem(ref it);
+								if (it.IsAir || !it.active) break;
 							}
 						}
 					}
@@ -125,7 +132,9 @@ namespace PortableStorage.Items.Special
 
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			spriteBatch.Draw(PortableStorage.textureBlackHole, position + new Vector2(16, 0) * scale, null, drawColor, active ? -BaseLibrary.Utility.ToRadians(Main.itemAnimations[item.type].Frame * 2) : 0f, new Vector2(16), scale, SpriteEffects.None, 0f);
+			DrawAnimation animation = Main.itemAnimations[item.type];
+
+			spriteBatch.Draw(PortableStorage.textureBlackHole, position + new Vector2(16, 0) * scale, null, drawColor, animation != null && active ? -BaseLibrary.Utility.ToRadians(animation.Frame * 2) : 0f, new Vector2(16), scale, SpriteEffects.None, 0f);
 
 			return false;
 		}
