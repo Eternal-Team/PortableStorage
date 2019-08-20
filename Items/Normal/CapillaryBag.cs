@@ -9,7 +9,6 @@ namespace PortableStorage.Items.Normal
 		public override string Texture => "PortableStorage/Textures/Items/CapillaryBag";
 
 		public override int SlotCount => 54;
-		public override string Name => "Capillary";
 
 		public override void SetDefaults()
 		{

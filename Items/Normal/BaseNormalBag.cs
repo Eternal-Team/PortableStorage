@@ -7,7 +7,6 @@ namespace PortableStorage.Items.Normal
 	public abstract class BaseNormalBag : BaseBag
 	{
 		public abstract int SlotCount { get; }
-		public new abstract string Name { get; }
 
 		public BaseNormalBag()
 		{

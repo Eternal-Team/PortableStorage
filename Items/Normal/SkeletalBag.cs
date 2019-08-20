@@ -7,7 +7,6 @@ namespace PortableStorage.Items.Normal
 		public override string Texture => "PortableStorage/Textures/Items/SkeletalBag";
 
 		public override int SlotCount => 27;
-		public override string Name => "Skeletal";
 
 		public override void SetDefaults()
 		{
