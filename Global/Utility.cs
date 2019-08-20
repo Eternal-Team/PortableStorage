@@ -232,7 +232,7 @@ namespace PortableStorage
 
 			void Add(string key, int ammoType)
 			{
-				BaseLibrary.Utility.Cache.ItemCache.Where(item => item.ammo == ammoType).Select(item => item.type).ForEach(itemType =>
+				BaseLibrary.Utility.Cache.ItemCache.Where(item => item?.ammo == ammoType).Select(item => item.type).ForEach(itemType =>
 				{
 					if (!Ammos.ContainsKey(key)) Ammos.Add(key, new MultiValueDictionary<int, int>());
 

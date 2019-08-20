@@ -16,7 +16,7 @@ namespace PortableStorage.Items
 {
 	public abstract class BaseBag : BaseItem, IItemHandler, ICraftingStorage, IHasUI
 	{
-		public override bool CloneNewInstances => true;
+		public override bool CloneNewInstances => false;
 
 		public ItemHandler Handler { get; set; }
 		public ItemHandler CraftingHandler => Handler;
@@ -34,14 +34,36 @@ namespace PortableStorage.Items
 			return clone;
 		}
 
+		public override ModItem Clone(Item item)
+		{
+			var clone = Clone();
+			clone.SetValue("item", item);
+			return clone;
+		}
+
+		public override ModItem NewInstance(Item itemClone)
+		{
+			ModItem copy = (ModItem)Activator.CreateInstance(GetType());
+			copy.SetValue("item", itemClone);
+			copy.SetValue("mod", mod);
+			copy.SetValue("Name", Name);
+			copy.SetValue("DisplayName", DisplayName);
+			copy.SetValue("Tooltip", Tooltip);
+			return copy;
+		}
+
 		public void OverhaulInit()
 		{
 			//this.SetTag(ItemTags.AllowQuickUse);
 		}
 
-		public override void SetDefaults()
+		public BaseBag()
 		{
 			UUID = Guid.NewGuid();
+		}
+
+		public override void SetDefaults()
+		{
 			item.useTime = 5;
 			item.useAnimation = 5;
 			item.useStyle = 1;
