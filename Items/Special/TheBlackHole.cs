@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -41,7 +40,6 @@ namespace PortableStorage.Items.Special
 		public override void SetStaticDefaults()
 		{
 			ItemID.Sets.ItemNoGravity[item.type] = true;
-			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(1, 360));
 		}
 
 		public override void SetDefaults()
@@ -132,16 +130,14 @@ namespace PortableStorage.Items.Special
 
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			DrawAnimation animation = Main.itemAnimations[item.type];
-
-			spriteBatch.Draw(PortableStorage.textureBlackHole, position + new Vector2(16, 0) * scale, null, drawColor, animation != null && active ? -BaseLibrary.Utility.ToRadians(animation.Frame * 2) : 0f, new Vector2(16), scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PortableStorage.textureBlackHole, position + new Vector2(16) * scale, null, drawColor, active ? -BaseLibrary.Utility.ToRadians(PortableStorage.BlackHoleAngle * 2) : 0f, new Vector2(16), scale, SpriteEffects.None, 0f);
 
 			return false;
 		}
 
 		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
 		{
-			spriteBatch.Draw(PortableStorage.textureBlackHole, item.position - Main.screenPosition + new Vector2(16), null, lightColor, (active ? -BaseLibrary.Utility.ToRadians(Main.itemAnimations[item.type].Frame * 2) : 0f) + rotation, new Vector2(16), scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PortableStorage.textureBlackHole, item.position - Main.screenPosition + new Vector2(16), null, lightColor, (active ? -BaseLibrary.Utility.ToRadians(PortableStorage.BlackHoleAngle * 2) : 0f) + rotation, new Vector2(16), scale, SpriteEffects.None, 0f);
 
 			return false;
 		}

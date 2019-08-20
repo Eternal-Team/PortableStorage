@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,6 +14,8 @@ namespace PortableStorage
 		internal static Texture2D textureLootAll;
 		internal static Texture2D textureDepositAll;
 		internal static Texture2D textureQuickStack;
+
+		internal static int BlackHoleAngle;
 
 		public override void Load()
 		{
@@ -34,6 +37,12 @@ namespace PortableStorage
 		public override void AddRecipeGroups() => Utility.AddRecipeGroups();
 
 		public override void PostSetupContent() => Utility.PostSetupContent();
+
+		public override void UpdateUI(GameTime gameTime)
+		{
+			BlackHoleAngle++;
+			if (BlackHoleAngle > 360) BlackHoleAngle = 0;
+		}
 
 		public override void AddRecipes()
 		{

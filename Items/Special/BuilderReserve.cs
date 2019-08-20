@@ -35,7 +35,7 @@ namespace PortableStorage.Items.Special
 			clone.selectedIndex = selectedIndex;
 			return clone;
 		}
-		
+
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
