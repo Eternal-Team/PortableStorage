@@ -13,7 +13,7 @@ namespace PortableStorage.Items.Normal
 			base.SetDefaults();
 
 			item.width = 26;
-			item.headSlot = 32;
+			item.height = 32;
 			item.rare = ItemRarityID.Green;
 			item.value = 25000 * 5;
 		}
