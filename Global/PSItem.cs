@@ -21,6 +21,7 @@ namespace PortableStorage
 		private static Dictionary<int, (float scale, float angle)> _blackHoleData;
 		public static Dictionary<int, (float scale, float angle)> BlackHoleData => _blackHoleData ?? (_blackHoleData = new Dictionary<int, (float, float)>());
 
+		// todo: add custom ItemText popup bag icon + bag slot + item name
 		public override bool OnPickup(Item item, Player player)
 		{
 			if (item.IsCoin())
@@ -89,6 +90,7 @@ namespace PortableStorage
 				}
 			}
 
+			// in case of lesser health and mana potion check if ingredients has it and put it there first
 			if (item.potion && item.healLife > 0 || item.healMana > 0 && !item.potion || item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph)
 			{
 				AlchemistBag alchemistBag = player.inventory.OfType<AlchemistBag>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
