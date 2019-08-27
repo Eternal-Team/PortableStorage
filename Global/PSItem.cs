@@ -21,7 +21,6 @@ namespace PortableStorage
 		private static Dictionary<int, (float scale, float angle)> _blackHoleData;
 		public static Dictionary<int, (float scale, float angle)> BlackHoleData => _blackHoleData ?? (_blackHoleData = new Dictionary<int, (float, float)>());
 
-		// todo: add custom ItemText popup bag icon + bag slot + item name
 		public override bool OnPickup(Item item, Player player)
 		{
 			if (item.IsCoin())
@@ -112,7 +111,24 @@ namespace PortableStorage
 				}
 			}
 
-			// todo: check if ingredients has it and put it there first
+			if (Utility.AlchemistBagWhitelist.Contains(item.type))
+			{
+				AlchemistBag alchemistBag = player.inventory.OfType<AlchemistBag>().FirstOrDefault(bag => bag.HandlerIngredients.Contains(item.type)&& bag.HandlerIngredients.HasSpace(item));
+
+				if (alchemistBag != null)
+				{
+					Main.PlaySound(SoundID.Grab);
+
+					Item temp = item.Clone();
+
+					alchemistBag.HandlerIngredients.InsertItem(ref item);
+
+					Hooking.BagItemText(alchemistBag.item, temp, temp.stack - item.stack, false, false);
+
+					if (item.IsAir || !item.active)return false;
+				}
+			}
+
 			if (item.potion && item.healLife > 0 || item.healMana > 0 && !item.potion || item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph)
 			{
 				AlchemistBag alchemistBag = player.inventory.OfType<AlchemistBag>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
@@ -160,6 +176,26 @@ namespace PortableStorage
 						Hooking.BagItemText(builderReserve.item, item, item.stack, false, false);
 
 						item = builderReserve.Handler.InsertItem(index, item);
+						item.TurnToAir();
+
+						Main.PlaySound(SoundID.Grab);
+
+						return false;
+					}
+				}
+			}
+
+			if (Utility.SeedWhitelist.Contains(item.type))
+			{
+				GardenerSatchel gardenerSatchel = player.inventory.OfType<GardenerSatchel>().FirstOrDefault(reserve => reserve.Handler.Items.Any(i => i.type == item.type));
+				if (gardenerSatchel != null)
+				{
+					int index = Array.FindIndex(gardenerSatchel.Handler.Items, i => i.type == item.type);
+					if (index != -1)
+					{
+						Hooking.BagItemText(gardenerSatchel.item, item, item.stack, false, false);
+
+						item = gardenerSatchel.Handler.InsertItem(index, item);
 						item.TurnToAir();
 
 						Main.PlaySound(SoundID.Grab);

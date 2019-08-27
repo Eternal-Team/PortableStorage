@@ -15,6 +15,8 @@ ItemName.BuilderReserve=Builder's Reserve
 ItemName.FishingBelt=Fishing Belt
 ItemName.MinersBackpack=Miner's Backpack
 ItemName.NinjaArsenalBelt=Ninja's Arsenal Belt
+ItemName.NinjaArsenalBelt=Ninja's Arsenal Belt
+ItemName.GardenerSatchel=Gardener's Satchel
 
 BagTooltip.AmmoPouch=Stores {0} stacks of misc. ammo\nRight-click or use to open\n"Can hold many things, mostly random junk."
 BagTooltip.ArrowQuiver=Stores {0} stacks of arrows\nRight-click or use to open\n"Contains enough to take down several armies."

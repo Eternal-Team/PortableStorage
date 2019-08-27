@@ -6,8 +6,6 @@ using Terraria.ModLoader;
 
 namespace PortableStorage
 {
-	// note: gardener's bag - similar to wand of regrowth
-
 	public class PortableStorage : Mod
 	{
 		internal static PortableStorage Instance;

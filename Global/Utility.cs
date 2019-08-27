@@ -15,7 +15,8 @@ namespace PortableStorage
 				AlchemyIngredient,
 				Ore,
 				Explosive,
-				Fishing
+				Fishing,
+				Seed
 			}
 
 			public static void Register(WhitelistType type, int itemID)
@@ -34,6 +35,9 @@ namespace PortableStorage
 					case WhitelistType.Fishing:
 						if (!FishingWhitelist.Contains(itemID)) FishingWhitelist.Add(itemID);
 						break;
+					case WhitelistType.Seed:
+						if (!SeedWhitelist.Contains(itemID)) SeedWhitelist.Add(itemID);
+						break;
 				}
 			}
 		}
@@ -47,6 +51,8 @@ namespace PortableStorage
 		internal static List<int> ExplosiveWhitelist;
 
 		internal static List<int> FishingWhitelist;
+
+		internal static List<int> SeedWhitelist;
 
 		internal static void PostSetupContent()
 		{
@@ -228,6 +234,17 @@ namespace PortableStorage
 				ItemID.Dynamite,
 				ItemID.StickyDynamite,
 				ItemID.BouncyDynamite
+			};
+
+			SeedWhitelist = new List<int>
+			{
+				ItemID.DaybloomSeeds,
+				ItemID.MoonglowSeeds,
+				ItemID.BlinkrootSeeds,
+				ItemID.DeathweedSeeds,
+				ItemID.WaterleafSeeds,
+				ItemID.FireblossomSeeds,
+				ItemID.ShiverthornSeeds
 			};
 
 			void Add(string key, int ammoType)
