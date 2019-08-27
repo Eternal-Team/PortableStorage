@@ -18,7 +18,7 @@ namespace PortableStorage
 		private static void ItemText_Update(ILContext il)
 		{
 			ILCursor cursor = new ILCursor(il);
-			
+
 			if (cursor.TryGotoNext(i => i.MatchLdarg(0), i => i.MatchLdcI4(0), i => i.MatchStfld<ItemText>("active")))
 			{
 				cursor.Index += 3;
@@ -402,7 +402,7 @@ namespace PortableStorage
 				}
 			}
 		}
-		
+
 		private static void Main_DoDraw(ILContext il)
 		{
 			ILCursor cursor = new ILCursor(il);

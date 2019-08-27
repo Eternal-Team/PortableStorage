@@ -117,11 +117,11 @@ namespace PortableStorage.Items.Special
 						{
 							if (bag.Handler.HasSpace(it))
 							{
-								Item temp = item.Clone();
+								Item temp = it.Clone();
 
 								bag.Handler.InsertItem(ref it);
 
-								Hooking.BagItemText(bag.item, it, temp.stack - it.stack, false, false);
+								Hooking.BagItemText(bag.item, temp, temp.stack - it.stack, false, false);
 
 								if (it.IsAir || !it.active) break;
 							}
