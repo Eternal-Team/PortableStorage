@@ -30,6 +30,8 @@ namespace PortableStorage
 
 				if (wallet != null)
 				{
+					Hooking.BagItemText(wallet.item, item, item.stack, false, false);
+
 					wallet.Coins += Utils.CoinsCount(out bool _, new[] { item });
 
 					Main.PlaySound(SoundID.CoinPickup);
@@ -46,7 +48,12 @@ namespace PortableStorage
 				{
 					Main.PlaySound(SoundID.Grab);
 
+					Item temp = item.Clone();
+
 					ammoBag.Handler.InsertItem(ref item);
+
+					Hooking.BagItemText(ammoBag.item, temp, temp.stack - item.stack, false, false);
+
 					if (item.IsAir || !item.active) return false;
 				}
 			}
@@ -59,7 +66,12 @@ namespace PortableStorage
 				{
 					Main.PlaySound(SoundID.Grab);
 
+					Item temp = item.Clone();
+
 					belt.Handler.InsertItem(ref item);
+
+					Hooking.BagItemText(belt.item, temp, temp.stack - item.stack, false, false);
+
 					if (item.IsAir || !item.active) return false;
 				}
 			}
@@ -72,7 +84,12 @@ namespace PortableStorage
 				{
 					Main.PlaySound(SoundID.Grab);
 
+					Item temp = item.Clone();
+
 					belt.Handler.InsertItem(ref item);
+
+					Hooking.BagItemText(belt.item, temp, temp.stack - item.stack, false, false);
+
 					if (item.IsAir || !item.active) return false;
 				}
 			}
@@ -85,12 +102,17 @@ namespace PortableStorage
 				{
 					Main.PlaySound(SoundID.Grab);
 
+					Item temp = item.Clone();
+
 					minersBackpack.Handler.InsertItem(ref item);
+
+					Hooking.BagItemText(minersBackpack.item, temp, temp.stack - item.stack, false, false);
+
 					if (item.IsAir || !item.active) return false;
 				}
 			}
 
-			// in case of lesser health and mana potion check if ingredients has it and put it there first
+			// todo: check if ingredients has it and put it there first
 			if (item.potion && item.healLife > 0 || item.healMana > 0 && !item.potion || item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph)
 			{
 				AlchemistBag alchemistBag = player.inventory.OfType<AlchemistBag>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
@@ -99,7 +121,12 @@ namespace PortableStorage
 				{
 					Main.PlaySound(SoundID.Grab);
 
+					Item temp = item.Clone();
+
 					alchemistBag.Handler.InsertItem(ref item);
+
+					Hooking.BagItemText(alchemistBag.item, temp, temp.stack - item.stack, false, false);
+
 					if (item.IsAir || !item.active) return false;
 				}
 			}
@@ -112,7 +139,12 @@ namespace PortableStorage
 				{
 					Main.PlaySound(SoundID.Grab);
 
+					Item temp = item.Clone();
+
 					alchemistBag.HandlerIngredients.InsertItem(ref item);
+
+					Hooking.BagItemText(alchemistBag.item, temp, temp.stack - item.stack, false, false);
+
 					if (item.IsAir || !item.active) return false;
 				}
 			}
@@ -125,6 +157,8 @@ namespace PortableStorage
 					int index = Array.FindIndex(builderReserve.Handler.Items, i => i.type == item.type);
 					if (index != -1)
 					{
+						Hooking.BagItemText(builderReserve.item, item, item.stack, false, false);
+
 						item = builderReserve.Handler.InsertItem(index, item);
 						item.TurnToAir();
 
