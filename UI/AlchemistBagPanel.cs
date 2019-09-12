@@ -13,7 +13,7 @@ namespace PortableStorage.UI
 			base.OnInitialize();
 
 			Width = (408, 0);
-			Height = (100 + (Container.Handler.Slots + Container.HandlerIngredients.Slots) / 9 * 44, 0);
+			Height = (100 + Container.Handler.Slots / 9 * 44, 0);
 			this.Center();
 
 			UIText textPotions = new UIText("Potions")
@@ -21,8 +21,6 @@ namespace PortableStorage.UI
 				Top = (28, 0)
 			};
 			Append(textPotions);
-
-			buttonQuickStack.OnClick += (evt, element) => ItemUtility.QuickStack(Container.HandlerIngredients, Main.LocalPlayer);
 
 			UIGrid<UIContainerSlot> gridItems = new UIGrid<UIContainerSlot>(9)
 			{
@@ -34,7 +32,7 @@ namespace PortableStorage.UI
 			};
 			Append(gridItems);
 
-			for (int i = 0; i < Container.Handler.Slots; i++)
+			for (int i = 0; i < 18; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i);
 				gridItems.Add(slot);
@@ -56,9 +54,9 @@ namespace PortableStorage.UI
 			};
 			Append(gridIngredients);
 
-			for (int i = 0; i < Container.HandlerIngredients.Slots; i++)
+			for (int i = 18; i < 81; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(() => Container.HandlerIngredients, i);
+				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i);
 				gridIngredients.Add(slot);
 			}
 		}

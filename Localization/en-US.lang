@@ -35,3 +35,4 @@ BagTooltip.FishingBelt=Stores {0} stacks of fishing poles, bait and fish\nRight-
 BagTooltip.MinersBackpack=Stores {0} stacks of ore\nRight-click or use to open\n"Salvaged from the remnants of the past."
 BagTooltip.NinjaArsenalBelt=Stores {0} stacks of throwing supplies\nRight-click or use to open\n"Cautionary Advisement= Avoid Tripping!"
 BagTooltip.TheBlackHole=Collects items in a {0} block radius and puts them in bags\nRight-click to activate\n"It is seemingly bottomless."
+BagTooltip.GardenerSatchel=Stores {0} stacks of seeds\nRight-Click to open UI, use to place seeds or gather flowers\nAlt+Left-Click on slot to select\n"The seeds of a whole new world, to be nurtured with care and they will bring life to this arid place."

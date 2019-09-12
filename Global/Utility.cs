@@ -244,7 +244,17 @@ namespace PortableStorage
 				ItemID.DeathweedSeeds,
 				ItemID.WaterleafSeeds,
 				ItemID.FireblossomSeeds,
-				ItemID.ShiverthornSeeds
+				ItemID.ShiverthornSeeds,
+
+				ItemID.CorruptSeeds,
+				ItemID.HallowedSeeds,
+				ItemID.GrassSeeds,
+				ItemID.JungleGrassSeeds,
+				ItemID.MushroomGrassSeeds,
+				ItemID.CrimsonSeeds,
+
+				ItemID.Acorn,
+				ItemID.PumpkinSeed
 			};
 
 			void Add(string key, int ammoType)

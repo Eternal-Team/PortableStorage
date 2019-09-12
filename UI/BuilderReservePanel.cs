@@ -77,10 +77,8 @@ namespace PortableStorage.UI
 
 				if (Main.keyState.IsKeyDown(Keys.LeftAlt) && !Item.IsAir)
 				{
-					if (builderReserve.selectedIndex == slot)
-						builderReserve.SetIndex(-1);
-					else
-						builderReserve.SetIndex(slot);
+					if (builderReserve.selectedIndex == slot) builderReserve.SetIndex(-1);
+					else builderReserve.SetIndex(slot);
 				}
 				else
 				{
@@ -92,8 +90,7 @@ namespace PortableStorage.UI
 						if (ItemSlot.ShiftInUse)
 						{
 							ItemUtility.Loot(Handler, slot, Main.LocalPlayer);
-							if (Item.IsAir && builderReserve.selectedIndex == slot)
-								builderReserve.SetIndex(-1);
+							if (Item.IsAir && builderReserve.selectedIndex == slot) builderReserve.SetIndex(-1);
 
 							base.Click(evt);
 
@@ -103,17 +100,14 @@ namespace PortableStorage.UI
 						if (Main.mouseItem.IsAir)
 						{
 							Main.mouseItem = Handler.ExtractItem(slot, Item.maxStack);
-							if (Item.IsAir && builderReserve.selectedIndex == slot)
-								builderReserve.SetIndex(-1);
+							if (Item.IsAir && builderReserve.selectedIndex == slot) builderReserve.SetIndex(-1);
 						}
 						else
 						{
-							if (Item.IsTheSameAs(Main.mouseItem))
-								Main.mouseItem = Handler.InsertItem(slot, Main.mouseItem);
+							if (Item.IsTheSameAs(Main.mouseItem)) Main.mouseItem = Handler.InsertItem(slot, Main.mouseItem);
 							else
 							{
-								if (builderReserve.selectedIndex == slot)
-									builderReserve.SetIndex(-1);
+								if (builderReserve.selectedIndex == slot) builderReserve.SetIndex(-1);
 
 								if (Item.stack <= Item.maxStack)
 								{
@@ -124,8 +118,7 @@ namespace PortableStorage.UI
 							}
 						}
 
-						if (Item.stack > 0)
-							AchievementsHelper.NotifyItemPickup(player, Item);
+						if (Item.stack > 0) AchievementsHelper.NotifyItemPickup(player, Item);
 
 						if (Main.mouseItem.type > 0 || Item.type > 0)
 						{
@@ -143,8 +136,7 @@ namespace PortableStorage.UI
 					Player player = Main.LocalPlayer;
 					Item.newAndShiny = false;
 
-					if (player.itemAnimation > 0)
-						return;
+					if (player.itemAnimation > 0) return;
 
 					if (Main.stackSplit <= 1 && Main.mouseRight)
 					{
@@ -154,8 +146,7 @@ namespace PortableStorage.UI
 							{
 								Main.mouseItem = Item.Clone();
 								Main.mouseItem.stack = 0;
-								if (Item.favorited && Item.maxStack == 1)
-									Main.mouseItem.favorited = true;
+								if (Item.favorited && Item.maxStack == 1) Main.mouseItem.favorited = true;
 								Main.mouseItem.favorited = false;
 							}
 
@@ -198,10 +189,8 @@ namespace PortableStorage.UI
 					float availableWidth = InnerDimensions.Width;
 					if (width > availableWidth || height > availableWidth)
 					{
-						if (width > height)
-							drawScale = availableWidth / width;
-						else
-							drawScale = availableWidth / height;
+						if (width > height) drawScale = availableWidth / width;
+						else drawScale = availableWidth / height;
 					}
 
 					drawScale *= scale;
@@ -211,13 +200,11 @@ namespace PortableStorage.UI
 					if (ItemLoader.PreDrawInInventory(Item, spriteBatch, position, rect, Item.GetAlpha(newColor), Item.GetColor(Color.White), origin, drawScale * pulseScale))
 					{
 						spriteBatch.Draw(itemTexture, position, rect, Item.GetAlpha(newColor), 0f, origin, drawScale * pulseScale, SpriteEffects.None, 0f);
-						if (Item.color != Color.Transparent)
-							spriteBatch.Draw(itemTexture, position, rect, Item.GetColor(Color.White), 0f, origin, drawScale * pulseScale, SpriteEffects.None, 0f);
+						if (Item.color != Color.Transparent) spriteBatch.Draw(itemTexture, position, rect, Item.GetColor(Color.White), 0f, origin, drawScale * pulseScale, SpriteEffects.None, 0f);
 					}
 
 					ItemLoader.PostDrawInInventory(Item, spriteBatch, position, rect, Item.GetAlpha(newColor), Item.GetColor(Color.White), origin, drawScale * pulseScale);
-					if (ItemID.Sets.TrapSigned[Item.type])
-						spriteBatch.Draw(Main.wireTexture, position + new Vector2(40f, 40f) * scale, new Rectangle(4, 58, 8, 8), Color.White, 0f, new Vector2(4f), 1f, SpriteEffects.None, 0f);
+					if (ItemID.Sets.TrapSigned[Item.type]) spriteBatch.Draw(Main.wireTexture, position + new Vector2(40f, 40f) * scale, new Rectangle(4, 58, 8, 8), Color.White, 0f, new Vector2(4f), 1f, SpriteEffects.None, 0f);
 					if (Item.stack > 1)
 					{
 						string text = Item.stack < 1000 ? Item.stack.ToString() : Item.stack.ToSI("N1");
@@ -231,10 +218,8 @@ namespace PortableStorage.UI
 						Main.HoverItem = Item.Clone();
 						Main.hoverItemName = Main.HoverItem.Name;
 
-						if (Main.keyState.IsKeyDown(Keys.LeftAlt))
-							BaseLibrary.Hooking.SetCursor("PortableStorage/Textures/Items/BuilderReserve");
-						else if (ItemSlot.ShiftInUse)
-							BaseLibrary.Hooking.SetCursor("Terraria/UI/Cursor_7");
+						if (Main.keyState.IsKeyDown(Keys.LeftAlt)) BaseLibrary.Hooking.SetCursor("PortableStorage/Textures/Items/BuilderReserve");
+						else if (ItemSlot.ShiftInUse) BaseLibrary.Hooking.SetCursor("Terraria/UI/Cursor_7");
 					}
 				}
 			}

@@ -113,7 +113,7 @@ namespace PortableStorage
 
 			if (Utility.AlchemistBagWhitelist.Contains(item.type))
 			{
-				AlchemistBag alchemistBag = player.inventory.OfType<AlchemistBag>().FirstOrDefault(bag => bag.HandlerIngredients.Contains(item.type)&& bag.HandlerIngredients.HasSpace(item));
+				AlchemistBag alchemistBag = player.inventory.OfType<AlchemistBag>().FirstOrDefault(bag => bag.Handler.Contains(item.type) && bag.Handler.HasSpace(item));
 
 				if (alchemistBag != null)
 				{
@@ -121,11 +121,11 @@ namespace PortableStorage
 
 					Item temp = item.Clone();
 
-					alchemistBag.HandlerIngredients.InsertItem(ref item);
+					alchemistBag.Handler.InsertItem(ref item, 18, 81);
 
 					Hooking.BagItemText(alchemistBag.item, temp, temp.stack - item.stack, false, false);
 
-					if (item.IsAir || !item.active)return false;
+					if (item.IsAir || !item.active) return false;
 				}
 			}
 
@@ -139,7 +139,7 @@ namespace PortableStorage
 
 					Item temp = item.Clone();
 
-					alchemistBag.Handler.InsertItem(ref item);
+					alchemistBag.Handler.InsertItem(ref item, 0, 18);
 
 					Hooking.BagItemText(alchemistBag.item, temp, temp.stack - item.stack, false, false);
 
@@ -149,7 +149,7 @@ namespace PortableStorage
 
 			if (Utility.AlchemistBagWhitelist.Contains(item.type))
 			{
-				AlchemistBag alchemistBag = player.inventory.OfType<AlchemistBag>().FirstOrDefault(bag => bag.HandlerIngredients.HasSpace(item));
+				AlchemistBag alchemistBag = player.inventory.OfType<AlchemistBag>().FirstOrDefault(bag => bag.Handler.HasSpace(item));
 
 				if (alchemistBag != null)
 				{
@@ -157,7 +157,7 @@ namespace PortableStorage
 
 					Item temp = item.Clone();
 
-					alchemistBag.HandlerIngredients.InsertItem(ref item);
+					alchemistBag.Handler.InsertItem(ref item, 18, 81);
 
 					Hooking.BagItemText(alchemistBag.item, temp, temp.stack - item.stack, false, false);
 

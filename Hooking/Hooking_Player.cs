@@ -342,7 +342,7 @@ namespace PortableStorage
 
 					if (Main.lightPet[item.buffType] || Main.vanityPet[item.buffType])
 					{
-						for (int buffIndex = 0; buffIndex < 22; buffIndex++)
+						for (int buffIndex = 0; buffIndex < player.buffType.Length; buffIndex++)
 						{
 							if (Main.lightPet[player.buffType[buffIndex]] && Main.lightPet[item.buffType]) useItem = false;
 							if (Main.vanityPet[player.buffType[buffIndex]] && Main.vanityPet[item.buffType]) useItem = false;
