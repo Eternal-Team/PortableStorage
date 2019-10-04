@@ -11,7 +11,7 @@ namespace PortableStorage
 	{
 		public override void SetupTravelShop(int[] shop, ref int nextSlot)
 		{
-			if (Main.rand.NextBool(10))
+			if (Main.rand.NextBool(4))
 			{
 				shop[nextSlot] = mod.ItemType<Wallet>();
 				nextSlot++;
@@ -29,6 +29,12 @@ namespace PortableStorage
 				case NPCID.Merchant:
 					shop.item[nextSlot].SetDefaults(mod.ItemType<AmmoPouch>());
 					nextSlot++;
+					if (NPC.downedBoss2)
+					{
+						shop.item[nextSlot].SetDefaults(mod.ItemType<AdventurerBag>());
+						nextSlot++;
+					}
+
 					break;
 				case NPCID.SkeletonMerchant:
 					shop.item[nextSlot].SetDefaults(mod.ItemType<SkeletalBag>());
@@ -43,7 +49,7 @@ namespace PortableStorage
 
 		public override void NPCLoot(NPC npc)
 		{
-			if (npc.type == NPCID.UndeadMiner && Main.rand.NextBool(10)) Item.NewItem(npc.getRect(), mod.ItemType<MinersBackpack>());
+			if (npc.type == NPCID.UndeadMiner && Main.rand.NextBool(5)) Item.NewItem(npc.getRect(), mod.ItemType<MinersBackpack>());
 		}
 	}
 }
