@@ -140,7 +140,15 @@ namespace PortableStorage
 				ItemID.OrichalcumOre,
 				ItemID.TitaniumOre,
 				ItemID.PalladiumOre,
-				ItemID.Hellstone
+				ItemID.Hellstone,
+
+				ItemID.Amber,
+				ItemID.Amethyst,
+				ItemID.Diamond,
+				ItemID.Emerald,
+				ItemID.Ruby,
+				ItemID.Sapphire,
+				ItemID.Topaz
 			};
 
 			FishingWhitelist = new List<int>
