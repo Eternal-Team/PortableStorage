@@ -23,7 +23,7 @@ namespace PortableStorage.Items.Normal
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Leather, 12);
+			recipe.AddIngredient(ItemID.Leather, 8);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.SetResult(this);
 			recipe.AddRecipe();

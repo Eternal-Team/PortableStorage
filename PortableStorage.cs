@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using BaseLibrary;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
@@ -32,7 +33,7 @@ namespace PortableStorage
 			}
 		}
 
-		public override void Unload() => BaseLibrary.Utility.UnloadNullableTypes();
+		public override void Unload() => this.UnloadNullableTypes();
 
 		public override void AddRecipeGroups() => Utility.AddRecipeGroups();
 
