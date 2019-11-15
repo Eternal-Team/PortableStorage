@@ -9,6 +9,7 @@ using PortableStorage.Items.Special;
 using System;
 using System.Linq;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace PortableStorage
 {
@@ -81,7 +82,7 @@ namespace PortableStorage
 
 				cursor.EmitDelegate<Action<SpriteBatch, long, float, float>>((sb, walletCount, shopx, shopy) =>
 				{
-					int walletType = PortableStorage.Instance.ItemType<Wallet>();
+					int walletType = ModContent.ItemType<Wallet>();
 					if (walletCount > 0L) sb.Draw(Main.itemTexture[walletType], Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 40f), Main.itemTexture[walletType].Size() * 0.5f));
 				});
 			}

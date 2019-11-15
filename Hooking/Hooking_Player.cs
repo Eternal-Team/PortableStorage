@@ -7,6 +7,7 @@ using PortableStorage.Items.Ammo;
 using PortableStorage.Items.Special;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
@@ -260,14 +261,13 @@ namespace PortableStorage
 
 				cursor.EmitDelegate<Func<Player, Item, bool>>((player, ammoUser) => player.inventory.OfType<BaseAmmoBag>().Any(ammoBag => ammoBag.Handler.Items.Any(item => item.ammo == ammoUser.useAmmo && item.stack > 0)));
 
-				cursor.Emit(OpCodes.Starg, il.Method.Parameters.FirstOrDefault(x => x.Name == "canUse"));
+				cursor.Emit(OpCodes.Starg, 2);
 			}
 		}
 
 		private static void Player_PickAmmo(ILContext il)
 		{
 			int firstAmmoIndex = il.AddVariable<Item>();
-			int canShootIndex = il.GetParameterIndex("canShoot");
 
 			ILCursor cursor = new ILCursor(il);
 			ILLabel elseLabel = cursor.DefineLabel();
@@ -291,7 +291,7 @@ namespace PortableStorage
 				cursor.Emit(OpCodes.Ldloc, firstAmmoIndex);
 				cursor.Emit(OpCodes.Stloc, 0);
 
-				cursor.Emit(OpCodes.Ldarg, canShootIndex);
+				cursor.Emit(OpCodes.Ldarg, 4);
 				cursor.Emit(OpCodes.Ldc_I4, 1);
 				cursor.Emit(OpCodes.Stind_I1);
 
@@ -300,7 +300,7 @@ namespace PortableStorage
 
 			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(1), i => i.MatchLdcI4(54))) cursor.MarkLabel(elseLabel);
 
-			if (cursor.TryGotoNext(i => i.MatchLdarg(3), i => i.MatchLdindU1(), i => i.MatchBrfalse(out _))) cursor.MarkLabel(endLabel);
+			if (cursor.TryGotoNext(i => i.MatchLdarg(4), i => i.MatchLdindU1(), i => i.MatchBrfalse(out _))) cursor.MarkLabel(endLabel);
 		}
 		#endregion
 
@@ -309,7 +309,7 @@ namespace PortableStorage
 
 		private static bool QuickBuff(Player player, ref LegacySoundStyle sound)
 		{
-			if (!PortableStorage.Instance.GetConfig<PortableStorageConfig>().AlchemistBagQuickBuff) return false;
+			if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickBuff) return false;
 
 			foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
 			{
@@ -413,7 +413,7 @@ namespace PortableStorage
 
 		private static void QuickHeal(Player player, int lostHealth, ref int healthGain, ref Item result)
 		{
-			if (!PortableStorage.Instance.GetConfig<PortableStorageConfig>().AlchemistBagQuickHeal) return;
+			if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickHeal) return;
 
 			foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
 			{
@@ -463,7 +463,7 @@ namespace PortableStorage
 
 				cursor.EmitDelegate<Func<Player, bool>>(player =>
 				{
-					if (!PortableStorage.Instance.GetConfig<PortableStorageConfig>().AlchemistBagQuickMana) return false;
+					if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickMana) return false;
 
 					foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
 					{

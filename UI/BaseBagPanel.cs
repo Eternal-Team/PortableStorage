@@ -7,6 +7,7 @@ using PortableStorage.Items;
 using System;
 using Terraria;
 using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace PortableStorage.UI
 {

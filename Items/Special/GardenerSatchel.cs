@@ -290,14 +290,14 @@ namespace PortableStorage.Items.Special
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.StaffofRegrowth);
-			recipe.AddIngredient(ItemID.AncientBattleArmorMaterial);
-			recipe.AddIngredient(ItemID.ChlorophyteBar, 3);
-			recipe.AddIngredient(ItemID.AncientCloth, 7);
-			recipe.AddTile(TileID.LivingLoom);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			//ModRecipe recipe = new ModRecipe(mod);
+			//recipe.AddIngredient(ItemID.StaffofRegrowth);
+			//recipe.AddIngredient(ItemID.AncientBattleArmorMaterial);
+			//recipe.AddIngredient(ItemID.ChlorophyteBar, 3);
+			//recipe.AddIngredient(ItemID.AncientCloth, 7);
+			//recipe.AddTile(TileID.LivingLoom);
+			//recipe.SetResult(this);
+			//recipe.AddRecipe();
 		}
 	}
 }

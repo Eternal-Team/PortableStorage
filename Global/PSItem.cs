@@ -230,7 +230,7 @@ namespace PortableStorage
 		{
 			if (context == "crate")
 			{
-				if (arg == ItemID.IronCrate && Main.rand.NextBool(20) || arg == ItemID.GoldenCrate && Main.rand.NextBool(10)) player.QuickSpawnItem(mod.ItemType<FishingBelt>());
+				if (arg == ItemID.IronCrate && Main.rand.NextBool(20) || arg == ItemID.GoldenCrate && Main.rand.NextBool(10)) player.QuickSpawnItem(ModContent.ItemType<FishingBelt>());
 			}
 		}
 	}

@@ -72,7 +72,8 @@ namespace PortableStorage.Items
 
 		public override bool UseItem(Player player)
 		{
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) BaseLibrary.BaseLibrary.PanelGUI.UI.HandleUI(this);
+			if (player.whoAmI == Main.LocalPlayer.whoAmI)
+				BaseLibrary.BaseLibrary.PanelGUI.UI.HandleUI(this);
 
 			return true;
 		}
@@ -83,7 +84,8 @@ namespace PortableStorage.Items
 
 		public override void RightClick(Player player)
 		{
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) BaseLibrary.BaseLibrary.PanelGUI.UI.HandleUI(this);
+			if (player.whoAmI == Main.LocalPlayer.whoAmI)
+				BaseLibrary.BaseLibrary.PanelGUI.UI.HandleUI(this);
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)

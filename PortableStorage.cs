@@ -9,8 +9,6 @@ namespace PortableStorage
 {
 	public class PortableStorage : Mod
 	{
-		internal static PortableStorage Instance;
-
 		internal static Texture2D textureBlackHole;
 		internal static Texture2D textureLootAll;
 		internal static Texture2D textureDepositAll;
@@ -20,8 +18,6 @@ namespace PortableStorage
 
 		public override void Load()
 		{
-			Instance = this;
-
 			Hooking.Load();
 
 			if (!Main.dedServ)

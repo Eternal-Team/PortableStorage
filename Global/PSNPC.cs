@@ -13,7 +13,7 @@ namespace PortableStorage
 		{
 			if (Main.rand.NextBool(4))
 			{
-				shop[nextSlot] = mod.ItemType<Wallet>();
+				shop[nextSlot] = ModContent.ItemType<Wallet>();
 				nextSlot++;
 			}
 		}
@@ -23,25 +23,25 @@ namespace PortableStorage
 			switch (type)
 			{
 				case NPCID.Cyborg:
-					shop.item[nextSlot].SetDefaults(mod.ItemType<FireProofContainer>());
+					shop.item[nextSlot].SetDefaults(ModContent.ItemType<FireProofContainer>());
 					nextSlot++;
 					break;
 				case NPCID.Merchant:
-					shop.item[nextSlot].SetDefaults(mod.ItemType<AmmoPouch>());
+					shop.item[nextSlot].SetDefaults(ModContent.ItemType<AmmoPouch>());
 					nextSlot++;
 					if (NPC.downedBoss2)
 					{
-						shop.item[nextSlot].SetDefaults(mod.ItemType<AdventurerBag>());
+						shop.item[nextSlot].SetDefaults(ModContent.ItemType<AdventurerBag>());
 						nextSlot++;
 					}
 
 					break;
 				case NPCID.SkeletonMerchant:
-					shop.item[nextSlot].SetDefaults(mod.ItemType<SkeletalBag>());
+					shop.item[nextSlot].SetDefaults(ModContent.ItemType<SkeletalBag>());
 					nextSlot++;
 					break;
 				case NPCID.WitchDoctor when Main.LocalPlayer.ZoneJungle:
-					shop.item[nextSlot].SetDefaults(mod.ItemType<DartHolder>());
+					shop.item[nextSlot].SetDefaults(ModContent.ItemType<DartHolder>());
 					nextSlot++;
 					break;
 			}
@@ -49,7 +49,7 @@ namespace PortableStorage
 
 		public override void NPCLoot(NPC npc)
 		{
-			if (npc.type == NPCID.UndeadMiner && Main.rand.NextBool(5)) Item.NewItem(npc.getRect(), mod.ItemType<MinersBackpack>());
+			if (npc.type == NPCID.UndeadMiner && Main.rand.NextBool(5)) Item.NewItem(npc.getRect(), ModContent.ItemType<MinersBackpack>());
 		}
 	}
 }
