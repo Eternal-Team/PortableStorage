@@ -1,6 +1,5 @@
 ﻿using ContainerLibrary;
 using System.Linq;
-using Terraria;
 
 namespace PortableStorage.Items.Ammo
 {

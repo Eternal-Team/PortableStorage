@@ -1,7 +1,6 @@
 ﻿using BaseLibrary;
 using ContainerLibrary;
 using PortableStorage.Items.Special;
-using Terraria;
 
 namespace PortableStorage.Items.Normal
 {

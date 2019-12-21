@@ -1,12 +1,10 @@
 ﻿using BaseLibrary;
-using BaseLibrary.UI;
 using BaseLibrary.UI.Elements;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.Items.Ammo;
 using Terraria;
 using Terraria.Localization;
-using Terraria.ModLoader;
 
 namespace PortableStorage.UI
 {

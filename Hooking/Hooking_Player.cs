@@ -667,13 +667,6 @@ namespace PortableStorage
 				});
 
 				cursor.Emit(OpCodes.Starg, 2);
-
-				cursor.Emit(OpCodes.Ldarg, 2);
-				cursor.Emit(OpCodes.Callvirt, typeof(Item).GetProperty("IsAir", BaseLibrary.Utility.defaultFlags).GetGetMethod());
-				cursor.Emit(OpCodes.Brfalse, label);
-				cursor.Emit(OpCodes.Ldarg, 2);
-				cursor.Emit(OpCodes.Ret);
-				cursor.MarkLabel(label);
 			}
 		}
 		#endregion

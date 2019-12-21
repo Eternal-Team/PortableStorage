@@ -23,6 +23,8 @@ namespace PortableStorage
 
 		public override bool OnPickup(Item item, Player player)
 		{
+			if (item.IsAir || item.stack <= 0 || item.type <= 0) return base.OnPickup(item, player);
+
 			if (item.IsCoin())
 			{
 				Wallet wallet = player.inventory.OfType<Wallet>().FirstOrDefault();
@@ -34,6 +36,9 @@ namespace PortableStorage
 					wallet.Coins += Utils.CoinsCount(out bool _, new[] { item });
 
 					Main.PlaySound(SoundID.CoinPickup);
+
+					item.TurnToAir();
+					item.active = false;
 
 					return false;
 				}

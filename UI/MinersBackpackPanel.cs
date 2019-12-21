@@ -2,7 +2,6 @@
 using BaseLibrary.UI.Elements;
 using ContainerLibrary;
 using PortableStorage.Items.Special;
-using Terraria;
 
 namespace PortableStorage.UI
 {
