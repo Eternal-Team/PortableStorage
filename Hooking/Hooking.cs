@@ -1,6 +1,8 @@
 ﻿using IL.Terraria.UI;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour.HookGen;
+using PortableStorage.Items.Ammo;
 using PortableStorage.Items.Special;
 using System;
 using System.Linq;
@@ -32,6 +34,8 @@ namespace PortableStorage
 			IL.Terraria.Player.ItemCheck += Player_ItemCheck;
 			IL.Terraria.Player.GetItem += Player_GetItem;
 
+			IL.Terraria.Main.UpdateTime_SpawnTownNPCs += Main_UpdateTime_SpawnTownNPCs;
+
 			if (ItemTextBags == null)
 			{
 				ItemTextBags = new Item[20];
@@ -42,6 +46,27 @@ namespace PortableStorage
 			IL.Terraria.Main.DoDraw += Main_DoDraw;
 
 			HookEndpointManager.Modify(typeof(Player).GetMethod("CanBuyItem", BaseLibrary.Utility.defaultFlags), new Action<ILContext>(Player_CanBuyItem));
+		}
+
+		private static void Main_UpdateTime_SpawnTownNPCs(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
+
+			if (cursor.TryGotoNext(MoveType.Before, i => i.MatchLdcI4(0), i => i.MatchStloc(39), i => i.MatchBr(out _)))
+			{
+				cursor.Emit(OpCodes.Ldloc, 37);
+
+				cursor.EmitDelegate<Func<int, int>>(index =>
+				{
+					Player player = Main.player[index];
+					long longCoins = player.inventory.OfType<Wallet>().Sum(wallet => wallet.Coins);
+					int coins = longCoins > int.MaxValue ? int.MaxValue : (int)longCoins;
+
+					return coins;
+				});
+
+				cursor.Emit(OpCodes.Stloc, 29);
+			}
 		}
 	}
 }
