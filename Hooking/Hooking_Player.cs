@@ -7,7 +7,6 @@ using PortableStorage.Items.Ammo;
 using PortableStorage.Items.Special;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
@@ -658,15 +657,28 @@ namespace PortableStorage
 						{
 							Main.PlaySound(SoundID.Grab);
 
+							Item temp = item.Clone();
+
 							belt.Handler.InsertItem(ref item);
+
+							BagItemText(belt.item, temp, temp.stack - item.stack, false, false);
+
 							if (item.IsAir || !item.active) return item;
 						}
 					}
 
+					if (item.stack <= 0) item.active = false;
 					return item;
 				});
 
 				cursor.Emit(OpCodes.Starg, 2);
+
+				cursor.Emit(OpCodes.Ldarg, 2);
+				cursor.EmitDelegate<Func<Item, bool>>(item => item.IsAir);
+				cursor.Emit(OpCodes.Brfalse, label);
+				cursor.Emit(OpCodes.Ldarg, 2);
+				cursor.Emit(OpCodes.Ret);
+				cursor.MarkLabel(label);
 			}
 		}
 		#endregion
