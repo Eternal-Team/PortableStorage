@@ -7,13 +7,13 @@ namespace PortableStorage
 	{
 		public override ConfigScope Mode => ConfigScope.ServerSide;
 
-		[DefaultValue(true)]
+		[DefaultValue(true), Label("$Mods.PortableStorage.Config.AlchemistBagQuickBuff")]
 		public bool AlchemistBagQuickBuff;
 
-		[DefaultValue(true)]
+		[DefaultValue(true), Label("$Mods.PortableStorage.Config.AlchemistBagQuickHeal")]
 		public bool AlchemistBagQuickHeal;
 
-		[DefaultValue(true)]
+		[DefaultValue(true), Label("$Mods.PortableStorage.Config.AlchemistBagQuickMana")]
 		public bool AlchemistBagQuickMana;
 	}
 }

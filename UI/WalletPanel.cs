@@ -8,6 +8,7 @@ using Terraria.Localization;
 
 namespace PortableStorage.UI
 {
+	// bug: weird slot size behavior
 	public class WalletPanel : BaseBagPanel<Wallet>
 	{
 		public override void OnInitialize()
