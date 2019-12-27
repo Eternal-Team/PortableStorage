@@ -9,16 +9,6 @@ namespace PortableStorage.Items.Ammo
 
 		public override string AmmoType => "Arrow";
 
-		public override void SetDefaults()
-		{
-			base.SetDefaults();
-
-			item.width = 32;
-			item.height = 32;
-			item.rare = ItemRarityID.Blue;
-			item.value = 6000 * 5;
-		}
-
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
@@ -27,6 +17,16 @@ namespace PortableStorage.Items.Ammo
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
+		}
+
+		public override void SetDefaults()
+		{
+			base.SetDefaults();
+
+			item.width = 32;
+			item.height = 32;
+			item.rare = ItemRarityID.Blue;
+			item.value = 6000 * 5;
 		}
 	}
 }

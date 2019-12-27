@@ -17,6 +17,16 @@ namespace PortableStorage.Items.Special
 			Handler.IsItemValid += (slot, item) => item.thrown;
 		}
 
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.NinjaShirt);
+			recipe.AddIngredient(ItemID.Chain, 3);
+			recipe.AddTile(TileID.Anvils);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
+
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
@@ -50,16 +60,6 @@ namespace PortableStorage.Items.Special
 					}
 				}
 			}
-		}
-
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.NinjaShirt);
-			recipe.AddIngredient(ItemID.Chain, 3);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
 		}
 	}
 }

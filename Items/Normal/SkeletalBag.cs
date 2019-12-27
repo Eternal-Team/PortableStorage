@@ -9,16 +9,6 @@ namespace PortableStorage.Items.Normal
 
 		public override int SlotCount => 27;
 
-		public override void SetDefaults()
-		{
-			base.SetDefaults();
-
-			item.width = 26;
-			item.height = 32;
-			item.rare = ItemRarityID.Green;
-			item.value = 25000 * 5;
-		}
-
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
@@ -27,6 +17,16 @@ namespace PortableStorage.Items.Normal
 			recipe.AddTile(TileID.BoneWelder);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
+		}
+
+		public override void SetDefaults()
+		{
+			base.SetDefaults();
+
+			item.width = 26;
+			item.height = 32;
+			item.rare = ItemRarityID.Green;
+			item.value = 25000 * 5;
 		}
 	}
 }

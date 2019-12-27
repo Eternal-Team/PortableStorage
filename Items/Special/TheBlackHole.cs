@@ -17,11 +17,22 @@ namespace PortableStorage.Items.Special
 {
 	public class TheBlackHole : BaseItem
 	{
+		private const int maxRange = 480;
 		public override string Texture => "PortableStorage/Textures/Items/TheBlackHole";
 
-		private const int maxRange = 480;
-
 		public bool active;
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.CrystalBall);
+			recipe.AddIngredient(ItemID.Ectoplasm, 12);
+			recipe.AddTile(TileID.DemonAltar);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
+
+		public override bool CanRightClick() => true;
 
 		public override ModItem Clone()
 		{
@@ -37,10 +48,42 @@ namespace PortableStorage.Items.Special
 			return clone;
 		}
 
-		public override void SetStaticDefaults()
+		public override bool ConsumeItem(Player player) => false;
+
+		public override void Load(TagCompound tag) => active = tag.GetBool("Active");
+
+		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			ItemID.Sets.ItemNoGravity[item.type] = true;
+			tooltips.Add(new TooltipLine(mod, "PortableStorage:BagTooltip", Language.GetText("Mods.PortableStorage.BagTooltip." + GetType().Name).Format(maxRange / 16)));
 		}
+
+		public override void NetRecieve(BinaryReader reader) => active = reader.ReadBoolean();
+
+		public override void NetSend(BinaryWriter writer) => writer.Write(active);
+
+		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
+		{
+			spriteBatch.Draw(PortableStorage.textureBlackHole, position + new Vector2(16) * scale, null, drawColor, active ? -BaseLibrary.Utility.ToRadians(PortableStorage.BlackHoleAngle * 2) : 0f, new Vector2(16), scale, SpriteEffects.None, 0f);
+
+			return false;
+		}
+
+		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
+		{
+			spriteBatch.Draw(PortableStorage.textureBlackHole, item.position - Main.screenPosition + new Vector2(16), null, lightColor, (active ? -BaseLibrary.Utility.ToRadians(PortableStorage.BlackHoleAngle * 2) : 0f) + rotation, new Vector2(16), scale, SpriteEffects.None, 0f);
+
+			return false;
+		}
+
+		public override void RightClick(Player player)
+		{
+			active = !active;
+		}
+
+		public override TagCompound Save() => new TagCompound
+		{
+			["Active"] = active
+		};
 
 		public override void SetDefaults()
 		{
@@ -53,18 +96,9 @@ namespace PortableStorage.Items.Special
 			item.value = 55555 * 5;
 		}
 
-		public override void ModifyTooltips(List<TooltipLine> tooltips)
+		public override void SetStaticDefaults()
 		{
-			tooltips.Add(new TooltipLine(mod, "PortableStorage:BagTooltip", Language.GetText("Mods.PortableStorage.BagTooltip." + GetType().Name).Format(maxRange / 16)));
-		}
-
-		public override bool ConsumeItem(Player player) => false;
-
-		public override bool CanRightClick() => true;
-
-		public override void RightClick(Player player)
-		{
-			active = !active;
+			ItemID.Sets.ItemNoGravity[item.type] = true;
 		}
 
 		public override void UpdateInventory(Player player)
@@ -131,41 +165,6 @@ namespace PortableStorage.Items.Special
 					if (Main.netMode == NetmodeID.MultiplayerClient) NetMessage.SendData(MessageID.SyncItem, -1, -1, null, i);
 				}
 			}
-		}
-
-		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
-		{
-			spriteBatch.Draw(PortableStorage.textureBlackHole, position + new Vector2(16) * scale, null, drawColor, active ? -BaseLibrary.Utility.ToRadians(PortableStorage.BlackHoleAngle * 2) : 0f, new Vector2(16), scale, SpriteEffects.None, 0f);
-
-			return false;
-		}
-
-		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
-		{
-			spriteBatch.Draw(PortableStorage.textureBlackHole, item.position - Main.screenPosition + new Vector2(16), null, lightColor, (active ? -BaseLibrary.Utility.ToRadians(PortableStorage.BlackHoleAngle * 2) : 0f) + rotation, new Vector2(16), scale, SpriteEffects.None, 0f);
-
-			return false;
-		}
-
-		public override TagCompound Save() => new TagCompound
-		{
-			["Active"] = active
-		};
-
-		public override void Load(TagCompound tag) => active = tag.GetBool("Active");
-
-		public override void NetSend(BinaryWriter writer) => writer.Write(active);
-
-		public override void NetRecieve(BinaryReader reader) => active = reader.ReadBoolean();
-
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.CrystalBall);
-			recipe.AddIngredient(ItemID.Ectoplasm, 12);
-			recipe.AddTile(TileID.DemonAltar);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
 		}
 	}
 }

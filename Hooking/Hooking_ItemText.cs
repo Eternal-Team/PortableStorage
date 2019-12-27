@@ -15,142 +15,6 @@ namespace PortableStorage
 	{
 		private static Item[] ItemTextBags;
 
-		private static void ItemText_Update(ILContext il)
-		{
-			ILCursor cursor = new ILCursor(il);
-
-			if (cursor.TryGotoNext(i => i.MatchLdarg(0), i => i.MatchLdcI4(0), i => i.MatchStfld<ItemText>("active")))
-			{
-				cursor.Index += 3;
-
-				cursor.Emit(OpCodes.Ldarg, 0);
-				cursor.EmitDelegate<Action<ItemText>>(itemText =>
-				{
-					int index = Array.FindLastIndex(Main.itemText, text => text == itemText);
-
-					if (index != -1) ItemTextBags[index] = new Item();
-				});
-			}
-		}
-
-		private static string ValueToName(int coinValue)
-		{
-			int num = 0;
-			int num2 = 0;
-			int num3 = 0;
-			int num4 = 0;
-			int i = coinValue;
-			while (i > 0)
-			{
-				if (i >= 1000000)
-				{
-					i -= 1000000;
-					num++;
-				}
-				else if (i >= 10000)
-				{
-					i -= 10000;
-					num2++;
-				}
-				else if (i >= 100)
-				{
-					i -= 100;
-					num3++;
-				}
-				else if (i >= 1)
-				{
-					i--;
-					num4++;
-				}
-			}
-
-			string text = "";
-			if (num > 0)
-			{
-				text = text + num + $" {Language.GetTextValue("Currency.Platinum")} ";
-			}
-
-			if (num2 > 0)
-			{
-				text = text + num2 + $" {Language.GetTextValue("Currency.Gold")} ";
-			}
-
-			if (num3 > 0)
-			{
-				text = text + num3 + $" {Language.GetTextValue("Currency.Silver")} ";
-			}
-
-			if (num4 > 0)
-			{
-				text = text + num4 + $" {Language.GetTextValue("Currency.Copper")} ";
-			}
-
-			if (text.Length > 1)
-			{
-				text = text.Substring(0, text.Length - 1);
-			}
-
-			return text;
-		}
-
-		private static void ValueToName(ItemText itemText)
-		{
-			int num = 0;
-			int num2 = 0;
-			int num3 = 0;
-			int num4 = 0;
-			int i = itemText.coinValue;
-			while (i > 0)
-			{
-				if (i >= 1000000)
-				{
-					i -= 1000000;
-					num++;
-				}
-				else if (i >= 10000)
-				{
-					i -= 10000;
-					num2++;
-				}
-				else if (i >= 100)
-				{
-					i -= 100;
-					num3++;
-				}
-				else if (i >= 1)
-				{
-					i--;
-					num4++;
-				}
-			}
-
-			itemText.name = "";
-			if (num > 0)
-			{
-				itemText.name = itemText.name + num + string.Format(" {0} ", Language.GetTextValue("Currency.Platinum"));
-			}
-
-			if (num2 > 0)
-			{
-				itemText.name = itemText.name + num2 + string.Format(" {0} ", Language.GetTextValue("Currency.Gold"));
-			}
-
-			if (num3 > 0)
-			{
-				itemText.name = itemText.name + num3 + string.Format(" {0} ", Language.GetTextValue("Currency.Silver"));
-			}
-
-			if (num4 > 0)
-			{
-				itemText.name = itemText.name + num4 + string.Format(" {0} ", Language.GetTextValue("Currency.Copper"));
-			}
-
-			if (itemText.name.Length > 1)
-			{
-				itemText.name = itemText.name.Substring(0, itemText.name.Length - 1);
-			}
-		}
-
 		internal static void BagItemText(Item bag, Item newItem, int stack, bool noStack, bool longText)
 		{
 			bool flag = newItem.type >= 71 && newItem.type <= 74;
@@ -403,6 +267,24 @@ namespace PortableStorage
 			}
 		}
 
+		private static void ItemText_Update(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
+
+			if (cursor.TryGotoNext(i => i.MatchLdarg(0), i => i.MatchLdcI4(0), i => i.MatchStfld<ItemText>("active")))
+			{
+				cursor.Index += 3;
+
+				cursor.Emit(OpCodes.Ldarg, 0);
+				cursor.EmitDelegate<Action<ItemText>>(itemText =>
+				{
+					int index = Array.FindLastIndex(Main.itemText, text => text == itemText);
+
+					if (index != -1) ItemTextBags[index] = new Item();
+				});
+			}
+		}
+
 		private static void Main_DoDraw(ILContext il)
 		{
 			ILCursor cursor = new ILCursor(il);
@@ -499,6 +381,124 @@ namespace PortableStorage
 			}
 
 			if (cursor.TryGotoNext(i => i.MatchLdsfld<Main>("netMode"))) cursor.MarkLabel(label);
+		}
+
+		private static string ValueToName(int coinValue)
+		{
+			int num = 0;
+			int num2 = 0;
+			int num3 = 0;
+			int num4 = 0;
+			int i = coinValue;
+			while (i > 0)
+			{
+				if (i >= 1000000)
+				{
+					i -= 1000000;
+					num++;
+				}
+				else if (i >= 10000)
+				{
+					i -= 10000;
+					num2++;
+				}
+				else if (i >= 100)
+				{
+					i -= 100;
+					num3++;
+				}
+				else if (i >= 1)
+				{
+					i--;
+					num4++;
+				}
+			}
+
+			string text = "";
+			if (num > 0)
+			{
+				text = text + num + $" {Language.GetTextValue("Currency.Platinum")} ";
+			}
+
+			if (num2 > 0)
+			{
+				text = text + num2 + $" {Language.GetTextValue("Currency.Gold")} ";
+			}
+
+			if (num3 > 0)
+			{
+				text = text + num3 + $" {Language.GetTextValue("Currency.Silver")} ";
+			}
+
+			if (num4 > 0)
+			{
+				text = text + num4 + $" {Language.GetTextValue("Currency.Copper")} ";
+			}
+
+			if (text.Length > 1)
+			{
+				text = text.Substring(0, text.Length - 1);
+			}
+
+			return text;
+		}
+
+		private static void ValueToName(ItemText itemText)
+		{
+			int num = 0;
+			int num2 = 0;
+			int num3 = 0;
+			int num4 = 0;
+			int i = itemText.coinValue;
+			while (i > 0)
+			{
+				if (i >= 1000000)
+				{
+					i -= 1000000;
+					num++;
+				}
+				else if (i >= 10000)
+				{
+					i -= 10000;
+					num2++;
+				}
+				else if (i >= 100)
+				{
+					i -= 100;
+					num3++;
+				}
+				else if (i >= 1)
+				{
+					i--;
+					num4++;
+				}
+			}
+
+			itemText.name = "";
+			if (num > 0)
+			{
+				itemText.name = itemText.name + num + string.Format(" {0} ", Language.GetTextValue("Currency.Platinum"));
+			}
+
+			if (num2 > 0)
+			{
+				itemText.name = itemText.name + num2 + string.Format(" {0} ", Language.GetTextValue("Currency.Gold"));
+			}
+
+			if (num3 > 0)
+			{
+				itemText.name = itemText.name + num3 + string.Format(" {0} ", Language.GetTextValue("Currency.Silver"));
+			}
+
+			if (num4 > 0)
+			{
+				itemText.name = itemText.name + num4 + string.Format(" {0} ", Language.GetTextValue("Currency.Copper"));
+			}
+
+			if (itemText.name.Length > 1)
+			{
+				itemText.name = itemText.name.Substring(0, itemText.name.Length - 1);
+			}
 		}
 	}
 }

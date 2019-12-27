@@ -12,8 +12,8 @@ namespace PortableStorage.UI
 	{
 		public override void OnInitialize()
 		{
-			Width = (188, 0);
-			Height = (84, 0);
+			Width = (12 + (SlotSize + Padding) * 4, 0);
+			Height = (44 + SlotSize, 0);
 			this.Center();
 
 			UIText textLabel = new UIText(Container.DisplayName.GetTranslation())
@@ -50,13 +50,13 @@ namespace PortableStorage.UI
 			buttonClose.OnClick += (evt, element) => BaseLibrary.BaseLibrary.PanelGUI.UI.CloseUI(Container);
 			Append(buttonClose);
 
-			UIGrid<UIContainerSlot> gridItems = new UIGrid<UIContainerSlot>(9)
+			UIGrid<UIContainerSlot> gridItems = new UIGrid<UIContainerSlot>(4)
 			{
 				Width = (0, 1),
 				Height = (-28, 1),
 				Top = (28, 0),
 				OverflowHidden = true,
-				ListPadding = 4f
+				ListPadding = Padding
 			};
 			Append(gridItems);
 
@@ -64,7 +64,9 @@ namespace PortableStorage.UI
 			{
 				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i)
 				{
-					ShortStackSize = true
+					ShortStackSize = true,
+					Width = (SlotSize, 0),
+					Height = (SlotSize, 0)
 				};
 				gridItems.Add(slot);
 			}

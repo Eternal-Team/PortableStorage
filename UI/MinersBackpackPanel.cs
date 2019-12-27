@@ -11,8 +11,8 @@ namespace PortableStorage.UI
 		{
 			base.OnInitialize();
 
-			Width = (408, 0);
-			Height = (40 + Container.Handler.Slots / 9 * 44, 0);
+			Width = (12 + (SlotSize + Padding) * 9, 0);
+			Height = (40 + (SlotSize + Padding) * Container.Handler.Slots / 9, 0);
 			this.Center();
 
 			UIGrid<UIContainerSlot> gridItems = new UIGrid<UIContainerSlot>(9)
@@ -21,13 +21,13 @@ namespace PortableStorage.UI
 				Height = (-28, 1),
 				Top = (28, 0),
 				OverflowHidden = true,
-				ListPadding = 4f
+				ListPadding = Padding
 			};
 			Append(gridItems);
 
 			for (int i = 0; i < Container.Handler.Slots; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i);
+				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i) { Width = (SlotSize, 0), Height = (SlotSize, 0) };
 				gridItems.Add(slot);
 			}
 		}

@@ -8,40 +8,6 @@ namespace PortableStorage
 {
 	public static class Utility
 	{
-		public static class API
-		{
-			public enum WhitelistType
-			{
-				AlchemyIngredient,
-				Ore,
-				Explosive,
-				Fishing,
-				Seed
-			}
-
-			public static void Register(WhitelistType type, int itemID)
-			{
-				switch (type)
-				{
-					case WhitelistType.AlchemyIngredient:
-						if (!AlchemistBagWhitelist.Contains(itemID)) AlchemistBagWhitelist.Add(itemID);
-						break;
-					case WhitelistType.Ore:
-						if (!OreWhitelist.Contains(itemID)) OreWhitelist.Add(itemID);
-						break;
-					case WhitelistType.Explosive:
-						if (!ExplosiveWhitelist.Contains(itemID)) ExplosiveWhitelist.Add(itemID);
-						break;
-					case WhitelistType.Fishing:
-						if (!FishingWhitelist.Contains(itemID)) FishingWhitelist.Add(itemID);
-						break;
-					case WhitelistType.Seed:
-						if (!SeedWhitelist.Contains(itemID)) SeedWhitelist.Add(itemID);
-						break;
-				}
-			}
-		}
-
 		internal static readonly Dictionary<string, MultiValueDictionary<int, int>> Ammos = new Dictionary<string, MultiValueDictionary<int, int>>();
 
 		internal static List<int> AlchemistBagWhitelist;
@@ -53,6 +19,14 @@ namespace PortableStorage
 		internal static List<int> FishingWhitelist;
 
 		internal static List<int> SeedWhitelist;
+
+		internal static RecipeGroup yoyoStringGroup;
+
+		internal static void AddRecipeGroups()
+		{
+			yoyoStringGroup = new RecipeGroup(() => "Any string", ItemID.RedString, ItemID.OrangeString, ItemID.YellowString, ItemID.LimeString, ItemID.GreenString, ItemID.TealString, ItemID.CyanString, ItemID.SkyBlueString, ItemID.BlueString, ItemID.PurpleString, ItemID.VioletString, ItemID.PinkString, ItemID.BrownString, ItemID.WhiteString, ItemID.RainbowString, ItemID.BlackString);
+			RecipeGroup.RegisterGroup("PortableStorage:YoYoStrings", yoyoStringGroup);
+		}
 
 		internal static void PostSetupContent()
 		{
@@ -295,14 +269,6 @@ namespace PortableStorage
 			Add("Coin", AmmoID.Coin);
 		}
 
-		internal static RecipeGroup yoyoStringGroup;
-
-		internal static void AddRecipeGroups()
-		{
-			yoyoStringGroup = new RecipeGroup(() => "Any string", ItemID.RedString, ItemID.OrangeString, ItemID.YellowString, ItemID.LimeString, ItemID.GreenString, ItemID.TealString, ItemID.CyanString, ItemID.SkyBlueString, ItemID.BlueString, ItemID.PurpleString, ItemID.VioletString, ItemID.PinkString, ItemID.BrownString, ItemID.WhiteString, ItemID.RainbowString, ItemID.BlackString);
-			RecipeGroup.RegisterGroup("PortableStorage:YoYoStrings", yoyoStringGroup);
-		}
-
 		internal static void SyncBag(this Item item)
 		{
 			if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -313,6 +279,40 @@ namespace PortableStorage
 				if (index < 0) return;
 
 				NetMessage.SendData(MessageID.SyncEquipment, number: item.owner, number2: index);
+			}
+		}
+
+		public static class API
+		{
+			public enum WhitelistType
+			{
+				AlchemyIngredient,
+				Ore,
+				Explosive,
+				Fishing,
+				Seed
+			}
+
+			public static void Register(WhitelistType type, int itemID)
+			{
+				switch (type)
+				{
+					case WhitelistType.AlchemyIngredient:
+						if (!AlchemistBagWhitelist.Contains(itemID)) AlchemistBagWhitelist.Add(itemID);
+						break;
+					case WhitelistType.Ore:
+						if (!OreWhitelist.Contains(itemID)) OreWhitelist.Add(itemID);
+						break;
+					case WhitelistType.Explosive:
+						if (!ExplosiveWhitelist.Contains(itemID)) ExplosiveWhitelist.Add(itemID);
+						break;
+					case WhitelistType.Fishing:
+						if (!FishingWhitelist.Contains(itemID)) FishingWhitelist.Add(itemID);
+						break;
+					case WhitelistType.Seed:
+						if (!SeedWhitelist.Contains(itemID)) SeedWhitelist.Add(itemID);
+						break;
+				}
 			}
 		}
 	}

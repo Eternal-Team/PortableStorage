@@ -9,16 +9,6 @@ namespace PortableStorage.Items.Normal
 
 		public override int SlotCount => 36;
 
-		public override void SetDefaults()
-		{
-			base.SetDefaults();
-
-			item.width = 28;
-			item.height = 26;
-			item.rare = ItemRarityID.LightRed;
-			item.value = 30000 * 5;
-		}
-
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
@@ -28,6 +18,16 @@ namespace PortableStorage.Items.Normal
 			recipe.AddTile(TileID.MythrilAnvil);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
+		}
+
+		public override void SetDefaults()
+		{
+			base.SetDefaults();
+
+			item.width = 28;
+			item.height = 26;
+			item.rare = ItemRarityID.LightRed;
+			item.value = 30000 * 5;
 		}
 	}
 }

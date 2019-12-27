@@ -15,9 +15,9 @@ namespace PortableStorage.Items.Special
 	public class BuilderReserve : BaseBag
 	{
 		public override string Texture => "PortableStorage/Textures/Items/BuilderReserve";
+		public Item SelectedItem => selectedIndex >= 0 ? Handler.GetItemInSlot(selectedIndex) : null;
 
 		public int selectedIndex;
-		public Item SelectedItem => selectedIndex >= 0 ? Handler.GetItemInSlot(selectedIndex) : null;
 
 		public BuilderReserve()
 		{
@@ -29,6 +29,18 @@ namespace PortableStorage.Items.Special
 			selectedIndex = -1;
 		}
 
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.Bone, 30);
+			recipe.AddIngredient(ItemID.IronCrate);
+			recipe.AddTile(TileID.BoneWelder);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
+
+		public override bool CanUseItem(Player player) => SelectedItem != null && SelectedItem.type > 0 && SelectedItem.stack > 1;
+
 		public override ModItem Clone()
 		{
 			BuilderReserve clone = (BuilderReserve)base.Clone();
@@ -36,46 +48,15 @@ namespace PortableStorage.Items.Special
 			return clone;
 		}
 
-		public override void SetDefaults()
+		public override void Load(TagCompound tag)
 		{
-			base.SetDefaults();
-
-			item.width = 32;
-			item.height = 32;
-			item.autoReuse = true;
-			item.useTurn = true;
-			item.rare = ItemRarityID.Orange;
-			item.value = 12000 * 5;
+			base.Load(tag);
+			SetIndex(tag.GetInt("SelectedIndex"));
 		}
-
-		public override bool CanUseItem(Player player) => SelectedItem != null && SelectedItem.type > 0 && SelectedItem.stack > 1;
-
-		public override bool UseItem(Player player) => false;
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			tooltips.Add(new TooltipLine(mod, "PortableStorage:BagTooltip", Language.GetText("Mods.PortableStorage.BagTooltip." + GetType().Name).Format(Handler.Slots)));
-		}
-
-		public void SetIndex(int index)
-		{
-			if (index == -1) selectedIndex = item.placeStyle = item.createTile = item.createWall = -1;
-			else
-			{
-				selectedIndex = index;
-				if (SelectedItem.createTile >= 0)
-				{
-					item.createTile = SelectedItem.createTile;
-					item.createWall = -1;
-					item.placeStyle = SelectedItem.placeStyle;
-				}
-				else if (SelectedItem.createWall >= 0)
-				{
-					item.createTile = -1;
-					item.createWall = SelectedItem.createWall;
-					item.placeStyle = SelectedItem.placeStyle;
-				}
-			}
 		}
 
 		public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
@@ -111,20 +92,39 @@ namespace PortableStorage.Items.Special
 			return tag;
 		}
 
-		public override void Load(TagCompound tag)
+		public override void SetDefaults()
 		{
-			base.Load(tag);
-			SetIndex(tag.GetInt("SelectedIndex"));
+			base.SetDefaults();
+
+			item.width = 32;
+			item.height = 32;
+			item.autoReuse = true;
+			item.useTurn = true;
+			item.rare = ItemRarityID.Orange;
+			item.value = 12000 * 5;
 		}
 
-		public override void AddRecipes()
+		public void SetIndex(int index)
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Bone, 30);
-			recipe.AddIngredient(ItemID.IronCrate);
-			recipe.AddTile(TileID.BoneWelder);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			if (index == -1) selectedIndex = item.placeStyle = item.createTile = item.createWall = -1;
+			else
+			{
+				selectedIndex = index;
+				if (SelectedItem.createTile >= 0)
+				{
+					item.createTile = SelectedItem.createTile;
+					item.createWall = -1;
+					item.placeStyle = SelectedItem.placeStyle;
+				}
+				else if (SelectedItem.createWall >= 0)
+				{
+					item.createTile = -1;
+					item.createWall = SelectedItem.createWall;
+					item.placeStyle = SelectedItem.placeStyle;
+				}
+			}
 		}
+
+		public override bool UseItem(Player player) => false;
 	}
 }

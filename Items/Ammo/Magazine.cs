@@ -8,16 +8,6 @@ namespace PortableStorage.Items.Ammo
 		public override string Texture => "PortableStorage/Textures/Items/Magazine";
 		public override string AmmoType => "Bullet";
 
-		public override void SetDefaults()
-		{
-			base.SetDefaults();
-
-			item.width = 24;
-			item.height = 28;
-			item.rare = ItemRarityID.Green;
-			item.value = 15000 * 5;
-		}
-
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
@@ -27,6 +17,16 @@ namespace PortableStorage.Items.Ammo
 			recipe.AddTile(TileID.Anvils);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
+		}
+
+		public override void SetDefaults()
+		{
+			base.SetDefaults();
+
+			item.width = 24;
+			item.height = 28;
+			item.rare = ItemRarityID.Green;
+			item.value = 15000 * 5;
 		}
 	}
 }

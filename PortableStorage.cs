@@ -16,6 +16,16 @@ namespace PortableStorage
 
 		internal static int BlackHoleAngle;
 
+		public override void AddRecipeGroups() => Utility.AddRecipeGroups();
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(this);
+			recipe.AddIngredient(ItemID.Vertebrae, 5);
+			recipe.SetResult(ItemID.Leather);
+			recipe.AddRecipe();
+		}
+
 		public override void Load()
 		{
 			Hooking.Load();
@@ -29,24 +39,14 @@ namespace PortableStorage
 			}
 		}
 
-		public override void Unload() => this.UnloadNullableTypes();
-
-		public override void AddRecipeGroups() => Utility.AddRecipeGroups();
-
 		public override void PostSetupContent() => Utility.PostSetupContent();
+
+		public override void Unload() => this.UnloadNullableTypes();
 
 		public override void UpdateUI(GameTime gameTime)
 		{
 			BlackHoleAngle++;
 			if (BlackHoleAngle > 360) BlackHoleAngle = 0;
-		}
-
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(this);
-			recipe.AddIngredient(ItemID.Vertebrae, 5);
-			recipe.SetResult(ItemID.Leather);
-			recipe.AddRecipe();
 		}
 	}
 }

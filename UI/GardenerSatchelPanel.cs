@@ -22,8 +22,8 @@ namespace PortableStorage.UI
 		{
 			base.OnInitialize();
 
-			Width = (408, 0);
-			Height = (40 + Container.Handler.Slots / 9 * 44, 0);
+			Width = (12 + (SlotSize + Padding) * 9, 0);
+			Height = (44 + SlotSize, 0);
 			this.Center();
 
 			UIGrid<UIGardenerSatchelSlot> gridItems = new UIGrid<UIGardenerSatchelSlot>(9)
@@ -32,31 +32,36 @@ namespace PortableStorage.UI
 				Height = (-28, 1),
 				Top = (28, 0),
 				OverflowHidden = true,
-				ListPadding = 4f
+				ListPadding = Padding
 			};
 			Append(gridItems);
 
 			for (int i = 0; i < Container.Handler.Slots; i++)
 			{
-				UIGardenerSatchelSlot slot = new UIGardenerSatchelSlot(Container, i);
+				UIGardenerSatchelSlot slot = new UIGardenerSatchelSlot(Container, i)
+				{
+					Width = (SlotSize, 0),
+					Height = (SlotSize, 0)
+				};
 				gridItems.Add(slot);
 			}
 		}
 
 		private class UIGardenerSatchelSlot : BaseElement, IGridElement<UIGardenerSatchelSlot>
 		{
-			public UIGrid<UIGardenerSatchelSlot> Grid { get; set; }
 			public ItemHandler Handler => gardenerSatchel.Handler;
-
-			private GardenerSatchel gardenerSatchel;
-
-			public int slot;
 
 			public Item Item
 			{
 				get => Handler.GetItemInSlot(slot);
 				set => Handler.SetItemInSlot(slot, value);
 			}
+
+			public UIGrid<UIGardenerSatchelSlot> Grid { get; set; }
+
+			private GardenerSatchel gardenerSatchel;
+
+			public int slot;
 
 			public UIGardenerSatchelSlot(GardenerSatchel gardenerSatchel, int slot = 0)
 			{
@@ -129,42 +134,6 @@ namespace PortableStorage.UI
 				}
 			}
 
-			public override void RightClickContinuous(UIMouseEvent evt)
-			{
-				if (Handler.IsItemValid(slot, Main.mouseItem) || Main.mouseItem.IsAir)
-				{
-					Player player = Main.LocalPlayer;
-					Item.newAndShiny = false;
-
-					if (player.itemAnimation > 0) return;
-
-					if (Main.stackSplit <= 1 && Main.mouseRight)
-					{
-						if ((Main.mouseItem.IsTheSameAs(Item) || Main.mouseItem.type == 0) && (Main.mouseItem.stack < Main.mouseItem.maxStack || Main.mouseItem.type == 0))
-						{
-							if (Main.mouseItem.type == 0)
-							{
-								Main.mouseItem = Item.Clone();
-								Main.mouseItem.stack = 0;
-								if (Item.favorited && Item.maxStack == 1) Main.mouseItem.favorited = true;
-								Main.mouseItem.favorited = false;
-							}
-
-							Main.mouseItem.stack++;
-							Handler.Shrink(slot, 1);
-
-							Recipe.FindRecipes();
-
-							Main.soundInstanceMenuTick.Stop();
-							Main.soundInstanceMenuTick = Main.soundMenuTick.CreateInstance();
-							Main.PlaySound(12);
-
-							Main.stackSplit = Main.stackSplit == 0 ? 15 : Main.stackDelay;
-						}
-					}
-				}
-			}
-
 			public override int CompareTo(object obj) => slot.CompareTo(((UIGardenerSatchelSlot)obj).slot);
 
 			protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -222,6 +191,42 @@ namespace PortableStorage.UI
 						//	BaseLibrary.Hooking.SetCursor("PortableStorage/Textures/Items/GardenerSatchel");
 						/*else*/
 						if (ItemSlot.ShiftInUse) BaseLibrary.Hooking.SetCursor("Terraria/UI/Cursor_7");
+					}
+				}
+			}
+
+			public override void RightClickContinuous(UIMouseEvent evt)
+			{
+				if (Handler.IsItemValid(slot, Main.mouseItem) || Main.mouseItem.IsAir)
+				{
+					Player player = Main.LocalPlayer;
+					Item.newAndShiny = false;
+
+					if (player.itemAnimation > 0) return;
+
+					if (Main.stackSplit <= 1 && Main.mouseRight)
+					{
+						if ((Main.mouseItem.IsTheSameAs(Item) || Main.mouseItem.type == 0) && (Main.mouseItem.stack < Main.mouseItem.maxStack || Main.mouseItem.type == 0))
+						{
+							if (Main.mouseItem.type == 0)
+							{
+								Main.mouseItem = Item.Clone();
+								Main.mouseItem.stack = 0;
+								if (Item.favorited && Item.maxStack == 1) Main.mouseItem.favorited = true;
+								Main.mouseItem.favorited = false;
+							}
+
+							Main.mouseItem.stack++;
+							Handler.Shrink(slot, 1);
+
+							Recipe.FindRecipes();
+
+							Main.soundInstanceMenuTick.Stop();
+							Main.soundInstanceMenuTick = Main.soundMenuTick.CreateInstance();
+							Main.PlaySound(12);
+
+							Main.stackSplit = Main.stackSplit == 0 ? 15 : Main.stackDelay;
+						}
 					}
 				}
 			}

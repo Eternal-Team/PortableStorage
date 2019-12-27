@@ -9,13 +9,9 @@ namespace PortableStorage
 {
 	public class PSNPC : GlobalNPC
 	{
-		public override void SetupTravelShop(int[] shop, ref int nextSlot)
+		public override void NPCLoot(NPC npc)
 		{
-			if (Main.rand.NextBool(4))
-			{
-				shop[nextSlot] = ModContent.ItemType<Wallet>();
-				nextSlot++;
-			}
+			if (npc.type == NPCID.UndeadMiner && Main.rand.NextBool(5)) Item.NewItem(npc.getRect(), ModContent.ItemType<MinersBackpack>());
 		}
 
 		public override void SetupShop(int type, Chest shop, ref int nextSlot)
@@ -47,9 +43,13 @@ namespace PortableStorage
 			}
 		}
 
-		public override void NPCLoot(NPC npc)
+		public override void SetupTravelShop(int[] shop, ref int nextSlot)
 		{
-			if (npc.type == NPCID.UndeadMiner && Main.rand.NextBool(5)) Item.NewItem(npc.getRect(), ModContent.ItemType<MinersBackpack>());
+			if (Main.rand.NextBool(4))
+			{
+				shop[nextSlot] = ModContent.ItemType<Wallet>();
+				nextSlot++;
+			}
 		}
 	}
 }

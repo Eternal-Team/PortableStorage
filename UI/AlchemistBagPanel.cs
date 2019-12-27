@@ -11,8 +11,8 @@ namespace PortableStorage.UI
 		{
 			base.OnInitialize();
 
-			Width = (408, 0);
-			Height = (100 + Container.Handler.Slots / 9 * 44, 0);
+			Width = (12 + (SlotSize + Padding) * 9, 0);
+			Height = (100 + (SlotSize + Padding) * Container.Handler.Slots / 9, 0);
 			this.Center();
 
 			UIText textPotions = new UIText("Potions")
@@ -24,38 +24,38 @@ namespace PortableStorage.UI
 			UIGrid<UIContainerSlot> gridItems = new UIGrid<UIContainerSlot>(9)
 			{
 				Width = (0, 1),
-				Height = (84, 0),
+				Height = (SlotSize * 2 + Padding, 0),
 				Top = (56, 0),
 				OverflowHidden = true,
-				ListPadding = 4f
+				ListPadding = Padding
 			};
 			Append(gridItems);
 
 			for (int i = 0; i < 18; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i);
+				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i) { Width = (SlotSize, 0), Height = (SlotSize, 0) };
 				gridItems.Add(slot);
 			}
 
 			UIText textIngredients = new UIText("Ingredients")
 			{
-				Top = (148, 0)
+				Top = (56 + 8 + SlotSize * 2 + Padding, 0)
 			};
 			Append(textIngredients);
 
 			UIGrid<UIContainerSlot> gridIngredients = new UIGrid<UIContainerSlot>(9)
 			{
 				Width = (0, 1),
-				Height = (304, 0),
-				Top = (176, 0),
+				Height = ((SlotSize + Padding) * 7 - Padding, 0),
+				Top = (56 + 8 + 20 + 8 + SlotSize * 2 + Padding, 0),
 				OverflowHidden = true,
-				ListPadding = 4f
+				ListPadding = Padding
 			};
 			Append(gridIngredients);
 
 			for (int i = 18; i < 81; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i);
+				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i) { Width = (SlotSize, 0), Height = (SlotSize, 0) };
 				gridIngredients.Add(slot);
 			}
 		}
