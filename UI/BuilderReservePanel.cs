@@ -1,5 +1,6 @@
 ﻿using BaseLibrary;
-using BaseLibrary.UI.Elements;
+using BaseLibrary.Input;
+using BaseLibrary.UI.New;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,30 +19,26 @@ namespace PortableStorage.UI
 {
 	public class BuilderReservePanel : BaseBagPanel<BuilderReserve>
 	{
-		public override void OnInitialize()
+		public BuilderReservePanel(BuilderReserve bag) : base(bag)
 		{
-			base.OnInitialize();
-
-			Width = (12 + (SlotSize + Padding) * 9, 0);
-			Height = (40 + (SlotSize + Padding) * Container.Handler.Slots / 9, 0);
-			this.Center();
+			Width.Pixels = 12 + (SlotSize + Padding) * 9;
+			Height.Pixels = 40 + (SlotSize + Padding) * Container.Handler.Slots / 9;
 
 			UIGrid<UIBuilderReserveSlot> gridItems = new UIGrid<UIBuilderReserveSlot>(9)
 			{
-				Width = (0, 1),
-				Height = (-28, 1),
-				Top = (28, 0),
-				OverflowHidden = true,
+				Width = { Percent = 100 },
+				Height = { Pixels = -28, Percent = 100 },
+				Y = { Pixels = 28 },
 				ListPadding = Padding
 			};
-			Append(gridItems);
+			Add(gridItems);
 
 			for (int i = 0; i < Container.Handler.Slots; i++)
 			{
 				UIBuilderReserveSlot slot = new UIBuilderReserveSlot(Container, i)
 				{
-					Width = (SlotSize, 0),
-					Height = (SlotSize, 0)
+					Width = { Pixels = SlotSize },
+					Height = { Pixels = SlotSize }
 				};
 				gridItems.Add(slot);
 			}
@@ -65,18 +62,18 @@ namespace PortableStorage.UI
 
 			public UIBuilderReserveSlot(BuilderReserve builderReserve, int slot = 0)
 			{
-				MinWidth = MinHeight = new StyleDimension(40, 0);
+				MinWidth = MinHeight = 40;
 
 				this.slot = slot;
 				this.builderReserve = builderReserve;
 			}
 
-			public override void Click(UIMouseEvent evt)
+			protected override void MouseClick(MouseButtonEventArgs args)
 			{
-				UIBuilderReserveSlot otherSlot = Grid.Items.FirstOrDefault(x => x.Item.type == Main.mouseItem.type);
+				UIBuilderReserveSlot otherSlot = (UIBuilderReserveSlot)Grid.Children.FirstOrDefault(x => x is UIBuilderReserveSlot s && s.Item.type == Main.mouseItem.type);
 				if (otherSlot != null && otherSlot != this && !otherSlot.Item.IsAir)
 				{
-					otherSlot.Click(evt);
+					otherSlot.MouseClick(args);
 					return;
 				}
 
@@ -97,7 +94,6 @@ namespace PortableStorage.UI
 							ItemUtility.Loot(Handler, slot, Main.LocalPlayer);
 							if (Item.IsAir && builderReserve.selectedIndex == slot) builderReserve.SetIndex(-1);
 
-							base.Click(evt);
 
 							return;
 						}
@@ -134,9 +130,9 @@ namespace PortableStorage.UI
 				}
 			}
 
-			public override int CompareTo(object obj) => slot.CompareTo(((UIBuilderReserveSlot)obj).slot);
+			public override int CompareTo(BaseElement other) => slot.CompareTo(((UIBuilderReserveSlot)other).slot);
 
-			protected override void DrawSelf(SpriteBatch spriteBatch)
+			protected override void Draw(SpriteBatch spriteBatch)
 			{
 				Texture2D texture = builderReserve.selectedIndex == slot ? Main.inventoryBack15Texture : Main.inventoryBackTexture;
 
@@ -193,41 +189,41 @@ namespace PortableStorage.UI
 				}
 			}
 
-			public override void RightClickContinuous(UIMouseEvent evt)
-			{
-				if (Handler.IsItemValid(slot, Main.mouseItem) || Main.mouseItem.IsAir)
-				{
-					Player player = Main.LocalPlayer;
-					Item.newAndShiny = false;
+			//public override void RightClickContinuous(UIMouseEvent evt)
+			//{
+			//	if (Handler.IsItemValid(slot, Main.mouseItem) || Main.mouseItem.IsAir)
+			//	{
+			//		Player player = Main.LocalPlayer;
+			//		Item.newAndShiny = false;
 
-					if (player.itemAnimation > 0) return;
+			//		if (player.itemAnimation > 0) return;
 
-					if (Main.stackSplit <= 1 && Main.mouseRight)
-					{
-						if ((Main.mouseItem.IsTheSameAs(Item) || Main.mouseItem.type == 0) && (Main.mouseItem.stack < Main.mouseItem.maxStack || Main.mouseItem.type == 0))
-						{
-							if (Main.mouseItem.type == 0)
-							{
-								Main.mouseItem = Item.Clone();
-								Main.mouseItem.stack = 0;
-								if (Item.favorited && Item.maxStack == 1) Main.mouseItem.favorited = true;
-								Main.mouseItem.favorited = false;
-							}
+			//		if (Main.stackSplit <= 1 && Main.mouseRight)
+			//		{
+			//			if ((Main.mouseItem.IsTheSameAs(Item) || Main.mouseItem.type == 0) && (Main.mouseItem.stack < Main.mouseItem.maxStack || Main.mouseItem.type == 0))
+			//			{
+			//				if (Main.mouseItem.type == 0)
+			//				{
+			//					Main.mouseItem = Item.Clone();
+			//					Main.mouseItem.stack = 0;
+			//					if (Item.favorited && Item.maxStack == 1) Main.mouseItem.favorited = true;
+			//					Main.mouseItem.favorited = false;
+			//				}
 
-							Main.mouseItem.stack++;
-							Handler.Shrink(slot, 1);
+			//				Main.mouseItem.stack++;
+			//				Handler.Shrink(slot, 1);
 
-							Recipe.FindRecipes();
+			//				Recipe.FindRecipes();
 
-							Main.soundInstanceMenuTick.Stop();
-							Main.soundInstanceMenuTick = Main.soundMenuTick.CreateInstance();
-							Main.PlaySound(12);
+			//				Main.soundInstanceMenuTick.Stop();
+			//				Main.soundInstanceMenuTick = Main.soundMenuTick.CreateInstance();
+			//				Main.PlaySound(12);
 
-							Main.stackSplit = Main.stackSplit == 0 ? 15 : Main.stackDelay;
-						}
-					}
-				}
-			}
+			//				Main.stackSplit = Main.stackSplit == 0 ? 15 : Main.stackDelay;
+			//			}
+			//		}
+			//	}
+			//}
 		}
 	}
 }

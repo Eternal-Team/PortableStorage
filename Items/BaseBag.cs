@@ -1,6 +1,6 @@
 ﻿using BaseLibrary;
 using BaseLibrary.Items;
-using BaseLibrary.UI;
+using BaseLibrary.UI.New;
 using ContainerLibrary;
 using System;
 using System.Collections.Generic;
@@ -84,14 +84,9 @@ namespace PortableStorage.Items
 			return copy;
 		}
 
-		public void OverhaulInit()
-		{
-			//this.SetTag(ItemTags.AllowQuickUse);
-		}
-
 		public override void RightClick(Player player)
 		{
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) BaseLibrary.BaseLibrary.PanelGUI.UI.HandleUI(this);
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) PanelUI.Instance.HandleUI(this);
 		}
 
 		public override TagCompound Save() => new TagCompound
@@ -110,7 +105,7 @@ namespace PortableStorage.Items
 
 		public override bool UseItem(Player player)
 		{
-			if (player.whoAmI == Main.LocalPlayer.whoAmI) BaseLibrary.BaseLibrary.PanelGUI.UI.HandleUI(this);
+			if (player.whoAmI == Main.LocalPlayer.whoAmI) PanelUI.Instance.HandleUI(this);
 
 			return true;
 		}

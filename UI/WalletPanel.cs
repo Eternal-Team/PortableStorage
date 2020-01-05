@@ -1,5 +1,5 @@
 ﻿using BaseLibrary;
-using BaseLibrary.UI.Elements;
+using BaseLibrary.UI.New;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.Items.Ammo;
@@ -11,63 +11,61 @@ namespace PortableStorage.UI
 	// bug: weird slot size behavior
 	public class WalletPanel : BaseBagPanel<Wallet>
 	{
-		public override void OnInitialize()
+		public WalletPanel(Wallet wallet) : base(wallet)
 		{
-			Width = (12 + (SlotSize + Padding) * 4, 0);
-			Height = (44 + SlotSize, 0);
-			this.Center();
+			Width.Pixels = 12 + (SlotSize + Padding) * 4;
+			Height.Pixels = 44 + SlotSize;
 
 			UIText textLabel = new UIText(Container.DisplayName.GetTranslation())
 			{
-				HAlign = 0.5f,
+				X = { Percent = 50 },
 				HorizontalAlignment = HorizontalAlignment.Center
 			};
-			Append(textLabel);
+			Add(textLabel);
 
 			UIButton buttonLootAll = new UIButton(PortableStorage.textureLootAll)
 			{
 				Size = new Vector2(20),
 				HoverText = Language.GetText("LegacyInterface.29")
 			};
-			buttonLootAll.OnClick += (evt, element) => ItemUtility.LootAll(Container.Handler, Main.LocalPlayer);
-			Append(buttonLootAll);
+			buttonLootAll.OnClick += args => ItemUtility.LootAll(Container.Handler, Main.LocalPlayer);
+			Add(buttonLootAll);
 
 			UIButton buttonDepositAll = new UIButton(PortableStorage.textureDepositAll)
 			{
 				Size = new Vector2(20),
-				Left = (28, 0),
+				X = { Pixels = 28 },
 				HoverText = Language.GetText("LegacyInterface.30")
 			};
-			buttonDepositAll.OnClick += (evt, element) => ItemUtility.DepositAll(Container.Handler, Main.LocalPlayer);
-			Append(buttonDepositAll);
+			buttonDepositAll.OnClick += args => ItemUtility.DepositAll(Container.Handler, Main.LocalPlayer);
+			Add(buttonDepositAll);
 
 			UITextButton buttonClose = new UITextButton("X")
 			{
 				Size = new Vector2(20),
-				Left = (-20, 1),
-				Padding = (0, 0, 0, 0),
+				X = { Percent = 100 },
+				Padding = BaseLibrary.UI.New.Padding.Zero,
 				RenderPanel = false
 			};
-			buttonClose.OnClick += (evt, element) => BaseLibrary.BaseLibrary.PanelGUI.UI.CloseUI(Container);
-			Append(buttonClose);
+			buttonClose.OnClick += args => PanelUI.Instance.CloseUI(Container);
+			Add(buttonClose);
 
 			UIGrid<UIContainerSlot> gridItems = new UIGrid<UIContainerSlot>(4)
 			{
-				Width = (0, 1),
-				Height = (-28, 1),
-				Top = (28, 0),
-				OverflowHidden = true,
+				Width = { Percent = 100 },
+				Height = { Pixels = -28, Percent = 100 },
+				Y = { Pixels = 28 },
 				ListPadding = Padding
 			};
-			Append(gridItems);
+			Add(gridItems);
 
 			for (int i = 0; i < Container.Handler.Slots; i++)
 			{
 				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i)
 				{
 					ShortStackSize = true,
-					Width = (SlotSize, 0),
-					Height = (SlotSize, 0)
+					Width = { Pixels = SlotSize },
+					Height = { Pixels = SlotSize }
 				};
 				gridItems.Add(slot);
 			}

@@ -1,5 +1,4 @@
-﻿using BaseLibrary;
-using BaseLibrary.UI.Elements;
+﻿using BaseLibrary.UI.New;
 using ContainerLibrary;
 using PortableStorage.Items.Normal;
 
@@ -7,27 +6,27 @@ namespace PortableStorage.UI
 {
 	public class BagPanel : BaseBagPanel<BaseNormalBag>
 	{
-		public override void OnInitialize()
+		public BagPanel(BaseNormalBag bag) : base(bag)
 		{
-			base.OnInitialize();
-
-			Width = (12 + (SlotSize + Padding) * 9, 0);
-			Height = (40 + (SlotSize + Padding) * Container.Handler.Slots / 9, 0);
-			this.Center();
+			Width.Pixels = 12 + (SlotSize + Padding) * 9;
+			Height.Pixels = 40 + (SlotSize + Padding) * Container.Handler.Slots / 9;
 
 			UIGrid<UIContainerSlot> gridItems = new UIGrid<UIContainerSlot>(9)
 			{
-				Width = (0, 1),
-				Height = (-28, 1),
-				Top = (28, 0),
-				OverflowHidden = true,
+				Width = { Percent = 100 },
+				Height = { Pixels = -28, Percent = 100 },
+				Y = { Pixels = 28 },
 				ListPadding = Padding
 			};
-			Append(gridItems);
+			Add(gridItems);
 
 			for (int i = 0; i < Container.Handler.Slots; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i) { Width = (SlotSize, 0), Height = (SlotSize, 0) };
+				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i)
+				{
+					Width = { Pixels = SlotSize },
+					Height = { Pixels = SlotSize }
+				};
 				gridItems.Add(slot);
 			}
 		}

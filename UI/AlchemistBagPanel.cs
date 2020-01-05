@@ -1,5 +1,4 @@
-﻿using BaseLibrary;
-using BaseLibrary.UI.Elements;
+﻿using BaseLibrary.UI.New;
 using ContainerLibrary;
 using PortableStorage.Items.Special;
 
@@ -7,55 +6,50 @@ namespace PortableStorage.UI
 {
 	public class AlchemistBagPanel : BaseBagPanel<AlchemistBag>
 	{
-		public override void OnInitialize()
+		public AlchemistBagPanel(AlchemistBag bag) : base(bag)
 		{
-			base.OnInitialize();
-
-			Width = (12 + (SlotSize + Padding) * 9, 0);
-			Height = (100 + (SlotSize + Padding) * Container.Handler.Slots / 9, 0);
-			this.Center();
+			Width.Pixels = 12 + (SlotSize + Padding) * 9;
+			Height.Pixels = 100 + (SlotSize + Padding) * Container.Handler.Slots / 9;
 
 			UIText textPotions = new UIText("Potions")
 			{
-				Top = (28, 0)
+				Y = { Pixels = 28 }
 			};
-			Append(textPotions);
+			Add(textPotions);
 
 			UIGrid<UIContainerSlot> gridItems = new UIGrid<UIContainerSlot>(9)
 			{
-				Width = (0, 1),
-				Height = (SlotSize * 2 + Padding, 0),
-				Top = (56, 0),
-				OverflowHidden = true,
+				Width = { Percent = 100 },
+				Height = { Pixels = SlotSize * 2 + Padding },
+				Y = { Pixels = 56 },
 				ListPadding = Padding
 			};
-			Append(gridItems);
+			Add(gridItems);
 
 			for (int i = 0; i < 18; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i) { Width = (SlotSize, 0), Height = (SlotSize, 0) };
+				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i) { Width = { Pixels = SlotSize }, Height = { Pixels = SlotSize } };
 				gridItems.Add(slot);
 			}
 
 			UIText textIngredients = new UIText("Ingredients")
 			{
-				Top = (56 + 8 + SlotSize * 2 + Padding, 0)
+				Y = { Pixels = 56 + 8 + SlotSize * 2 + Padding }
 			};
-			Append(textIngredients);
+			Add(textIngredients);
 
 			UIGrid<UIContainerSlot> gridIngredients = new UIGrid<UIContainerSlot>(9)
 			{
-				Width = (0, 1),
-				Height = ((SlotSize + Padding) * 7 - Padding, 0),
-				Top = (56 + 8 + 20 + 8 + SlotSize * 2 + Padding, 0),
-				OverflowHidden = true,
+				Width = { Percent = 100 },
+				Height = { Pixels = (SlotSize + Padding) * 7 - Padding },
+				Y = { Pixels = 56 + 8 + 20 + 8 + SlotSize * 2 + Padding },
 				ListPadding = Padding
 			};
-			Append(gridIngredients);
+			Add(gridIngredients);
 
 			for (int i = 18; i < 81; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i) { Width = (SlotSize, 0), Height = (SlotSize, 0) };
+				UIContainerSlot slot = new UIContainerSlot(() => Container.Handler, i) { Width = { Pixels = SlotSize }, Height = { Pixels = SlotSize } };
 				gridIngredients.Add(slot);
 			}
 		}

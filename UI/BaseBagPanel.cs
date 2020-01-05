@@ -1,6 +1,5 @@
 ﻿using BaseLibrary;
-using BaseLibrary.UI;
-using BaseLibrary.UI.Elements;
+using BaseLibrary.UI.New;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.Items;
@@ -29,50 +28,50 @@ namespace PortableStorage.UI
 
 		protected UIButton buttonQuickStack;
 
-		public override void OnInitialize()
+		public BaseBagPanel(BaseBag bag) : base((T)bag)
 		{
 			UIText textLabel = new UIText(Container.DisplayName.GetTranslation())
 			{
-				HAlign = 0.5f,
+				X = { Percent = 50 },
 				HorizontalAlignment = HorizontalAlignment.Center
 			};
-			Append(textLabel);
+			Add(textLabel);
 
 			UIButton buttonLootAll = new UIButton(PortableStorage.textureLootAll)
 			{
 				Size = new Vector2(20),
 				HoverText = Language.GetText("LegacyInterface.29")
 			};
-			buttonLootAll.OnClick += (evt, element) => ItemUtility.LootAll(Container.Handler, Main.LocalPlayer);
-			Append(buttonLootAll);
+			buttonLootAll.OnClick += args => ItemUtility.LootAll(Container.Handler, Main.LocalPlayer);
+			Add(buttonLootAll);
 
 			UIButton buttonDepositAll = new UIButton(PortableStorage.textureDepositAll)
 			{
 				Size = new Vector2(20),
-				Left = (28, 0),
+				X = { Pixels = 28 },
 				HoverText = Language.GetText("LegacyInterface.30")
 			};
-			buttonDepositAll.OnClick += (evt, element) => ItemUtility.DepositAll(Container.Handler, Main.LocalPlayer);
-			Append(buttonDepositAll);
+			buttonDepositAll.OnClick += args => ItemUtility.DepositAll(Container.Handler, Main.LocalPlayer);
+			Add(buttonDepositAll);
 
 			buttonQuickStack = new UIButton(PortableStorage.textureQuickStack)
 			{
 				Size = new Vector2(20),
-				Left = (56, 0),
+				X = { Pixels = 56 },
 				HoverText = Language.GetText("LegacyInterface.31")
 			};
-			buttonQuickStack.OnClick += (evt, element) => ItemUtility.QuickStack(Container.Handler, Main.LocalPlayer);
-			Append(buttonQuickStack);
+			buttonQuickStack.OnClick += args => ItemUtility.QuickStack(Container.Handler, Main.LocalPlayer);
+			Add(buttonQuickStack);
 
 			UITextButton buttonClose = new UITextButton("X")
 			{
 				Size = new Vector2(20),
-				Left = (-20, 1),
-				Padding = (0, 0, 0, 0),
+				X = { Percent = 100 },
+				Padding = BaseLibrary.UI.New.Padding.Zero,
 				RenderPanel = false
 			};
-			buttonClose.OnClick += (evt, element) => BaseLibrary.BaseLibrary.PanelGUI.UI.CloseUI(Container);
-			Append(buttonClose);
+			buttonClose.OnClick += args => PanelUI.Instance.CloseUI(Container);
+			Add(buttonClose);
 		}
 	}
 }
