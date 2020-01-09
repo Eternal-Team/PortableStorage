@@ -22,7 +22,11 @@ namespace PortableStorage.Items.Special
 		public BuilderReserve()
 		{
 			Handler = new ItemHandler(9);
-			Handler.OnContentsChanged += slot => item.SyncBag();
+			Handler.OnContentsChanged += slot =>
+			{
+				Recipe.FindRecipes();
+				item.SyncBag();
+			};
 			Handler.IsItemValid += (slot, item) => (item.createTile >= 0 || item.createWall >= 0) && (Handler.GetItemInSlot(slot).type == item.type || !Handler.Contains(item.type));
 			Handler.GetSlotLimit += slot => int.MaxValue;
 

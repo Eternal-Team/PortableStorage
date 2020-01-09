@@ -1,5 +1,6 @@
 ﻿using ContainerLibrary;
 using System.Collections.Generic;
+using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -13,7 +14,11 @@ namespace PortableStorage.Items.Special
 		public AlchemistBag()
 		{
 			Handler = new ItemHandler(81);
-			Handler.OnContentsChanged += slot => item.SyncBag();
+			Handler.OnContentsChanged += slot =>
+			{
+				Recipe.FindRecipes();
+				item.SyncBag();
+			};
 			Handler.IsItemValid += (slot, item) =>
 			{
 				if (slot < 18)

@@ -22,7 +22,11 @@ namespace PortableStorage.Items.Special
 		public GardenerSatchel()
 		{
 			Handler = new ItemHandler(18);
-			Handler.OnContentsChanged += slot => item.SyncBag();
+			Handler.OnContentsChanged += slot =>
+			{
+				Recipe.FindRecipes();
+				item.SyncBag();
+			};
 			Handler.IsItemValid += (slot, item) => Utility.SeedWhitelist.Contains(item.type) && (Handler.GetItemInSlot(slot).type == item.type || !Handler.Contains(item.type));
 			Handler.GetSlotLimit += slot => int.MaxValue;
 

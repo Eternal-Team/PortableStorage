@@ -1,4 +1,5 @@
 ﻿using ContainerLibrary;
+using Terraria;
 using Terraria.ID;
 
 namespace PortableStorage.Items.Special
@@ -10,7 +11,11 @@ namespace PortableStorage.Items.Special
 		public MinersBackpack()
 		{
 			Handler = new ItemHandler(18);
-			Handler.OnContentsChanged += slot => item.SyncBag();
+			Handler.OnContentsChanged += slot =>
+			{
+				Recipe.FindRecipes();
+				item.SyncBag();
+			};
 			Handler.IsItemValid += (slot, item) => Utility.OreWhitelist.Contains(item.type) || Utility.ExplosiveWhitelist.Contains(item.type);
 		}
 

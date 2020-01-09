@@ -1,4 +1,5 @@
 ﻿using ContainerLibrary;
+using Terraria;
 using Terraria.ID;
 
 namespace PortableStorage.Items.Special
@@ -10,7 +11,11 @@ namespace PortableStorage.Items.Special
 		public FishingBelt()
 		{
 			Handler = new ItemHandler(18);
-			Handler.OnContentsChanged += slot => item.SyncBag();
+			Handler.OnContentsChanged += slot =>
+			{
+				Recipe.FindRecipes();
+				item.SyncBag();
+			};
 			Handler.IsItemValid += (slot, item) => item.fishingPole > 0 || item.bait > 0 || Utility.FishingWhitelist.Contains(item.type);
 		}
 

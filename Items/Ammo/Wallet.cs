@@ -26,6 +26,7 @@ namespace PortableStorage.Items.Ammo
 
 				for (int i = 0; i < Handler.Slots; i++) Handler.SetItemInSlot(i, coins[i]);
 
+				Recipe.FindRecipes();
 				item.SyncBag();
 			}
 		}
@@ -33,7 +34,11 @@ namespace PortableStorage.Items.Ammo
 		public Wallet()
 		{
 			Handler = new ItemHandler(4);
-			Handler.OnContentsChanged += slot => item.SyncBag();
+			Handler.OnContentsChanged += slot =>
+			{
+				Recipe.FindRecipes();
+				item.SyncBag();
+			};
 			Handler.IsItemValid += (slot, item) => item.type == ItemID.PlatinumCoin - slot;
 			Handler.GetSlotLimit += slot => int.MaxValue;
 		}

@@ -13,7 +13,11 @@ namespace PortableStorage.Items.Special
 		public NinjaArsenalBelt()
 		{
 			Handler = new ItemHandler(9);
-			Handler.OnContentsChanged += slot => item.SyncBag();
+			Handler.OnContentsChanged += slot =>
+			{
+				Recipe.FindRecipes();
+				item.SyncBag();
+			};
 			Handler.IsItemValid += (slot, item) => item.thrown;
 		}
 

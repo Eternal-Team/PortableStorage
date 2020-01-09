@@ -1,5 +1,6 @@
 ﻿using ContainerLibrary;
 using System.Linq;
+using Terraria;
 
 namespace PortableStorage.Items.Ammo
 {
@@ -10,7 +11,11 @@ namespace PortableStorage.Items.Ammo
 		public BaseAmmoBag()
 		{
 			Handler = new ItemHandler(9);
-			Handler.OnContentsChanged += slot => item.SyncBag();
+			Handler.OnContentsChanged += slot =>
+			{
+				Recipe.FindRecipes();
+				item.SyncBag();
+			};
 			Handler.IsItemValid += (slot, item) => Utility.Ammos[AmmoType].Values.SelectMany(x => x).Contains(item.type);
 		}
 	}
