@@ -1,5 +1,5 @@
 ﻿using BaseLibrary;
-using BaseLibrary.UI.New;
+using BaseLibrary.UI;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.Items;
@@ -67,7 +67,7 @@ namespace PortableStorage.UI
 			{
 				Size = new Vector2(20),
 				X = { Percent = 100 },
-				Padding = BaseLibrary.UI.New.Padding.Zero,
+				Padding = BaseLibrary.UI.Padding.Zero,
 				RenderPanel = false
 			};
 			buttonClose.OnClick += args => PanelUI.Instance.CloseUI(Container);

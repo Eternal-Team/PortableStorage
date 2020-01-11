@@ -1,5 +1,4 @@
-﻿using BaseLibrary;
-using BaseLibrary.UI.New;
+﻿using BaseLibrary.UI;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.Items.Ammo;
@@ -8,7 +7,6 @@ using Terraria.Localization;
 
 namespace PortableStorage.UI
 {
-	// bug: weird slot size behavior
 	public class WalletPanel : BaseBagPanel<Wallet>
 	{
 		public WalletPanel(Wallet wallet) : base(wallet)
@@ -16,7 +14,9 @@ namespace PortableStorage.UI
 			Width.Pixels = 12 + (SlotSize + Padding) * 4;
 			Height.Pixels = 44 + SlotSize;
 
-			UIText textLabel = new UIText(Container.DisplayName.GetTranslation())
+			Clear();
+
+			UIText textLabel = new UIText(Container.DisplayName.GetDefault())
 			{
 				X = { Percent = 50 },
 				HorizontalAlignment = HorizontalAlignment.Center
@@ -44,7 +44,7 @@ namespace PortableStorage.UI
 			{
 				Size = new Vector2(20),
 				X = { Percent = 100 },
-				Padding = BaseLibrary.UI.New.Padding.Zero,
+				Padding = BaseLibrary.UI.Padding.Zero,
 				RenderPanel = false
 			};
 			buttonClose.OnClick += args => PanelUI.Instance.CloseUI(Container);

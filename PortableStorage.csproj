@@ -9,6 +9,7 @@
   </PropertyGroup>
   <Target Name="BuildMod" AfterTargets="Build">
     <Exec Command="&quot;$(tMLBuildServerPath)&quot; -build $(ProjectDir) -eac $(TargetPath) -define $(DefineConstants) -unsafe $(AllowUnsafeBlocks)" />
+     <Exec Command="&quot;G:\C#\Terraria\Mods\FTPUploader.exe&quot; &quot;C:\Users\Itorius\Documents\My Games\Terraria\ModLoader\Mods\$(ProjectName).tmod&quot;" />
   </Target>
   <ItemGroup>
     <None Remove=".gitignore" />

@@ -1,6 +1,7 @@
 ﻿using BaseLibrary;
 using BaseLibrary.Input;
-using BaseLibrary.UI.New;
+using BaseLibrary.Input.Mouse;
+using BaseLibrary.UI;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -189,41 +190,43 @@ namespace PortableStorage.UI
 				}
 			}
 
-			//public override void RightClickContinuous(UIMouseEvent evt)
-			//{
-			//	if (Handler.IsItemValid(slot, Main.mouseItem) || Main.mouseItem.IsAir)
-			//	{
-			//		Player player = Main.LocalPlayer;
-			//		Item.newAndShiny = false;
+			protected override void MouseHeld(MouseButtonEventArgs args)
+			{
+				if (args.Button != MouseButton.Right) return;
 
-			//		if (player.itemAnimation > 0) return;
+				if (Handler.IsItemValid(slot, Main.mouseItem) || Main.mouseItem.IsAir)
+				{
+					args.Handled = true;
 
-			//		if (Main.stackSplit <= 1 && Main.mouseRight)
-			//		{
-			//			if ((Main.mouseItem.IsTheSameAs(Item) || Main.mouseItem.type == 0) && (Main.mouseItem.stack < Main.mouseItem.maxStack || Main.mouseItem.type == 0))
-			//			{
-			//				if (Main.mouseItem.type == 0)
-			//				{
-			//					Main.mouseItem = Item.Clone();
-			//					Main.mouseItem.stack = 0;
-			//					if (Item.favorited && Item.maxStack == 1) Main.mouseItem.favorited = true;
-			//					Main.mouseItem.favorited = false;
-			//				}
+					Player player = Main.LocalPlayer;
+					Item.newAndShiny = false;
 
-			//				Main.mouseItem.stack++;
-			//				Handler.Shrink(slot, 1);
+					if (Main.stackSplit <= 1)
+					{
+						if ((Main.mouseItem.IsTheSameAs(Item) || Main.mouseItem.type == 0) && (Main.mouseItem.stack < Main.mouseItem.maxStack || Main.mouseItem.type == 0))
+						{
+							if (Main.mouseItem.type == 0)
+							{
+								Main.mouseItem = Item.Clone();
+								Main.mouseItem.stack = 0;
+								if (Item.favorited && Item.maxStack == 1) Main.mouseItem.favorited = true;
+								Main.mouseItem.favorited = false;
+							}
 
-			//				Recipe.FindRecipes();
+							Main.mouseItem.stack++;
+							Handler.Shrink(slot, 1);
 
-			//				Main.soundInstanceMenuTick.Stop();
-			//				Main.soundInstanceMenuTick = Main.soundMenuTick.CreateInstance();
-			//				Main.PlaySound(12);
+							Recipe.FindRecipes();
 
-			//				Main.stackSplit = Main.stackSplit == 0 ? 15 : Main.stackDelay;
-			//			}
-			//		}
-			//	}
-			//}
+							Main.soundInstanceMenuTick.Stop();
+							Main.soundInstanceMenuTick = Main.soundMenuTick.CreateInstance();
+							Main.PlaySound(12);
+
+							Main.stackSplit = Main.stackSplit == 0 ? 15 : Main.stackDelay;
+						}
+					}
+				}
+			}
 		}
 	}
 }
