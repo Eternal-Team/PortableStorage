@@ -11,7 +11,7 @@ namespace PortableStorage.UI
 	{
 		public WalletPanel(Wallet wallet) : base(wallet)
 		{
-			Width.Pixels = 12 + (SlotSize + Padding) * 4;
+			Width.Pixels = 12 + (SlotSize + SlotMargin) * 4;
 			Height.Pixels = 44 + SlotSize;
 
 			Clear();
@@ -44,7 +44,7 @@ namespace PortableStorage.UI
 			{
 				Size = new Vector2(20),
 				X = { Percent = 100 },
-				Padding = BaseLibrary.UI.Padding.Zero,
+				Padding = Padding.Zero,
 				RenderPanel = false
 			};
 			buttonClose.OnClick += args => PanelUI.Instance.CloseUI(Container);
@@ -55,7 +55,7 @@ namespace PortableStorage.UI
 				Width = { Percent = 100 },
 				Height = { Pixels = -28, Percent = 100 },
 				Y = { Pixels = 28 },
-				ListPadding = Padding
+				ItemMargin = SlotMargin
 			};
 			Add(gridItems);
 

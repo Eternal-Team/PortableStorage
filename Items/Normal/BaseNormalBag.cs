@@ -12,7 +12,7 @@ namespace PortableStorage.Items.Normal
 		public BaseNormalBag()
 		{
 			Handler = new ItemHandler(SlotCount);
-			Handler.OnContentsChanged += slot =>
+			Handler.OnContentsChanged += (slot, user) =>
 			{
 				Recipe.FindRecipes();
 				item.SyncBag();

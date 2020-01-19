@@ -22,15 +22,15 @@ namespace PortableStorage.UI
 	{
 		public BuilderReservePanel(BuilderReserve bag) : base(bag)
 		{
-			Width.Pixels = 12 + (SlotSize + Padding) * 9;
-			Height.Pixels = 40 + (SlotSize + Padding) * Container.Handler.Slots / 9;
+			Width.Pixels = 12 + (SlotSize + SlotMargin) * 9;
+			Height.Pixels = 40 + (SlotSize + SlotMargin) * Container.Handler.Slots / 9;
 
 			UIGrid<UIBuilderReserveSlot> gridItems = new UIGrid<UIBuilderReserveSlot>(9)
 			{
 				Width = { Percent = 100 },
 				Height = { Pixels = -28, Percent = 100 },
 				Y = { Pixels = 28 },
-				ListPadding = Padding
+				ItemMargin = SlotMargin
 			};
 			Add(gridItems);
 

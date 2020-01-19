@@ -34,7 +34,7 @@ namespace PortableStorage.Items.Ammo
 		public Wallet()
 		{
 			Handler = new ItemHandler(4);
-			Handler.OnContentsChanged += slot =>
+			Handler.OnContentsChanged += (slot, user) =>
 			{
 				Recipe.FindRecipes();
 				item.SyncBag();

@@ -8,8 +8,8 @@ namespace PortableStorage.UI
 	{
 		public AlchemistBagPanel(AlchemistBag bag) : base(bag)
 		{
-			Width.Pixels = 12 + (SlotSize + Padding) * 9;
-			Height.Pixels = 100 + (SlotSize + Padding) * Container.Handler.Slots / 9;
+			Width.Pixels = 12 + (SlotSize + SlotMargin) * 9;
+			Height.Pixels = 100 + (SlotSize + SlotMargin) * Container.Handler.Slots / 9;
 
 			UIText textPotions = new UIText("Potions")
 			{
@@ -20,9 +20,9 @@ namespace PortableStorage.UI
 			UIGrid<UIContainerSlot> gridItems = new UIGrid<UIContainerSlot>(9)
 			{
 				Width = { Percent = 100 },
-				Height = { Pixels = SlotSize * 2 + Padding },
+				Height = { Pixels = SlotSize * 2 + SlotMargin },
 				Y = { Pixels = 56 },
-				ListPadding = Padding
+				ItemMargin = SlotMargin
 			};
 			Add(gridItems);
 
@@ -34,16 +34,16 @@ namespace PortableStorage.UI
 
 			UIText textIngredients = new UIText("Ingredients")
 			{
-				Y = { Pixels = 56 + 8 + SlotSize * 2 + Padding }
+				Y = { Pixels = 56 + 8 + SlotSize * 2 + SlotMargin }
 			};
 			Add(textIngredients);
 
 			UIGrid<UIContainerSlot> gridIngredients = new UIGrid<UIContainerSlot>(9)
 			{
 				Width = { Percent = 100 },
-				Height = { Pixels = (SlotSize + Padding) * 7 - Padding },
-				Y = { Pixels = 56 + 8 + 20 + 8 + SlotSize * 2 + Padding },
-				ListPadding = Padding
+				Height = { Pixels = (SlotSize + SlotMargin) * 7 - SlotMargin },
+				Y = { Pixels = 56 + 8 + 20 + 8 + SlotSize * 2 + SlotMargin },
+				ItemMargin = SlotMargin
 			};
 			Add(gridIngredients);
 

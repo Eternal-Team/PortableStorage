@@ -17,9 +17,6 @@ namespace PortableStorage.UI
 
 	public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IBagPanel, IItemHandlerUI where T : BaseBag
 	{
-		protected const int SlotSize = 44;
-		protected new const int Padding = 4;
-
 		public Guid UUID { get; set; }
 
 		public ItemHandler Handler => Container.Handler;
@@ -67,7 +64,7 @@ namespace PortableStorage.UI
 			{
 				Size = new Vector2(20),
 				X = { Percent = 100 },
-				Padding = BaseLibrary.UI.Padding.Zero,
+				Padding = Padding.Zero,
 				RenderPanel = false
 			};
 			buttonClose.OnClick += args => PanelUI.Instance.CloseUI(Container);

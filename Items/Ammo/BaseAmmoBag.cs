@@ -11,7 +11,7 @@ namespace PortableStorage.Items.Ammo
 		public BaseAmmoBag()
 		{
 			Handler = new ItemHandler(9);
-			Handler.OnContentsChanged += slot =>
+			Handler.OnContentsChanged += (slot, user) =>
 			{
 				Recipe.FindRecipes();
 				item.SyncBag();

@@ -1,7 +1,7 @@
 ﻿author = Itorius, orian34 & team
 version = 2.2.3
 displayName = Portable Storage
-homepage = http://forums.terraria.org/index.php?threads/itorius-mods.42289/
+homepage = https://terraria.itorius.com
 hideCode = false
 hideResources = false
 includeSource = false

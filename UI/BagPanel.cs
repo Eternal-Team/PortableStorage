@@ -8,15 +8,15 @@ namespace PortableStorage.UI
 	{
 		public BagPanel(BaseNormalBag bag) : base(bag)
 		{
-			Width.Pixels = 12 + (SlotSize + Padding) * 9;
-			Height.Pixels = 40 + (SlotSize + Padding) * Container.Handler.Slots / 9;
+			Width.Pixels = 12 + (SlotSize + SlotMargin) * 9;
+			Height.Pixels = 40 + (SlotSize + SlotMargin) * Container.Handler.Slots / 9;
 
 			UIGrid<UIContainerSlot> gridItems = new UIGrid<UIContainerSlot>(9)
 			{
 				Width = { Percent = 100 },
 				Height = { Pixels = -28, Percent = 100 },
 				Y = { Pixels = 28 },
-				ListPadding = Padding
+				ItemMargin = SlotMargin
 			};
 			Add(gridItems);
 

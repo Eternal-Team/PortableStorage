@@ -14,7 +14,7 @@ namespace PortableStorage.Items.Special
 		public AlchemistBag()
 		{
 			Handler = new ItemHandler(81);
-			Handler.OnContentsChanged += slot =>
+			Handler.OnContentsChanged += (slot, user) =>
 			{
 				Recipe.FindRecipes();
 				item.SyncBag();
@@ -26,11 +26,23 @@ namespace PortableStorage.Items.Special
 					return
 						(item.potion && item.healLife > 0 ||
 						 item.healMana > 0 && !item.potion ||
-						 item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph) && item.type != ItemID.NebulaPickup1 && item.type != ItemID.NebulaPickup2 && item.type != ItemID.NebulaPickup3;
+						 item.buffType > 0 && !item.summon && item.buffType != BuffID.Rudolph) && !ItemID.Sets.NebulaPickup[item.type] && !IsPetItem(item);
 				}
 
 				return Utility.AlchemistBagWhitelist.Contains(item.type);
 			};
+		}
+
+		private static bool IsPetItem(Item item)
+		{
+			bool checkItem = item.type > 0 && item.shoot > 0;
+			bool checkBuff = item.buffType > 0 && item.buffType < Main.vanityPet.Length;
+			if (checkItem)
+			{
+				checkBuff = Main.vanityPet[item.buffType] || Main.lightPet[item.buffType];
+			}
+
+			return checkItem && checkBuff;
 		}
 
 		public override void AddRecipes()

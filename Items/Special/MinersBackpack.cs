@@ -11,7 +11,7 @@ namespace PortableStorage.Items.Special
 		public MinersBackpack()
 		{
 			Handler = new ItemHandler(18);
-			Handler.OnContentsChanged += slot =>
+			Handler.OnContentsChanged += (slot, user) =>
 			{
 				Recipe.FindRecipes();
 				item.SyncBag();

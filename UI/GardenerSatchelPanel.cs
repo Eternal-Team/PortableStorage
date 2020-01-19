@@ -22,7 +22,7 @@ namespace PortableStorage.UI
 	{
 		public GardenerSatchelPanel(GardenerSatchel bag) : base(bag)
 		{
-			Width.Pixels = 12 + (SlotSize + Padding) * 9;
+			Width.Pixels = 12 + (SlotSize + SlotMargin) * 9;
 			Height.Pixels = 44 + SlotSize;
 
 			UIGrid<UIGardenerSatchelSlot> gridItems = new UIGrid<UIGardenerSatchelSlot>(9)
@@ -30,7 +30,7 @@ namespace PortableStorage.UI
 				Width = { Percent = 100 },
 				Height = { Pixels = -28, Percent = 100 },
 				Y = { Pixels = 28 },
-				ListPadding = Padding
+				ItemMargin = SlotMargin
 			};
 			Add(gridItems);
 
@@ -195,8 +195,7 @@ namespace PortableStorage.UI
 
 			protected override void MouseHeld(MouseButtonEventArgs args)
 			{
-				if (args.Button != MouseButton.Right)
-					return;
+				if (args.Button != MouseButton.Right) return;
 
 				if (Handler.IsItemValid(slot, Main.mouseItem) || Main.mouseItem.IsAir)
 				{
@@ -213,8 +212,7 @@ namespace PortableStorage.UI
 							{
 								Main.mouseItem = Item.Clone();
 								Main.mouseItem.stack = 0;
-								if (Item.favorited && Item.maxStack == 1)
-									Main.mouseItem.favorited = true;
+								if (Item.favorited && Item.maxStack == 1) Main.mouseItem.favorited = true;
 								Main.mouseItem.favorited = false;
 							}
 
