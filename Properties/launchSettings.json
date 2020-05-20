@@ -1,10 +1,7 @@
 {
   "profiles": {
     "Start": {
-      "commandName": "Executable",
-      "executablePath": "$(tMLPath)",
-      "workingDirectory": "$(TerrariaSteamPath)",
-      "ErrorString": "JsonToken EndConstructor is not valid for closing JsonType Object. Path 'profiles.Terraria', line 7, position 49."
+      "commandName": "Project"
     }
   }
 }

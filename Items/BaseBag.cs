@@ -48,6 +48,17 @@ namespace PortableStorage.Items
 			return clone;
 		}
 
+		public override ModItem NewInstance(Item itemClone)
+		{
+			ModItem copy = (ModItem)Activator.CreateInstance(GetType());
+			copy.SetValue("item", itemClone);
+			copy.SetValue("mod", mod);
+			copy.SetValue("Name", Name);
+			copy.SetValue("DisplayName", DisplayName);
+			copy.SetValue("Tooltip", Tooltip);
+			return copy;
+		}
+		
 		public override bool ConsumeItem(Player player) => false;
 
 		public override void Load(TagCompound tag)
@@ -73,16 +84,7 @@ namespace PortableStorage.Items
 			Handler.Write(writer);
 		}
 
-		public override ModItem NewInstance(Item itemClone)
-		{
-			ModItem copy = (ModItem)Activator.CreateInstance(GetType());
-			copy.SetValue("item", itemClone);
-			copy.SetValue("mod", mod);
-			copy.SetValue("Name", Name);
-			copy.SetValue("DisplayName", DisplayName);
-			copy.SetValue("Tooltip", Tooltip);
-			return copy;
-		}
+		
 
 		public override void RightClick(Player player)
 		{

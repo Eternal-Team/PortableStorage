@@ -278,28 +278,28 @@ namespace PortableStorage
 			if (cursor.TryGotoNext(i => i.MatchNewobj(typeof(Item).GetConstructors()[0]), i => i.MatchStloc(0)))
 			{
 				cursor.Index += 2;
-
+			
 				cursor.Emit(OpCodes.Ldarg, 0);
 				cursor.Emit(OpCodes.Ldarg, 1);
 				cursor.EmitDelegate<Func<Player, Item, Item>>((player, sItem) => player.inventory.OfType<BaseAmmoBag>().SelectMany(bag => bag.Handler.Items).FirstOrDefault(ammo => ammo.ammo == sItem.useAmmo && ammo.stack > 0));
 				cursor.Emit(OpCodes.Stloc, firstAmmoIndex);
-
+			
 				cursor.Emit(OpCodes.Ldloc, firstAmmoIndex);
 				cursor.Emit(OpCodes.Brfalse, elseLabel);
-
+			
 				cursor.Emit(OpCodes.Ldloc, firstAmmoIndex);
 				cursor.Emit(OpCodes.Stloc, 0);
-
+			
 				cursor.Emit(OpCodes.Ldarg, 4);
 				cursor.Emit(OpCodes.Ldc_I4, 1);
 				cursor.Emit(OpCodes.Stind_I1);
-
+			
 				cursor.Emit(OpCodes.Br, endLabel);
 			}
 
 			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(1), i => i.MatchLdcI4(54))) cursor.MarkLabel(elseLabel);
 
-			if (cursor.TryGotoNext(i => i.MatchLdarg(4), i => i.MatchLdindU1(), i => i.MatchBrfalse(out _))) cursor.MarkLabel(endLabel);
+			if (cursor.TryGotoNext(i => i.MatchLdarg(4), i => i.MatchLdindU1(), i => i.MatchBrtrue(out _))) cursor.MarkLabel(endLabel);
 		}
 		#endregion
 
