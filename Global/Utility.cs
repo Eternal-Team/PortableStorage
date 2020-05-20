@@ -115,6 +115,7 @@ namespace PortableStorage
 				ItemID.TitaniumOre,
 				ItemID.PalladiumOre,
 				ItemID.Hellstone,
+				ItemID.Meteorite,
 
 				ItemID.Amber,
 				ItemID.Amethyst,
