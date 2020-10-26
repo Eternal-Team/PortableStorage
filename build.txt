@@ -1,5 +1,5 @@
 author = Itorius, orian34 & team
-version = 3.0.0
+version = 3.0
 displayName = Portable Storage
 homepage = https://terraria.itorius.com/
 hideCode = false
@@ -7,3 +7,4 @@ hideResources = false
 includeSource = false
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, .git\*, .editorconfig, .gitignore, *.sln, *.md
 includePDB = true
+modReferences = BaseLibrary
