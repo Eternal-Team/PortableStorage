@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace PortableStorage.Items
+namespace PortableStorage
 {
 	internal class DragableUIPanel : UIPanel
 	{
