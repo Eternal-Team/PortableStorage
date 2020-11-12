@@ -25,6 +25,16 @@ namespace PortableStorage
 			}
 		}
 
+		public override void PostSetupContent()
+		{
+			Utility.PostSetupContent();
+		}
+
+		public override void AddRecipeGroups()
+		{
+			Utility.AddRecipeGroups();
+		}
+
 		public override void UpdateUI(GameTime gameTime)
 		{
 			if (bagState.Visible) bagUI.Update(gameTime);
