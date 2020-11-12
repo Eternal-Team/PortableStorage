@@ -17,6 +17,8 @@ namespace PortableStorage
 
 		public override void Load()
 		{
+			Hooking.Hooking.Load();
+			
 			if (!Main.dedServ)
 			{
 				bagState = new NormalBagUI();

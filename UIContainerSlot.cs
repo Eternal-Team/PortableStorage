@@ -43,7 +43,7 @@ namespace PortableStorage
 
 		public override void Click(UIMouseEvent evt)
 		{
-			if (Handler.IsItemValid(slot, Main.mouseItem))
+			if (Main.mouseItem.IsAir || Handler.IsItemValid(slot, Main.mouseItem))
 			{
 				// args.Handled = true;
 
