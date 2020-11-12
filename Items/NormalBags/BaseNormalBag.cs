@@ -1,10 +1,11 @@
-﻿using Terraria;
+﻿using BaseLibrary;
+using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Container;
 
 namespace PortableStorage.Items
 {
-	public abstract class BaseNormalBag : BaseBag
+	public abstract class BaseNormalBag : BaseBag, ICraftingStorage
 	{
 		private class NormalBagHandler : ItemHandler
 		{
@@ -41,5 +42,7 @@ namespace PortableStorage.Items
 			item.width = 26;
 			item.height = 34;
 		}
+
+		public ItemHandler GetItemHandlerForCrafting() => Handler;
 	}
 }

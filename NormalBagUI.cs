@@ -26,7 +26,10 @@ namespace PortableStorage
 			exit.Width.Set(30f, 0f);
 			exit.Height.Set(30f, 0f);
 			exit.HAlign = 1f;
-			exit.OnClick += (evt, element) => { bag = null; };
+			exit.OnClick += (evt, element) =>
+			{
+				bag = null;
+			};
 			panel.Append(exit);
 
 			for (int i = 0; i < bag.Handler.Slots; i++)
