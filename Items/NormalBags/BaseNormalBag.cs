@@ -11,9 +11,8 @@ namespace PortableStorage.Items
 		{
 			public NormalBagHandler(int slots) : base(slots)
 			{
-				
 			}
-			
+
 			public override void OnContentsChanged(int slot, bool user)
 			{
 				Recipe.FindRecipes();
@@ -31,7 +30,7 @@ namespace PortableStorage.Items
 		public override void OnCreate(ItemCreationContext context)
 		{
 			base.OnCreate(context);
-			
+
 			Handler = new NormalBagHandler(SlotCount);
 		}
 

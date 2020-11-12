@@ -40,8 +40,8 @@ namespace PortableStorage.Items
 		{
 			item.stack++;
 
-			if (ModContent.GetInstance<PortableStorage>().bagState.bag == this) ModContent.GetInstance<PortableStorage>().bagState.bag = null;
-			else ModContent.GetInstance<PortableStorage>().bagState.Open(this);
+			if (PortableStorage.Instance.bagState.bag == this) PortableStorage.Instance.bagState.bag = null;
+			else PortableStorage.Instance.bagState.Open(this);
 		}
 
 		public override TagCompound Save() => new TagCompound

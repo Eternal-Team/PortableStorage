@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using PortableStorage.Items;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -9,6 +8,10 @@ namespace PortableStorage
 {
 	public class PortableStorage : Mod
 	{
+		public const string AssetPath = "PortableStorage/Assets/";
+
+		public static PortableStorage Instance => ModContent.GetInstance<PortableStorage>();
+
 		public NormalBagUI bagState;
 		private UserInterface bagUI;
 

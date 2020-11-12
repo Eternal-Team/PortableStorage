@@ -1,9 +1,12 @@
-﻿using Terraria.ID;
+﻿using Terraria;
+using Terraria.ID;
 
 namespace PortableStorage.Items
 {
 	public class CapillaryBag : BaseNormalBag
 	{
+		public override string Texture => PortableStorage.AssetPath + "Textures/Items/CapillaryBag";
+
 		protected override int SlotCount => 54;
 
 		public override void SetDefaults()
@@ -11,9 +14,9 @@ namespace PortableStorage.Items
 			base.SetDefaults();
 
 			item.width = 26;
-			item.height = 32;
+			item.height = 30;
 			item.rare = ItemRarityID.Lime;
-			item.value = 150000 * 5;
+			item.value = Item.sellPrice(gold: 15);
 		}
 
 		public override void AddRecipes()
