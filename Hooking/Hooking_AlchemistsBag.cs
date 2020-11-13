@@ -5,7 +5,10 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using PortableStorage.Items.SpecialBags;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
+using Terraria.ModLoader;
+using Terraria.ModLoader.Container;
 
 namespace PortableStorage.Hooking
 {
@@ -167,70 +170,83 @@ namespace PortableStorage.Hooking
 		// 		cursor.EmitDelegate<QuickHealDelegate>(QuickHeal);
 		// 	}
 		// }
-		//
-		// private static void Player_QuickMana(ILContext il)
-		// {
-		// 	ILCursor cursor = new ILCursor(il);
-		// 	ILLabel label = cursor.DefineLabel();
-		//
-		// 	if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdcI4(0), i => i.MatchStloc(0)))
-		// 	{
-		// 		cursor.Emit(OpCodes.Ldarg, 0);
-		//
-		// 		cursor.EmitDelegate<Func<Player, bool>>(player =>
-		// 		{
-		// 			if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickMana) return false;
-		//
-		// 			foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
-		// 			{
-		// 				if (item.stack > 0 && item.type > 0 && item.healMana > 0 && (player.potionDelay == 0 || !item.potion) && ItemLoader.CanUseItem(item, player))
-		// 				{
-		// 					Main.PlaySound(item.UseSound, player.position);
-		// 					if (item.potion)
-		// 					{
-		// 						if (item.type == ItemID.RestorationPotion)
-		// 						{
-		// 							player.potionDelay = player.restorationDelayTime;
-		// 							player.AddBuff(BuffID.PotionSickness, player.potionDelay);
-		// 						}
-		// 						else
-		// 						{
-		// 							player.potionDelay = player.potionDelayTime;
-		// 							player.AddBuff(BuffID.PotionSickness, player.potionDelay);
-		// 						}
-		// 					}
-		//
-		// 					ItemLoader.UseItem(item, player);
-		// 					int healLife = player.GetHealLife(item, true);
-		// 					int healMana = player.GetHealMana(item, true);
-		// 					player.statLife += healLife;
-		// 					player.statMana += healMana;
-		// 					if (player.statLife > player.statLifeMax2) player.statLife = player.statLifeMax2;
-		// 					if (player.statMana > player.statManaMax2) player.statMana = player.statManaMax2;
-		// 					if (healLife > 0 && Main.myPlayer == player.whoAmI) player.HealEffect(healLife);
-		// 					if (healMana > 0)
-		// 					{
-		// 						player.AddBuff(BuffID.ManaSickness, Player.manaSickTime);
-		// 						if (Main.myPlayer == player.whoAmI) player.ManaEffect(healMana);
-		// 					}
-		//
-		// 					if (ItemLoader.ConsumeItem(item, player)) item.stack--;
-		// 					if (item.stack <= 0) item.TurnToAir();
-		//
-		// 					Recipe.FindRecipes();
-		// 					return true;
-		// 				}
-		// 			}
-		//
-		// 			return false;
-		// 		});
-		//
-		// 		cursor.Emit(OpCodes.Brfalse, label);
-		// 		cursor.Emit(OpCodes.Ret);
-		// 		cursor.MarkLabel(label);
-		// 	}
-		// }
-		
+
+		private static void QuickMana(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
+			ILLabel label = cursor.DefineLabel();
+
+			if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdcI4(0), i => i.MatchStloc(0)))
+			{
+				cursor.Emit(OpCodes.Ldarg, 0);
+
+				cursor.EmitDelegate<Func<Player, bool>>(player =>
+				{
+					// if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickMana) return false;
+
+					foreach (AlchemistBag bag in GetAlchemistBags(player))
+					{
+						ItemHandler handler = bag.GetItemHandler();
+
+						foreach (Item item in handler.Items)
+						{
+							if (item.IsAir || item.healMana <= 0 || player.potionDelay > 0 && item.potion || !CombinedHooks.CanUseItem(player, item)) continue;
+
+							SoundEngine.PlaySound(item.UseSound, player.position);
+							if (item.potion)
+							{
+								if (item.type == ItemID.RestorationPotion)
+								{
+									player.potionDelay = player.restorationDelayTime;
+									player.AddBuff(21, player.potionDelay);
+								}
+								else if (item.type == ItemID.Mushroom)
+								{
+									player.potionDelay = player.mushroomDelayTime;
+									player.AddBuff(21, player.potionDelay);
+								}
+								else
+								{
+									player.potionDelay = player.potionDelayTime;
+									player.AddBuff(21, player.potionDelay);
+								}
+							}
+
+							ItemLoader.UseItem(item, player);
+							int healLife = player.GetHealLife(item, true);
+							int healMana = player.GetHealMana(item, true);
+							player.statLife += healLife;
+							player.statMana += healMana;
+
+							if (player.statLife > player.statLifeMax2) player.statLife = player.statLifeMax2;
+							if (player.statMana > player.statManaMax2) player.statMana = player.statManaMax2;
+
+							if (healLife > 0 && Main.myPlayer == player.whoAmI) player.HealEffect(healLife);
+
+							if (healMana > 0)
+							{
+								player.AddBuff(94, Player.manaSickTime);
+								if (Main.myPlayer == player.whoAmI) player.ManaEffect(healMana);
+							}
+
+							if (ItemLoader.ConsumeItem(item, player)) item.stack--;
+							if (item.stack <= 0) item.TurnToAir();
+
+							Recipe.FindRecipes();
+
+							return true;
+						}
+					}
+
+					return false;
+				});
+
+				cursor.Emit(OpCodes.Brfalse, label);
+				cursor.Emit(OpCodes.Ret);
+				cursor.MarkLabel(label);
+			}
+		}
+
 		private static void AdjTiles(ILContext il)
 		{
 			ILCursor cursor = new ILCursor(il);
