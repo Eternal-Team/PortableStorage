@@ -27,7 +27,6 @@ namespace PortableStorage.Hooking
 			Player.QuickBuff += QuickBuff;
 
 			// On.Terraria.Player.FishingLevel += Player_FishingLevel;
-
 			// IL.Terraria.Player.ItemCheck += Player_ItemCheck;
 			// IL.Terraria.Player.GetItem += Player_GetItem;
 
