@@ -1,6 +1,8 @@
-﻿using Terraria;
+﻿using System.Linq;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Container;
 
 namespace PortableStorage.Items
 {
@@ -9,6 +11,26 @@ namespace PortableStorage.Items
 		public override string Texture => PortableStorage.AssetPath + "Textures/Items/Wallet";
 
 		protected override string AmmoType => "Coin";
+
+		public long Coins
+		{
+			get => Handler.CountCoins();
+			set
+			{
+				Item[] coins = Utils.CoinsSplit(value).Select((stack, index) =>
+				{
+					Item coin = new Item();
+					coin.SetDefaults(ItemID.CopperCoin + index);
+					coin.stack = stack;
+					return coin;
+				}).Reverse().ToArray();
+
+				for (int i = 0; i < Handler.Slots; i++) Handler.SetItemInSlot(i, coins[i]);
+
+				Recipe.FindRecipes();
+				Utility.SyncBag(this);
+			}
+		}
 
 		public override void OnCreate(ItemCreationContext context)
 		{
