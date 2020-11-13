@@ -9,16 +9,6 @@ namespace PortableStorage.Items
 
 		protected override string AmmoType => "Solution";
 
-		public override void AddRecipes()
-		{
-			CreateRecipe()
-				.AddIngredient(ItemID.Glass, 10)
-				.AddIngredient(ItemID.HallowedBar, 7)
-				.AddIngredient(ItemID.SoulofFright, 5)
-				.AddTile(TileID.SteampunkBoiler)
-				.Register();
-		}
-
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
@@ -27,6 +17,16 @@ namespace PortableStorage.Items
 			item.height = 32;
 			item.rare = ItemRarityID.Pink;
 			item.value = Item.buyPrice(gold: 7, silver: 50);
+		}
+
+		public override void AddRecipes()
+		{
+			CreateRecipe()
+				.AddIngredient(ItemID.Glass, 10)
+				.AddIngredient(ItemID.HallowedBar, 7)
+				.AddIngredient(ItemID.SoulofFright, 5)
+				.AddTile(TileID.SteampunkBoiler)
+				.Register();
 		}
 	}
 }

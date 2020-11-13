@@ -11,10 +11,10 @@ namespace PortableStorage.Hooking
 			Player.PickAmmo += PickAmmo;
 			ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += DrawAmmo;
 
+			ItemSlot.DrawSavings += DrawSavings;
+
 			// On.Terraria.Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
 			// On.Terraria.Player.FishingLevel += Player_FishingLevel;
-			//
-			// ItemSlot.DrawSavings += ItemSlot_DrawSavings;
 
 			// IL.Terraria.Player.QuickBuff += Player_QuickBuff;
 			// IL.Terraria.Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;

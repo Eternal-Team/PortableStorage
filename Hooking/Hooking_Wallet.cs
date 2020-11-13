@@ -1,4 +1,16 @@
-﻿namespace PortableStorage.Hooking
+﻿using System;
+using BaseLibrary.Utility;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using PortableStorage.Items;
+using Terraria;
+using Terraria.GameContent;
+using Terraria.ModLoader;
+using Terraria.ModLoader.Container;
+
+namespace PortableStorage.Hooking
 {
 	public static partial class Hooking
 	{
@@ -229,49 +241,59 @@
 		// 	return result;
 		// }
 
-		// private static void ItemSlot_DrawSavings(ILContext il)
-		// {
-		// 	int walletIndex = il.AddVariable<long>();
-		//
-		// 	ILCursor cursor = new ILCursor(il);
-		//
-		// 	if (cursor.TryGotoNext(i => i.MatchStloc(4), i => i.MatchLdloca(1), i => i.MatchLdcI4(3)))
-		// 	{
-		// 		cursor.Index++;
-		//
-		// 		cursor.Emit(OpCodes.Ldloc, 0);
-		// 		cursor.EmitDelegate<Func<Player, long>>(player => player.inventory.OfType<Wallet>().Sum(wallet => wallet.Coins));
-		// 		cursor.Emit(OpCodes.Stloc, walletIndex);
-		//
-		// 		cursor.Index++;
-		//
-		// 		cursor.Remove();
-		// 		cursor.Emit(OpCodes.Ldc_I4, 4);
-		// 	}
-		//
-		// 	if (cursor.TryGotoNext(i => i.MatchLdloc(4), i => i.MatchStelemI8()))
-		// 	{
-		// 		cursor.Index += 2;
-		//
-		// 		cursor.Emit(OpCodes.Dup);
-		// 		cursor.Emit(OpCodes.Ldc_I4, 3);
-		// 		cursor.Emit(OpCodes.Ldloc, walletIndex);
-		// 		cursor.Emit(OpCodes.Stelem_I8);
-		// 	}
-		//
-		// 	if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdarg(0), i => i.MatchLdsfld(typeof(Lang).GetField("inter", BaseLibrary.Utility.defaultFlags)), i => i.MatchLdcI4(66)))
-		// 	{
-		// 		cursor.Emit(OpCodes.Ldarg, 0);
-		// 		cursor.Emit(OpCodes.Ldloc, walletIndex);
-		// 		cursor.Emit(OpCodes.Ldarg, 1);
-		// 		cursor.Emit(OpCodes.Ldarg, 2);
-		//
-		// 		cursor.EmitDelegate<Action<SpriteBatch, long, float, float>>((sb, walletCount, shopx, shopy) =>
-		// 		{
-		// 			int walletType = ModContent.ItemType<Wallet>();
-		// 			if (walletCount > 0L) sb.Draw(Main.itemTexture[walletType], Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 40f), Main.itemTexture[walletType].Size() * 0.5f));
-		// 		});
-		// 	}
-		// }
+		private static void DrawSavings(ILContext il)
+		{
+			int walletIndex = il.AddVariable<long>();
+
+			ILCursor cursor = new ILCursor(il);
+
+			if (cursor.TryGotoNext(i => i.MatchLdloca(1), i => i.MatchLdcI4(4)))
+			{
+				cursor.Emit(OpCodes.Ldloc, 0);
+				cursor.EmitDelegate<Func<Player, long>>(player =>
+				{
+					long coins = 0;
+
+					foreach (Item pItem in player.inventory)
+					{
+						if (pItem.modItem is Wallet wallet) coins += wallet.Handler.CountCoins();
+					}
+
+					return coins;
+				});
+				cursor.Emit(OpCodes.Stloc, walletIndex);
+
+				cursor.Index++;
+				cursor.Remove();
+
+				cursor.Emit(OpCodes.Ldc_I4, 5);
+
+				cursor.Index++;
+				cursor.Emit(OpCodes.Dup);
+				cursor.Emit(OpCodes.Ldc_I4, 4);
+				cursor.Emit(OpCodes.Ldloc, walletIndex);
+				cursor.Emit(OpCodes.Stelem_I8);
+			}
+
+			if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdarg(0), i => i.MatchLdsfld<Lang>("inter")))
+			{
+				cursor.Emit(OpCodes.Ldarg, 0);
+				cursor.Emit(OpCodes.Ldloc, walletIndex);
+				cursor.Emit(OpCodes.Ldarg, 1);
+				cursor.Emit(OpCodes.Ldarg, 2);
+
+				cursor.EmitDelegate<Action<SpriteBatch, long, float, float>>((sb, walletCount, shopx, shopy) =>
+				{
+					if (walletCount > 0L)
+					{
+						int walletType = ModContent.ItemType<Wallet>();
+						Main.instance.LoadItem(walletType);
+
+						Texture2D texture = TextureAssets.Item[walletType].Value;
+						sb.Draw(texture, Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 40f), texture.Size() * 0.5f), Color.White);
+					}
+				});
+			}
+		}
 	}
 }

@@ -7,7 +7,7 @@ namespace PortableStorage.Items
 {
 	public abstract class BaseAmmoBag : BaseBag
 	{
-		private class AmmoBagItemHandler : ItemHandler
+		protected class AmmoBagItemHandler : ItemHandler
 		{
 			private BaseAmmoBag bag;
 

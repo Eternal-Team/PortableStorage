@@ -10,26 +10,6 @@ namespace PortableStorage.Items
 
 		protected override string AmmoType => "Coin";
 
-		// public long Coins
-		// {
-		// 	get => Handler.CoinsValue();
-		// 	set
-		// 	{
-		// 		Item[] coins = Utils.CoinsSplit(value).Select((stack, index) =>
-		// 		{
-		// 			Item coin = new Item();
-		// 			coin.SetDefaults(ItemID.CopperCoin + index);
-		// 			coin.stack = stack;
-		// 			return coin;
-		// 		}).Reverse().ToArray();
-		//
-		// 		for (int i = 0; i < Handler.Slots; i++) Handler.SetItemInSlot(i, coins[i]);
-		//
-		// 		Recipe.FindRecipes();
-		// 		item.SyncBag();
-		// 	}
-		// }
-
 		public override void OnCreate(ItemCreationContext context)
 		{
 			base.OnCreate(context);
