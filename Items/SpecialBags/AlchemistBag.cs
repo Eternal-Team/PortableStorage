@@ -53,7 +53,7 @@ namespace PortableStorage.Items.SpecialBags
 
 		public override string Texture => PortableStorage.AssetPath + "Textures/Items/AlchemistBag";
 
-		private const int PotionSlots = 18;
+		public const int PotionSlots = 18;
 		private const int IngredientSlots = 63;
 
 		public override void OnCreate(ItemCreationContext context)

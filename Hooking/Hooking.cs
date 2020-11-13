@@ -22,7 +22,8 @@ namespace PortableStorage.Hooking
 			Player.AdjTiles += AdjTiles;
 
 			Player.QuickMana += QuickMana;
-			IL.Terraria.Player.QuickHeal_GetItemToUse += QuickHeal;
+			Player.QuickHeal_GetItemToUse += QuickHeal;
+			Player.QuickBuff_PickBestFoodItem += PickBestFoodItem;
 
 			// On.Terraria.Player.FishingLevel += Player_FishingLevel;
 

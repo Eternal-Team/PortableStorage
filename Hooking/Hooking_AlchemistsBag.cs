@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using BaseLibrary.Utility;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using PortableStorage.Items.SpecialBags;
@@ -24,8 +26,8 @@ namespace PortableStorage.Hooking
 			}
 		}
 
-		// private delegate bool QuickBuffDelegate(Player player, ref LegacySoundStyle sound);
-		//
+		private delegate bool QuickBuff_Del(Player player, ref LegacySoundStyle sound);
+
 		// private static bool QuickBuff(Player player, ref LegacySoundStyle sound)
 		// {
 		// 	if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickBuff) return false;
@@ -107,26 +109,26 @@ namespace PortableStorage.Hooking
 		//
 		// 	return false;
 		// }
-		//
-		// private static void Player_QuickBuff(ILContext il)
-		// {
-		// 	ILCursor cursor = new ILCursor(il);
-		// 	ILLabel label = cursor.DefineLabel();
-		//
-		// 	if (cursor.TryGotoNext(i => i.MatchLdnull(), i => i.MatchStloc(0)))
-		// 	{
-		// 		cursor.Index += 2;
-		//
-		// 		cursor.Emit(OpCodes.Ldarg_0);
-		// 		cursor.Emit(OpCodes.Ldloca, 0);
-		//
-		// 		cursor.EmitDelegate<QuickBuffDelegate>(QuickBuff);
-		//
-		// 		cursor.Emit(OpCodes.Brfalse, label);
-		// 		cursor.Emit(OpCodes.Ret);
-		// 		cursor.MarkLabel(label);
-		// 	}
-		// }
+
+		private static void QuickBuff(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
+			ILLabel label = cursor.DefineLabel();
+
+			if (cursor.TryGotoNext(i => i.MatchLdnull(), i => i.MatchStloc(0)))
+			{
+				cursor.Index += 2;
+
+				cursor.Emit(OpCodes.Ldarg_0);
+				cursor.Emit(OpCodes.Ldloca, 0);
+
+				cursor.EmitDelegate<QuickBuff_Del>((Player player, ref LegacySoundStyle sound) => { return false; });
+
+				cursor.Emit(OpCodes.Brfalse, label);
+				cursor.Emit(OpCodes.Ret);
+				cursor.MarkLabel(label);
+			}
+		}
 
 		private delegate void QuickHeal_Del(Player player, int lostHealth, ref int healthGain, ref Item result);
 
@@ -148,9 +150,10 @@ namespace PortableStorage.Hooking
 					foreach (AlchemistBag bag in GetAlchemistBags(player))
 					{
 						ItemHandler handler = bag.GetItemHandler();
-						
-						foreach (Item item in handler.Items)
+
+						for (var i = 0; i < AlchemistBag.PotionSlots; i++)
 						{
+							Item item = handler.Items[i];
 							if (item.IsAir || !item.potion || item.healLife <= 0 || !ItemLoader.CanUseItem(item, player)) continue;
 
 							int healWaste = player.GetHealLife(item, true) - lostHealth;
@@ -166,7 +169,7 @@ namespace PortableStorage.Hooking
 							{
 								result = item;
 								healthGain = healWaste;
-							}	
+							}
 						}
 					}
 				});
@@ -190,8 +193,9 @@ namespace PortableStorage.Hooking
 					{
 						ItemHandler handler = bag.GetItemHandler();
 
-						foreach (Item item in handler.Items)
+						for (var i = 0; i < AlchemistBag.PotionSlots; i++)
 						{
+							Item item = handler.Items[i];
 							if (item.IsAir || item.healMana <= 0 || player.potionDelay > 0 && item.potion || !CombinedHooks.CanUseItem(player, item)) continue;
 
 							SoundEngine.PlaySound(item.UseSound, player.position);
@@ -263,6 +267,43 @@ namespace PortableStorage.Hooking
 					{
 						player.adjTile[TileID.Bottles] = true;
 						player.alchemyTable = true;
+					}
+				});
+			}
+		}
+
+		private delegate void PickBestFoodItem_Del(Player player, ref Item item, ref int num);
+
+		private static MethodInfo QuickBuff_FindFoodPriority = typeof(Player).GetMethod("QuickBuff_FindFoodPriority", ReflectionUtility.DefaultFlags);
+
+		private static void PickBestFoodItem(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
+
+			if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdloc(13), i => i.MatchRet()))
+			{
+				cursor.Emit(OpCodes.Ldarg, 0);
+				cursor.Emit(OpCodes.Ldloca, 13);
+				cursor.Emit(OpCodes.Ldloca, 0);
+
+				cursor.EmitDelegate<PickBestFoodItem_Del>((Player player, ref Item foodItem, ref int num) =>
+				{
+					foreach (AlchemistBag bag in GetAlchemistBags(player))
+					{
+						ItemHandler handler = bag.GetItemHandler();
+
+						for (var i = 0; i < AlchemistBag.PotionSlots; i++)
+						{
+							Item item = handler.Items[i];
+							if (item.IsAir) continue;
+
+							int priority = (int)QuickBuff_FindFoodPriority.Invoke(player, new object[] { item.buffType });
+							if (priority >= num && (foodItem == null || foodItem.buffTime < item.buffTime || priority > num))
+							{
+								foodItem = item;
+								num = priority;
+							}
+						}
 					}
 				});
 			}
