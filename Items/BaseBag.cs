@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using BaseLibrary;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Container;
 using Terraria.ModLoader.IO;
@@ -34,12 +36,25 @@ namespace PortableStorage.Items
 			item.rare = ItemRarityID.White;
 		}
 
+		public override void ModifyTooltips(List<TooltipLine> tooltips)
+		{
+			tooltips.Add(new TooltipLine(Mod, "PortableStorage:BagTooltip", Language.GetText("Mods.PortableStorage.BagTooltip." + GetType().Name).Format(Handler.Slots)));
+		}
+		
+		public override bool ConsumeItem(Player player) => false;
+		
+		public override bool UseItem(Player player)
+		{
+			if (PortableStorage.Instance.bagState.bag == this) PortableStorage.Instance.bagState.bag = null;
+			else PortableStorage.Instance.bagState.Open(this);
+			
+			return true;
+		}
+		
 		public override bool CanRightClick() => true;
 
 		public override void RightClick(Player player)
 		{
-			item.stack++;
-
 			if (PortableStorage.Instance.bagState.bag == this) PortableStorage.Instance.bagState.bag = null;
 			else PortableStorage.Instance.bagState.Open(this);
 		}

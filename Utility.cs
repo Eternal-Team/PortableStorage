@@ -283,6 +283,7 @@ namespace PortableStorage
 			Add("Coin", AmmoID.Coin);
 		}
 
+		// use ModPacket with a cache of all bags?
 		internal static void SyncBag(BaseBag bag)
 		{
 			if (Main.netMode == NetmodeID.MultiplayerClient)
