@@ -35,12 +35,12 @@ namespace PortableStorage
 		internal static List<int> FishingWhitelist;
 		internal static List<int> SeedWhitelist;
 
-		// internal static RecipeGroup yoyoStringGroup;
+		internal static RecipeGroup YoYoStrings;
 
 		internal static void AddRecipeGroups()
 		{
-			// yoyoStringGroup = new RecipeGroup(() => "Any string", ItemID.RedString, ItemID.OrangeString, ItemID.YellowString, ItemID.LimeString, ItemID.GreenString, ItemID.TealString, ItemID.CyanString, ItemID.SkyBlueString, ItemID.BlueString, ItemID.PurpleString, ItemID.VioletString, ItemID.PinkString, ItemID.BrownString, ItemID.WhiteString, ItemID.RainbowString, ItemID.BlackString);
-			// RecipeGroup.RegisterGroup("PortableStorage:YoYoStrings", yoyoStringGroup);
+			YoYoStrings = new RecipeGroup(() => "Any string", ItemID.RedString, ItemID.OrangeString, ItemID.YellowString, ItemID.LimeString, ItemID.GreenString, ItemID.TealString, ItemID.CyanString, ItemID.SkyBlueString, ItemID.BlueString, ItemID.PurpleString, ItemID.VioletString, ItemID.PinkString, ItemID.BrownString, ItemID.WhiteString, ItemID.RainbowString, ItemID.BlackString);
+			RecipeGroup.RegisterGroup("PortableStorage:YoYoStrings", YoYoStrings);
 		}
 
 		internal static void PostSetupContent()

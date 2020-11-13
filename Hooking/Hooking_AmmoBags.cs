@@ -10,7 +10,7 @@ namespace PortableStorage.Hooking
 {
 	public static partial class Hooking
 	{
-		private static IEnumerable<BaseAmmoBag> GetAmmoBags()
+		private static IEnumerable<BaseAmmoBag> GetAmmoBags(Player player)
 		{
 			foreach (Item pItem in Main.LocalPlayer.inventory)
 			{
@@ -33,7 +33,7 @@ namespace PortableStorage.Hooking
 
 				cursor.EmitDelegate<Func<Player, Item, bool, bool>>((player, weapon, hasAmmo) =>
 				{
-					foreach (BaseAmmoBag bag in GetAmmoBags())
+					foreach (BaseAmmoBag bag in GetAmmoBags(player))
 					{
 						ItemHandler handler = bag.GetItemHandler();
 
@@ -64,7 +64,27 @@ namespace PortableStorage.Hooking
 				cursor.Emit(OpCodes.Ldarg, 1); // sItem
 				cursor.Emit(OpCodes.Ldloca, 0); // item
 
-				cursor.EmitDelegate<PickAmmo_Del>(PickAmmo);
+				cursor.EmitDelegate<PickAmmo_Del>(delegate(Player player, Item weapon, ref Item ammoItem)
+				{
+					if (!ammoItem.IsAir) return false;
+
+					foreach (BaseAmmoBag bag in GetAmmoBags(player))
+					{
+						ItemHandler handler = bag.GetItemHandler();
+
+						for (int i = 0; i < handler.Slots; i++)
+						{
+							Item item = handler.GetItemInSlot(i);
+							if (!item.IsAir && item.ammo == weapon.useAmmo)
+							{
+								ammoItem = item;
+								return true;
+							}
+						}
+					}
+
+					return false;
+				});
 
 				cursor.Emit(OpCodes.Brfalse, label);
 
@@ -73,28 +93,6 @@ namespace PortableStorage.Hooking
 				cursor.Emit(OpCodes.Stind_I1);
 
 				cursor.MarkLabel(label);
-			}
-
-			bool PickAmmo(Player player, Item weapon, ref Item ammoItem)
-			{
-				if (!ammoItem.IsAir) return false;
-
-				foreach (BaseAmmoBag bag in GetAmmoBags())
-				{
-					ItemHandler handler = bag.GetItemHandler();
-
-					for (int i = 0; i < handler.Slots; i++)
-					{
-						Item item = handler.GetItemInSlot(i);
-						if (!item.IsAir && item.ammo == weapon.useAmmo)
-						{
-							ammoItem = item;
-							return true;
-						}
-					}
-				}
-
-				return false;
 			}
 		}
 
@@ -109,7 +107,7 @@ namespace PortableStorage.Hooking
 
 				cursor.EmitDelegate<Func<int, int, int>>((useAmmo, ammoCount) =>
 				{
-					foreach (BaseAmmoBag bag in GetAmmoBags())
+					foreach (BaseAmmoBag bag in GetAmmoBags(Main.LocalPlayer))
 					{
 						ItemHandler handler = bag.GetItemHandler();
 

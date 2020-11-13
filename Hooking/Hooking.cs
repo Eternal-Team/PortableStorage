@@ -1,18 +1,21 @@
-﻿namespace PortableStorage.Hooking
+﻿using IL.Terraria;
+using IL.Terraria.UI;
+
+namespace PortableStorage.Hooking
 {
 	public static partial class Hooking
 	{
 		public static void Load()
 		{
-			IL.Terraria.Player.HasAmmo += HasAmmo;
-			IL.Terraria.Player.PickAmmo += PickAmmo;
-			IL.Terraria.UI.ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += DrawAmmo;
-			
+			Player.HasAmmo += HasAmmo;
+			Player.PickAmmo += PickAmmo;
+			ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += DrawAmmo;
+
 			// On.Terraria.Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
 			// On.Terraria.Player.FishingLevel += Player_FishingLevel;
 			//
 			// ItemSlot.DrawSavings += ItemSlot_DrawSavings;
-		
+
 			// IL.Terraria.Player.QuickBuff += Player_QuickBuff;
 			// IL.Terraria.Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
 			// IL.Terraria.Player.QuickMana += Player_QuickMana;
@@ -25,8 +28,8 @@
 
 			// if (ItemTextBags == null)
 			// {
-				// ItemTextBags = new Item[20];
-				// for (int i = 0; i < ItemTextBags.Length; i++) ItemTextBags[i] = new Item();
+			// ItemTextBags = new Item[20];
+			// for (int i = 0; i < ItemTextBags.Length; i++) ItemTextBags[i] = new Item();
 			// }
 
 			// IL.Terraria.ItemText.Update += ItemText_Update;
