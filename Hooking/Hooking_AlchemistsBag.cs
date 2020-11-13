@@ -127,49 +127,51 @@ namespace PortableStorage.Hooking
 		// 		cursor.MarkLabel(label);
 		// 	}
 		// }
-		//
-		// private delegate void QuickHealDelegate(Player player, int lostHealth, ref int healthGain, ref Item result);
-		//
-		// private static void QuickHeal(Player player, int lostHealth, ref int healthGain, ref Item result)
-		// {
-		// 	if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickHeal) return;
-		//
-		// 	foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
-		// 	{
-		// 		if (item.stack > 0 && item.type > 0 && item.potion && item.healLife > 0 && ItemLoader.CanUseItem(item, player))
-		// 		{
-		// 			int healWaste = player.GetHealLife(item, true) - lostHealth;
-		// 			if (healthGain < 0)
-		// 			{
-		// 				if (healWaste > healthGain)
-		// 				{
-		// 					result = item;
-		// 					healthGain = healWaste;
-		// 				}
-		// 			}
-		// 			else if (healWaste < healthGain && healWaste >= 0)
-		// 			{
-		// 				result = item;
-		// 				healthGain = healWaste;
-		// 			}
-		// 		}
-		// 	}
-		// }
-		//
-		// private static void Player_QuickHeal_GetItemToUse(ILContext il)
-		// {
-		// 	ILCursor cursor = new ILCursor(il);
-		//
-		// 	if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(3), i => i.MatchBr(out _)))
-		// 	{
-		// 		cursor.Emit(OpCodes.Ldarg, 0);
-		// 		cursor.Emit(OpCodes.Ldloc, 0);
-		// 		cursor.Emit(OpCodes.Ldloca, 2);
-		// 		cursor.Emit(OpCodes.Ldloca, 1);
-		//
-		// 		cursor.EmitDelegate<QuickHealDelegate>(QuickHeal);
-		// 	}
-		// }
+
+		private delegate void QuickHeal_Del(Player player, int lostHealth, ref int healthGain, ref Item result);
+
+		private static void QuickHeal(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
+
+			if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(3), i => i.MatchBr(out _)))
+			{
+				cursor.Emit(OpCodes.Ldarg, 0);
+				cursor.Emit(OpCodes.Ldloc, 0);
+				cursor.Emit(OpCodes.Ldloca, 2);
+				cursor.Emit(OpCodes.Ldloca, 1);
+
+				cursor.EmitDelegate<QuickHeal_Del>((Player player, int lostHealth, ref int healthGain, ref Item result) =>
+				{
+					// if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickHeal) return;
+
+					foreach (AlchemistBag bag in GetAlchemistBags(player))
+					{
+						ItemHandler handler = bag.GetItemHandler();
+						
+						foreach (Item item in handler.Items)
+						{
+							if (item.IsAir || !item.potion || item.healLife <= 0 || !ItemLoader.CanUseItem(item, player)) continue;
+
+							int healWaste = player.GetHealLife(item, true) - lostHealth;
+							if (healthGain < 0)
+							{
+								if (healWaste > healthGain)
+								{
+									result = item;
+									healthGain = healWaste;
+								}
+							}
+							else if (healWaste < healthGain && healWaste >= 0)
+							{
+								result = item;
+								healthGain = healWaste;
+							}	
+						}
+					}
+				});
+			}
+		}
 
 		private static void QuickMana(ILContext il)
 		{
