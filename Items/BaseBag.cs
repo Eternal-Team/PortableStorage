@@ -40,17 +40,17 @@ namespace PortableStorage.Items
 		{
 			tooltips.Add(new TooltipLine(Mod, "PortableStorage:BagTooltip", Language.GetText("Mods.PortableStorage.BagTooltip." + GetType().Name).Format(Handler.Slots)));
 		}
-		
+
 		public override bool ConsumeItem(Player player) => false;
-		
+
 		public override bool UseItem(Player player)
 		{
 			if (PortableStorage.Instance.bagState.bag == this) PortableStorage.Instance.bagState.bag = null;
 			else PortableStorage.Instance.bagState.Open(this);
-			
+
 			return true;
 		}
-		
+
 		public override bool CanRightClick() => true;
 
 		public override void RightClick(Player player)

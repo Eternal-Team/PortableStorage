@@ -24,14 +24,12 @@ namespace PortableStorage.Hooking
 			Player.QuickMana += QuickMana;
 			Player.QuickHeal_GetItemToUse += QuickHeal;
 			Player.QuickBuff_PickBestFoodItem += PickBestFoodItem;
+			Player.QuickBuff += QuickBuff;
 
 			// On.Terraria.Player.FishingLevel += Player_FishingLevel;
 
-			// IL.Terraria.Player.QuickBuff += Player_QuickBuff;
 			// IL.Terraria.Player.ItemCheck += Player_ItemCheck;
 			// IL.Terraria.Player.GetItem += Player_GetItem;
-
-			// IL.Terraria.Main.UpdateTime_SpawnTownNPCs += Main_UpdateTime_SpawnTownNPCs;
 
 			// if (ItemTextBags == null)
 			// {

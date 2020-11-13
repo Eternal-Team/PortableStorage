@@ -8,6 +8,7 @@ using Terraria.ModLoader.Container;
 
 namespace PortableStorage.Items.SpecialBags
 {
+	// todo: limit crafting to ingredient slots
 	public class AlchemistBag : BaseBag, ICraftingStorage
 	{
 		private class AlchemistBagItemHandler : ItemHandler

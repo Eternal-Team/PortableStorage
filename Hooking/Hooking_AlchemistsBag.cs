@@ -26,107 +26,70 @@ namespace PortableStorage.Hooking
 			}
 		}
 
-		private delegate bool QuickBuff_Del(Player player, ref LegacySoundStyle sound);
+		private delegate void QuickBuff_Del(Player player, ref LegacySoundStyle sound);
 
-		// private static bool QuickBuff(Player player, ref LegacySoundStyle sound)
-		// {
-		// 	if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickBuff) return false;
-		//
-		// 	foreach (Item item in player.inventory.OfType<AlchemistBag>().SelectMany(x => x.Handler.Items))
-		// 	{
-		// 		if (player.CountBuffs() == player.buffType.Length) return true;
-		//
-		// 		if (item.stack > 0 && item.type > 0 && item.buffType > 0 && !item.summon && item.buffType != 90)
-		// 		{
-		// 			int buffType = item.buffType;
-		// 			bool useItem = ItemLoader.CanUseItem(item, player);
-		// 			for (int i = 0; i < player.buffType.Length; i++)
-		// 			{
-		// 				if (buffType == 27 && (player.buffType[i] == buffType || player.buffType[i] == 101 || player.buffType[i] == 102))
-		// 				{
-		// 					useItem = false;
-		// 					break;
-		// 				}
-		//
-		// 				if (player.buffType[i] == buffType)
-		// 				{
-		// 					useItem = false;
-		// 					break;
-		// 				}
-		//
-		// 				if (Main.meleeBuff[buffType] && Main.meleeBuff[player.buffType[i]])
-		// 				{
-		// 					useItem = false;
-		// 					break;
-		// 				}
-		// 			}
-		//
-		// 			if (Main.lightPet[item.buffType] || Main.vanityPet[item.buffType])
-		// 			{
-		// 				for (int buffIndex = 0; buffIndex < player.buffType.Length; buffIndex++)
-		// 				{
-		// 					if (Main.lightPet[player.buffType[buffIndex]] && Main.lightPet[item.buffType]) useItem = false;
-		// 					if (Main.vanityPet[player.buffType[buffIndex]] && Main.vanityPet[item.buffType]) useItem = false;
-		// 				}
-		// 			}
-		//
-		// 			if (item.mana > 0 && useItem)
-		// 			{
-		// 				if (player.statMana >= (int)(item.mana * player.manaCost))
-		// 				{
-		// 					player.manaRegenDelay = (int)player.maxRegenDelay;
-		// 					player.statMana -= (int)(item.mana * player.manaCost);
-		// 				}
-		// 				else useItem = false;
-		// 			}
-		//
-		// 			if (player.whoAmI == Main.myPlayer && item.type == 603 && !Main.cEd) useItem = false;
-		//
-		// 			if (buffType == 27)
-		// 			{
-		// 				buffType = Main.rand.Next(3);
-		// 				if (buffType == 0) buffType = 27;
-		// 				if (buffType == 1) buffType = 101;
-		// 				if (buffType == 2) buffType = 102;
-		// 			}
-		//
-		// 			if (useItem)
-		// 			{
-		// 				ItemLoader.UseItem(item, player);
-		// 				sound = item.UseSound;
-		// 				int buffTime = item.buffTime;
-		// 				if (buffTime == 0) buffTime = 3600;
-		//
-		// 				player.AddBuff(buffType, buffTime);
-		// 				if (item.consumable)
-		// 				{
-		// 					if (ItemLoader.ConsumeItem(item, player)) item.stack--;
-		// 					if (item.stack <= 0) item.TurnToAir();
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		//
-		// 	return false;
-		// }
+		private static MethodInfo QuickBuff_ShouldBotherUsingThisBuff = typeof(Player).GetMethod("QuickBuff_ShouldBotherUsingThisBuff", ReflectionUtility.DefaultFlags);
 
 		private static void QuickBuff(ILContext il)
 		{
 			ILCursor cursor = new ILCursor(il);
-			ILLabel label = cursor.DefineLabel();
 
-			if (cursor.TryGotoNext(i => i.MatchLdnull(), i => i.MatchStloc(0)))
+			if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdloc(0), i => i.MatchLdnull(), i => i.MatchCgtUn()))
 			{
-				cursor.Index += 2;
-
-				cursor.Emit(OpCodes.Ldarg_0);
+				cursor.Emit(OpCodes.Ldarg, 0);
 				cursor.Emit(OpCodes.Ldloca, 0);
 
-				cursor.EmitDelegate<QuickBuff_Del>((Player player, ref LegacySoundStyle sound) => { return false; });
+				cursor.EmitDelegate<QuickBuff_Del>((Player player, ref LegacySoundStyle sound) =>
+				{
+					// if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickBuff) return false;
 
-				cursor.Emit(OpCodes.Brfalse, label);
-				cursor.Emit(OpCodes.Ret);
-				cursor.MarkLabel(label);
+					if (player.CountBuffs() == Player.MaxBuffs) return;
+
+					foreach (AlchemistBag bag in GetAlchemistBags(player))
+					{
+						ItemHandler handler = bag.GetItemHandler();
+
+						for (var i = 0; i < AlchemistBag.PotionSlots; i++)
+						{
+							Item item = handler.Items[i];
+
+							if (item.IsAir || item.buffType <= 0 || item.DamageType == DamageClass.Summon) continue;
+
+							int buffType = item.buffType;
+							bool canUse = CombinedHooks.CanUseItem(player, item) && QuickBuff_ShouldBotherUsingThisBuff.Invoke<bool>(player, buffType);
+							if (item.mana > 0 && canUse)
+							{
+								if (player.CheckMana(item, -1, true, true)) player.manaRegenDelay = (int)player.maxRegenDelay;
+							}
+
+							if (player.whoAmI == Main.myPlayer && item.type == ItemID.Carrot && !Main.runningCollectorsEdition) canUse = false;
+
+							if (buffType == 27)
+							{
+								buffType = Main.rand.Next(3);
+								if (buffType == 0) buffType = 27;
+								if (buffType == 1) buffType = 101;
+								if (buffType == 2) buffType = 102;
+							}
+
+							if (!canUse) continue;
+
+							ItemLoader.UseItem(item, player);
+							sound = item.UseSound;
+							int buffTime = item.buffTime;
+							if (buffTime == 0) buffTime = 3600;
+
+							player.AddBuff(buffType, buffTime);
+							if (item.consumable)
+							{
+								if (ItemLoader.ConsumeItem(item, player)) item.stack--;
+								if (item.stack <= 0) item.TurnToAir();
+							}
+
+							if (player.CountBuffs() == Player.MaxBuffs) return;
+						}
+					}
+				});
 			}
 		}
 
@@ -297,7 +260,7 @@ namespace PortableStorage.Hooking
 							Item item = handler.Items[i];
 							if (item.IsAir) continue;
 
-							int priority = (int)QuickBuff_FindFoodPriority.Invoke(player, new object[] { item.buffType });
+							int priority = QuickBuff_FindFoodPriority.Invoke<int>(player, item.buffType);
 							if (priority >= num && (foodItem == null || foodItem.buffTime < item.buffTime || priority > num))
 							{
 								foodItem = item;
