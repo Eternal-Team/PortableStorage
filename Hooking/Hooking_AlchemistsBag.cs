@@ -1,7 +1,26 @@
-﻿namespace PortableStorage.Hooking
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using PortableStorage.Items.SpecialBags;
+using Terraria;
+using Terraria.ID;
+
+namespace PortableStorage.Hooking
 {
 	public static partial class Hooking
 	{
+		private static IEnumerable<AlchemistBag> GetAlchemistBags(Player player)
+		{
+			foreach (Item item in player.inventory)
+			{
+				if (item.IsAir) continue;
+
+				if (item.modItem is AlchemistBag bag) yield return bag;
+			}
+		}
+
 		// private delegate bool QuickBuffDelegate(Player player, ref LegacySoundStyle sound);
 		//
 		// private static bool QuickBuff(Player player, ref LegacySoundStyle sound)
@@ -211,5 +230,24 @@
 		// 		cursor.MarkLabel(label);
 		// 	}
 		// }
+		
+		private static void AdjTiles(ILContext il)
+		{
+			ILCursor cursor = new ILCursor(il);
+
+			if (cursor.TryGotoNext(i => i.MatchLdsfld<Main>("playerInventory"), i => i.MatchLdcI4(0)))
+			{
+				cursor.Emit(OpCodes.Ldarg, 0);
+
+				cursor.EmitDelegate<Action<Player>>(player =>
+				{
+					if (GetAlchemistBags(player).Any())
+					{
+						player.adjTile[TileID.Bottles] = true;
+						player.alchemyTable = true;
+					}
+				});
+			}
+		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using IL.Terraria;
 using IL.Terraria.UI;
+using MonoMod.Cil;
 
 namespace PortableStorage.Hooking
 {
@@ -19,6 +20,8 @@ namespace PortableStorage.Hooking
 
 			Main.UpdateTime_SpawnTownNPCs += SpawnTownNPCs;
 
+			Player.AdjTiles+= AdjTiles;
+			
 			// On.Terraria.Player.FishingLevel += Player_FishingLevel;
 
 			// IL.Terraria.Player.QuickBuff += Player_QuickBuff;
