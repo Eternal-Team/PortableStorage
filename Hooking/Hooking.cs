@@ -4,14 +4,14 @@
 	{
 		public static void Load()
 		{
-			IL.Terraria.Player.HasAmmo += Player_HasAmmo;
-			IL.Terraria.Player.PickAmmo += Player_PickAmmo;
+			IL.Terraria.Player.HasAmmo += HasAmmo;
+			IL.Terraria.Player.PickAmmo += PickAmmo;
+			IL.Terraria.UI.ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += DrawAmmo;
 			
 			// On.Terraria.Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3) => false;
 			// On.Terraria.Player.FishingLevel += Player_FishingLevel;
 			//
 			// ItemSlot.DrawSavings += ItemSlot_DrawSavings;
-			// ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color;
 		
 			// IL.Terraria.Player.QuickBuff += Player_QuickBuff;
 			// IL.Terraria.Player.QuickHeal_GetItemToUse += Player_QuickHeal_GetItemToUse;
