@@ -17,6 +17,8 @@ namespace PortableStorage.Hooking
 			On.Terraria.Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3, bank4) => false;
 			Player.SellItem += SellItem;
 
+			Main.UpdateTime_SpawnTownNPCs += SpawnTownNPCs;
+
 			// On.Terraria.Player.FishingLevel += Player_FishingLevel;
 
 			// IL.Terraria.Player.QuickBuff += Player_QuickBuff;
