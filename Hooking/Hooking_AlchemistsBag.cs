@@ -28,7 +28,7 @@ namespace PortableStorage.Hooking
 
 		private delegate void QuickBuff_Del(Player player, ref LegacySoundStyle sound);
 
-		private static MethodInfo QuickBuff_ShouldBotherUsingThisBuff = typeof(Player).GetMethod("QuickBuff_ShouldBotherUsingThisBuff", ReflectionUtility.DefaultFlags);
+		private static MethodInfo QuickBuff_ShouldBotherUsingThisBuff = typeof(Player).GetMethod("QuickBuff_ShouldBotherUsingThisBuff", ReflectionUtility.DefaultFlags_Static);
 
 		private static void QuickBuff(ILContext il)
 		{
@@ -237,7 +237,7 @@ namespace PortableStorage.Hooking
 
 		private delegate void PickBestFoodItem_Del(Player player, ref Item item, ref int num);
 
-		private static MethodInfo QuickBuff_FindFoodPriority = typeof(Player).GetMethod("QuickBuff_FindFoodPriority", ReflectionUtility.DefaultFlags);
+		private static MethodInfo QuickBuff_FindFoodPriority = typeof(Player).GetMethod("QuickBuff_FindFoodPriority", ReflectionUtility.DefaultFlags_Static);
 
 		private static void PickBestFoodItem(ILContext il)
 		{

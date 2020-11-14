@@ -1,5 +1,6 @@
 ﻿using IL.Terraria;
 using IL.Terraria.UI;
+using MonoMod.Cil;
 
 namespace PortableStorage.Hooking
 {
@@ -30,14 +31,11 @@ namespace PortableStorage.Hooking
 			// IL.Terraria.Player.ItemCheck += Player_ItemCheck;
 			// IL.Terraria.Player.GetItem += Player_GetItem;
 
-			// if (ItemTextBags == null)
-			// {
-			// ItemTextBags = new Item[20];
-			// for (int i = 0; i < ItemTextBags.Length; i++) ItemTextBags[i] = new Item();
-			// }
+			ItemTextBags = new Terraria.Item[Terraria.Main.popupText.Length];
+			for (int i = 0; i < ItemTextBags.Length; i++) ItemTextBags[i] = new Terraria.Item();
 
 			// IL.Terraria.ItemText.Update += ItemText_Update;
-			// IL.Terraria.Main.DoDraw += Main_DoDraw;
+			IL.Terraria.Main.DoDraw += DoDraw;
 		}
 	}
 }
