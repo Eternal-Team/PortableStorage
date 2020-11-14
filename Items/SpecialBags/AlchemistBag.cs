@@ -87,6 +87,9 @@ namespace PortableStorage.Items.SpecialBags
 				.Register();
 		}
 
-		public ItemHandler GetItemHandlerForCrafting() => Handler;
+		public IEnumerable<int> GetSlotsForCrafting()
+		{
+			for (int i = PotionSlots; i < IngredientSlots; i++) yield return i;
+		}
 	}
 }

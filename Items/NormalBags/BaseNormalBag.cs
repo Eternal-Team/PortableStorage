@@ -1,4 +1,6 @@
-﻿using BaseLibrary;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BaseLibrary;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Container;
@@ -45,6 +47,6 @@ namespace PortableStorage.Items
 			item.height = 34;
 		}
 
-		public ItemHandler GetItemHandlerForCrafting() => Handler;
+		public IEnumerable<int> GetSlotsForCrafting() => Enumerable.Range(0, SlotCount);
 	}
 }
