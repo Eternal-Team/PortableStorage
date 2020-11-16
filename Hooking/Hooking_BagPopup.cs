@@ -16,7 +16,7 @@ namespace PortableStorage.Hooking
 	{
 		private static Item[] ItemTextBags;
 
-		private static MethodInfo ValueToName_S = typeof(PopupText).GetMethod("ValueToName", ReflectionUtility.DefaultFlags_Static, null, Type.EmptyTypes, null);
+		private static MethodInfo ValueToName_Static = typeof(PopupText).GetMethod("ValueToName", ReflectionUtility.DefaultFlags_Static);
 		private static MethodInfo ValueToName = typeof(PopupText).GetMethod("ValueToName", ReflectionUtility.DefaultFlags);
 		private static MethodInfo FindNextItemTextSlot = typeof(PopupText).GetMethod("FindNextItemTextSlot", ReflectionUtility.DefaultFlags_Static);
 		private static MethodInfo GetRarity = typeof(RarityLoader).GetMethod("GetRarity", ReflectionUtility.DefaultFlags_Static);
@@ -48,7 +48,7 @@ namespace PortableStorage.Hooking
 					else if (newItem.type == ItemID.PlatinumCoin) num += 1000000 * stack;
 
 					popupText.coinValue += num;
-					text = ValueToName_S.Invoke<string>(null, popupText.coinValue);
+					text = ValueToName_Static.Invoke<string>(null, popupText.coinValue);
 					vector = FontAssets.MouseText.Value.MeasureString(text);
 					popupText.name = text;
 					if (popupText.coinValue >= 1000000)

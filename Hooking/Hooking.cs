@@ -1,6 +1,5 @@
 ﻿using IL.Terraria;
 using IL.Terraria.UI;
-using MonoMod.Cil;
 
 namespace PortableStorage.Hooking
 {
@@ -18,10 +17,7 @@ namespace PortableStorage.Hooking
 			On.Terraria.Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3, bank4) => false;
 			Player.SellItem += SellItem;
 
-			Main.UpdateTime_SpawnTownNPCs += SpawnTownNPCs;
-
 			Player.AdjTiles += AdjTiles;
-
 			Player.QuickMana += QuickMana;
 			Player.QuickHeal_GetItemToUse += QuickHeal;
 			Player.QuickBuff_PickBestFoodItem += PickBestFoodItem;
@@ -31,11 +27,11 @@ namespace PortableStorage.Hooking
 			// IL.Terraria.Player.ItemCheck += Player_ItemCheck;
 			// IL.Terraria.Player.GetItem += Player_GetItem;
 
+			Main.UpdateTime_SpawnTownNPCs += SpawnTownNPCs;
+
 			ItemTextBags = new Terraria.Item[Terraria.Main.popupText.Length];
 			for (int i = 0; i < ItemTextBags.Length; i++) ItemTextBags[i] = new Terraria.Item();
-
-			// IL.Terraria.ItemText.Update += ItemText_Update;
-			IL.Terraria.Main.DoDraw += DoDraw;
+			Main.DoDraw += DoDraw;
 		}
 	}
 }

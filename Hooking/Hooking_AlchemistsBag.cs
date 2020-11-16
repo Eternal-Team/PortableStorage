@@ -26,7 +26,7 @@ namespace PortableStorage.Hooking
 			}
 		}
 
-		private delegate void QuickBuff_Del(Player player, ref LegacySoundStyle sound);
+		private delegate void QuickBuff_Del(Player player, ref SoundStyle sound);
 
 		private static MethodInfo QuickBuff_ShouldBotherUsingThisBuff = typeof(Player).GetMethod("QuickBuff_ShouldBotherUsingThisBuff", ReflectionUtility.DefaultFlags_Static);
 
@@ -39,7 +39,7 @@ namespace PortableStorage.Hooking
 				cursor.Emit(OpCodes.Ldarg, 0);
 				cursor.Emit(OpCodes.Ldloca, 0);
 
-				cursor.EmitDelegate<QuickBuff_Del>((Player player, ref LegacySoundStyle sound) =>
+				cursor.EmitDelegate<QuickBuff_Del>((Player player, ref SoundStyle sound) =>
 				{
 					// if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickBuff) return false;
 

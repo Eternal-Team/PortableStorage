@@ -45,8 +45,8 @@ namespace PortableStorage.Items
 
 		public override bool UseItem(Player player)
 		{
-			if (PortableStorage.Instance.bagState.bag == this) PortableStorage.Instance.bagState.bag = null;
-			else PortableStorage.Instance.bagState.Open(this);
+			if (BagUISystem.Instance.bagState.bag == this) BagUISystem.Instance.bagState.bag = null;
+			else BagUISystem.Instance.bagState.Open(this);
 
 			return true;
 		}
@@ -55,8 +55,8 @@ namespace PortableStorage.Items
 
 		public override void RightClick(Player player)
 		{
-			if (PortableStorage.Instance.bagState.bag == this) PortableStorage.Instance.bagState.bag = null;
-			else PortableStorage.Instance.bagState.Open(this);
+			if (BagUISystem.Instance.bagState.bag == this) BagUISystem.Instance.bagState.bag = null;
+			else BagUISystem.Instance.bagState.Open(this);
 		}
 
 		public override TagCompound Save() => new TagCompound
