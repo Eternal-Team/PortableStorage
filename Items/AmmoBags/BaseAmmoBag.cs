@@ -7,11 +7,11 @@ namespace PortableStorage.Items
 {
 	public abstract class BaseAmmoBag : BaseBag
 	{
-		protected class AmmoBagItemHandler : ItemHandler
+		protected class AmmoBagItemStorage : ItemStorage
 		{
 			private BaseAmmoBag bag;
 
-			public AmmoBagItemHandler(int slots, BaseAmmoBag bag) : base(slots)
+			public AmmoBagItemStorage(int slots, BaseAmmoBag bag) : base(slots)
 			{
 				this.bag = bag;
 			}
@@ -34,7 +34,7 @@ namespace PortableStorage.Items
 		{
 			base.OnCreate(context);
 
-			Handler = new AmmoBagItemHandler(9, this);
+			Storage = new AmmoBagItemStorage(9, this);
 		}
 	}
 }

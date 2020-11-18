@@ -7,11 +7,11 @@ namespace PortableStorage.Items.SpecialBags
 {
 	public class MinerBackpack : BaseBag
 	{
-		private class MinerBackpackItemHandler : ItemHandler
+		private class MinerBackpackItemStorage : ItemStorage
 		{
 			private MinerBackpack bag;
 
-			public MinerBackpackItemHandler(int slots, MinerBackpack bag) : base(slots)
+			public MinerBackpackItemStorage(int slots, MinerBackpack bag) : base(slots)
 			{
 				this.bag = bag;
 			}
@@ -32,7 +32,7 @@ namespace PortableStorage.Items.SpecialBags
 
 		public override void OnCreate(ItemCreationContext context)
 		{
-			Handler = new MinerBackpackItemHandler(18, this);
+			Storage = new MinerBackpackItemStorage(18, this);
 		}
 
 		public override void SetDefaults()

@@ -14,7 +14,7 @@ namespace PortableStorage.Items
 
 		public long Coins
 		{
-			get => Handler.CountCoins();
+			get => Storage.CountCoins();
 			set
 			{
 				Item[] coins = Utils.CoinsSplit(value).Select((stack, index) =>
@@ -25,7 +25,7 @@ namespace PortableStorage.Items
 					return coin;
 				}).Reverse().ToArray();
 
-				for (int i = 0; i < Handler.Slots; i++) Handler.SetItemInSlot(i, coins[i]);
+				for (int i = 0; i < Storage.Length; i++) Storage.SetItemInSlot(i, coins[i]);
 
 				Recipe.FindRecipes();
 				Utility.SyncBag(this);
@@ -37,7 +37,7 @@ namespace PortableStorage.Items
 			base.OnCreate(context);
 
 			// todo: allow for custom currencies
-			Handler = new AmmoBagItemHandler(4, this);
+			Storage = new AmmoBagItemStorage(4, this);
 		}
 
 		public override void SetDefaults()

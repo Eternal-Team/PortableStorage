@@ -16,12 +16,12 @@ namespace PortableStorage
 {
 	public class UIContainerSlot : UIElement
 	{
-		public ItemHandler Handler;
+		private ItemStorage storage;
 
 		public Item Item
 		{
-			get => Handler.GetItemInSlot(slot);
-			set => Handler.SetItemInSlot(slot, value);
+			get => storage.GetItemInSlot(slot);
+			set => storage.SetItemInSlot(slot, value);
 		}
 
 		public Texture2D backgroundTexture = TextureAssets.InventoryBack.Value;
@@ -32,18 +32,18 @@ namespace PortableStorage
 
 		public int slot;
 
-		public UIContainerSlot(ItemHandler itemHandler, int slot = 0)
+		public UIContainerSlot(ItemStorage itemStorage, int slot = 0)
 		{
 			Width.Pixels = 44;
 			Height.Pixels = 44;
 
 			this.slot = slot;
-			Handler = itemHandler;
+			storage = itemStorage;
 		}
 
 		public override void Click(UIMouseEvent evt)
 		{
-			if (Main.mouseItem.IsAir || Handler.IsItemValid(slot, Main.mouseItem))
+			if (Main.mouseItem.IsAir || storage.IsItemValid(slot, Main.mouseItem))
 			{
 				// args.Handled = true;
 
@@ -52,14 +52,14 @@ namespace PortableStorage
 
 				if (ItemSlot.ShiftInUse)
 				{
-					Main.LocalPlayer.Loot(Handler, slot);
+					Main.LocalPlayer.Loot(storage, slot);
 					return;
 				}
 
-				if (Main.mouseItem.IsAir) Handler.ExtractItem(slot, out Main.mouseItem, Item.maxStack, true);
+				if (Main.mouseItem.IsAir) storage.ExtractItem(slot, out Main.mouseItem, Item.maxStack, true);
 				else
 				{
-					if (Item.IsTheSameAs(Main.mouseItem)) Handler.InsertItem(slot, ref Main.mouseItem, true);
+					if (Item.IsTheSameAs(Main.mouseItem)) storage.InsertItem(slot, ref Main.mouseItem, true);
 					else
 					{
 						if (Item.stack <= Item.maxStack)
@@ -199,7 +199,7 @@ namespace PortableStorage
 					}
 
 					Main.mouseItem.stack++;
-					Handler.Shrink(slot, 1, true);
+					storage.Shrink(slot, 1, true);
 
 					Recipe.FindRecipes();
 

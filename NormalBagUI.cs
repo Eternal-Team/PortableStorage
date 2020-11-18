@@ -29,9 +29,9 @@ namespace PortableStorage
 			exit.OnClick += (evt, element) => BagUISystem.Instance.bagState.bag = null;
 			panel.Append(exit);
 
-			for (int i = 0; i < bag.Handler.Slots; i++)
+			for (int i = 0; i < bag.Storage.Length; i++)
 			{
-				UIContainerSlot slot = new UIContainerSlot(bag.Handler, i);
+				UIContainerSlot slot = new UIContainerSlot(bag.Storage, i);
 				slot.Left.Set(48f * (i % 9), 0f);
 				slot.Top.Set(60f + i / 9 * 48f, 0f);
 				panel.Append(slot);

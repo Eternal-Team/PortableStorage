@@ -47,11 +47,11 @@ namespace PortableStorage.Hooking
 
 					foreach (AlchemistBag bag in GetAlchemistBags(player))
 					{
-						ItemHandler handler = bag.GetItemHandler();
+						ItemStorage storage = bag.GetItemStorage();
 
-						for (var i = 0; i < AlchemistBag.PotionSlots; i++)
+						for (int i = 0; i < AlchemistBag.PotionSlots; i++)
 						{
-							Item item = handler.Items[i];
+							Item item = storage.Items[i];
 
 							if (item.IsAir || item.buffType <= 0 || item.DamageType == DamageClass.Summon) continue;
 
@@ -112,11 +112,11 @@ namespace PortableStorage.Hooking
 
 					foreach (AlchemistBag bag in GetAlchemistBags(player))
 					{
-						ItemHandler handler = bag.GetItemHandler();
+						ItemStorage storage = bag.GetItemStorage();
 
-						for (var i = 0; i < AlchemistBag.PotionSlots; i++)
+						for (int i = 0; i < AlchemistBag.PotionSlots; i++)
 						{
-							Item item = handler.Items[i];
+							Item item = storage.Items[i];
 							if (item.IsAir || !item.potion || item.healLife <= 0 || !ItemLoader.CanUseItem(item, player)) continue;
 
 							int healWaste = player.GetHealLife(item, true) - lostHealth;
@@ -154,11 +154,11 @@ namespace PortableStorage.Hooking
 
 					foreach (AlchemistBag bag in GetAlchemistBags(player))
 					{
-						ItemHandler handler = bag.GetItemHandler();
+						ItemStorage storage = bag.GetItemStorage();
 
-						for (var i = 0; i < AlchemistBag.PotionSlots; i++)
+						for (int i = 0; i < AlchemistBag.PotionSlots; i++)
 						{
-							Item item = handler.Items[i];
+							Item item = storage.Items[i];
 							if (item.IsAir || item.healMana <= 0 || player.potionDelay > 0 && item.potion || !CombinedHooks.CanUseItem(player, item)) continue;
 
 							SoundEngine.PlaySound(item.UseSound, player.position);
@@ -253,11 +253,11 @@ namespace PortableStorage.Hooking
 				{
 					foreach (AlchemistBag bag in GetAlchemistBags(player))
 					{
-						ItemHandler handler = bag.GetItemHandler();
+						ItemStorage storage = bag.GetItemStorage();
 
 						for (var i = 0; i < AlchemistBag.PotionSlots; i++)
 						{
-							Item item = handler.Items[i];
+							Item item = storage.Items[i];
 							if (item.IsAir) continue;
 
 							int priority = QuickBuff_FindFoodPriority.Invoke<int>(player, item.buffType);

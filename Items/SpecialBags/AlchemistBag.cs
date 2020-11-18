@@ -11,11 +11,11 @@ namespace PortableStorage.Items.SpecialBags
 	// todo: limit crafting to ingredient slots
 	public class AlchemistBag : BaseBag, ICraftingStorage
 	{
-		private class AlchemistBagItemHandler : ItemHandler
+		private class AlchemistBagItemStorage : ItemStorage
 		{
 			private AlchemistBag bag;
 
-			public AlchemistBagItemHandler(AlchemistBag bag) : base(PotionSlots + IngredientSlots)
+			public AlchemistBagItemStorage(AlchemistBag bag) : base(PotionSlots + IngredientSlots)
 			{
 				this.bag = bag;
 			}
@@ -59,7 +59,7 @@ namespace PortableStorage.Items.SpecialBags
 
 		public override void OnCreate(ItemCreationContext context)
 		{
-			Handler = new AlchemistBagItemHandler(this);
+			Storage = new AlchemistBagItemStorage(this);
 		}
 
 		public override void SetDefaults()

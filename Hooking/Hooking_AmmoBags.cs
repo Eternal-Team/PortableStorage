@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using PortableStorage.Items;
@@ -12,7 +13,7 @@ namespace PortableStorage.Hooking
 	{
 		private static IEnumerable<BaseAmmoBag> GetAmmoBags(Player player)
 		{
-			foreach (Item pItem in Main.LocalPlayer.inventory)
+			foreach (Item pItem in player.inventory)
 			{
 				if (!pItem.IsAir && pItem.modItem is BaseAmmoBag bag)
 				{
@@ -35,12 +36,11 @@ namespace PortableStorage.Hooking
 				{
 					foreach (BaseAmmoBag bag in GetAmmoBags(player))
 					{
-						ItemHandler handler = bag.GetItemHandler();
+						ItemStorage handler = bag.GetItemStorage();
 
-						for (int i = 0; i < handler.Slots; i++)
+						if (handler.Items.Any(item => !item.IsAir && item.ammo == weapon.useAmmo))
 						{
-							Item item = handler.GetItemInSlot(i);
-							if (!item.IsAir && item.ammo == weapon.useAmmo) return true;
+							return true;
 						}
 					}
 
@@ -70,11 +70,10 @@ namespace PortableStorage.Hooking
 
 					foreach (BaseAmmoBag bag in GetAmmoBags(player))
 					{
-						ItemHandler handler = bag.GetItemHandler();
+						ItemStorage storage = bag.GetItemStorage();
 
-						for (int i = 0; i < handler.Slots; i++)
+						foreach (Item item in storage.Items)
 						{
-							Item item = handler.GetItemInSlot(i);
 							if (!item.IsAir && item.ammo == weapon.useAmmo)
 							{
 								ammoItem = item;
@@ -109,13 +108,9 @@ namespace PortableStorage.Hooking
 				{
 					foreach (BaseAmmoBag bag in GetAmmoBags(Main.LocalPlayer))
 					{
-						ItemHandler handler = bag.GetItemHandler();
+						ItemStorage storage = bag.GetItemStorage();
 
-						for (int i = 0; i < handler.Slots; i++)
-						{
-							Item item = handler.GetItemInSlot(i);
-							if (!item.IsAir && item.ammo == useAmmo) ammoCount += item.stack;
-						}
+						ammoCount += storage.Items.Where(item => !item.IsAir && item.ammo == useAmmo).Sum(item => item.stack);
 					}
 
 					return ammoCount;

@@ -9,11 +9,11 @@ namespace PortableStorage.Items
 {
 	public abstract class BaseNormalBag : BaseBag, ICraftingStorage
 	{
-		private class NormalBagHandler : ItemHandler
+		private class NormalBagItemStorage : ItemStorage
 		{
 			private BaseNormalBag bag;
 
-			public NormalBagHandler(BaseNormalBag bag) : base(bag.SlotCount)
+			public NormalBagItemStorage(BaseNormalBag bag) : base(bag.SlotCount)
 			{
 				this.bag = bag;
 			}
@@ -36,7 +36,7 @@ namespace PortableStorage.Items
 		{
 			base.OnCreate(context);
 
-			Handler = new NormalBagHandler(this);
+			Storage = new NormalBagItemStorage(this);
 		}
 
 		public override void SetDefaults()

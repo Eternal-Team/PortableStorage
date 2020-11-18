@@ -10,15 +10,15 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items
 {
-	public abstract class BaseBag : BaseItem, IItemHandler
+	public abstract class BaseBag : BaseItem, IItemStorage
 	{
 		public Guid ID;
-		public ItemHandler Handler;
+		public ItemStorage Storage;
 
 		public override ModItem Clone(Item item)
 		{
 			BaseBag clone = (BaseBag)base.Clone(item);
-			clone.Handler = Handler.Clone();
+			clone.Storage = Storage.Clone();
 			clone.ID = ID;
 			return clone;
 		}
@@ -38,7 +38,7 @@ namespace PortableStorage.Items
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(Mod, "PortableStorage:BagTooltip", Language.GetText("Mods.PortableStorage.BagTooltip." + GetType().Name).Format(Handler.Slots)));
+			tooltips.Add(new TooltipLine(Mod, "PortableStorage:BagTooltip", Language.GetText("Mods.PortableStorage.BagTooltip." + GetType().Name).Format(Storage.Length)));
 		}
 
 		public override bool ConsumeItem(Player player) => false;
@@ -62,15 +62,15 @@ namespace PortableStorage.Items
 		public override TagCompound Save() => new TagCompound
 		{
 			["ID"] = ID,
-			["Items"] = Handler.Save()
+			["Items"] = Storage.Save()
 		};
 
 		public override void Load(TagCompound tag)
 		{
 			ID = tag.Get<Guid>("ID");
-			Handler.Load(tag.GetCompound("Items"));
+			Storage.Load(tag.GetCompound("Items"));
 		}
 
-		public ItemHandler GetItemHandler() => Handler;
+		public ItemStorage GetItemStorage() => Storage;
 	}
 }

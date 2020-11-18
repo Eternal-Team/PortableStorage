@@ -9,7 +9,7 @@ namespace PortableStorage
 	public class BagUISystem : ModSystem
 	{
 		public static BagUISystem Instance => ModContent.GetInstance<BagUISystem>();
-		
+
 		public NormalBagUI bagState;
 		private UserInterface bagUI;
 

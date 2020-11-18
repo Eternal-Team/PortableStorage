@@ -36,12 +36,12 @@ namespace PortableStorage.Hooking
 						{
 							if (bag is Wallet wallet)
 							{
-								walletCoins += wallet.Handler.CountCoins();
+								walletCoins += wallet.Storage.CountCoins();
 								continue;
 							}
 
-							ItemHandler handler = bag.GetItemHandler();
-							foreach (Item item in handler.Items)
+							ItemStorage storage = bag.GetItemStorage();
+							foreach (Item item in storage.Items)
 							{
 								if (item.IsAir) continue;
 
