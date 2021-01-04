@@ -16,11 +16,11 @@ namespace PortableStorage.Items.SpecialBags
 				this.bag = bag;
 			}
 
-			public override void OnContentsChanged(int slot, bool user)
-			{
-				Recipe.FindRecipes();
-				Utility.SyncBag(bag);
-			}
+			// public void OnContentsChanged(object user, int slot, Item item)
+			// {
+			// 	Recipe.FindRecipes();
+			// 	Utility.SyncBag(bag);
+			// }
 
 			public override bool IsItemValid(int slot, Item item)
 			{

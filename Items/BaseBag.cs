@@ -38,12 +38,12 @@ namespace PortableStorage.Items
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(Mod, "PortableStorage:BagTooltip", Language.GetText("Mods.PortableStorage.BagTooltip." + GetType().Name).Format(Storage.Length)));
+			tooltips.Add(new TooltipLine(Mod, "PortableStorage:BagTooltip", Language.GetText("Mods.PortableStorage.BagTooltip." + GetType().Name).Format(Storage.Count)));
 		}
 
 		public override bool ConsumeItem(Player player) => false;
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			if (BagUISystem.Instance.bagState.bag == this) BagUISystem.Instance.bagState.bag = null;
 			else BagUISystem.Instance.bagState.Open(this);

@@ -56,6 +56,8 @@ namespace PortableStorage.Hooking
 			ILCursor cursor = new ILCursor(il);
 			int walletIndex = il.AddVariable<long>();
 
+			// hook CustomCurrencyManager.BuyItem(this, price, customCurrency);
+
 			if (cursor.TryGotoNext(i => i.MatchLdloca(0), i => i.MatchLdcI4(5)))
 			{
 				cursor.Emit(OpCodes.Ldarg, 0);
@@ -102,10 +104,11 @@ namespace PortableStorage.Hooking
 			{
 				if (pItem.modItem is Wallet wallet)
 				{
-					long walletCoins = wallet.Storage.CountCoins();
+					ItemStorage storage = wallet.Storage;
+					long walletCoins = storage.CountCoins();
 					long sub = Math.Min(walletCoins, priceRemaining);
 					priceRemaining -= sub;
-					wallet.Coins -= sub;
+					storage.RemoveCoins(player, ref sub);
 
 					if (priceRemaining <= 0) return false;
 				}
@@ -279,7 +282,7 @@ namespace PortableStorage.Hooking
 					{
 						if (!pItem.IsAir && pItem.modItem is Wallet wallet)
 						{
-							wallet.Coins += price;
+							wallet.Storage.InsertCoins(player, price);
 							return true;
 						}
 					}

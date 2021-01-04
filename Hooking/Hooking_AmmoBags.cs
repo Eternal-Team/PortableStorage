@@ -38,10 +38,7 @@ namespace PortableStorage.Hooking
 					{
 						ItemStorage handler = bag.GetItemStorage();
 
-						if (handler.Items.Any(item => !item.IsAir && item.ammo == weapon.useAmmo))
-						{
-							return true;
-						}
+						if (handler.Any(item => !item.IsAir && item.ammo == weapon.useAmmo)) return true;
 					}
 
 					return hasAmmo;
@@ -72,7 +69,7 @@ namespace PortableStorage.Hooking
 					{
 						ItemStorage storage = bag.GetItemStorage();
 
-						foreach (Item item in storage.Items)
+						foreach (Item item in storage)
 						{
 							if (!item.IsAir && item.ammo == weapon.useAmmo)
 							{
@@ -110,7 +107,7 @@ namespace PortableStorage.Hooking
 					{
 						ItemStorage storage = bag.GetItemStorage();
 
-						ammoCount += storage.Items.Where(item => !item.IsAir && item.ammo == useAmmo).Sum(item => item.stack);
+						ammoCount += storage.Where(item => !item.IsAir && item.ammo == useAmmo).Sum(item => item.stack);
 					}
 
 					return ammoCount;

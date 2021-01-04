@@ -41,7 +41,7 @@ namespace PortableStorage.Hooking
 							}
 
 							ItemStorage storage = bag.GetItemStorage();
-							foreach (Item item in storage.Items)
+							foreach (Item item in storage)
 							{
 								if (item.IsAir) continue;
 

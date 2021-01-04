@@ -1,40 +1,43 @@
-﻿using PortableStorage.Items;
-using Terraria.GameContent.UI.Elements;
-using Terraria.UI;
+﻿using BaseLibrary.UI;
+using PortableStorage.Items;
 
 namespace PortableStorage
 {
-	public class NormalBagUI : UIState
+	public class NormalBagUI : BaseState
 	{
-		public bool Visible => bag != null;
-
 		public BaseBag bag;
 
 		public void Open(BaseBag bag)
 		{
 			this.bag = bag;
+			Display = Display.Visible;
+			
+			Clear();
 
-			RemoveAllChildren();
-
-			DragableUIPanel panel = new DragableUIPanel();
-			panel.Width.Set(512f, 0f);
-			panel.Height.Set(300f, 0f);
-			panel.HAlign = panel.VAlign = 0.5f;
-			Append(panel);
-
-			UITextPanel<string> exit = new UITextPanel<string>("X");
-			exit.Width.Set(30f, 0f);
-			exit.Height.Set(30f, 0f);
-			exit.HAlign = 1f;
-			exit.OnClick += (evt, element) => BagUISystem.Instance.bagState.bag = null;
-			panel.Append(exit);
-
-			for (int i = 0; i < bag.Storage.Length; i++)
+			UIDraggablePanel panel = new UIDraggablePanel
 			{
-				UIContainerSlot slot = new UIContainerSlot(bag.Storage, i);
-				slot.Left.Set(48f * (i % 9), 0f);
-				slot.Top.Set(60f + i / 9 * 48f, 0f);
-				panel.Append(slot);
+				Width = { Pixels = 512 },
+				Height = { Pixels = 300 },
+				X = { Percent = 50 },
+				Y = { Percent = 50 }
+			};
+			Add(panel);
+
+			// UITextPanel<string> exit = new UITextPanel<string>("X");
+			// exit.Width.Set(30f, 0f);
+			// exit.Height.Set(30f, 0f);
+			// exit.HAlign = 1f;
+			// exit.OnClick += (evt, element) => BagUISystem.Instance.bagState.bag = null;
+			// panel.Add(exit);
+
+			for (int i = 0; i < bag.Storage.Count; i++)
+			{
+				UIContainerSlot slot = new UIContainerSlot(bag.Storage, i)
+				{
+					X = { Pixels = 48 * (i % 9) },
+					Y = { Pixels = 60 + i / 9 * 48 }
+				};
+				panel.Add(slot);
 			}
 		}
 	}
