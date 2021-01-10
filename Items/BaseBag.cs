@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using BaseLibrary;
+using BaseLibrary.UI;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -10,7 +12,7 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items
 {
-	public abstract class BaseBag : BaseItem, IItemStorage
+	public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	{
 		public Guid ID;
 		public ItemStorage Storage;
@@ -45,8 +47,7 @@ namespace PortableStorage.Items
 
 		public override bool? UseItem(Player player)
 		{
-			if (BagUISystem.Instance.bagState.bag == this) BagUISystem.Instance.bagState.bag = null;
-			else BagUISystem.Instance.bagState.Open(this);
+			PanelUI.Instance.HandleUI(this);
 
 			return true;
 		}
@@ -55,8 +56,7 @@ namespace PortableStorage.Items
 
 		public override void RightClick(Player player)
 		{
-			if (BagUISystem.Instance.bagState.bag == this) BagUISystem.Instance.bagState.bag = null;
-			else BagUISystem.Instance.bagState.Open(this);
+			PanelUI.Instance.HandleUI(this);
 		}
 
 		public override TagCompound Save() => new TagCompound
@@ -72,5 +72,10 @@ namespace PortableStorage.Items
 		}
 
 		public ItemStorage GetItemStorage() => Storage;
+
+		public Guid GetID() => ID;
+
+		public LegacySoundStyle CloseSound { get; }
+		public LegacySoundStyle OpenSound { get; }
 	}
 }
