@@ -15,7 +15,7 @@ namespace PortableStorage.Hooking
 		{
 			foreach (Item pItem in player.inventory)
 			{
-				if (!pItem.IsAir && pItem.modItem is BaseAmmoBag bag)
+				if (!pItem.IsAir && pItem.ModItem is BaseAmmoBag bag)
 				{
 					yield return bag;
 				}

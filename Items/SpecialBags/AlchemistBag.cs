@@ -65,10 +65,10 @@ namespace PortableStorage.Items.SpecialBags
 		{
 			base.SetDefaults();
 
-			item.width = 32;
-			item.height = 32;
-			item.rare = ItemRarityID.Orange;
-			item.value = Item.buyPrice(gold: 3);
+			Item.width = 32;
+			Item.height = 32;
+			Item.rare = ItemRarityID.Orange;
+			Item.value = Item.buyPrice(gold: 3);
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)

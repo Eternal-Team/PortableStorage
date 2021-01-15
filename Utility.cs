@@ -288,14 +288,14 @@ namespace PortableStorage
 		{
 			if (Main.netMode == NetmodeID.MultiplayerClient)
 			{
-				bag.item.FindOwner(bag.item.whoAmI);
+				bag.Item.FindOwner(bag.Item.whoAmI);
 
-				Player player = Main.player[bag.item.playerIndexTheItemIsReservedFor];
+				Player player = Main.player[bag.Item.playerIndexTheItemIsReservedFor];
 
-				int index = player.inventory.ToList().FindIndex(x => x == bag.item);
+				int index = player.inventory.ToList().FindIndex(x => x == bag.Item);
 				if (index < 0) return;
 
-				NetMessage.SendData(MessageID.SyncEquipment, number: bag.item.playerIndexTheItemIsReservedFor, number2: index);
+				NetMessage.SendData(MessageID.SyncEquipment, number: bag.Item.playerIndexTheItemIsReservedFor, number2: index);
 			}
 		}
 

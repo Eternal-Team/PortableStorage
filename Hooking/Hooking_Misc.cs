@@ -32,7 +32,7 @@ namespace PortableStorage.Hooking
 
 					foreach (Item pItem in player.inventory)
 					{
-						if (pItem.modItem is BaseBag bag)
+						if (pItem.ModItem is BaseBag bag)
 						{
 							if (bag is Wallet wallet)
 							{

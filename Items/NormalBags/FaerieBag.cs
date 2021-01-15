@@ -13,10 +13,10 @@ namespace PortableStorage.Items
 		{
 			base.SetDefaults();
 
-			item.width = 28;
-			item.height = 26;
-			item.rare = ItemRarityID.LightRed;
-			item.value = Item.sellPrice(gold: 3);
+			Item.width = 28;
+			Item.height = 26;
+			Item.rare = ItemRarityID.LightRed;
+			Item.value = Item.sellPrice(gold: 3);
 		}
 
 		public override void AddRecipes()

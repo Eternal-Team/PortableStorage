@@ -26,7 +26,7 @@ namespace PortableStorage.Items
 
 			public override bool IsItemValid(int slot, Item item)
 			{
-				return !(item.modItem is BaseBag) && !item.IsACoin /*&& !(item.modItem is TheBlackHole)*/;
+				return !(item.ModItem is BaseBag) && !item.IsACoin /*&& !(item.ModItem is TheBlackHole)*/;
 			}
 		}
 
@@ -43,8 +43,8 @@ namespace PortableStorage.Items
 		{
 			base.SetDefaults();
 
-			item.width = 26;
-			item.height = 34;
+			Item.width = 26;
+			Item.height = 34;
 		}
 
 		public IEnumerable<int> GetSlotsForCrafting() => Enumerable.Range(0, SlotCount);

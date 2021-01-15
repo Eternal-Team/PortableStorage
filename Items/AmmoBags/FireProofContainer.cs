@@ -13,10 +13,10 @@ namespace PortableStorage.Items
 		{
 			base.SetDefaults();
 
-			item.width = 28;
-			item.height = 26;
-			item.value = Item.buyPrice(gold: 20);
-			item.rare = ItemRarityID.Lime;
+			Item.width = 28;
+			Item.height = 26;
+			Item.value = Item.buyPrice(gold: 20);
+			Item.rare = ItemRarityID.Lime;
 		}
 	}
 }

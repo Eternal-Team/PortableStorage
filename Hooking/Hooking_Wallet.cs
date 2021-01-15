@@ -30,7 +30,7 @@ namespace PortableStorage.Hooking
 
 					foreach (Item pItem in player.inventory)
 					{
-						if (pItem.modItem is Wallet wallet) coins += wallet.Storage.CountCoins();
+						if (pItem.ModItem is Wallet wallet) coins += wallet.Storage.CountCoins();
 					}
 
 					return coins;
@@ -68,7 +68,7 @@ namespace PortableStorage.Hooking
 
 					foreach (Item pItem in player.inventory)
 					{
-						if (pItem.modItem is Wallet wallet) coins += wallet.Storage.CountCoins();
+						if (pItem.ModItem is Wallet wallet) coins += wallet.Storage.CountCoins();
 					}
 
 					return coins;
@@ -102,7 +102,7 @@ namespace PortableStorage.Hooking
 
 			foreach (Item pItem in player.inventory)
 			{
-				if (pItem.modItem is Wallet wallet)
+				if (pItem.ModItem is Wallet wallet)
 				{
 					ItemStorage storage = wallet.Storage;
 					long walletCoins = storage.CountCoins();
@@ -280,7 +280,7 @@ namespace PortableStorage.Hooking
 				{
 					foreach (Item pItem in player.inventory)
 					{
-						if (!pItem.IsAir && pItem.modItem is Wallet wallet)
+						if (!pItem.IsAir && pItem.ModItem is Wallet wallet)
 						{
 							wallet.Storage.InsertCoins(player, price);
 							return true;
@@ -312,7 +312,7 @@ namespace PortableStorage.Hooking
 
 					foreach (Item pItem in player.inventory)
 					{
-						if (pItem.modItem is Wallet wallet) coins += wallet.Storage.CountCoins();
+						if (pItem.ModItem is Wallet wallet) coins += wallet.Storage.CountCoins();
 					}
 
 					return coins;

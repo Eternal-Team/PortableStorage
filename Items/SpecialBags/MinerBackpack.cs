@@ -39,10 +39,10 @@ namespace PortableStorage.Items.SpecialBags
 		{
 			base.SetDefaults();
 
-			item.width = 32;
-			item.height = 32;
-			item.rare = ItemRarityID.Green;
-			item.value = Item.buyPrice(gold: 1);
+			Item.width = 32;
+			Item.height = 32;
+			Item.rare = ItemRarityID.Green;
+			Item.value = Item.buyPrice(gold: 1);
 		}
 	}
 }

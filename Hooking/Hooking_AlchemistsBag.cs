@@ -22,7 +22,7 @@ namespace PortableStorage.Hooking
 			{
 				if (item.IsAir) continue;
 
-				if (item.modItem is AlchemistBag bag) yield return bag;
+				if (item.ModItem is AlchemistBag bag) yield return bag;
 			}
 		}
 

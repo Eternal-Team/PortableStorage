@@ -32,10 +32,10 @@ namespace PortableStorage.Items
 
 		public override void SetDefaults()
 		{
-			item.useTime = 5;
-			item.useAnimation = 5;
-			item.useStyle = ItemUseStyleID.Swing;
-			item.rare = ItemRarityID.White;
+			Item.useTime = 5;
+			Item.useAnimation = 5;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.rare = ItemRarityID.White;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
