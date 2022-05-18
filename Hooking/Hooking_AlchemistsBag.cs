@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using BaseLibrary.Utility;
+using ContainerLibrary;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using PortableStorage.Items.SpecialBags;
