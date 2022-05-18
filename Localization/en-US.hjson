@@ -1,0 +1,52 @@
+﻿Mods: {
+	PortableStorage: {
+		Config: {
+			AlchemistBag: Alchemist's Bag
+			AlchemistBagQuickBuff: Allow quick buff
+            AlchemistBagQuickHeal: Allow quick heal
+            AlchemistBagQuickMana: Allow quick mana
+		}
+		
+		ItemName: {
+			AdventurerBag: Adventurer's Bag
+            CapillaryBag: Capillary Bag
+            FaerieBag: Faerie Bag
+            SkeletalBag: Skeletal Bag
+            AmmoPouch: Ammo Pouch
+            TheBlackHole: The Black Hole
+            ThePerfectSolution: The Perfect Solution
+            FireProofContainer: Fire-Proof Container
+            Wallet: Wallet
+            Magazine: Magazine
+            DartHolder: Dart Holder
+            ArrowQuiver: Arrow Quiver
+            AlchemistBag: Alchemist's Bag
+            BuilderReserve: Builder's Reserve
+            FishingBelt: Fishing Belt
+            MinersBackpack: Miner's Backpack
+            NinjaArsenalBelt: Ninja's Arsenal Belt
+            GardenerSatchel: Gardener's Satchel
+		}
+		
+		BagTooltip: {
+			AmmoPouch: Stores {0} stacks of misc. ammo\nRight-click or use to open\n"Can hold many things, mostly random junk."
+            ArrowQuiver: Stores {0} stacks of arrows\nRight-click or use to open\n"Contains enough to take down several armies."
+            DartHolder: Stores {0} stacks of darts\nRight-click or use to open\n"A breathtaking collection to pin down."
+            FireProofContainer: Stores {0} stacks of explosive or flammable ammo\nRight-click or use to open\n"Made to protect against any hazard, except the user."
+            Magazine: Stores {0} stacks of bullets\nRight-click or use to open\n"High capacity for trigger happy havocs."
+            ThePerfectSolution: Stores {0} stacks of solutions\nRight-click or use to open\n"The only way to solve this cleanly."
+            Wallet: Stores coins\nRight-click or use to open\n"The only things savings aren't safe from are discounts."
+            AdventurerBag: Stores {0} stacks of items\nRight-click or use to open\n"Your best friend when going on expeditions."
+            CapillaryBag: Stores {0} stacks of items\nRight-click or use to open\n"It almost feels like it's alive."
+            FaerieBag: Stores {0} stacks of items\nRight-click or use to open\n"Magically expanding to fit your needs."
+            SkeletalBag: Stores {0} stacks of items\nRight-click or use to open\n"Can lead to existential questions."
+            AlchemistBag: Stores {0} stacks of potions and {1} stacks of potion ingredients\nWorks like an Alchemy Table\nRight-click or use to open\n"The favorite of apothecaries to keep all at hand's reach."
+            BuilderReserve: Stores {0} stacks of tiles or walls\nRight-click to open UI, use to place tiles/walls\nAlt+Left-Click on slot to select\n"To build the realm of your dreams."
+            FishingBelt: Stores {0} stacks of fishing poles, bait and fish\nRight-click or use to open\n"Every day is a nice day for fishing!"
+            MinersBackpack: Stores {0} stacks of ore\nRight-click or use to open\n"Salvaged from the remnants of the past."
+            NinjaArsenalBelt: Stores {0} stacks of throwing supplies\nRight-click or use to open\n"Cautionary Advisement= Avoid Tripping!"
+            TheBlackHole: Collects items in a {0} block radius and puts them in bags\nRight-click to activate\n"It is seemingly bottomless."
+            GardenerSatchel: Stores {0} stacks of seeds\nRight-Click to open UI, use to place seeds or gather flowers\nAlt+Left-Click on slot to select\n"The seeds of a whole new world, to be nurtured with care and they will bring life to this arid place."
+		}
+	}
+}
