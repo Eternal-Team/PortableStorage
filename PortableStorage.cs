@@ -1,26 +1,27 @@
 using Terraria.ModLoader;
 
-namespace PortableStorage
+namespace PortableStorage;
+
+// note: fluid and energy addons
+
+public class PortableStorage : Mod
 {
-	public class PortableStorage : Mod
+	public const string AssetPath = "PortableStorage/Assets/";
+
+	public static PortableStorage Instance => ModContent.GetInstance<PortableStorage>();
+
+	public override void Load()
 	{
-		public const string AssetPath = "PortableStorage/Assets/";
+		// Hooking.Hooking.Load();
+	}
 
-		public static PortableStorage Instance => ModContent.GetInstance<PortableStorage>();
+	public override void PostSetupContent()
+	{
+		Utility.PostSetupContent();
+	}
 
-		public override void Load()
-		{
-			Hooking.Hooking.Load();
-		}
-
-		public override void PostSetupContent()
-		{
-			Utility.PostSetupContent();
-		}
-
-		public override void AddRecipeGroups()
-		{
-			Utility.AddRecipeGroups();
-		}
+	public override void AddRecipeGroups()
+	{
+		Utility.AddRecipeGroups();
 	}
 }
