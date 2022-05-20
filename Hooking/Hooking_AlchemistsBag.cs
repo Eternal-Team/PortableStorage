@@ -11,7 +11,6 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Container;
 
 namespace PortableStorage.Hooking
 {
@@ -29,7 +28,7 @@ namespace PortableStorage.Hooking
 
 		private delegate void QuickBuff_Del(Player player, ref SoundStyle sound);
 
-		private static MethodInfo QuickBuff_ShouldBotherUsingThisBuff = typeof(Player).GetMethod("QuickBuff_ShouldBotherUsingThisBuff", ReflectionUtility.DefaultFlags_Static);
+		private static MethodInfo QuickBuff_ShouldBotherUsingThisBuff = typeof(Player).GetMethod("QuickBuff_ShouldBotherUsingThisBuff", ReflectionUtility.DefaultFlags);
 
 		private static void QuickBuff(ILContext il)
 		{
@@ -42,7 +41,7 @@ namespace PortableStorage.Hooking
 
 				cursor.EmitDelegate<QuickBuff_Del>((Player player, ref SoundStyle sound) =>
 				{
-					// if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickBuff) return false;
+					if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickBuff) return;
 
 					if (player.CountBuffs() == Player.MaxBuffs) return;
 
@@ -105,7 +104,7 @@ namespace PortableStorage.Hooking
 
 				cursor.EmitDelegate<QuickHeal_Del>((Player player, int lostHealth, ref int healthGain, ref Item result) =>
 				{
-					// if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickHeal) return;
+					if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickHeal) return;
 
 					foreach (AlchemistBag bag in GetAlchemistBags(player))
 					{
@@ -114,9 +113,16 @@ namespace PortableStorage.Hooking
 						for (int i = 0; i < AlchemistBag.PotionSlots; i++)
 						{
 							Item item = storage[i];
-							if (item.IsAir || !item.potion || item.healLife <= 0 || !ItemLoader.CanUseItem(item, player)) continue;
+							if (item.IsAir || !item.potion || item.healLife <= 0 || !CombinedHooks.CanUseItem(player, item)) continue;
 
 							int healWaste = player.GetHealLife(item, true) - lostHealth;
+							if (item.type == ItemID.RestorationPotion && healWaste < 0)
+							{
+								healWaste += 30;
+								if (healWaste > 0)
+									healWaste = 0;
+							}
+
 							if (healthGain < 0)
 							{
 								if (healWaste > healthGain)
@@ -147,7 +153,7 @@ namespace PortableStorage.Hooking
 
 				cursor.EmitDelegate<Func<Player, bool>>(player =>
 				{
-					// if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickMana) return false;
+					if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickMana) return false;
 
 					foreach (AlchemistBag bag in GetAlchemistBags(player))
 					{
@@ -156,7 +162,7 @@ namespace PortableStorage.Hooking
 						for (int i = 0; i < AlchemistBag.PotionSlots; i++)
 						{
 							Item item = storage[i];
-							if (item.IsAir || item.healMana <= 0 || player.potionDelay > 0 && item.potion || !CombinedHooks.CanUseItem(player, item)) continue;
+							if (item.IsAir || item.healMana <= 0 || (player.potionDelay > 0 && item.potion) || !CombinedHooks.CanUseItem(player, item)) continue;
 
 							SoundEngine.PlaySound(item.UseSound, player.position);
 							if (item.potion)
@@ -216,7 +222,7 @@ namespace PortableStorage.Hooking
 		{
 			ILCursor cursor = new ILCursor(il);
 
-			if (cursor.TryGotoNext(i => i.MatchLdsfld<Main>("playerInventory"), i => i.MatchLdcI4(0)))
+			if (cursor.TryGotoNext(i => i.MatchLdsfld<Main>("playerInventory")))
 			{
 				cursor.Emit(OpCodes.Ldarg, 0);
 
@@ -233,7 +239,7 @@ namespace PortableStorage.Hooking
 
 		private delegate void PickBestFoodItem_Del(Player player, ref Item item, ref int num);
 
-		private static MethodInfo QuickBuff_FindFoodPriority = typeof(Player).GetMethod("QuickBuff_FindFoodPriority", ReflectionUtility.DefaultFlags_Static);
+		private static MethodInfo QuickBuff_FindFoodPriority = typeof(Player).GetMethod("QuickBuff_FindFoodPriority", ReflectionUtility.DefaultFlags);
 
 		private static void PickBestFoodItem(ILContext il)
 		{

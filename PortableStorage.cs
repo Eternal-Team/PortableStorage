@@ -12,7 +12,7 @@ public class PortableStorage : Mod
 
 	public override void Load()
 	{
-		// Hooking.Hooking.Load();
+		Hooking.Hooking.Load();
 	}
 
 	public override void PostSetupContent()
