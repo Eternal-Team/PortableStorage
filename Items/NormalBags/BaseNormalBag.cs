@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace PortableStorage.Items;
 
-public abstract class BaseNormalBag : BaseBag /*, ICraftingStorage*/
+public abstract class BaseNormalBag : BaseBag, ICraftingStorage
 {
 	private class NormalBagItemStorage : ItemStorage
 	{
@@ -25,7 +25,7 @@ public abstract class BaseNormalBag : BaseBag /*, ICraftingStorage*/
 
 		public override bool IsItemValid(int slot, Item item)
 		{
-			return item.ModItem is not BaseBag && !item.IsACoin /*&& !(item.ModItem is TheBlackHole)*/;
+			return item.ModItem is not BaseBag && !item.IsACoin;
 		}
 	}
 

@@ -7,16 +7,27 @@ using Terraria;
 
 namespace PortableStorage.UI;
 
-public abstract class BaseBagPanel<T> : BaseUIPanel<T>/*, IItemStorageUI*/ where T : BaseBag
+public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T : BaseBag
 {
-	public const int SlotSize = 44;
-	public const int SlotMargin = 4;
+	protected const int SlotSize = 44;
+	protected const int SlotMargin = 4;
 
 	public ItemStorage GetItemStorage() => Container.GetItemStorage();
 
-	public string GetTexture(Item item) => Container.GetItemStorage().IsItemValid(0, item) ? Container.Texture : "";
+	// public bool IsVisible() => Display == Display.Visible;
+	public string GetCursorTexture(Item item) => Container.Texture;
 
-	// protected UIButton buttonQuickStack;`
+	// protected UIButton buttonQuickStack;
+
+	protected override void Activate()
+	{
+		ContainerLibrary.ContainerLibrary.OpenedStorageUIs.Add(this);
+	}
+
+	protected override void Deactivate()
+	{
+		ContainerLibrary.ContainerLibrary.OpenedStorageUIs.Remove(this);
+	}
 
 	public BaseBagPanel(BaseBag bag) : base((T)bag)
 	{
