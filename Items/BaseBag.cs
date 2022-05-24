@@ -15,8 +15,18 @@ namespace PortableStorage.Items;
 public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 {
 	public Guid ID;
-	protected ItemStorage Storage;
+	protected ItemStorage storage;
 
+	protected ItemStorage Storage
+	{
+		set => storage = value;
+		get
+		{
+			if (storage == null) OnCreate(null);
+			return storage;
+		}
+	}
+	
 	public override ModItem Clone(Item item)
 	{
 		BaseBag clone = (BaseBag)base.Clone(item);
@@ -28,6 +38,11 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	public override void OnCreate(ItemCreationContext context)
 	{
 		ID = Guid.NewGuid();
+	}
+
+	public override void SetStaticDefaults()
+	{
+		SacrificeTotal = 1;
 	}
 
 	public override void SetDefaults()
@@ -75,6 +90,6 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	public Guid GetID() => ID;
 
-	public SoundStyle CloseSound { get; }
-	public SoundStyle OpenSound { get; }
+	public SoundStyle? CloseSound { get; }
+	public SoundStyle? OpenSound { get; }
 }
