@@ -5,56 +5,55 @@ using PortableStorage.Items;
 using Terraria;
 using Terraria.ID;
 
-namespace PortableStorage.Hooking
+namespace PortableStorage.Hooking;
+
+public static partial class Hooking
 {
-	public static partial class Hooking
+	private delegate void SpawnTownNPCs_Del(Player player, ref int coins, ref bool f, ref bool f1, ref bool f3);
+
+	private static void SpawnTownNPCs(ILContext il)
 	{
-		private delegate void SpawnTownNPCs_Del(Player player, ref int coins, ref bool f, ref bool f1, ref bool f3);
+		ILCursor cursor = new ILCursor(il);
 
-		private static void SpawnTownNPCs(ILContext il)
+		if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdsfld<Main>("player"), i => i.MatchLdloc(85), i => i.MatchLdelemRef()))
 		{
-			ILCursor cursor = new ILCursor(il);
+			cursor.Emit<Main>(OpCodes.Ldsfld, "player");
+			cursor.Emit(OpCodes.Ldloc, 85);
+			cursor.Emit(OpCodes.Ldelem_Ref);
 
-			if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdsfld<Main>("player"), i => i.MatchLdloc(85), i => i.MatchLdelemRef()))
+			cursor.Emit(OpCodes.Ldloca, 33);
+			cursor.Emit(OpCodes.Ldloca, 36);
+			cursor.Emit(OpCodes.Ldloca, 37);
+			cursor.Emit(OpCodes.Ldloca, 38);
+
+			cursor.EmitDelegate<SpawnTownNPCs_Del>((Player player, ref int coins, ref bool condArmsDealer, ref bool condDemolitionist, ref bool condDyeTrader) =>
 			{
-				cursor.Emit<Main>(OpCodes.Ldsfld, "player");
-				cursor.Emit(OpCodes.Ldloc, 85);
-				cursor.Emit(OpCodes.Ldelem_Ref);
+				long walletCoins = 0;
 
-				cursor.Emit(OpCodes.Ldloca, 33);
-				cursor.Emit(OpCodes.Ldloca, 36);
-				cursor.Emit(OpCodes.Ldloca, 37);
-				cursor.Emit(OpCodes.Ldloca, 38);
-
-				cursor.EmitDelegate<SpawnTownNPCs_Del>((Player player, ref int coins, ref bool condArmsDealer, ref bool condDemolitionist, ref bool condDyeTrader) =>
+				foreach (Item pItem in player.inventory)
 				{
-					long walletCoins = 0;
-
-					foreach (Item pItem in player.inventory)
+					if (pItem.ModItem is BaseBag bag)
 					{
-						if (pItem.ModItem is BaseBag bag)
+						if (bag is Wallet wallet)
 						{
-							if (bag is Wallet wallet)
-							{
-								walletCoins += wallet.GetItemStorage().CountCoins();
-								continue;
-							}
+							walletCoins += wallet.GetItemStorage().CountCoins();
+							continue;
+						}
 
-							ItemStorage storage = bag.GetItemStorage();
-							foreach (Item item in storage)
-							{
-								if (item.IsAir) continue;
+						ItemStorage storage = bag.GetItemStorage();
+						foreach (Item item in storage)
+						{
+							if (item.IsAir) continue;
 
-								if (item.ammo == AmmoID.Bullet || item.useAmmo == AmmoID.Bullet) condArmsDealer = true;
-								if (ItemID.Sets.ItemsThatCountAsBombsForDemolitionistToSpawn[item.type]) condDemolitionist = true;
-								if (item.dye > 0 || item.type is >= ItemID.TealMushroom and <= ItemID.DyeVat or >= ItemID.StrangePlant1 and <= ItemID.StrangePlant4) condDyeTrader = true;
-							}
+							if (item.ammo == AmmoID.Bullet || item.useAmmo == AmmoID.Bullet) condArmsDealer = true;
+							if (ItemID.Sets.ItemsThatCountAsBombsForDemolitionistToSpawn[item.type]) condDemolitionist = true;
+							if (item.dye > 0 || item.type is >= ItemID.TealMushroom and <= ItemID.DyeVat or >= ItemID.StrangePlant1 and <= ItemID.StrangePlant4) condDyeTrader = true;
 						}
 					}
+				}
 
-					coins = (int)Utils.Clamp(walletCoins + coins, 0, int.MaxValue);
-				});
-			}
+				coins = (int)Utils.Clamp(walletCoins + coins, 0, int.MaxValue);
+			});
 		}
 	}
 }

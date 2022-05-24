@@ -1,33 +1,32 @@
 ﻿using BaseLibrary.UI;
 using PortableStorage.Items.SpecialBags;
 
-namespace PortableStorage.UI
+namespace PortableStorage.UI;
+
+public class MinersBackpackPanel : BaseBagPanel<MinersBackpack>
 {
-	public class MinersBackpackPanel : BaseBagPanel<MinersBackpack>
+	public MinersBackpackPanel(MinersBackpack bag) : base(bag)
 	{
-		public MinersBackpackPanel(MinersBackpack bag) : base(bag)
+		Width.Pixels = 12 + (SlotSize + SlotMargin) * 9;
+		Height.Pixels = 40 + (SlotSize + SlotMargin) * Container.GetItemStorage().Count / 9;
+
+		UIGrid<UIContainerSlot> gridItems = new UIGrid<UIContainerSlot>(9)
 		{
-			Width.Pixels = 12 + (SlotSize + SlotMargin) * 9;
-			Height.Pixels = 40 + (SlotSize + SlotMargin) * Container.GetItemStorage().Count / 9;
+			Width = { Percent = 100 },
+			Height = { Pixels = -28, Percent = 100 },
+			Y = { Pixels = 28 },
+			Settings = { ItemMargin = SlotMargin }
+		};
 
-			UIGrid<UIContainerSlot> gridItems = new UIGrid<UIContainerSlot>(9)
+		Add(gridItems);
+		for (int i = 0; i < Container.GetItemStorage().Count; i++)
+		{
+			UIContainerSlot slot = new UIContainerSlot(Container.GetItemStorage(), i)
 			{
-				Width = { Percent = 100 },
-				Height = { Pixels = -28, Percent = 100 },
-				Y = { Pixels = 28 },
-				Settings = { ItemMargin = SlotMargin }
+				Width = { Pixels = SlotSize },
+				Height = { Pixels = SlotSize }
 			};
-
-			Add(gridItems);
-			for (int i = 0; i < Container.GetItemStorage().Count; i++)
-			{
-				UIContainerSlot slot = new UIContainerSlot(Container.GetItemStorage(), i)
-				{
-					Width = { Pixels = SlotSize },
-					Height = { Pixels = SlotSize }
-				};
-				gridItems.Add(slot);
-			}
+			gridItems.Add(slot);
 		}
 	}
 }
