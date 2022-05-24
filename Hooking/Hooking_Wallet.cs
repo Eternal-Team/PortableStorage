@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BaseLibrary.Utility;
+using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Mono.Cecil.Cil;
@@ -9,7 +10,6 @@ using PortableStorage.Items;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Container;
 
 namespace PortableStorage.Hooking
 {
@@ -20,7 +20,7 @@ namespace PortableStorage.Hooking
 			ILCursor cursor = new ILCursor(il);
 			int walletIndex = il.AddVariable<long>();
 
-			if (cursor.TryGotoNext(i => i.MatchLdloca(0), i => i.MatchLdcI4(4)))
+			if (cursor.TryGotoNext(i => i.MatchLdloca(7), i => i.MatchLdcI4(4)))
 			{
 				cursor.Emit(OpCodes.Ldarg, 0);
 
@@ -30,7 +30,7 @@ namespace PortableStorage.Hooking
 
 					foreach (Item pItem in player.inventory)
 					{
-						if (pItem.ModItem is Wallet wallet) coins += wallet.Storage.CountCoins();
+						if (pItem.ModItem is Wallet wallet) coins += wallet.GetItemStorage().CountCoins();
 					}
 
 					return coins;
@@ -68,7 +68,7 @@ namespace PortableStorage.Hooking
 
 					foreach (Item pItem in player.inventory)
 					{
-						if (pItem.ModItem is Wallet wallet) coins += wallet.Storage.CountCoins();
+						if (pItem.ModItem is Wallet wallet) coins += wallet.GetItemStorage().CountCoins();
 					}
 
 					return coins;
@@ -104,7 +104,7 @@ namespace PortableStorage.Hooking
 			{
 				if (pItem.ModItem is Wallet wallet)
 				{
-					ItemStorage storage = wallet.Storage;
+					ItemStorage storage = wallet.GetItemStorage();
 					long walletCoins = storage.CountCoins();
 					long sub = Math.Min(walletCoins, priceRemaining);
 					priceRemaining -= sub;
@@ -282,7 +282,7 @@ namespace PortableStorage.Hooking
 					{
 						if (!pItem.IsAir && pItem.ModItem is Wallet wallet)
 						{
-							wallet.Storage.InsertCoins(player, price);
+							wallet.GetItemStorage().InsertCoins(player, price);
 							return true;
 						}
 					}
@@ -312,7 +312,7 @@ namespace PortableStorage.Hooking
 
 					foreach (Item pItem in player.inventory)
 					{
-						if (pItem.ModItem is Wallet wallet) coins += wallet.Storage.CountCoins();
+						if (pItem.ModItem is Wallet wallet) coins += wallet.GetItemStorage().CountCoins();
 					}
 
 					return coins;

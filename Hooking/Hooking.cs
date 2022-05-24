@@ -1,4 +1,5 @@
 ﻿using IL.Terraria;
+using IL.Terraria.UI;
 
 namespace PortableStorage.Hooking
 {
@@ -10,11 +11,11 @@ namespace PortableStorage.Hooking
 			// Player.PickAmmo += PickAmmo;
 			// ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += DrawAmmo;
 
-			// ItemSlot.DrawSavings += DrawSavings;
-			// Player.BuyItem += BuyItem;
-			// Player.CanBuyItem += CanBuyItem;
+			ItemSlot.DrawSavings += DrawSavings;
+			Player.BuyItem += BuyItem;
+			Player.CanBuyItem += CanBuyItem;
 			On.Terraria.Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3, bank4) => false;
-			// Player.SellItem += SellItem;
+			Player.SellItem += SellItem;
 
 			Player.AdjTiles += AdjTiles;
 			Player.QuickMana += QuickMana;
