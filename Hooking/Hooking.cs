@@ -7,9 +7,8 @@ namespace PortableStorage.Hooking
 	{
 		public static void Load()
 		{
-			// Player.HasAmmo += HasAmmo;
-			// Player.PickAmmo += PickAmmo;
-			// ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += DrawAmmo;
+			Player.ChooseAmmo += ChooseAmmo;
+			ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += DrawAmmo;
 
 			ItemSlot.DrawSavings += DrawSavings;
 			Player.BuyItem += BuyItem;

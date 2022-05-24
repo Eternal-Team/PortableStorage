@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ContainerLibrary;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using PortableStorage.Items;
 using Terraria;
-using Terraria.ModLoader.Container;
+using Terraria.ModLoader;
 
 namespace PortableStorage.Hooking
 {
@@ -22,73 +23,32 @@ namespace PortableStorage.Hooking
 			}
 		}
 
-		private static void HasAmmo(ILContext il)
+		private static void ChooseAmmo(ILContext il)
 		{
 			ILCursor cursor = new ILCursor(il);
 
-			if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdarg(2), i => i.MatchStloc(4), i => i.MatchBr(out _)))
-			{
-				cursor.Emit(OpCodes.Ldarg, 0);
-				cursor.Emit(OpCodes.Ldarg, 1);
-				cursor.Emit(OpCodes.Ldarg, 2);
-
-				cursor.EmitDelegate<Func<Player, Item, bool, bool>>((player, weapon, hasAmmo) =>
-				{
-					foreach (BaseAmmoBag bag in GetAmmoBags(player))
-					{
-						ItemStorage handler = bag.GetItemStorage();
-
-						if (handler.Any(item => !item.IsAir && item.ammo == weapon.useAmmo)) return true;
-					}
-
-					return hasAmmo;
-				});
-
-				cursor.Emit(OpCodes.Starg, 2);
-			}
-		}
-
-		private delegate bool PickAmmo_Del(Player player, Item weapon, ref Item ammoItem);
-
-		private static void PickAmmo(ILContext il)
-		{
-			ILCursor cursor = new ILCursor(il);
-			ILLabel label = il.DefineLabel();
-
-			if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdarg(4), i => i.MatchLdindU1(), i => i.MatchLdcI4(0)))
+			if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdloc(16), i => i.MatchRet()))
 			{
 				cursor.Emit(OpCodes.Ldarg, 0); // player
-				cursor.Emit(OpCodes.Ldarg, 1); // sItem
-				cursor.Emit(OpCodes.Ldloca, 0); // item
+				cursor.Emit(OpCodes.Ldarg, 1); // weapon
+				cursor.Emit(OpCodes.Ldloc, 16); // result
 
-				cursor.EmitDelegate<PickAmmo_Del>(delegate(Player player, Item weapon, ref Item ammoItem)
+				cursor.EmitDelegate<Func<Player, Item, Item, Item>>((player, weapon, result) =>
 				{
-					if (!ammoItem.IsAir) return false;
+					if (result != null) return result;
 
 					foreach (BaseAmmoBag bag in GetAmmoBags(player))
 					{
 						ItemStorage storage = bag.GetItemStorage();
 
-						foreach (Item item in storage)
-						{
-							if (!item.IsAir && item.ammo == weapon.useAmmo)
-							{
-								ammoItem = item;
-								return true;
-							}
-						}
+						result = storage.FirstOrDefault(item => !item.IsAir && ItemLoader.CanChooseAmmo(weapon, item, player));
+						if (result != null) break;
 					}
 
-					return false;
+					return result;
 				});
 
-				cursor.Emit(OpCodes.Brfalse, label);
-
-				cursor.Emit(OpCodes.Ldarg, 4);
-				cursor.Emit(OpCodes.Ldc_I4, 1);
-				cursor.Emit(OpCodes.Stind_I1);
-
-				cursor.MarkLabel(label);
+				cursor.Emit(OpCodes.Stloc, 16);
 			}
 		}
 
@@ -98,22 +58,22 @@ namespace PortableStorage.Hooking
 
 			if (cursor.TryGotoNext(i => i.MatchLdloc(1), i => i.MatchLdfld<Item>("fishingPole"), i => i.MatchLdcI4(0)))
 			{
-				cursor.Emit(OpCodes.Ldloc, 89);
-				cursor.Emit(OpCodes.Ldloc, 76);
+				cursor.Emit(OpCodes.Ldloc, 1);
+				cursor.Emit(OpCodes.Ldloc, 68);
 
-				cursor.EmitDelegate<Func<int, int, int>>((useAmmo, ammoCount) =>
+				cursor.EmitDelegate<Func<Item, int, int>>((weapon, ammoCount) =>
 				{
 					foreach (BaseAmmoBag bag in GetAmmoBags(Main.LocalPlayer))
 					{
 						ItemStorage storage = bag.GetItemStorage();
 
-						ammoCount += storage.Where(item => !item.IsAir && item.ammo == useAmmo).Sum(item => item.stack);
+						ammoCount += storage.Where(item => !item.IsAir && ItemLoader.CanChooseAmmo(weapon, item, Main.LocalPlayer)).Sum(item => item.stack);
 					}
 
 					return ammoCount;
 				});
 
-				cursor.Emit(OpCodes.Stloc, 76);
+				cursor.Emit(OpCodes.Stloc, 68);
 			}
 		}
 	}
