@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using BaseLibrary;
 using BaseLibrary.UI;
@@ -12,7 +12,7 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items;
 
-public abstract class BaseBag : BaseItem, IItemStorage , IHasUI
+public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 {
 	public Guid ID;
 	protected ItemStorage Storage;
@@ -62,13 +62,13 @@ public abstract class BaseBag : BaseItem, IItemStorage , IHasUI
 	public override void SaveData(TagCompound tag)
 	{
 		tag.Set("ID", ID);
-		tag.Set("Items", Storage);
+		tag.Set("Items", Storage.Save());
 	}
 
 	public override void LoadData(TagCompound tag)
 	{
 		ID = tag.Get<Guid>("ID");
-		Storage = tag.Get<ItemStorage>("Items");
+		Storage.Load(tag.Get<TagCompound>("Items"));
 	}
 
 	public ItemStorage GetItemStorage() => Storage;
