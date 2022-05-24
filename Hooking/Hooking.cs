@@ -9,6 +9,7 @@ namespace PortableStorage.Hooking
 		{
 			Player.ChooseAmmo += ChooseAmmo;
 			ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += DrawAmmo;
+			Main.UpdateTime_SpawnTownNPCs += SpawnTownNPCs;
 
 			ItemSlot.DrawSavings += DrawSavings;
 			Player.BuyItem += BuyItem;
@@ -25,8 +26,6 @@ namespace PortableStorage.Hooking
 			// On.Terraria.Player.FishingLevel += Player_FishingLevel;
 			// IL.Terraria.Player.ItemCheck += Player_ItemCheck;
 			// IL.Terraria.Player.GetItem += Player_GetItem;
-
-			// Main.UpdateTime_SpawnTownNPCs += SpawnTownNPCs;
 
 			// ItemTextBags = new Terraria.Item[Terraria.Main.popupText.Length];
 			// for (int i = 0; i < ItemTextBags.Length; i++) ItemTextBags[i] = new Terraria.Item();

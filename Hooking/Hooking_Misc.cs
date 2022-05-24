@@ -1,9 +1,9 @@
-﻿using Mono.Cecil.Cil;
+﻿using ContainerLibrary;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using PortableStorage.Items;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader.Container;
 
 namespace PortableStorage.Hooking
 {
@@ -36,7 +36,7 @@ namespace PortableStorage.Hooking
 						{
 							if (bag is Wallet wallet)
 							{
-								walletCoins += wallet.Storage.CountCoins();
+								walletCoins += wallet.GetItemStorage().CountCoins();
 								continue;
 							}
 
@@ -47,7 +47,7 @@ namespace PortableStorage.Hooking
 
 								if (item.ammo == AmmoID.Bullet || item.useAmmo == AmmoID.Bullet) condArmsDealer = true;
 								if (ItemID.Sets.ItemsThatCountAsBombsForDemolitionistToSpawn[item.type]) condDemolitionist = true;
-								if (item.dye > 0 || item.type >= ItemID.TealMushroom && item.type <= ItemID.DyeVat || item.type >= ItemID.StrangePlant1 && item.type <= ItemID.StrangePlant4) condDyeTrader = true;
+								if (item.dye > 0 || item.type is >= ItemID.TealMushroom and <= ItemID.DyeVat or >= ItemID.StrangePlant1 and <= ItemID.StrangePlant4) condDyeTrader = true;
 							}
 						}
 					}
