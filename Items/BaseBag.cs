@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using BaseLibrary;
 using BaseLibrary.UI;
@@ -75,6 +75,6 @@ public abstract class BaseBag : BaseItem, IItemStorage , IHasUI
 
 	public Guid GetID() => ID;
 
-	public LegacySoundStyle CloseSound { get; }
-	public LegacySoundStyle OpenSound { get; }
+	public SoundStyle CloseSound { get; }
+	public SoundStyle OpenSound { get; }
 }

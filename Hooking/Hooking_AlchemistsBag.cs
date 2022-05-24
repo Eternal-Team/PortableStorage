@@ -26,7 +26,7 @@ namespace PortableStorage.Hooking
 			}
 		}
 
-		private delegate void QuickBuff_Del(Player player, ref SoundStyle sound);
+		private delegate void QuickBuff_Del(Player player, ref SoundStyle? sound);
 
 		private static MethodInfo QuickBuff_ShouldBotherUsingThisBuff = typeof(Player).GetMethod("QuickBuff_ShouldBotherUsingThisBuff", ReflectionUtility.DefaultFlags);
 
@@ -39,7 +39,7 @@ namespace PortableStorage.Hooking
 				cursor.Emit(OpCodes.Ldarg, 0);
 				cursor.Emit(OpCodes.Ldloca, 0);
 
-				cursor.EmitDelegate<QuickBuff_Del>((Player player, ref SoundStyle sound) =>
+				cursor.EmitDelegate<QuickBuff_Del>((Player player, ref SoundStyle? sound) =>
 				{
 					if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickBuff) return;
 
@@ -164,7 +164,7 @@ namespace PortableStorage.Hooking
 							Item item = storage[i];
 							if (item.IsAir || item.healMana <= 0 || (player.potionDelay > 0 && item.potion) || !CombinedHooks.CanUseItem(player, item)) continue;
 
-							SoundEngine.PlaySound(item.UseSound, player.position);
+							if (item.UseSound != null) SoundEngine.PlaySound(item.UseSound.Value, player.position);
 							if (item.potion)
 							{
 								if (item.type == ItemID.RestorationPotion)
