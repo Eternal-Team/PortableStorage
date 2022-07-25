@@ -1,5 +1,8 @@
 ﻿using IL.Terraria;
+using IL.Terraria.GameContent.UI;
 using IL.Terraria.UI;
+using MonoMod.Cil;
+using CustomCurrencySystem = On.Terraria.GameContent.UI.CustomCurrencySystem;
 
 namespace PortableStorage.Hooking;
 
@@ -13,6 +16,7 @@ public static partial class Hooking
 
 		ItemSlot.DrawSavings += DrawSavings;
 		Player.BuyItem += BuyItem;
+		CustomCurrencyManager.BuyItem += BuyItemCustomCurrency;
 		Player.CanBuyItem += CanBuyItem;
 		On.Terraria.Player.TryPurchasing += (orig, price, inv, coins, empty, bank, bank2, bank3, bank4) => false;
 		Player.SellItem += SellItem;
