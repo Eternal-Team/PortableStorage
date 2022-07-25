@@ -1,33 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\Mods.targets" />
-  <PropertyGroup>
-    <AssemblyName>PortableStorage</AssemblyName>
-    <TargetFramework>net6.0</TargetFramework>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BaseLibrary\BaseLibrary.csproj" />
-    <ProjectReference Include="..\ContainerLibrary\ContainerLibrary.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="README.md" />
-    <None Remove=".gitignore" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Hooking\Hooking.cs" />
-    <Compile Remove="Hooking\Hooking_AlchemistsBag.cs" />
-    <Compile Remove="Hooking\Hooking_AmmoBags.cs" />
-    <Compile Remove="Hooking\Hooking_BagPopup.cs" />
-    <Compile Remove="Hooking\Hooking_Fishing.cs" />
-    <Compile Remove="Hooking\Hooking_Misc.cs" />
-    <Compile Remove="Hooking\Hooking_Wallet.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Hooking" />
-  </ItemGroup>
+	<Import Project="..\Mods.targets" />
+	<PropertyGroup>
+		<AssemblyName>PortableStorage</AssemblyName>
+		<TargetFramework>net6.0</TargetFramework>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\BaseLibrary\BaseLibrary.csproj" />
+		<ProjectReference Include="..\ContainerLibrary\ContainerLibrary.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="README.md" />
+		<None Remove=".gitignore" />
+	</ItemGroup>
 </Project>

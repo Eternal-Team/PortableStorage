@@ -26,7 +26,7 @@ public static class Utility
 		}
 	}
 
-	internal static Dictionary<string, List<AmmoTypeGroup>> Ammos=new();
+	internal static Dictionary<string, List<AmmoTypeGroup>> Ammos = new();
 	internal static HashSet<int> AlchemistBagWhitelist = new();
 	internal static HashSet<int> OreWhitelist = new();
 	internal static HashSet<int> ExplosiveWhitelist = new();
@@ -207,7 +207,7 @@ public static class Utility
 		void Add(string key, int ammoType)
 		{
 			if (Ammos.ContainsKey(key)) Ammos[key].Add(new AmmoTypeGroup(ammoType));
-			else Ammos.Add(key, new List<AmmoTypeGroup> { new (ammoType) });
+			else Ammos.Add(key, new List<AmmoTypeGroup> { new(ammoType) });
 		}
 
 		Add("Misc", AmmoID.FallenStar);

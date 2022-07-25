@@ -1,5 +1,4 @@
 ﻿using BaseLibrary.UI;
-using BaseLibrary.Utility;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.Items;
@@ -31,7 +30,7 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 
 	public BaseBagPanel(BaseBag bag) : base((T)bag)
 	{
-		UIText textLabel = new UIText(Container.DisplayName.Get())
+		UIText textLabel = new UIText(Container.Item.Name)
 		{
 			X = { Percent = 50 },
 			Settings = { HorizontalAlignment = HorizontalAlignment.Center }

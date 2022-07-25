@@ -48,7 +48,7 @@ public class MinersBackpack : BaseBag
 	public override void OnCreate(ItemCreationContext context)
 	{
 		base.OnCreate(context);
-		
+
 		Storage = new MinersBackpackItemStorage(18, this);
 	}
 

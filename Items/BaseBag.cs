@@ -26,7 +26,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 			return storage;
 		}
 	}
-	
+
 	public override ModItem Clone(Item item)
 	{
 		BaseBag clone = (BaseBag)base.Clone(item);
@@ -69,6 +69,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	public override bool CanRightClick() => true;
 
+	// bug: also plays the default right click sound (grab)
 	public override void RightClick(Player player)
 	{
 		PanelUI.Instance.HandleUI(this);
@@ -90,6 +91,6 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	public Guid GetID() => ID;
 
-	public SoundStyle? CloseSound { get; }
-	public SoundStyle? OpenSound { get; }
+	public SoundStyle? CloseSound => new SoundStyle("PortableStorage/Assets/Sounds/BagClose");
+	public SoundStyle? OpenSound => new SoundStyle("PortableStorage/Assets/Sounds/BagOpen");
 }
