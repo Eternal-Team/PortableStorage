@@ -52,8 +52,6 @@ public static partial class Hooking
 		}
 	}
 
-	// todo: draw bait from fishing belts
-	
 	private static void DrawAmmo(ILContext il)
 	{
 		ILCursor cursor = new ILCursor(il);
@@ -61,7 +59,7 @@ public static partial class Hooking
 		if (cursor.TryGotoNext(i => i.MatchLdloc(1), i => i.MatchLdfld<Item>("fishingPole"), i => i.MatchLdcI4(0)))
 		{
 			cursor.Emit(OpCodes.Ldloc, 1);
-			cursor.Emit(OpCodes.Ldloc, 68);
+			cursor.Emit(OpCodes.Ldloc, 35);
 
 			cursor.EmitDelegate<Func<Item, int, int>>((weapon, ammoCount) =>
 			{
@@ -75,7 +73,26 @@ public static partial class Hooking
 				return ammoCount;
 			});
 
-			cursor.Emit(OpCodes.Stloc, 68);
+			cursor.Emit(OpCodes.Stloc, 35);
+		}
+
+		if (cursor.TryGotoNext(i => i.MatchLdloc(1), i => i.MatchLdfld<Item>("tileWand"), i => i.MatchLdcI4(0)))
+		{
+			cursor.Emit(OpCodes.Ldloc, 35);
+
+			cursor.EmitDelegate<Func<int, int>>(bait =>
+			{
+				foreach (FishingBelt bag in GetFishingBelts(Main.LocalPlayer))
+				{
+					ItemStorage storage = bag.GetItemStorage();
+
+					bait += storage.Where(item => !item.IsAir && item.bait > 0).Sum(item => item.stack);
+				}
+
+				return bait;
+			});
+
+			cursor.Emit(OpCodes.Stloc, 35);
 		}
 	}
 }
