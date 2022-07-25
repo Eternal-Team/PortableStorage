@@ -1,0 +1,4 @@
+Sound effects obtained from https://www.zapsplat.com
+
+Bag open sound - https://www.zapsplat.com/music/bag-backpack-pick-up-1/
+Bag close sound - https://www.zapsplat.com/music/backpack-handling-pick-up/

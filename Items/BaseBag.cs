@@ -14,6 +14,9 @@ namespace PortableStorage.Items;
 
 public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 {
+	public SoundStyle? OpenSound => new SoundStyle("PortableStorage/Assets/Sounds/BagOpen");
+	public SoundStyle? CloseSound => new SoundStyle("PortableStorage/Assets/Sounds/BagClose");
+
 	public Guid ID;
 	protected ItemStorage storage;
 
@@ -90,7 +93,4 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	public ItemStorage GetItemStorage() => Storage;
 
 	public Guid GetID() => ID;
-
-	public SoundStyle? CloseSound => new SoundStyle("PortableStorage/Assets/Sounds/BagClose");
-	public SoundStyle? OpenSound => new SoundStyle("PortableStorage/Assets/Sounds/BagOpen");
 }
