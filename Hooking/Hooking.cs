@@ -8,7 +8,7 @@ public static partial class Hooking
 	public static void Load()
 	{
 		Player.ChooseAmmo += ChooseAmmo;
-		ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += DrawAmmo;
+		ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += ItemSlotText;
 		Main.UpdateTime_SpawnTownNPCs += SpawnTownNPCs;
 
 		ItemSlot.DrawSavings += DrawSavings;
