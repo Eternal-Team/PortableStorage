@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using BaseLibrary.Utility;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
@@ -97,9 +98,11 @@ public static partial class Hooking
 		}
 	}
 
+	private static MethodInfo Orig_TryPurchasing = typeof(Player).GetMethod("TryPurchasing", ReflectionUtility.DefaultFlags_Static);
+
 	private static bool TryPurchasing(int price, List<Item[]> inv, List<Point> slotCoins, List<Point> slotsEmpty, List<Point> slotEmptyBank, List<Point> slotEmptyBank2, List<Point> slotEmptyBank3, List<Point> slotEmptyBank4, Player player)
 	{
-		long priceRemaining = price;
+		int priceRemaining = price;
 
 		foreach (Item pItem in player.inventory)
 		{
@@ -108,159 +111,14 @@ public static partial class Hooking
 				ItemStorage storage = wallet.GetItemStorage();
 				long walletCoins = storage.CountCoins();
 				long sub = Math.Min(walletCoins, priceRemaining);
-				priceRemaining -= sub;
+				priceRemaining -= (int)sub;
 				storage.RemoveCoins(player, ref sub);
 
 				if (priceRemaining <= 0) return false;
 			}
 		}
 
-		long num = priceRemaining;
-		Dictionary<Point, Item> dictionary = new Dictionary<Point, Item>();
-		bool result = false;
-		while (num > 0)
-		{
-			long num2 = 1000000L;
-			for (int i = 0; i < 4; i++)
-			{
-				if (num >= num2)
-				{
-					foreach (Point slotCoin in slotCoins)
-					{
-						if (inv[slotCoin.X][slotCoin.Y].type == 74 - i)
-						{
-							long num3 = num / num2;
-							dictionary[slotCoin] = inv[slotCoin.X][slotCoin.Y].Clone();
-							if (num3 < inv[slotCoin.X][slotCoin.Y].stack)
-							{
-								inv[slotCoin.X][slotCoin.Y].stack -= (int)num3;
-							}
-							else
-							{
-								inv[slotCoin.X][slotCoin.Y].SetDefaults();
-								slotsEmpty.Add(slotCoin);
-							}
-
-							num -= num2 * (dictionary[slotCoin].stack - inv[slotCoin.X][slotCoin.Y].stack);
-						}
-					}
-				}
-
-				num2 /= 100;
-			}
-
-			if (num <= 0)
-				continue;
-
-			if (slotsEmpty.Count > 0)
-			{
-				slotsEmpty.Sort(DelegateMethods.CompareYReverse);
-				Point item = new Point(-1, -1);
-				for (int j = 0; j < inv.Count; j++)
-				{
-					num2 = 10000L;
-					for (int k = 0; k < 3; k++)
-					{
-						if (num >= num2)
-						{
-							foreach (Point slotCoin2 in slotCoins)
-							{
-								if (slotCoin2.X == j && inv[slotCoin2.X][slotCoin2.Y].type == 74 - k && inv[slotCoin2.X][slotCoin2.Y].stack >= 1)
-								{
-									List<Point> list = j switch
-									{
-										1 when slotEmptyBank.Count > 0 => slotEmptyBank,
-										2 when slotEmptyBank2.Count > 0 => slotEmptyBank2,
-										3 when slotEmptyBank3.Count > 0 => slotEmptyBank3,
-										4 when slotEmptyBank4.Count > 0 => slotEmptyBank4,
-										_ => slotsEmpty
-									};
-
-									if (--inv[slotCoin2.X][slotCoin2.Y].stack <= 0)
-									{
-										inv[slotCoin2.X][slotCoin2.Y].SetDefaults();
-										list.Add(slotCoin2);
-									}
-
-									dictionary[list[0]] = inv[list[0].X][list[0].Y].Clone();
-									inv[list[0].X][list[0].Y].SetDefaults(73 - k);
-									inv[list[0].X][list[0].Y].stack = 100;
-									item = list[0];
-									list.RemoveAt(0);
-									break;
-								}
-							}
-						}
-
-						if (item.X != -1 || item.Y != -1)
-							break;
-
-						num2 /= 100;
-					}
-
-					for (int l = 0; l < 2; l++)
-					{
-						if (item.X != -1 || item.Y != -1)
-							continue;
-
-						foreach (Point slotCoin3 in slotCoins)
-						{
-							if (slotCoin3.X == j && inv[slotCoin3.X][slotCoin3.Y].type == 73 + l && inv[slotCoin3.X][slotCoin3.Y].stack >= 1)
-							{
-								List<Point> list2 = slotsEmpty;
-								if (j == 1 && slotEmptyBank.Count > 0)
-									list2 = slotEmptyBank;
-
-								if (j == 2 && slotEmptyBank2.Count > 0)
-									list2 = slotEmptyBank2;
-
-								if (j == 3 && slotEmptyBank3.Count > 0)
-									list2 = slotEmptyBank3;
-
-								if (j == 4 && slotEmptyBank4.Count > 0)
-									list2 = slotEmptyBank4;
-
-								if (--inv[slotCoin3.X][slotCoin3.Y].stack <= 0)
-								{
-									inv[slotCoin3.X][slotCoin3.Y].SetDefaults();
-									list2.Add(slotCoin3);
-								}
-
-								dictionary[list2[0]] = inv[list2[0].X][list2[0].Y].Clone();
-								inv[list2[0].X][list2[0].Y].SetDefaults(72 + l);
-								inv[list2[0].X][list2[0].Y].stack = 100;
-								item = list2[0];
-								list2.RemoveAt(0);
-								break;
-							}
-						}
-					}
-
-					if (item.X != -1 && item.Y != -1)
-					{
-						slotCoins.Add(item);
-						break;
-					}
-				}
-
-				slotsEmpty.Sort(DelegateMethods.CompareYReverse);
-				slotEmptyBank.Sort(DelegateMethods.CompareYReverse);
-				slotEmptyBank2.Sort(DelegateMethods.CompareYReverse);
-				slotEmptyBank3.Sort(DelegateMethods.CompareYReverse);
-				slotEmptyBank4.Sort(DelegateMethods.CompareYReverse);
-				continue;
-			}
-
-			foreach (KeyValuePair<Point, Item> item2 in dictionary)
-			{
-				inv[item2.Key.X][item2.Key.Y] = item2.Value.Clone();
-			}
-
-			result = true;
-			break;
-		}
-
-		return result;
+		return Orig_TryPurchasing.InvokeStatic<bool>(priceRemaining, inv, slotCoins, slotsEmpty, slotEmptyBank, slotEmptyBank2, slotEmptyBank3, slotEmptyBank4);
 	}
 
 	private static void SellItem(ILContext il)
