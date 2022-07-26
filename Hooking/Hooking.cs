@@ -13,6 +13,7 @@ public static partial class Hooking
 		Main.UpdateTime_SpawnTownNPCs += SpawnTownNPCs;
 
 		ItemSlot.DrawSavings += DrawSavings;
+		CustomCurrencyManager.DrawSavings += DrawSavingsCustomCurrency;
 		Player.BuyItem += BuyItem;
 		CustomCurrencyManager.BuyItem += BuyItemCustomCurrency;
 		Player.CanBuyItem += CanBuyItem;

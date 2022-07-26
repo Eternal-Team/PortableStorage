@@ -201,7 +201,7 @@ public static partial class Hooking
 					Main.instance.LoadItem(walletType);
 
 					Texture2D texture = TextureAssets.Item[walletType].Value;
-					sb.Draw(texture, Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 40f), texture.Size() * 0.5f), Color.White);
+					sb.Draw(texture, Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 45f), texture.Size() * 0.5f), Color.White);
 				}
 			});
 		}
@@ -269,8 +269,6 @@ public static partial class Hooking
 		}
 	}
 
-	// todo: display currency not working
-
 	private static bool TryPurchasingCustomCurrency(int price, List<Item[]> inv, List<Point> slotCoins, List<Point> slotsEmpty, List<Point> slotEmptyBank, List<Point> slotEmptyBank2, List<Point> slotEmptyBank3, List<Point> slotEmptyBank4, Player player, CustomCurrencySystem system)
 	{
 		int priceRemaining = price;
@@ -297,6 +295,66 @@ public static partial class Hooking
 		}
 
 		return system.TryPurchasing(priceRemaining, inv, slotCoins, slotsEmpty, slotEmptyBank, slotEmptyBank2, slotEmptyBank3, slotEmptyBank4);
+	}
+
+	private static void DrawSavingsCustomCurrency(ILContext il)
+	{
+		int walletIndex = il.AddVariable<long>();
+
+		ILCursor cursor = new ILCursor(il);
+
+		if (cursor.TryGotoNext(i => i.MatchLdloc(0), i => i.MatchLdloca(2), i => i.MatchLdcI4(4)))
+		{
+			cursor.Emit(OpCodes.Ldloc, 0);
+			cursor.Emit(OpCodes.Ldloca, 2);
+			cursor.Emit(OpCodes.Ldloc, 1);
+			cursor.EmitDelegate<BuyItemCustomCurrency_Del>((CustomCurrencySystem system, ref bool overflowing, Player player) =>
+			{
+				long val = 0;
+
+				foreach (Item pItem in player.inventory)
+				{
+					if (pItem.ModItem is Wallet wallet)
+					{
+						val += system.CountCurrency(out overflowing, wallet.GetItemStorage().ToArray());
+					}
+				}
+
+				return val;
+			});
+			cursor.Emit(OpCodes.Stloc, walletIndex);
+
+			cursor.Index += 2;
+			cursor.Remove();
+
+			cursor.Emit(OpCodes.Ldc_I4, 5);
+
+			cursor.Index++;
+			cursor.Emit(OpCodes.Dup);
+			cursor.Emit(OpCodes.Ldc_I4, 4);
+			cursor.Emit(OpCodes.Ldloc, walletIndex);
+			cursor.Emit(OpCodes.Stelem_I8);
+		}
+
+		if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdsfld<Main>("instance"), i => i.MatchLdcI4(4076)))
+		{
+			cursor.Emit(OpCodes.Ldarg, 0);
+			cursor.Emit(OpCodes.Ldloc, walletIndex);
+			cursor.Emit(OpCodes.Ldarg, 2);
+			cursor.Emit(OpCodes.Ldarg, 3);
+
+			cursor.EmitDelegate<Action<SpriteBatch, long, float, float>>((sb, walletCount, shopx, shopy) =>
+			{
+				if (walletCount > 0L)
+				{
+					int walletType = ModContent.ItemType<Wallet>();
+					Main.instance.LoadItem(walletType);
+
+					Texture2D texture = TextureAssets.Item[walletType].Value;
+					sb.Draw(texture, Utils.CenteredRectangle(new Vector2(shopx + 70f, shopy + 45f), texture.Size() * 0.5f), Color.White);
+				}
+			});
+		}
 	}
 	#endregion
 }
