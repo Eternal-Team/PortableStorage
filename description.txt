@@ -1,2 +1,31 @@
+Warning: highly experimental
+
 Introducing Portable Storage 3.
+
 A mod that provides you with a variety of bags and holders to store your items.
+With 16+ different bags, holding different kinds of items and auto picking them when gathered, it will become difficult to have your inventory flooded by the various loot you can obtain.
+From specific ammo holders, general all-purpose bags, containers for special items (like ores, potions, fishes, etc...) to the mighty black hole absorbing items in range and auto sorting them into corresponding bags.
+Items inside storages can still be used for crafting and quick usage as if they were in the inventory.
+
+Normal Bags:
+ -Adventurer's Bag. Made with 12 leather. Can hold 18 stacks. Any item.
+ -Skeletal Bag. Bought from the Skeleton Merchant. Can hold 27 stacks. Any item.
+ -Faerie Bag. Made with 15 silk, 10 pixie dust and 7 light souls. Can hold 36 stacks. Any item.
+ -Capillary Bag. Made with 20 leather, 15 chlorophyte bars, 7 vines and 1 life fruit. Can hold 54 stacks. Any item.
+
+Ammo Bags:
+ -Ammo Pouch. Bought from the Merchant. Can hold 27 stacks. Misc Ammo (auto pickup).
+ -Arrow Quiver. Made with 8 leather and a string. Can hold 27 stacks. Arrows (auto pickup).
+ -Dart Holder. Bought from the Witch Doctor. Can hold 27 stacks. Darts (auto pickup).
+ -Fire-Proof Container. Bought from the Cyborg. Can hold 27 stacks. Explosives and Flammables (auto pickup).
+ -Magazine. Made with 10 iron bars and 10 obsidian. Can hold 27 stacks. Bullets (auto pickup).
+ -The Perfect Solution. Made with 10 glass, 7 hallowed bars and 5 souls of fright. Can hold 27 stacks. Solutions (auto pickup).
+ -Ninja's Arsenal Belt. Made with 3 iron chains and 1 ninja shirt. Can hold 9 stacks. Throwing items (auto pickup).
+
+Special Bags:
+ -Wallet. Bought from the Travelling Merchant. Can hold 4 stacks. Money (auto pickup).
+ -Miner's Backpack. Drop from Undead Miners. Can hold 18 stacks. Ores (auto pickup).
+ -Fishing Belt. Obtained from Iron and Golden Crates. Can hold 18 stacks. Rods, Baits and Fishing Loot (auto pickup).
+ -Alchemist's Bag. Made with 10 leather, 12 sturdy fossils and 1 alchemy table. Can hold 18 stacks and 63 stacks respectively. Potions and Alchemical Ingredients (auto pickup).
+ -Builder's Reserve. Made with 30 bones and an iron crate. Can hold 9 stacks. Blocks and walls (auto pickup). Alt+Left-Click to select what you want to place using it.
+ -The Black Hole. Made with 12 ectoplasm and a crystal ball. Can't hold items. Sucks in items around and places them into corresponding bags.
