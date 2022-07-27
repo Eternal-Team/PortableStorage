@@ -1,4 +1,4 @@
-Warning: highly experimental
+HIGHLY EXPERIMENTAL, please report any bugs to my Discord server (discord.gg/EP9nfZV #bug-reports channel)
 
 Introducing Portable Storage 3.
 

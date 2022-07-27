@@ -2,7 +2,7 @@ using Terraria.ModLoader;
 
 namespace PortableStorage;
 
-// note: fluid and energy addons
+// note: energy addons
 
 public class PortableStorage : Mod
 {
