@@ -6,7 +6,7 @@ using BaseLibrary.Utility;
 using ContainerLibrary;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using PortableStorage.Items.SpecialBags;
+using PortableStorage.Items;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;

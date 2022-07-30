@@ -5,7 +5,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace PortableStorage.Items.SpecialBags;
+namespace PortableStorage.Items;
 
 public class AlchemistBag : BaseBag, ICraftingStorage
 {

@@ -18,7 +18,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace PortableStorage.Items.SpecialBags;
+namespace PortableStorage.Items;
 
 public class MinersBackpack : BaseBag
 {

@@ -1,5 +1,5 @@
 ﻿using BaseLibrary.UI;
-using PortableStorage.Items.SpecialBags;
+using PortableStorage.Items;
 
 namespace PortableStorage.UI;
 
