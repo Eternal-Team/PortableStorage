@@ -19,6 +19,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	public Guid ID;
 	protected ItemStorage storage;
+	public bool EnablePickup = true;
 
 	protected ItemStorage Storage
 	{
@@ -35,12 +36,14 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 		BaseBag clone = (BaseBag)base.Clone(item);
 		clone.Storage = Storage.Clone();
 		clone.ID = ID;
+		clone.EnablePickup = EnablePickup;
 		return clone;
 	}
 
 	public override void OnCreate(ItemCreationContext context)
 	{
 		ID = Guid.NewGuid();
+		EnablePickup = true;
 	}
 
 	public override void SetStaticDefaults()
@@ -82,12 +85,14 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	{
 		tag.Set("ID", ID);
 		tag.Set("Items", Storage.Save());
+		tag.Set("EnablePickup", EnablePickup);
 	}
 
 	public override void LoadData(TagCompound tag)
 	{
 		ID = tag.Get<Guid>("ID");
 		Storage.Load(tag.Get<TagCompound>("Items"));
+		EnablePickup = tag.GetBool("EnablePickup");
 	}
 
 	public ItemStorage GetItemStorage() => Storage;

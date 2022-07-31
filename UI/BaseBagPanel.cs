@@ -3,6 +3,9 @@ using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.Items;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
+using Terraria.ID;
 
 namespace PortableStorage.UI;
 
@@ -13,10 +16,7 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 
 	public ItemStorage GetItemStorage() => Container.GetItemStorage();
 
-	// public bool IsVisible() => Display == Display.Visible;
 	public string GetCursorTexture(Item item) => Container.Texture;
-
-	// protected UIButton buttonQuickStack;
 
 	protected override void Activate()
 	{
@@ -63,19 +63,43 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 		// buttonQuickStack.OnClick += args => ItemUtility.QuickStack(Container.Handler, Main.LocalPlayer);
 		// Add(buttonQuickStack);
 
+		// todo: localization
+		
+		Main.instance.LoadItem(ItemID.TreasureMagnet);
+		UITexture buttonPickup = new UITexture(TextureAssets.Item[ItemID.TreasureMagnet])
+		{
+			Settings = { ScaleMode = ScaleMode.Stretch },
+			Height = { Pixels = 20 },
+			Width = { Pixels = 20 },
+			X = { Percent = 100, Pixels = -28 },
+			HoverText = bag.EnablePickup ? "Toggle Pickup Off" :  "Toggle Pickup On"
+		};
+		buttonPickup.OnClick += args =>
+		{
+			bag.EnablePickup = !bag.EnablePickup;
+
+			buttonPickup.HoverText = bag.EnablePickup ? "Toggle Pickup Off" : "Toggle Pickup On";
+
+			SoundEngine.PlaySound(SoundID.MenuTick);
+			
+			args.Handled = true;
+		};
+		Add(buttonPickup);
+
 		UIText buttonClose = new UIText("X")
 		{
 			Height = { Pixels = 20 },
 			Width = { Pixels = 20 },
-			X = { Percent = 100 }
+			X = { Percent = 100 },
+			HoverText = "Close"
 		};
 		buttonClose.OnClick += args =>
 		{
 			PanelUI.Instance.CloseUI(Container);
 			args.Handled = true;
 		};
-		buttonClose.OnMouseEnter += args => buttonClose.Settings.TextColor = Color.Red;
-		buttonClose.OnMouseLeave += args => buttonClose.Settings.TextColor = Color.White;
+		buttonClose.OnMouseEnter += _ => buttonClose.Settings.TextColor = Color.Red;
+		buttonClose.OnMouseLeave += _ => buttonClose.Settings.TextColor = Color.White;
 		Add(buttonClose);
 	}
 }

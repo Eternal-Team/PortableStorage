@@ -30,7 +30,9 @@ public class PSItem : GlobalItem
 		{
 			foreach (Wallet wallet in OfModItemType<Wallet>(player.inventory))
 			{
-				if (wallet.GetItemStorage().InsertItem(player, ref item))
+				if (!wallet.EnablePickup) continue;
+				
+				if ( wallet.GetItemStorage().InsertItem(player, ref item))
 					SoundEngine.PlaySound(SoundID.CoinPickup);
 
 				if (item is null || item.IsAir || !item.active)
@@ -42,6 +44,8 @@ public class PSItem : GlobalItem
 		{
 			foreach (BaseAmmoBag ammoBag in OfModItemType<BaseAmmoBag>(player.inventory))
 			{
+				if (!ammoBag.EnablePickup) continue;
+				
 				if (ammoBag.GetItemStorage().InsertItem(player, ref item))
 					SoundEngine.PlaySound(SoundID.Grab);
 
@@ -54,6 +58,8 @@ public class PSItem : GlobalItem
 		{
 			foreach (FishingBelt fishingBelt in OfModItemType<FishingBelt>(player.inventory))
 			{
+				if (!fishingBelt.EnablePickup) continue;
+				
 				if (fishingBelt.GetItemStorage().InsertItem(player, ref item))
 					SoundEngine.PlaySound(SoundID.Grab);
 
@@ -66,6 +72,8 @@ public class PSItem : GlobalItem
 		{
 			foreach (MinersBackpack minersBackpack in OfModItemType<MinersBackpack>(player.inventory))
 			{
+				if (!minersBackpack.EnablePickup) continue;
+				
 				if (minersBackpack.GetItemStorage().InsertItem(player, ref item))
 					SoundEngine.PlaySound(SoundID.Grab);
 
@@ -82,6 +90,8 @@ public class PSItem : GlobalItem
 		{
 			foreach (AlchemistBag alchemistBag in OfModItemType<AlchemistBag>(player.inventory))
 			{
+				if (!alchemistBag.EnablePickup) continue;
+				
 				if (alchemistBag.GetItemStorage().InsertItem(player, ref item))
 					SoundEngine.PlaySound(SoundID.Grab);
 
