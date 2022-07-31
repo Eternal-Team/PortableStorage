@@ -20,12 +20,9 @@ Ammo Bags:
  -Fire-Proof Container. Bought from the Cyborg. Can hold 27 stacks. Explosives and Flammables (auto pickup).
  -Magazine. Made with 10 iron bars and 10 obsidian. Can hold 27 stacks. Bullets (auto pickup).
  -The Perfect Solution. Made with 10 glass, 7 hallowed bars and 5 souls of fright. Can hold 27 stacks. Solutions (auto pickup).
- -Ninja's Arsenal Belt. Made with 3 iron chains and 1 ninja shirt. Can hold 9 stacks. Throwing items (auto pickup).
 
 Special Bags:
  -Wallet. Bought from the Travelling Merchant. Can hold 4 stacks. Money (auto pickup).
  -Miner's Backpack. Drop from Undead Miners. Can hold 18 stacks. Ores (auto pickup).
  -Fishing Belt. Obtained from Iron and Golden Crates. Can hold 18 stacks. Rods, Baits and Fishing Loot (auto pickup).
  -Alchemist's Bag. Made with 10 leather, 12 sturdy fossils and 1 alchemy table. Can hold 18 stacks and 63 stacks respectively. Potions and Alchemical Ingredients (auto pickup).
- -Builder's Reserve. Made with 30 bones and an iron crate. Can hold 9 stacks. Blocks and walls (auto pickup). Alt+Left-Click to select what you want to place using it.
- -The Black Hole. Made with 12 ectoplasm and a crystal ball. Can't hold items. Sucks in items around and places them into corresponding bags.
