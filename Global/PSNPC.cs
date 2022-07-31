@@ -1,5 +1,6 @@
 using PortableStorage.Items;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -7,10 +8,13 @@ namespace PortableStorage.Global;
 
 public class PSNPC : GlobalNPC
 {
-	// public override void NPCLoot(NPC npc)
-	// {
-	// 	if (npc.type == NPCID.UndeadMiner && Main.rand.NextBool(5)) Item.NewItem(npc.getRect(), ModContent.ItemType<MinersBackpack>());
-	// }
+	public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
+	{
+		if (npc.type == NPCID.UndeadMiner)
+		{
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<MinersBackpack>(), 5));
+		}
+	}
 
 	public override void SetupShop(int type, Chest shop, ref int nextSlot)
 	{
