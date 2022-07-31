@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using PortableStorage.Items;
 using Terraria;
 using Terraria.Audio;
@@ -29,15 +28,13 @@ public class PSItem : GlobalItem
 
 		if (item.IsCurrency)
 		{
-			Wallet wallet = OfModItemType<Wallet>(player.inventory).FirstOrDefault();
-
-			if (wallet != null)
+			foreach (Wallet wallet in OfModItemType<Wallet>(player.inventory))
 			{
-				wallet.GetItemStorage().InsertItem(player, ref item);
+				if (wallet.GetItemStorage().InsertItem(player, ref item))
+					SoundEngine.PlaySound(SoundID.CoinPickup);
 
-				SoundEngine.PlaySound(SoundID.CoinPickup);
-
-				return false;
+				if (item is null || item.IsAir || !item.active)
+					return false;
 			}
 		}
 
@@ -92,7 +89,7 @@ public class PSItem : GlobalItem
 					return false;
 			}
 		}
-		
+
 		return base.OnPickup(item, player);
 	}
 
