@@ -6,6 +6,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace PortableStorage.UI;
 
@@ -63,8 +64,9 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 		// buttonQuickStack.OnClick += args => ItemUtility.QuickStack(Container.Handler, Main.LocalPlayer);
 		// Add(buttonQuickStack);
 
-		// todo: localization
-		
+		var localPickupOn = Language.GetText("Mods.PortableStorage.UI.PickupToggleOn");
+		var localPickupOff = Language.GetText("Mods.PortableStorage.UI.PickupToggleOff");
+
 		Main.instance.LoadItem(ItemID.TreasureMagnet);
 		UITexture buttonPickup = new UITexture(TextureAssets.Item[ItemID.TreasureMagnet])
 		{
@@ -72,16 +74,16 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 			Height = { Pixels = 20 },
 			Width = { Pixels = 20 },
 			X = { Percent = 100, Pixels = -28 },
-			HoverText = bag.EnablePickup ? "Toggle Pickup Off" :  "Toggle Pickup On"
+			HoverText = bag.EnablePickup ? localPickupOff : localPickupOn
 		};
 		buttonPickup.OnClick += args =>
 		{
 			bag.EnablePickup = !bag.EnablePickup;
 
-			buttonPickup.HoverText = bag.EnablePickup ? "Toggle Pickup Off" : "Toggle Pickup On";
+			buttonPickup.HoverText = bag.EnablePickup ? localPickupOff : localPickupOn;
 
 			SoundEngine.PlaySound(SoundID.MenuTick);
-			
+
 			args.Handled = true;
 		};
 		Add(buttonPickup);
@@ -91,7 +93,7 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 			Height = { Pixels = 20 },
 			Width = { Pixels = 20 },
 			X = { Percent = 100 },
-			HoverText = "Close"
+			HoverText = Language.GetText("Mods.PortableStorage.UI.Close")
 		};
 		buttonClose.OnClick += args =>
 		{

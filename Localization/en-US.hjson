@@ -1,5 +1,11 @@
 ﻿Mods: {
 	PortableStorage: {
+		UI: {
+			PickupToggleOff: Toggle Pickup Off
+			PickupToggleOn: Toggle Pickup On
+			Close: Close
+		}
+		
 		Config: {
 			AlchemistBag: Alchemist's Bag
 			AlchemistBagQuickBuff: Allow quick buff
@@ -24,7 +30,6 @@
             BuilderReserve: Builder's Reserve
             FishingBelt: Fishing Belt
             MinersBackpack: Miner's Backpack
-            NinjaArsenalBelt: Ninja's Arsenal Belt
             GardenerSatchel: Gardener's Satchel
 		}
 		
@@ -122,12 +127,6 @@
             {$Mods.PortableStorage.BagTooltip.StoresTip} ore
             {$Mods.PortableStorage.BagTooltip.UseTip} 
             "Salvaged from the remnants of the past."
-            '''
-            NinjaArsenalBelt:
-            '''
-            {$Mods.PortableStorage.BagTooltip.StoresTip} throwing supplies
-            {$Mods.PortableStorage.BagTooltip.UseTip} 
-            "Cautionary Advisement= Avoid Tripping!"
             '''
             TheBlackHole:
             '''
