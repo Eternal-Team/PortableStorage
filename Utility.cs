@@ -230,6 +230,18 @@ public static class Utility
 		Add("Coin", AmmoID.Coin);
 	}
 
+	public static bool IsPetItem(Item item)
+	{
+		bool checkItem = item.type > ItemID.None && item.shoot > ProjectileID.None;
+		bool checkBuff = item.buffType > 0 && item.buffType < Main.vanityPet.Length;
+		if (checkItem)
+		{
+			checkBuff = Main.vanityPet[item.buffType] || Main.lightPet[item.buffType];
+		}
+
+		return checkItem && checkBuff;
+	}
+	
 	// use ModPacket with a cache of all bags?
 	// internal static void SyncBag(BaseBag bag)
 	// {

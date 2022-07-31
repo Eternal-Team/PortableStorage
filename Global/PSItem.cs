@@ -78,7 +78,7 @@ public class PSItem : GlobalItem
 		if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon &&
 		                                                          ((item.potion && item.healLife > 0) ||
 		                                                           (item.healMana > 0 && !item.potion) ||
-		                                                           (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] /*&& !IsPetItem(item)*/))
+		                                                           (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
 		{
 			foreach (AlchemistBag alchemistBag in OfModItemType<AlchemistBag>(player.inventory))
 			{

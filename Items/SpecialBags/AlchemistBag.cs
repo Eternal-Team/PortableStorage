@@ -31,23 +31,13 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 				return item.DamageType != DamageClass.Summon &&
 				       ((item.potion && item.healLife > 0) ||
 				        (item.healMana > 0 && !item.potion) ||
-				        (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !IsPetItem(item);
+				        (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item);
 			}
 
 			return Utility.AlchemistBagWhitelist.Contains(item.type);
 		}
 
-		private static bool IsPetItem(Item item)
-		{
-			bool checkItem = item.type > ItemID.None && item.shoot > ProjectileID.None;
-			bool checkBuff = item.buffType > 0 && item.buffType < Main.vanityPet.Length;
-			if (checkItem)
-			{
-				checkBuff = Main.vanityPet[item.buffType] || Main.lightPet[item.buffType];
-			}
-
-			return checkItem && checkBuff;
-		}
+	
 	}
 
 	public override string Texture => PortableStorage.AssetPath + "Textures/Items/AlchemistBag";
