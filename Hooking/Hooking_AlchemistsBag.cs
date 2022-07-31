@@ -20,9 +20,7 @@ public static partial class Hooking
 	{
 		foreach (Item item in player.inventory)
 		{
-			if (item.IsAir) continue;
-
-			if (item.ModItem is AlchemistBag bag) yield return bag;
+			if (!item.IsAir && item.ModItem is AlchemistBag bag) yield return bag;
 		}
 	}
 
@@ -34,7 +32,7 @@ public static partial class Hooking
 	{
 		ILCursor cursor = new ILCursor(il);
 
-		if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdloc(0), i => i.MatchLdnull(), i => i.MatchCgtUn()))
+		if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdloca(0), i => i.MatchCall(typeof(SoundStyle?).GetMethod("get_HasValue", ReflectionUtility.DefaultFlags)), i => i.MatchBrfalse(out _)))
 		{
 			cursor.Emit(OpCodes.Ldarg, 0);
 			cursor.Emit(OpCodes.Ldloca, 0);
@@ -245,10 +243,10 @@ public static partial class Hooking
 	{
 		ILCursor cursor = new ILCursor(il);
 
-		if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdloc(13), i => i.MatchRet()))
+		if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdloc(1), i => i.MatchRet()))
 		{
 			cursor.Emit(OpCodes.Ldarg, 0);
-			cursor.Emit(OpCodes.Ldloca, 13);
+			cursor.Emit(OpCodes.Ldloca, 1);
 			cursor.Emit(OpCodes.Ldloca, 0);
 
 			cursor.EmitDelegate<PickBestFoodItem_Del>((Player player, ref Item foodItem, ref int num) =>
@@ -257,7 +255,7 @@ public static partial class Hooking
 				{
 					ItemStorage storage = bag.GetItemStorage();
 
-					for (var i = 0; i < AlchemistBag.PotionSlots; i++)
+					for (int i = 0; i < AlchemistBag.PotionSlots; i++)
 					{
 						Item item = storage[i];
 						if (item.IsAir) continue;
