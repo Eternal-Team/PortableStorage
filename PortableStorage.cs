@@ -13,6 +13,7 @@ public class PortableStorage : Mod
 	public override void Load()
 	{
 		Hooking.Hooking.Load();
+		BagPopupText.Load();
 	}
 
 	public override void PostSetupContent()

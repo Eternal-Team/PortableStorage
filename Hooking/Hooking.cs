@@ -28,9 +28,5 @@ public static partial class Hooking
 		On.Terraria.Player.ItemCheck_CheckFishingBobber_PickAndConsumeBait += PlayerOnItemCheck_CheckFishingBobber_PickAndConsumeBait;
 		On.Terraria.Player.Fishing_GetBestFishingPole += PlayerOnFishing_GetBestFishingPole;
 		On.Terraria.Player.Fishing_GetBait += PlayerOnFishing_GetBait;
-
-		// ItemTextBags = new Terraria.Item[Terraria.Main.popupText.Length];
-		// for (int i = 0; i < ItemTextBags.Length; i++) ItemTextBags[i] = new Terraria.Item();
-		// Main.DoDraw += DoDraw;
 	}
 }

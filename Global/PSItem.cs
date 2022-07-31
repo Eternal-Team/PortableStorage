@@ -31,9 +31,13 @@ public class PSItem : GlobalItem
 			foreach (Wallet wallet in OfModItemType<Wallet>(player.inventory))
 			{
 				if (!wallet.EnablePickup) continue;
-				
-				if ( wallet.GetItemStorage().InsertItem(player, ref item))
+
+				Item temp = item.Clone();
+				if (wallet.GetItemStorage().InsertItem(player, ref item))
+				{
+					BagPopupText.NewText(PopupTextContext.RegularItemPickup, wallet.Item, temp, temp.stack - item.stack);
 					SoundEngine.PlaySound(SoundID.CoinPickup);
+				}
 
 				if (item is null || item.IsAir || !item.active)
 					return false;
@@ -45,9 +49,13 @@ public class PSItem : GlobalItem
 			foreach (BaseAmmoBag ammoBag in OfModItemType<BaseAmmoBag>(player.inventory))
 			{
 				if (!ammoBag.EnablePickup) continue;
-				
+
+				Item temp = item.Clone();
 				if (ammoBag.GetItemStorage().InsertItem(player, ref item))
+				{
+					BagPopupText.NewText(PopupTextContext.RegularItemPickup, ammoBag.Item, temp, temp.stack - item.stack);
 					SoundEngine.PlaySound(SoundID.Grab);
+				}
 
 				if (item is null || item.IsAir || !item.active)
 					return false;
@@ -59,9 +67,13 @@ public class PSItem : GlobalItem
 			foreach (FishingBelt fishingBelt in OfModItemType<FishingBelt>(player.inventory))
 			{
 				if (!fishingBelt.EnablePickup) continue;
-				
+
+				Item temp = item.Clone();
 				if (fishingBelt.GetItemStorage().InsertItem(player, ref item))
+				{
+					BagPopupText.NewText(PopupTextContext.RegularItemPickup, fishingBelt.Item, temp, temp.stack - item.stack);
 					SoundEngine.PlaySound(SoundID.Grab);
+				}
 
 				if (item is null || item.IsAir || !item.active)
 					return false;
@@ -73,9 +85,13 @@ public class PSItem : GlobalItem
 			foreach (MinersBackpack minersBackpack in OfModItemType<MinersBackpack>(player.inventory))
 			{
 				if (!minersBackpack.EnablePickup) continue;
-				
+
+				Item temp = item.Clone();
 				if (minersBackpack.GetItemStorage().InsertItem(player, ref item))
+				{
+					BagPopupText.NewText(PopupTextContext.RegularItemPickup, minersBackpack.Item, temp, temp.stack - item.stack);
 					SoundEngine.PlaySound(SoundID.Grab);
+				}
 
 				if (item is null || item.IsAir || !item.active)
 					return false;
@@ -91,9 +107,13 @@ public class PSItem : GlobalItem
 			foreach (AlchemistBag alchemistBag in OfModItemType<AlchemistBag>(player.inventory))
 			{
 				if (!alchemistBag.EnablePickup) continue;
-				
+
+				Item temp = item.Clone();
 				if (alchemistBag.GetItemStorage().InsertItem(player, ref item))
+				{
+					BagPopupText.NewText(PopupTextContext.RegularItemPickup, alchemistBag.Item, temp, temp.stack - item.stack);
 					SoundEngine.PlaySound(SoundID.Grab);
+				}
 
 				if (item is null || item.IsAir || !item.active)
 					return false;
