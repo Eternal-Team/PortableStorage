@@ -94,7 +94,7 @@ public static partial class Hooking
 		{
 			cursor.Remove();
 			cursor.Emit(OpCodes.Ldarg, 0);
-			cursor.EmitDelegate<Func<int, List<Item[]>, List<Point>, List<Point>, List<Point>, List<Point>, List<Point>, List<Point>, Player, bool>>(TryPurchasing);
+			cursor.EmitDelegate(TryPurchasing);
 		}
 	}
 
@@ -209,7 +209,20 @@ public static partial class Hooking
 	#endregion
 
 	#region Custom currencies
-	private delegate long BuyItemCustomCurrency_Del(CustomCurrencySystem system, ref bool overflowing, Player player);
+	private static long CountCustomCurrencies(CustomCurrencySystem system, ref bool overflowing, Player player)
+	{
+		long val = 0;
+
+		foreach (Item pItem in player.inventory)
+		{
+			if (pItem.ModItem is Wallet wallet)
+			{
+				val += system.CountCurrency(out overflowing, wallet.GetItemStorage().ToArray());
+			}
+		}
+
+		return val;
+	}
 
 	private static void BuyItemCustomCurrency(ILContext il)
 	{
@@ -223,20 +236,7 @@ public static partial class Hooking
 			cursor.Emit(OpCodes.Ldloca, 1);
 			cursor.Emit(OpCodes.Ldarg, 0);
 
-			cursor.EmitDelegate<BuyItemCustomCurrency_Del>((CustomCurrencySystem system, ref bool overflowing, Player player) =>
-			{
-				long val = 0;
-
-				foreach (Item pItem in player.inventory)
-				{
-					if (pItem.ModItem is Wallet wallet)
-					{
-						val += system.CountCurrency(out overflowing, wallet.GetItemStorage().ToArray());
-					}
-				}
-
-				return val;
-			});
+			cursor.EmitDelegate(CountCustomCurrencies);
 
 			cursor.Emit(OpCodes.Stloc, walletCoins);
 
@@ -265,7 +265,7 @@ public static partial class Hooking
 
 			cursor.Emit(OpCodes.Ldarg, 0);
 			cursor.Emit(OpCodes.Ldloc, 0);
-			cursor.EmitDelegate<Func<int, List<Item[]>, List<Point>, List<Point>, List<Point>, List<Point>, List<Point>, List<Point>, Player, CustomCurrencySystem, bool>>(TryPurchasingCustomCurrency);
+			cursor.EmitDelegate(TryPurchasingCustomCurrency);
 		}
 	}
 
@@ -308,20 +308,7 @@ public static partial class Hooking
 			cursor.Emit(OpCodes.Ldloc, 0);
 			cursor.Emit(OpCodes.Ldloca, 2);
 			cursor.Emit(OpCodes.Ldloc, 1);
-			cursor.EmitDelegate<BuyItemCustomCurrency_Del>((CustomCurrencySystem system, ref bool overflowing, Player player) =>
-			{
-				long val = 0;
-
-				foreach (Item pItem in player.inventory)
-				{
-					if (pItem.ModItem is Wallet wallet)
-					{
-						val += system.CountCurrency(out overflowing, wallet.GetItemStorage().ToArray());
-					}
-				}
-
-				return val;
-			});
+			cursor.EmitDelegate(CountCustomCurrencies);
 			cursor.Emit(OpCodes.Stloc, walletIndex);
 
 			cursor.Index += 2;

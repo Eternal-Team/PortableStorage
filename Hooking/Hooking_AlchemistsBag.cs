@@ -24,7 +24,53 @@ public static partial class Hooking
 		}
 	}
 
-	private delegate void QuickBuff_Del(Player player, ref SoundStyle? sound);
+	private static void QuickBuff_Del(Player player, ref SoundStyle? sound)
+	{
+		if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickBuff) return;
+
+		if (player.CountBuffs() == Player.MaxBuffs) return;
+
+		foreach (AlchemistBag bag in GetAlchemistBags(player))
+		{
+			ItemStorage storage = bag.GetItemStorage();
+
+			for (int i = 0; i < AlchemistBag.PotionSlots; i++)
+			{
+				Item item = storage[i];
+
+				if (item.IsAir || item.buffType <= 0 || item.DamageType == DamageClass.Summon) continue;
+
+				int buffType = item.buffType;
+				bool canUse = CombinedHooks.CanUseItem(player, item) && QuickBuff_ShouldBotherUsingThisBuff.Invoke<bool>(player, buffType);
+				if (item.mana > 0 && canUse)
+				{
+					if (player.CheckMana(item, -1, true, true)) player.manaRegenDelay = (int)player.maxRegenDelay;
+				}
+
+				if (player.whoAmI == Main.myPlayer && item.type == ItemID.Carrot && !Main.runningCollectorsEdition) canUse = false;
+
+				if (buffType == 27)
+				{
+					buffType = Main.rand.Next(3);
+					if (buffType == 0) buffType = 27;
+					if (buffType == 1) buffType = 101;
+					if (buffType == 2) buffType = 102;
+				}
+
+				if (!canUse) continue;
+
+				ItemLoader.UseItem(item, player);
+				sound = item.UseSound;
+				int buffTime = item.buffTime;
+				if (buffTime == 0) buffTime = 3600;
+
+				player.AddBuff(buffType, buffTime);
+				if (item.consumable && ItemLoader.ConsumeItem(item, player)) storage.ModifyStackSize(player, i, -1);
+
+				if (player.CountBuffs() == Player.MaxBuffs) return;
+			}
+		}
+	}
 
 	private static MethodInfo QuickBuff_ShouldBotherUsingThisBuff = typeof(Player).GetMethod("QuickBuff_ShouldBotherUsingThisBuff", ReflectionUtility.DefaultFlags);
 
@@ -37,106 +83,60 @@ public static partial class Hooking
 			cursor.Emit(OpCodes.Ldarg, 0);
 			cursor.Emit(OpCodes.Ldloca, 0);
 
-			cursor.EmitDelegate<QuickBuff_Del>((Player player, ref SoundStyle? sound) =>
-			{
-				if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickBuff) return;
-
-				if (player.CountBuffs() == Player.MaxBuffs) return;
-
-				foreach (AlchemistBag bag in GetAlchemistBags(player))
-				{
-					ItemStorage storage = bag.GetItemStorage();
-
-					for (int i = 0; i < AlchemistBag.PotionSlots; i++)
-					{
-						Item item = storage[i];
-
-						if (item.IsAir || item.buffType <= 0 || item.DamageType == DamageClass.Summon) continue;
-
-						int buffType = item.buffType;
-						bool canUse = CombinedHooks.CanUseItem(player, item) && QuickBuff_ShouldBotherUsingThisBuff.Invoke<bool>(player, buffType);
-						if (item.mana > 0 && canUse)
-						{
-							if (player.CheckMana(item, -1, true, true)) player.manaRegenDelay = (int)player.maxRegenDelay;
-						}
-
-						if (player.whoAmI == Main.myPlayer && item.type == ItemID.Carrot && !Main.runningCollectorsEdition) canUse = false;
-
-						if (buffType == 27)
-						{
-							buffType = Main.rand.Next(3);
-							if (buffType == 0) buffType = 27;
-							if (buffType == 1) buffType = 101;
-							if (buffType == 2) buffType = 102;
-						}
-
-						if (!canUse) continue;
-
-						ItemLoader.UseItem(item, player);
-						sound = item.UseSound;
-						int buffTime = item.buffTime;
-						if (buffTime == 0) buffTime = 3600;
-
-						player.AddBuff(buffType, buffTime);
-						if (item.consumable && ItemLoader.ConsumeItem(item, player)) storage.ModifyStackSize(player, i, -1);
-
-						if (player.CountBuffs() == Player.MaxBuffs) return;
-					}
-				}
-			});
+			cursor.EmitDelegate(QuickBuff_Del);
 		}
 	}
 
-	private delegate void QuickHeal_Del(Player player, int lostHealth, ref int healthGain, ref Item result);
+	private static void QuickHeal_Del(Player player, int lostHealth, ref int healthGain, ref Item result)
+	{
+		if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickHeal) return;
+
+		foreach (AlchemistBag bag in GetAlchemistBags(player))
+		{
+			ItemStorage storage = bag.GetItemStorage();
+
+			for (int i = 0; i < AlchemistBag.PotionSlots; i++)
+			{
+				Item item = storage[i];
+				if (item.IsAir || !item.potion || item.healLife <= 0 || !CombinedHooks.CanUseItem(player, item)) continue;
+
+				int healWaste = player.GetHealLife(item, true) - lostHealth;
+				if (item.type == ItemID.RestorationPotion && healWaste < 0)
+				{
+					healWaste += 30;
+					if (healWaste > 0)
+						healWaste = 0;
+				}
+
+				if (healthGain < 0)
+				{
+					if (healWaste > healthGain)
+					{
+						result = item;
+						healthGain = healWaste;
+					}
+				}
+				else if (healWaste < healthGain && healWaste >= 0)
+				{
+					result = item;
+					healthGain = healWaste;
+				}
+			}
+		}
+	}
 
 	private static void QuickHeal(ILContext il)
 	{
 		ILCursor cursor = new ILCursor(il);
 
-		if (cursor.TryGotoNext(i => i.MatchLdcI4(0), i => i.MatchStloc(3), i => i.MatchBr(out _)))
+		if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdcI4(0), i => i.MatchStloc(3), i => i.MatchBr(out _)))
 		{
 			cursor.Emit(OpCodes.Ldarg, 0);
 			cursor.Emit(OpCodes.Ldloc, 0);
 			cursor.Emit(OpCodes.Ldloca, 2);
 			cursor.Emit(OpCodes.Ldloca, 1);
 
-			cursor.EmitDelegate<QuickHeal_Del>((Player player, int lostHealth, ref int healthGain, ref Item result) =>
-			{
-				if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickHeal) return;
-
-				foreach (AlchemistBag bag in GetAlchemistBags(player))
-				{
-					ItemStorage storage = bag.GetItemStorage();
-
-					for (int i = 0; i < AlchemistBag.PotionSlots; i++)
-					{
-						Item item = storage[i];
-						if (item.IsAir || !item.potion || item.healLife <= 0 || !CombinedHooks.CanUseItem(player, item)) continue;
-
-						int healWaste = player.GetHealLife(item, true) - lostHealth;
-						if (item.type == ItemID.RestorationPotion && healWaste < 0)
-						{
-							healWaste += 30;
-							if (healWaste > 0)
-								healWaste = 0;
-						}
-
-						if (healthGain < 0)
-						{
-							if (healWaste > healthGain)
-							{
-								result = item;
-								healthGain = healWaste;
-							}
-						}
-						else if (healWaste < healthGain && healWaste >= 0)
-						{
-							result = item;
-							healthGain = healWaste;
-						}
-					}
-				}
-			});
+			cursor.EmitDelegate(QuickHeal_Del);
 		}
 	}
 
@@ -235,7 +235,26 @@ public static partial class Hooking
 		}
 	}
 
-	private delegate void PickBestFoodItem_Del(Player player, ref Item item, ref int num);
+	private static void PickBestFoodItem_Del(Player player, ref Item foodItem, ref int num)
+	{
+		foreach (AlchemistBag bag in GetAlchemistBags(player))
+		{
+			ItemStorage storage = bag.GetItemStorage();
+
+			for (int i = 0; i < AlchemistBag.PotionSlots; i++)
+			{
+				Item item = storage[i];
+				if (item.IsAir) continue;
+
+				int priority = QuickBuff_FindFoodPriority.Invoke<int>(player, item.buffType);
+				if (priority >= num && (foodItem == null || foodItem.buffTime < item.buffTime || priority > num))
+				{
+					foodItem = item;
+					num = priority;
+				}
+			}
+		}
+	}
 
 	private static MethodInfo QuickBuff_FindFoodPriority = typeof(Player).GetMethod("QuickBuff_FindFoodPriority", ReflectionUtility.DefaultFlags);
 
@@ -249,26 +268,7 @@ public static partial class Hooking
 			cursor.Emit(OpCodes.Ldloca, 1);
 			cursor.Emit(OpCodes.Ldloca, 0);
 
-			cursor.EmitDelegate<PickBestFoodItem_Del>((Player player, ref Item foodItem, ref int num) =>
-			{
-				foreach (AlchemistBag bag in GetAlchemistBags(player))
-				{
-					ItemStorage storage = bag.GetItemStorage();
-
-					for (int i = 0; i < AlchemistBag.PotionSlots; i++)
-					{
-						Item item = storage[i];
-						if (item.IsAir) continue;
-
-						int priority = QuickBuff_FindFoodPriority.Invoke<int>(player, item.buffType);
-						if (priority >= num && (foodItem == null || foodItem.buffTime < item.buffTime || priority > num))
-						{
-							foodItem = item;
-							num = priority;
-						}
-					}
-				}
-			});
+			cursor.EmitDelegate(PickBestFoodItem_Del);
 		}
 	}
 }

@@ -12,7 +12,34 @@ namespace PortableStorage.Hooking;
 
 public static partial class Hooking
 {
-	private delegate void SpawnTownNPCs_Del(Player player, ref int coins, ref bool f, ref bool f1, ref bool f3);
+	private static void SpawnTownNPCs_Del(Player player, ref int coins, ref bool condArmsDealer, ref bool condDemolitionist, ref bool condDyeTrader)
+	{
+		long walletCoins = 0;
+
+		foreach (Item pItem in player.inventory)
+		{
+			if (pItem.ModItem is BaseBag bag)
+			{
+				if (bag is Wallet wallet)
+				{
+					walletCoins += wallet.GetItemStorage().CountCoins();
+					continue;
+				}
+
+				ItemStorage storage = bag.GetItemStorage();
+				foreach (Item item in storage)
+				{
+					if (item.IsAir) continue;
+
+					if (item.ammo == AmmoID.Bullet || item.useAmmo == AmmoID.Bullet) condArmsDealer = true;
+					if (ItemID.Sets.ItemsThatCountAsBombsForDemolitionistToSpawn[item.type]) condDemolitionist = true;
+					if (item.dye > 0 || item.type is >= ItemID.TealMushroom and <= ItemID.DyeVat or >= ItemID.StrangePlant1 and <= ItemID.StrangePlant4) condDyeTrader = true;
+				}
+			}
+		}
+
+		coins = (int)Utils.Clamp(walletCoins + coins, 0, int.MaxValue);
+	}
 
 	private static void SpawnTownNPCs(ILContext il)
 	{
@@ -29,34 +56,7 @@ public static partial class Hooking
 			cursor.Emit(OpCodes.Ldloca, 37);
 			cursor.Emit(OpCodes.Ldloca, 38);
 
-			cursor.EmitDelegate<SpawnTownNPCs_Del>((Player player, ref int coins, ref bool condArmsDealer, ref bool condDemolitionist, ref bool condDyeTrader) =>
-			{
-				long walletCoins = 0;
-
-				foreach (Item pItem in player.inventory)
-				{
-					if (pItem.ModItem is BaseBag bag)
-					{
-						if (bag is Wallet wallet)
-						{
-							walletCoins += wallet.GetItemStorage().CountCoins();
-							continue;
-						}
-
-						ItemStorage storage = bag.GetItemStorage();
-						foreach (Item item in storage)
-						{
-							if (item.IsAir) continue;
-
-							if (item.ammo == AmmoID.Bullet || item.useAmmo == AmmoID.Bullet) condArmsDealer = true;
-							if (ItemID.Sets.ItemsThatCountAsBombsForDemolitionistToSpawn[item.type]) condDemolitionist = true;
-							if (item.dye > 0 || item.type is >= ItemID.TealMushroom and <= ItemID.DyeVat or >= ItemID.StrangePlant1 and <= ItemID.StrangePlant4) condDyeTrader = true;
-						}
-					}
-				}
-
-				coins = (int)Utils.Clamp(walletCoins + coins, 0, int.MaxValue);
-			});
+			cursor.EmitDelegate(SpawnTownNPCs_Del);
 		}
 	}
 
