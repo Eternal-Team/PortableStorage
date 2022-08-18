@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using BaseLibrary;
 using BaseLibrary.UI;
@@ -68,7 +68,8 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	public override bool? UseItem(Player player)
 	{
-		PanelUI.Instance.HandleUI(this);
+		if (player.whoAmI == Main.LocalPlayer.whoAmI)
+			PanelUI.Instance.HandleUI(this);
 
 		return true;
 	}
@@ -78,7 +79,8 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	// bug: also plays the default right click sound (grab)
 	public override void RightClick(Player player)
 	{
-		PanelUI.Instance.HandleUI(this);
+		if (player.whoAmI == Main.LocalPlayer.whoAmI)
+			PanelUI.Instance.HandleUI(this);
 	}
 
 	public override void SaveData(TagCompound tag)
