@@ -1,7 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using BaseLibrary;
 using BaseLibrary.UI;
+using BaseLibrary.Utility;
 using ContainerLibrary;
 using Terraria;
 using Terraria.Audio;
@@ -12,23 +15,64 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items;
 
+public class BagStorage : ItemStorage
+{
+	protected BaseBag bag;
+
+	public BagStorage(BaseBag bag, int size) : base(size)
+	{
+		this.bag = bag;
+		OnContentsChanged += (_, _, slot) =>
+		{
+			BaseBag.SyncBag(bag);
+			// ModContent.GetInstance<BagChangeSystem>().RegisterItem(bag, slot);
+		};
+	}
+}
+
 public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 {
+	internal static void SyncBag(BaseBag item)
+	{
+		if (Main.netMode == NetmodeID.MultiplayerClient)
+		{
+			Player player = Main.LocalPlayer;
+
+			int slot = player.inventory.ToList().FindIndex(x => (x.ModItem as BaseBag)?.ID == item.ID);
+			if (slot < 0) return;
+
+			NetMessage.SendData(MessageID.SyncEquipment, -1, -1, null, Main.myPlayer, slot);
+		}
+	}
+
 	public SoundStyle? GetOpenSound() => new SoundStyle("PortableStorage/Assets/Sounds/BagOpen");
 	public SoundStyle? GetCloseSound() => new SoundStyle("PortableStorage/Assets/Sounds/BagClose");
 
+	protected override bool CloneNewInstances => false;
+
 	public Guid ID;
 	protected ItemStorage storage;
-	public bool EnablePickup = true;
+	public bool EnablePickup;
 
 	protected ItemStorage Storage
 	{
 		set => storage = value;
 		get
 		{
-			if (storage == null) OnCreate(null);
+			// if (storage == null) OnCreate(null);
 			return storage;
 		}
+	}
+
+	public BaseBag()
+	{
+		ID = Guid.NewGuid();
+		EnablePickup = true;
+
+		// if (!BagChangeSystem.Bags.ContainsKey(ID)) BagChangeSystem.Bags.Add(ID, this);
+		// BagChangeSystem.Bags.Add(ID, this);
+
+		// if (Main.netMode != NetmodeID.Server) Main.NewText($"Created bag with ID: {ID}");
 	}
 
 	public override ModItem Clone(Item item)
@@ -40,11 +84,14 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 		return clone;
 	}
 
-	public override void OnCreate(ItemCreationContext context)
-	{
-		ID = Guid.NewGuid();
-		EnablePickup = true;
-	}
+	// public override void OnCreate(ItemCreationContext context)
+	// {
+	// 	ID = Guid.NewGuid();
+	//
+	// 	if(Main.netMode!= NetmodeID.Server)Main.NewText($"Created bag with ID: {ID}");
+	//
+	// 	EnablePickup = true;
+	// }
 
 	public override void SetStaticDefaults()
 	{
@@ -92,9 +139,36 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	public override void LoadData(TagCompound tag)
 	{
+		// if (BagChangeSystem.Bags.ContainsKey(ID)) BagChangeSystem.Bags.Remove(ID);
+
 		ID = tag.Get<Guid>("ID");
 		Storage.Load(tag.Get<TagCompound>("Items"));
 		EnablePickup = tag.GetBool("EnablePickup");
+
+		// if (!BagChangeSystem.Bags.ContainsKey(ID)) BagChangeSystem.Bags.Add(ID, this);
+		// if (BagChangeSystem.Bags.ContainsKey(ID)) BagChangeSystem.Bags.Remove(ID);
+		// BagChangeSystem.Bags.Add(ID, this);
+	}
+
+	public override void NetSend(BinaryWriter writer)
+	{
+		writer.Write(ID);
+
+		Storage.Write(writer);
+		writer.Write(EnablePickup);
+	}
+
+	public override void NetReceive(BinaryReader reader)
+	{
+		// if (BagChangeSystem.Bags.ContainsKey(ID)) BagChangeSystem.Bags.Remove(ID);
+
+		ID = reader.ReadGuid();
+		Storage.Read(reader);
+		EnablePickup = reader.ReadBoolean();
+		
+		// if (!BagChangeSystem.Bags.ContainsKey(ID)) BagChangeSystem.Bags.Add(ID, this);
+		// if (Main.netMode != NetmodeID.Server) Main.NewText($"Received bag with ID: {ID}");
+		// BagChangeSystem.Bags.Add(ID, this);
 	}
 
 	public ItemStorage GetItemStorage() => Storage;

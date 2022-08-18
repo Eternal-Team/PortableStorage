@@ -2,26 +2,16 @@
 using System.Linq;
 using ContainerLibrary;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace PortableStorage.Items;
 
 public abstract class BaseNormalBag : BaseBag, ICraftingStorage
 {
-	private class NormalBagItemStorage : ItemStorage
+	private class NormalBagItemStorage : BagStorage
 	{
-		private BaseNormalBag bag;
-
-		public NormalBagItemStorage(BaseNormalBag bag) : base(bag.SlotCount)
+		public NormalBagItemStorage(BaseNormalBag bag) : base(bag, bag.SlotCount)
 		{
-			this.bag = bag;
 		}
-
-		// public override void OnContentsChanged(int slot, bool user)
-		// {
-		// 	Recipe.FindRecipes();
-		// 	Utility.SyncBag(bag);
-		// }
 
 		public override bool IsItemValid(int slot, Item item)
 		{
@@ -31,12 +21,17 @@ public abstract class BaseNormalBag : BaseBag, ICraftingStorage
 
 	protected abstract int SlotCount { get; }
 
-	public override void OnCreate(ItemCreationContext context)
+	public BaseNormalBag()
 	{
-		base.OnCreate(context);
-
 		Storage = new NormalBagItemStorage(this);
 	}
+
+	// public override void OnCreate(ItemCreationContext context)
+	// {
+	// 	base.OnCreate(context);
+	//
+	// 	Storage = new NormalBagItemStorage(this);
+	// }
 
 	public override void SetDefaults()
 	{

@@ -9,20 +9,11 @@ namespace PortableStorage.Items;
 
 public class AlchemistBag : BaseBag, ICraftingStorage
 {
-	private class AlchemistBagItemStorage : ItemStorage
+	private class AlchemistBagItemStorage : BagStorage
 	{
-		private AlchemistBag bag;
-
-		public AlchemistBagItemStorage(AlchemistBag bag) : base(PotionSlots + IngredientSlots)
+		public AlchemistBagItemStorage(BaseBag bag) : base(bag, PotionSlots + IngredientSlots)
 		{
-			this.bag = bag;
 		}
-
-		// public override void OnContentsChanged(int slot, bool user)
-		// {
-		// 	Recipe.FindRecipes();
-		// 	Utility.SyncBag(bag);
-		// }
 
 		public override bool IsItemValid(int slot, Item item)
 		{
@@ -36,8 +27,6 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 
 			return Utility.AlchemistBagWhitelist.Contains(item.type);
 		}
-
-	
 	}
 
 	public override string Texture => PortableStorage.AssetPath + "Textures/Items/AlchemistBag";
@@ -47,12 +36,17 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 	public const int PotionSlots = 18;
 	public const int IngredientSlots = 63;
 
-	public override void OnCreate(ItemCreationContext context)
+	public AlchemistBag()
 	{
-		base.OnCreate(context);
-
 		Storage = new AlchemistBagItemStorage(this);
 	}
+	
+	// public override void OnCreate(ItemCreationContext context)
+	// {
+	// 	base.OnCreate(context);
+	//
+	// 	Storage = new AlchemistBagItemStorage(this);
+	// }
 
 	public override void SetDefaults()
 	{

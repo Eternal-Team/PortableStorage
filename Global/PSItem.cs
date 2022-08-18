@@ -26,13 +26,14 @@ public class PSItem : GlobalItem
 		if (item.IsAir)
 			return base.OnPickup(item, player);
 
+		Item temp = item.Clone();
+
 		if (item.IsCurrency)
 		{
 			foreach (Wallet wallet in OfModItemType<Wallet>(player.inventory))
 			{
 				if (!wallet.EnablePickup) continue;
 
-				Item temp = item.Clone();
 				if (wallet.GetItemStorage().InsertItem(player, ref item))
 				{
 					BagPopupText.NewText(PopupTextContext.RegularItemPickup, wallet.Item, temp, temp.stack - item.stack);
@@ -50,7 +51,6 @@ public class PSItem : GlobalItem
 			{
 				if (!ammoBag.EnablePickup) continue;
 
-				Item temp = item.Clone();
 				if (ammoBag.GetItemStorage().InsertItem(player, ref item))
 				{
 					BagPopupText.NewText(PopupTextContext.RegularItemPickup, ammoBag.Item, temp, temp.stack - item.stack);
@@ -68,7 +68,6 @@ public class PSItem : GlobalItem
 			{
 				if (!fishingBelt.EnablePickup) continue;
 
-				Item temp = item.Clone();
 				if (fishingBelt.GetItemStorage().InsertItem(player, ref item))
 				{
 					BagPopupText.NewText(PopupTextContext.RegularItemPickup, fishingBelt.Item, temp, temp.stack - item.stack);
@@ -86,7 +85,6 @@ public class PSItem : GlobalItem
 			{
 				if (!minersBackpack.EnablePickup) continue;
 
-				Item temp = item.Clone();
 				if (minersBackpack.GetItemStorage().InsertItem(player, ref item))
 				{
 					BagPopupText.NewText(PopupTextContext.RegularItemPickup, minersBackpack.Item, temp, temp.stack - item.stack);
@@ -108,7 +106,6 @@ public class PSItem : GlobalItem
 			{
 				if (!alchemistBag.EnablePickup) continue;
 
-				Item temp = item.Clone();
 				if (alchemistBag.GetItemStorage().InsertItem(player, ref item))
 				{
 					BagPopupText.NewText(PopupTextContext.RegularItemPickup, alchemistBag.Item, temp, temp.stack - item.stack);

@@ -55,6 +55,21 @@ public static class Utility
 			}
 		}
 
+		// modded ores courtesy of Vein Miner (will be different in 1.4, use as a reference)
+/*
+ThoriumMod,SmoothCoal,ThoriumOre,LifeQuartz,MagmaOre,Aquaite,LodeStone,ValadiumChunk,IllumiteChunk,SynthGold,SynthPlatinum,Opal,PearlStone,Onyx,PlacedGem
+SpiritMod,FloranOreTile,MarbleOre,GraniteOre,CryoliteOreTile,SpiritOreTile,ThermiteOre
+CalamityMod,AerialiteOre,CryonicOre,PerennialOre,CharredOre,AstralOre,ChaoticOre,UelibloomOre,AuricOre,SeaPrism
+Tremor,IceOre,AngeliteOreTile,ArgiteOre,CollapsiumOreTile,CometiteOreTile,FrostoneOreTile,HardCometiteOreTile,NightmareOreTile
+CheezeMod,StarlightOre
+Antiaris,EnchantedStone
+SacredTools,LapisOre,OblivionOreBlock,Flarium,BismuthOre,VenomiteOre
+Bluemagic,PuriumOre
+CrystiliumMod,RadiantOre
+AAMod,AbyssiumOre,IncineriteOre,EventideAbyssiumOre,DaybreakIncineriteOre,LuminiteOre,Apocalyptite,DynaskullOre,YtriumOre,UraniumOre,TechneciumOre,RadiumOre,PrismOre,HallowedOre,DoomitePlate
+UniverseOfSwordsMod,DamascusOreTile
+*/
+		
 		OreWhitelist = new HashSet<int>
 		{
 			ItemID.LunarOre,
