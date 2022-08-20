@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using BaseLibrary.Utility;
+﻿using BaseLibrary.Utility;
 using ContainerLibrary;
 using PortableStorage.Items;
 using Terraria;
@@ -70,9 +69,12 @@ public class PSItem : GlobalItem
 			if (InsertIntoOfType_Existing<AlchemistBag>(SoundID.Grab))
 				return false;
 		}
-		
-		if (InsertIntoOfType_Existing<BaseNormalBag>(SoundID.Grab))
-			return false;
+
+		if (item.type is not 184 or 1735 or 1668 or 58 or 1734 or 1867 && !ItemID.Sets.NebulaPickup[item.type])
+		{
+			if (InsertIntoOfType_Existing<BaseNormalBag>(SoundID.Grab))
+				return false;
+		}
 		#endregion
 
 		#region BeforeInventory
@@ -126,9 +128,12 @@ public class PSItem : GlobalItem
 			if (InsertIntoOfType_BeforeInventory<AlchemistBag>(SoundID.Grab))
 				return false;
 		}
-		
-		if (InsertIntoOfType_BeforeInventory<BaseNormalBag>(SoundID.Grab))
-			return false;
+
+		if (item.type is not 184 or 1735 or 1668 or 58 or 1734 or 1867 && !ItemID.Sets.NebulaPickup[item.type])
+		{
+			if (InsertIntoOfType_BeforeInventory<BaseNormalBag>(SoundID.Grab))
+				return false;
+		}
 		#endregion
 
 		return base.OnPickup(item, player);

@@ -25,7 +25,7 @@ public static partial class Hooking
 
 			cursor.Emit(OpCodes.Ldarg, 0);
 			cursor.Emit(OpCodes.Ldloc, 1);
-			
+
 			cursor.EmitDelegate<Func<Player, Item, bool>>((player, item) =>
 			{
 				Item temp = item.Clone();
@@ -81,8 +81,11 @@ public static partial class Hooking
 						return false;
 				}
 
-				if (InsertIntoOfType_AfterInventory<BaseNormalBag>(SoundID.Grab))
-					return false;
+				if (item.type is not 184 or 1735 or 1668 or 58 or 1734 or 1867 && !ItemID.Sets.NebulaPickup[item.type])
+				{
+					if (InsertIntoOfType_AfterInventory<BaseNormalBag>(SoundID.Grab))
+						return false;
+				}
 
 				return true;
 			});
