@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
+using BaseLibrary.Utility;
 using ContainerLibrary;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using PortableStorage.Items;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -12,6 +14,88 @@ namespace PortableStorage.Hooking;
 
 public static partial class Hooking
 {
+	private static void PlayerOnGrabItems(ILContext il)
+	{
+		ILCursor cursor = new ILCursor(il);
+		ILLabel label = cursor.DefineLabel();
+
+		if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchCall<Player>("PickupItem"), i => i.MatchStloc(1), i => i.MatchBr(out _)))
+		{
+			cursor.Index += 2;
+
+			cursor.Emit(OpCodes.Ldarg, 0);
+			cursor.Emit(OpCodes.Ldloc, 1);
+			
+			cursor.EmitDelegate<Func<Player, Item, bool>>((player, item) =>
+			{
+				Item temp = item.Clone();
+
+				bool InsertIntoOfType_AfterInventory<T>(SoundStyle sound) where T : BaseBag
+				{
+					foreach (T bag in player.inventory.OfModItemType<T>())
+					{
+						if (bag.PickupMode != PickupMode.AfterInventory) continue;
+
+						ItemStorage storage = bag.GetItemStorage();
+						if (storage.Contains(item.type) && storage.InsertItem(player, ref item))
+						{
+							BagPopupText.NewText(PopupTextContext.RegularItemPickup, bag.Item, temp, temp.stack - item.stack);
+							SoundEngine.PlaySound(sound);
+						}
+
+						if (item is null || item.IsAir || !item.active)
+							return true;
+					}
+
+					return false;
+				}
+
+				if (item.IsCurrency)
+				{
+					if (InsertIntoOfType_AfterInventory<Wallet>(SoundID.CoinPickup))
+						return false;
+				}
+
+				if (item.ammo > 0)
+				{
+					if (InsertIntoOfType_AfterInventory<AmmoPouch>(SoundID.Grab))
+						return false;
+				}
+
+				if (item.bait > 0 || Utility.FishingWhitelist.Contains(item.type))
+				{
+					if (InsertIntoOfType_AfterInventory<FishingBelt>(SoundID.Grab))
+						return false;
+				}
+
+				if (Utility.OreWhitelist.Contains(item.type))
+				{
+					if (InsertIntoOfType_AfterInventory<MinersBackpack>(SoundID.Grab))
+						return false;
+				}
+
+				// first it should try to put stuff into ingredients (assuming it already has that ingredient), e.g. health potions
+				if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon && ((item.potion && item.healLife > 0) || (item.healMana > 0 && !item.potion) || (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
+				{
+					if (InsertIntoOfType_AfterInventory<AlchemistBag>(SoundID.Grab))
+						return false;
+				}
+
+				if (InsertIntoOfType_AfterInventory<BaseNormalBag>(SoundID.Grab))
+					return false;
+
+				return true;
+			});
+
+			cursor.Emit(OpCodes.Brfalse, label);
+		}
+
+		if (cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdloc(0), i => i.MatchLdcI4(1), i => i.MatchAdd(), i => i.MatchStloc(0)))
+		{
+			cursor.MarkLabel(label);
+		}
+	}
+
 	private static void SpawnTownNPCs_Del(Player player, ref int coins, ref bool condArmsDealer, ref bool condDemolitionist, ref bool condDyeTrader)
 	{
 		long walletCoins = 0;

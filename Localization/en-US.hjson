@@ -1,8 +1,11 @@
 ﻿Mods: {
 	PortableStorage: {
 		UI: {
-			PickupToggleOff: Toggle Pickup Off
-			PickupToggleOn: Toggle Pickup On
+			PickupDisabled: Pickup disabled
+            PickupBeforeInventory: Pickup before inventory
+            PickupAfterInventory: Pickup after inventory
+            PickupExistingOnly: Pickup items already inside bag
+			
 			Close: Close
 		}
 		

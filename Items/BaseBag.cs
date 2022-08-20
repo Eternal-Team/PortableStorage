@@ -24,10 +24,19 @@ public class BagStorage : ItemStorage
 		this.bag = bag;
 		OnContentsChanged += (_, _, slot) =>
 		{
+			// todo: only sync once a frame, not every change
 			BaseBag.SyncBag(bag);
 			// ModContent.GetInstance<BagChangeSystem>().RegisterItem(bag, slot);
 		};
 	}
+}
+
+public enum PickupMode
+{
+	Disabled,
+	BeforeInventory,
+	AfterInventory,
+	ExistingOnly
 }
 
 public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
@@ -52,7 +61,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	public Guid ID;
 	protected ItemStorage storage;
-	public bool EnablePickup;
+	public PickupMode PickupMode;
 
 	protected ItemStorage Storage
 	{
@@ -67,7 +76,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	public BaseBag()
 	{
 		ID = Guid.NewGuid();
-		EnablePickup = true;
+		PickupMode = PickupMode.Disabled;
 
 		// if (!BagChangeSystem.Bags.ContainsKey(ID)) BagChangeSystem.Bags.Add(ID, this);
 		// BagChangeSystem.Bags.Add(ID, this);
@@ -80,7 +89,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 		BaseBag clone = (BaseBag)base.Clone(item);
 		clone.Storage = Storage.Clone();
 		clone.ID = ID;
-		clone.EnablePickup = EnablePickup;
+		clone.PickupMode = PickupMode;
 		return clone;
 	}
 
@@ -134,7 +143,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	{
 		tag.Set("ID", ID);
 		tag.Set("Items", Storage.Save());
-		tag.Set("EnablePickup", EnablePickup);
+		tag.Set("PickupMode", (byte)PickupMode);
 	}
 
 	public override void LoadData(TagCompound tag)
@@ -143,7 +152,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 		ID = tag.Get<Guid>("ID");
 		Storage.Load(tag.Get<TagCompound>("Items"));
-		EnablePickup = tag.GetBool("EnablePickup");
+		PickupMode = (PickupMode)tag.GetByte("PickupMode");
 
 		// if (!BagChangeSystem.Bags.ContainsKey(ID)) BagChangeSystem.Bags.Add(ID, this);
 		// if (BagChangeSystem.Bags.ContainsKey(ID)) BagChangeSystem.Bags.Remove(ID);
@@ -155,7 +164,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 		writer.Write(ID);
 
 		Storage.Write(writer);
-		writer.Write(EnablePickup);
+		writer.Write((byte)PickupMode);
 	}
 
 	public override void NetReceive(BinaryReader reader)
@@ -164,7 +173,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 		ID = reader.ReadGuid();
 		Storage.Read(reader);
-		EnablePickup = reader.ReadBoolean();
+		PickupMode = (PickupMode)reader.ReadByte();
 		
 		// if (!BagChangeSystem.Bags.ContainsKey(ID)) BagChangeSystem.Bags.Add(ID, this);
 		// if (Main.netMode != NetmodeID.Server) Main.NewText($"Received bag with ID: {ID}");

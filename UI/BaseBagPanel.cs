@@ -1,4 +1,5 @@
-﻿using BaseLibrary.UI;
+﻿using System;
+using BaseLibrary.UI;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using PortableStorage.Items;
@@ -64,9 +65,6 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 		// buttonQuickStack.OnClick += args => ItemUtility.QuickStack(Container.Handler, Main.LocalPlayer);
 		// Add(buttonQuickStack);
 
-		var localPickupOn = Language.GetText("Mods.PortableStorage.UI.PickupToggleOn");
-		var localPickupOff = Language.GetText("Mods.PortableStorage.UI.PickupToggleOff");
-
 		Main.instance.LoadItem(ItemID.TreasureMagnet);
 		UITexture buttonPickup = new UITexture(TextureAssets.Item[ItemID.TreasureMagnet])
 		{
@@ -74,13 +72,11 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 			Height = { Pixels = 20 },
 			Width = { Pixels = 20 },
 			X = { Percent = 100, Pixels = -28 },
-			HoverText = bag.EnablePickup ? localPickupOff : localPickupOn
+			HoverText = (Func<string>)(() => Language.GetText("Mods.PortableStorage.UI.Pickup" + bag.PickupMode).ToString())
 		};
 		buttonPickup.OnClick += args =>
 		{
-			bag.EnablePickup = !bag.EnablePickup;
-
-			buttonPickup.HoverText = bag.EnablePickup ? localPickupOff : localPickupOn;
+			bag.PickupMode = bag.PickupMode.NextEnum();
 
 			SoundEngine.PlaySound(SoundID.MenuTick);
 
