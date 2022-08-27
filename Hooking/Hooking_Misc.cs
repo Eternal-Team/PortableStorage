@@ -205,10 +205,15 @@ public static partial class Hooking
 		{
 			Item hotbarItem = Main.LocalPlayer.inventory[Main.LocalPlayer.selectedItem];
 
-			if (hotbarItem.IsAir || hotbarItem.ModItem is not BuilderReserve reserve)
+			if (hotbarItem.IsAir)
 				return;
 
-			Item selectedItem = reserve.SelectedItem;
+			Item selectedItem = hotbarItem.ModItem switch
+			{
+				BuilderReserve reserve => reserve.SelectedItem,
+				GardenerSatchel satchel => satchel.SelectedItem,
+				_ => null
+			};
 
 			if (selectedItem is null || selectedItem.IsAir)
 				return;
