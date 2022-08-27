@@ -1,7 +1,6 @@
 ﻿using Terraria;
 using Terraria.GameContent.UI;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace PortableStorage.Items;
 
@@ -37,10 +36,8 @@ public class Wallet : BaseAmmoBag
 
 	protected override string AmmoType => "Coin";
 
-	public override void OnCreate(ItemCreationContext context)
+	public Wallet()
 	{
-		base.OnCreate(context);
-
 		Storage = new WalletItemStorage(18, this);
 	}
 
