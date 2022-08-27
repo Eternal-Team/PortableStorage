@@ -74,7 +74,7 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 			X = { Percent = 100, Pixels = -28 },
 			HoverText = (Func<string>)(() => Language.GetText("Mods.PortableStorage.UI.Pickup" + bag.PickupMode).ToString())
 		};
-		buttonPickup.OnClick += args =>
+		buttonPickup.OnMouseDown += args =>
 		{
 			bag.PickupMode = bag.PickupMode.NextEnum();
 
@@ -91,7 +91,7 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 			X = { Percent = 100 },
 			HoverText = Language.GetText("Mods.PortableStorage.UI.Close")
 		};
-		buttonClose.OnClick += args =>
+		buttonClose.OnMouseDown += args =>
 		{
 			PanelUI.Instance.CloseUI(Container);
 			args.Handled = true;
