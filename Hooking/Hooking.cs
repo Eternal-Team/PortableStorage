@@ -1,7 +1,6 @@
 ﻿using IL.Terraria;
 using IL.Terraria.GameContent.UI;
 using IL.Terraria.UI;
-using MonoMod.Cil;
 
 namespace PortableStorage.Hooking;
 
@@ -29,7 +28,9 @@ public static partial class Hooking
 		On.Terraria.Player.ItemCheck_CheckFishingBobber_PickAndConsumeBait += PlayerOnItemCheck_CheckFishingBobber_PickAndConsumeBait;
 		On.Terraria.Player.Fishing_GetBestFishingPole += PlayerOnFishing_GetBestFishingPole;
 		On.Terraria.Player.Fishing_GetBait += PlayerOnFishing_GetBait;
-		
+
 		Player.GrabItems += PlayerOnGrabItems;
+
+		Main.DrawInterface_40_InteractItemIcon += MainOnDrawInterface_40_InteractItemIcon;
 	}
 }

@@ -2,13 +2,16 @@
 using System.Linq;
 using BaseLibrary.Utility;
 using ContainerLibrary;
+using Microsoft.Xna.Framework;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using PortableStorage.Items;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.UI.Chat;
 
 namespace PortableStorage.Hooking;
 
@@ -189,5 +192,38 @@ public static partial class Hooking
 
 			cursor.Emit(OpCodes.Stloc, 35);
 		}
+	}
+
+	private static void MainOnDrawInterface_40_InteractItemIcon(ILContext il)
+	{
+		ILCursor cursor = new ILCursor(il);
+
+		if (!cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdloc(1), i => i.MatchBrtrue(out _), i => i.MatchLdloca(3)))
+			throw new Exception("IL edit failed");
+
+		cursor.EmitDelegate(() =>
+		{
+			Item hotbarItem = Main.LocalPlayer.inventory[Main.LocalPlayer.selectedItem];
+
+			if (hotbarItem.IsAir || hotbarItem.ModItem is not BuilderReserve reserve)
+				return;
+
+			Item selectedItem = reserve.SelectedItem;
+
+			if (selectedItem is null || selectedItem.IsAir)
+				return;
+
+			Main.instance.LoadItem(selectedItem.type);
+			Vector2 size = Item.GetDrawHitbox(hotbarItem.type, null).Size();
+			float scale = Main.cursorScale;
+			Vector2 position = new Vector2(Main.mouseX + 10, Main.mouseY + 10);
+
+			DrawingUtility.DrawItemInInventory(Main.spriteBatch, selectedItem, position + size * 0.5f * scale, size * 0.5f, scale, false);
+
+			string text = selectedItem.stack < 1000 ? selectedItem.stack.ToString() : TextUtility.ToSI(selectedItem.stack, "N1");
+			Vector2 textSize = FontAssets.MouseText.Value.MeasureString(text);
+
+			ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.MouseText.Value, text, position + new Vector2(size.X * 0.5f, size.Y) * scale, Color.White, 0f, new Vector2(textSize.X * 0.5f, 0f), new Vector2(0.75f) * scale);
+		});
 	}
 }
