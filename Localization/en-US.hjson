@@ -1,4 +1,4 @@
-Mods: {
+﻿Mods: {
 	PortableStorage: {
 		UI: {
 			PickupDisabled: Pickup disabled
@@ -33,6 +33,7 @@ Mods: {
             FishingBelt: Fishing Belt
             MinersBackpack: Miner's Backpack
             GardenerSatchel: Gardener's Satchel
+            WiringBag: Mechanic's Belt
 		}
 		
 		BagTooltip: {
@@ -142,6 +143,12 @@ Mods: {
             Right-Click to open UI, use to place seeds or gather flowers
             Alt+Left-Click on slot to select
             "The seeds of a whole new world, to be nurtured with care and they will bring life to this arid place."
+            '''
+            WiringBag:
+            '''
+            {$Mods.PortableStorage.BagTooltip.StoresTip} wiring supplies
+            {$Mods.PortableStorage.BagTooltip.UseTip} 
+            "Just hope it does not release the magic white smoke."
             '''
 		}
 	}
