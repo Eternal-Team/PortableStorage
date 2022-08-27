@@ -133,6 +133,8 @@ public class BuilderReserve : BaseBag
 
 	public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 	{
+		if (SelectedItem is null || SelectedItem.IsAir) return;
+
 		string text = SelectedItem.stack < 1000 ? SelectedItem.stack.ToString() : TextUtility.ToSI(SelectedItem.stack, "N1");
 		Vector2 size = FontAssets.MouseText.Value.MeasureString(text);
 
