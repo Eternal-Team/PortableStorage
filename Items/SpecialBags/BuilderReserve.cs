@@ -10,8 +10,6 @@ using Terraria.UI.Chat;
 
 namespace PortableStorage.Items;
 
-// todo: draw selected item in cursor icon, also do for gardener's satchel (and wiring bag?)
-
 public class BuilderReserve : BaseBag
 {
 	private class BuilderReserveItemStorage : BagStorage
@@ -39,7 +37,12 @@ public class BuilderReserve : BaseBag
 		get => selectedIndex;
 		set
 		{
-			if (value == -1) selectedIndex = Item.placeStyle = Item.createTile = Item.createWall = -1;
+			if (value == -1)
+			{
+				selectedIndex = Item.placeStyle = Item.createTile = Item.createWall = -1;
+
+				Item.ClearNameOverride();
+			}
 			else
 			{
 				selectedIndex = value;

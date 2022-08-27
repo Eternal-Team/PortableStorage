@@ -37,20 +37,18 @@ public class GardenerSatchel : BaseBag
 		get => selectedIndex;
 		set
 		{
-			if (value == -1) selectedIndex = Item.placeStyle = Item.createTile = Item.createWall = -1;
+			if (value == -1)
+			{
+				selectedIndex = Item.placeStyle = Item.createTile = -1;
+
+				Item.ClearNameOverride();
+			}
 			else
 			{
 				selectedIndex = value;
 				if (SelectedItem.createTile >= TileID.Dirt)
 				{
 					Item.createTile = SelectedItem.createTile;
-					Item.createWall = -1;
-					Item.placeStyle = SelectedItem.placeStyle;
-				}
-				else if (SelectedItem.createWall > WallID.None)
-				{
-					Item.createTile = -1;
-					Item.createWall = SelectedItem.createWall;
 					Item.placeStyle = SelectedItem.placeStyle;
 				}
 
