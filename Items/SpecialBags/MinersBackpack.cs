@@ -39,13 +39,6 @@ public class MinersBackpack : BaseBag
 		Storage = new MinersBackpackItemStorage(18, this);
 	}
 
-	// public override void OnCreate(ItemCreationContext context)
-	// {
-	// 	base.OnCreate(context);
-	//
-	// 	Storage = new MinersBackpackItemStorage(18, this);
-	// }
-
 	public override void SetDefaults()
 	{
 		base.SetDefaults();

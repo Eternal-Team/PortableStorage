@@ -24,13 +24,6 @@ public class FishingBelt : BaseBag
 		Storage = new FishingBeltItemStorage(18, this);
 	}
 
-	// public override void OnCreate(ItemCreationContext context)
-	// {
-	// 	base.OnCreate(context);
-	//
-	// 	Storage = new FishingBeltItemStorage(18, this);
-	// }
-
 	public override void SetDefaults()
 	{
 		base.SetDefaults();

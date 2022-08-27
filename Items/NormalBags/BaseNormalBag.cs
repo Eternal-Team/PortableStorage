@@ -26,13 +26,6 @@ public abstract class BaseNormalBag : BaseBag, ICraftingStorage
 		Storage = new NormalBagItemStorage(this);
 	}
 
-	// public override void OnCreate(ItemCreationContext context)
-	// {
-	// 	base.OnCreate(context);
-	//
-	// 	Storage = new NormalBagItemStorage(this);
-	// }
-
 	public override void SetDefaults()
 	{
 		base.SetDefaults();

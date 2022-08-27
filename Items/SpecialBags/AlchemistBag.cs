@@ -31,7 +31,6 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 
 	public override string Texture => PortableStorage.AssetPath + "Textures/Items/AlchemistBag";
 
-
 	// note: separate into 2 ItemStorages?
 	public const int PotionSlots = 18;
 	public const int IngredientSlots = 63;
@@ -40,13 +39,6 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 	{
 		Storage = new AlchemistBagItemStorage(this);
 	}
-	
-	// public override void OnCreate(ItemCreationContext context)
-	// {
-	// 	base.OnCreate(context);
-	//
-	// 	Storage = new AlchemistBagItemStorage(this);
-	// }
 
 	public override void SetDefaults()
 	{

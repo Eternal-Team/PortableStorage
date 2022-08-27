@@ -23,11 +23,4 @@ public abstract class BaseAmmoBag : BaseBag
 	{
 		Storage = new AmmoBagItemStorage(9, this);
 	}
-
-	// public override void OnCreate(ItemCreationContext context)
-	// {
-	// 	base.OnCreate(context);
-	//
-	// 	Storage = new AmmoBagItemStorage(9, this);
-	// }
 }
