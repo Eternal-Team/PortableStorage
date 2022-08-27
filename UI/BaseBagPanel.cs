@@ -32,7 +32,7 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 
 	public BaseBagPanel(BaseBag bag) : base((T)bag)
 	{
-		UIText textLabel = new UIText(Container.Item.Name)
+		UIText textLabel = new UIText(Lang.GetItemNameValue(Container.Item.type))
 		{
 			X = { Percent = 50 },
 			Settings = { HorizontalAlignment = HorizontalAlignment.Center }
