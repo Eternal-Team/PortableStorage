@@ -1,4 +1,4 @@
-﻿Mods: {
+Mods: {
 	PortableStorage: {
 		UI: {
 			PickupDisabled: Pickup disabled
@@ -10,7 +10,6 @@
 		}
 		
 		Config: {
-			AlchemistBag: Alchemist's Bag
 			AlchemistBagQuickBuff: Allow quick buff
             AlchemistBagQuickHeal: Allow quick heal
             AlchemistBagQuickMana: Allow quick mana
