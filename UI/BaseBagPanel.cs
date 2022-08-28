@@ -1,13 +1,16 @@
 ﻿using System;
+using BaseLibrary;
 using BaseLibrary.UI;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using PortableStorage.Items;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace PortableStorage.UI;
 
@@ -39,31 +42,58 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 		};
 		Add(textLabel);
 
-		// UIButton buttonLootAll = new UIButton(PortableStorage.textureLootAll)
-		// {
-		// 	Size = new Vector2(20),
-		// 	HoverText = Language.GetText("LegacyInterface.29")
-		// };
-		// buttonLootAll.OnClick += args => ItemUtility.LootAll(Container.Handler, Main.LocalPlayer);
-		// Add(buttonLootAll);
-		//
-		// UIButton buttonDepositAll = new UIButton(PortableStorage.textureDepositAll)
-		// {
-		// 	Size = new Vector2(20),
-		// 	X = { Pixels = 28 },
-		// 	HoverText = Language.GetText("LegacyInterface.30")
-		// };
-		// buttonDepositAll.OnClick += args => ItemUtility.DepositAll(Container.Handler, Main.LocalPlayer);
-		// Add(buttonDepositAll);
-		//
-		// buttonQuickStack = new UIButton(PortableStorage.textureQuickStack)
-		// {
-		// 	Size = new Vector2(20),
-		// 	X = { Pixels = 56 },
-		// 	HoverText = Language.GetText("LegacyInterface.31")
-		// };
-		// buttonQuickStack.OnClick += args => ItemUtility.QuickStack(Container.Handler, Main.LocalPlayer);
-		// Add(buttonQuickStack);
+		UITexture buttonLootAll = new UITexture(ModContent.Request<Texture2D>(BaseLibrary.BaseLibrary.AssetPath + "Textures/UI/LootAll"))
+		{
+			Size = new Vector2(20),
+			HoverText = Language.GetText("Mods.PortableStorage.UI.LootAll")
+		};
+		buttonLootAll.OnMouseDown += args =>
+		{
+			if (args.Button != MouseButton.Left) return;
+
+			args.Handled = true;
+
+			Main.LocalPlayer.LootAll(Container.GetItemStorage());
+
+			SoundEngine.PlaySound(SoundID.Grab);
+		};
+		Add(buttonLootAll);
+
+		UITexture buttonDepositAll = new UITexture(ModContent.Request<Texture2D>(BaseLibrary.BaseLibrary.AssetPath + "Textures/UI/DepositAll"))
+		{
+			Size = new Vector2(20),
+			X = { Pixels = 28 },
+			HoverText = Language.GetText("Mods.PortableStorage.UI.DepositAll")
+		};
+		buttonDepositAll.OnMouseDown += args =>
+		{
+			if (args.Button != MouseButton.Left) return;
+
+			args.Handled = true;
+
+			Main.LocalPlayer.DepositAll(Container.GetItemStorage());
+
+			SoundEngine.PlaySound(SoundID.Grab);
+		};
+		Add(buttonDepositAll);
+
+		UITexture buttonQuickStack = new UITexture(ModContent.Request<Texture2D>(BaseLibrary.BaseLibrary.AssetPath + "Textures/UI/QuickStack"))
+		{
+			Size = new Vector2(20),
+			X = { Pixels = 56 },
+			HoverText = Language.GetText("Mods.PortableStorage.UI.QuickStack")
+		};
+		buttonQuickStack.OnMouseDown += args =>
+		{
+			if (args.Button != MouseButton.Left) return;
+
+			args.Handled = true;
+
+			Main.LocalPlayer.QuickStack(Container.GetItemStorage());
+
+			SoundEngine.PlaySound(SoundID.Grab);
+		};
+		Add(buttonQuickStack);
 
 		Main.instance.LoadItem(ItemID.TreasureMagnet);
 		UITexture buttonPickup = new UITexture(TextureAssets.Item[ItemID.TreasureMagnet])
@@ -76,6 +106,8 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 		};
 		buttonPickup.OnMouseDown += args =>
 		{
+			if (args.Button != MouseButton.Left) return;
+
 			bag.PickupMode = bag.PickupMode.NextEnum();
 
 			SoundEngine.PlaySound(SoundID.MenuTick);
@@ -93,6 +125,8 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 		};
 		buttonClose.OnMouseDown += args =>
 		{
+			if (args.Button != MouseButton.Left) return;
+
 			PanelUI.Instance.CloseUI(Container);
 			args.Handled = true;
 		};

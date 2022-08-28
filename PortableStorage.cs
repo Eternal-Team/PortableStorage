@@ -7,8 +7,6 @@ using Terraria.ModLoader;
 
 namespace PortableStorage;
 
-// note: energy addons
-
 public class BagSyncSystem : ModSystem
 {
 	private List<BaseBag> Bags = new();
