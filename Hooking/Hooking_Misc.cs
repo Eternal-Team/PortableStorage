@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using BaseLibrary.Utility;
 using ContainerLibrary;
@@ -198,10 +198,12 @@ public static partial class Hooking
 	{
 		ILCursor cursor = new ILCursor(il);
 
-		if (!cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdloc(1), i => i.MatchBrtrue(out _), i => i.MatchLdloca(3)))
+		if (!cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchCallvirt<Main>("LoadItem")))
 			throw new Exception("IL edit failed");
 
-		cursor.EmitDelegate(() =>
+		cursor.Index++;
+		cursor.Emit(OpCodes.Ldloca, 6);
+		cursor.EmitDelegate((ref float scale) =>
 		{
 			Item hotbarItem = Main.LocalPlayer.inventory[Main.LocalPlayer.selectedItem];
 
@@ -218,17 +220,17 @@ public static partial class Hooking
 			if (selectedItem is null || selectedItem.IsAir)
 				return;
 
+			scale = 1f;
 			Main.instance.LoadItem(selectedItem.type);
 			Vector2 size = Item.GetDrawHitbox(hotbarItem.type, null).Size();
-			float scale = Main.cursorScale;
 			Vector2 position = new Vector2(Main.mouseX + 10, Main.mouseY + 10);
 
-			DrawingUtility.DrawItemInInventory(Main.spriteBatch, selectedItem, position + size * 0.5f * scale, size * 0.5f, scale, false);
+			DrawingUtility.DrawItemInInventory(Main.spriteBatch, selectedItem, position + size * 0.5f, size * 0.5f, 1f, false);
 
 			string text = selectedItem.stack < 1000 ? selectedItem.stack.ToString() : TextUtility.ToSI(selectedItem.stack, "N1");
 			Vector2 textSize = FontAssets.MouseText.Value.MeasureString(text);
 
-			ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.MouseText.Value, text, position + new Vector2(size.X * 0.5f, size.Y) * scale, Color.White, 0f, new Vector2(textSize.X * 0.5f, 0f), new Vector2(0.75f) * scale);
+			ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.MouseText.Value, text, position + new Vector2(size.X * 0.5f, size.Y), Color.White, 0f, new Vector2(textSize.X * 0.5f, 0f), new Vector2(0.75f));
 		});
 	}
 }
