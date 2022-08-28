@@ -5,6 +5,7 @@ using PortableStorage.Items;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -186,12 +187,11 @@ public class PSItem : GlobalItem
 		return base.OnPickup(item, player);
 	}
 
-	public override void OpenVanillaBag(string context, Player player, int arg)
+	public override void ModifyItemLoot(Item item, ItemLoot itemLoot)
 	{
-		if (context == "crate")
-		{
-			if ((arg == ItemID.IronCrate && Main.rand.NextBool(20)) || (arg == ItemID.GoldenCrate && Main.rand.NextBool(10)))
-				player.QuickSpawnItem(new EntitySource_ItemOpen(player, arg, context), ModContent.ItemType<FishingBelt>());
-		}
+		if (item.type == ItemID.IronCrate)
+			itemLoot.Add(new CommonDrop(ModContent.ItemType<FishingBelt>(), 20));
+		else if (item.type == ItemID.GoldenCrate)
+			itemLoot.Add(new CommonDrop(ModContent.ItemType<FishingBelt>(), 10));
 	}
 }
