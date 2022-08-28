@@ -90,7 +90,6 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	public override bool CanRightClick() => true;
 
-	// bug: also plays the default right click sound (grab)
 	public override void RightClick(Player player)
 	{
 		if (player.whoAmI == Main.LocalPlayer.whoAmI)
