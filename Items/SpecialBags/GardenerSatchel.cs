@@ -17,6 +17,11 @@ public class GardenerSatchel : BaseBag
 	{
 		public GardenerSatchelItemStorage(int slots, BaseBag bag) : base(bag, slots)
 		{
+			OnContentsChanged += (_, _, slot) =>
+			{
+				if (this[slot].IsAir && bag is GardenerSatchel satchel)
+					satchel.SelectedIndex = -1;
+			};
 		}
 
 		public override bool IsItemValid(int slot, Item Item)
@@ -149,7 +154,6 @@ public class GardenerSatchel : BaseBag
 		if (player.altFunctionUse == 2) return false;
 
 		Storage.ModifyStackSize(player, SelectedIndex, -1);
-		if (SelectedItem.IsAir) SelectedIndex = -1;
 
 		return false;
 	}

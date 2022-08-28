@@ -17,6 +17,11 @@ public class BuilderReserve : BaseBag
 	{
 		public BuilderReserveItemStorage(int slots, BaseBag bag) : base(bag, slots)
 		{
+			OnContentsChanged += (_, _, slot) =>
+			{
+				if (this[slot].IsAir && bag is BuilderReserve reserve)
+					reserve.SelectedIndex = -1;
+			};
 		}
 
 		public override bool IsItemValid(int slot, Item Item)
@@ -138,7 +143,6 @@ public class BuilderReserve : BaseBag
 		if (SelectedItem is null || SelectedItem.IsAir) return false;
 
 		Storage.ModifyStackSize(player, SelectedIndex, -1);
-		if (SelectedItem.IsAir) SelectedIndex = -1;
 
 		return false;
 	}
