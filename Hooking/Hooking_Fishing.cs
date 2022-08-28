@@ -118,8 +118,8 @@ public static partial class Hooking
 
 					if (CombinedHooks.CanConsumeBait(player, bait) ?? useBait)
 					{
-						if (bait.type is 4361 or 4362)
-							NPC.LadyBugKilled(player.Center, bait.type == 4362);
+						if (bait.type is ItemID.LadyBug or ItemID.GoldLadyBug)
+							NPC.LadyBugKilled(player.Center, bait.type == ItemID.GoldLadyBug);
 
 						belt.GetItemStorage().ModifyStackSize(player, i, -1);
 					}

@@ -272,22 +272,6 @@ public static partial class Hooking
 		});
 	}
 
-	private static void ItemLoaderRightClick(ILContext il)
-	{
-		ILCursor cursor = new ILCursor(il);
-
-		if (!cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdcI4(7), i => i.MatchLdcI4(-1), i => i.MatchLdcI4(-1)))
-			throw new Exception("IL edit failed");
-
-		cursor.RemoveRange(8);
-		cursor.Emit(OpCodes.Ldarg, 0);
-		cursor.EmitDelegate((Item item) =>
-		{
-			if (item.ModItem is not BaseBag)
-				SoundEngine.PlaySound(SoundID.Grab);
-		});
-	}
-
 	private static void PlayerOnItemCheck_UseWiringTools(ILContext il)
 	{
 		ILCursor cursor = new ILCursor(il);

@@ -1,10 +1,6 @@
-﻿using System.Reflection;
-using BaseLibrary.Utility;
-using IL.Terraria;
+﻿using IL.Terraria;
 using IL.Terraria.GameContent.UI;
 using IL.Terraria.UI;
-using MonoMod.RuntimeDetour.HookGen;
-using Terraria.ModLoader;
 
 namespace PortableStorage.Hooking;
 
@@ -39,8 +35,5 @@ public static partial class Hooking
 		Player.GrabItems += PlayerOnGrabItems;
 
 		Main.DrawInterface_40_InteractItemIcon += MainOnDrawInterface_40_InteractItemIcon;
-
-		MethodInfo methodInfo = typeof(ItemLoader).GetMethod("RightClick", ReflectionUtility.DefaultFlags_Static);
-		HookEndpointManager.Modify(methodInfo, ItemLoaderRightClick);
 	}
 }
