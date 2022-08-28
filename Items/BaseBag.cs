@@ -41,7 +41,19 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	protected override bool CloneNewInstances => false;
 
 	public Guid ID;
-	public PickupMode PickupMode;
+
+	private PickupMode pickupMode;
+
+	public PickupMode PickupMode
+	{
+		get => pickupMode;
+		set
+		{
+			pickupMode = value;
+
+			ModContent.GetInstance<BagSyncSystem>().Register(this);
+		}
+	}
 
 	protected ItemStorage Storage;
 
@@ -113,7 +125,6 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	public override void NetSend(BinaryWriter writer)
 	{
 		writer.Write(ID);
-
 		Storage.Write(writer);
 		writer.Write((byte)PickupMode);
 	}

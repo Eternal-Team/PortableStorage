@@ -1,3 +1,4 @@
+using System.IO;
 using BaseLibrary.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -54,6 +55,8 @@ public class GardenerSatchel : BaseBag
 
 				Item.SetNameOverride(Lang.GetItemNameValue(Item.type) + $" ({SelectedItem.Name})");
 			}
+
+			ModContent.GetInstance<BagSyncSystem>().Register(this);
 		}
 	}
 
@@ -122,6 +125,20 @@ public class GardenerSatchel : BaseBag
 	{
 		base.LoadData(tag);
 		SelectedIndex = tag.GetInt("SelectedIndex");
+	}
+
+	public override void NetSend(BinaryWriter writer)
+	{
+		base.NetSend(writer);
+
+		writer.Write(SelectedIndex);
+	}
+
+	public override void NetReceive(BinaryReader reader)
+	{
+		base.NetReceive(reader);
+
+		SelectedIndex = reader.ReadInt32();
 	}
 
 	public override bool ConsumeItem(Player player)
