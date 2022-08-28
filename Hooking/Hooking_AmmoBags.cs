@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using BaseLibrary.Utility;
 using ContainerLibrary;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -12,17 +12,6 @@ namespace PortableStorage.Hooking;
 
 public static partial class Hooking
 {
-	private static IEnumerable<BaseAmmoBag> GetAmmoBags(Player player)
-	{
-		foreach (Item pItem in player.inventory)
-		{
-			if (!pItem.IsAir && pItem.ModItem is BaseAmmoBag bag)
-			{
-				yield return bag;
-			}
-		}
-	}
-
 	private static void ChooseAmmo(ILContext il)
 	{
 		ILCursor cursor = new ILCursor(il);
@@ -37,7 +26,7 @@ public static partial class Hooking
 			{
 				if (result != null) return result;
 
-				foreach (BaseAmmoBag bag in GetAmmoBags(player))
+				foreach (BaseAmmoBag bag in player.inventory.OfModItemType<BaseAmmoBag>())
 				{
 					ItemStorage storage = bag.GetItemStorage();
 

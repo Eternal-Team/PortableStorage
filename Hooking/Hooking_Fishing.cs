@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using BaseLibrary.Utility;
 using ContainerLibrary;
 using PortableStorage.Items;
 using Terraria;
@@ -9,16 +9,6 @@ namespace PortableStorage.Hooking;
 
 public static partial class Hooking
 {
-	private static IEnumerable<FishingBelt> GetFishingBelts(Player player)
-	{
-		foreach (Item item in player.inventory)
-		{
-			if (item.IsAir) continue;
-
-			if (item.ModItem is FishingBelt bag) yield return bag;
-		}
-	}
-
 	private static void PlayerOnItemCheck_CheckFishingBobber_PickAndConsumeBait(On.Terraria.Player.orig_ItemCheck_CheckFishingBobber_PickAndConsumeBait orig, Player player, Projectile bobber, out bool pullTheBobber, out int baitTypeUsed)
 	{
 		pullTheBobber = false;
@@ -92,7 +82,7 @@ public static partial class Hooking
 		}
 		else
 		{
-			foreach (FishingBelt belt in GetFishingBelts(player))
+			foreach (FishingBelt belt in player.inventory.OfModItemType<FishingBelt>())
 			{
 				ItemStorage storage = belt.GetItemStorage();
 				for (int i = 0; i < storage.Count; i++)
@@ -154,7 +144,7 @@ public static partial class Hooking
 			}
 		}
 
-		foreach (FishingBelt belt in GetFishingBelts(player))
+		foreach (FishingBelt belt in player.inventory.OfModItemType<FishingBelt>())
 		{
 			foreach (Item item in belt.GetItemStorage())
 			{
@@ -185,7 +175,7 @@ public static partial class Hooking
 			}
 		}
 
-		foreach (FishingBelt belt in GetFishingBelts(player))
+		foreach (FishingBelt belt in player.inventory.OfModItemType<FishingBelt>())
 		{
 			foreach (Item item in belt.GetItemStorage())
 			{

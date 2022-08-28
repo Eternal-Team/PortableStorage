@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using BaseLibrary.Utility;
@@ -16,21 +15,13 @@ namespace PortableStorage.Hooking;
 
 public static partial class Hooking
 {
-	private static IEnumerable<AlchemistBag> GetAlchemistBags(Player player)
-	{
-		foreach (Item item in player.inventory)
-		{
-			if (!item.IsAir && item.ModItem is AlchemistBag bag) yield return bag;
-		}
-	}
-
 	private static void QuickBuff_Del(Player player, ref SoundStyle? sound)
 	{
 		if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickBuff) return;
 
 		if (player.CountBuffs() == Player.MaxBuffs) return;
 
-		foreach (AlchemistBag bag in GetAlchemistBags(player))
+		foreach (AlchemistBag bag in player.inventory.OfModItemType<AlchemistBag>())
 		{
 			ItemStorage storage = bag.GetItemStorage();
 
@@ -91,7 +82,7 @@ public static partial class Hooking
 	{
 		if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickHeal) return;
 
-		foreach (AlchemistBag bag in GetAlchemistBags(player))
+		foreach (AlchemistBag bag in player.inventory.OfModItemType<AlchemistBag>())
 		{
 			ItemStorage storage = bag.GetItemStorage();
 
@@ -153,7 +144,7 @@ public static partial class Hooking
 			{
 				if (!ModContent.GetInstance<PortableStorageConfig>().AlchemistBagQuickMana) return false;
 
-				foreach (AlchemistBag bag in GetAlchemistBags(player))
+				foreach (AlchemistBag bag in player.inventory.OfModItemType<AlchemistBag>())
 				{
 					ItemStorage storage = bag.GetItemStorage();
 
@@ -226,7 +217,7 @@ public static partial class Hooking
 
 			cursor.EmitDelegate<Action<Player>>(player =>
 			{
-				if (GetAlchemistBags(player).Any())
+				if (player.inventory.OfModItemType<AlchemistBag>().Any())
 				{
 					player.adjTile[TileID.Bottles] = true;
 					player.alchemyTable = true;
@@ -237,7 +228,7 @@ public static partial class Hooking
 
 	private static void PickBestFoodItem_Del(Player player, ref Item foodItem, ref int num)
 	{
-		foreach (AlchemistBag bag in GetAlchemistBags(player))
+		foreach (AlchemistBag bag in player.inventory.OfModItemType<AlchemistBag>())
 		{
 			ItemStorage storage = bag.GetItemStorage();
 

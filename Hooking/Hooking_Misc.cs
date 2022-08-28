@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using BaseLibrary.Utility;
 using ContainerLibrary;
@@ -77,7 +77,7 @@ public static partial class Hooking
 						return false;
 				}
 
-				// first it should try to put stuff into ingredients (assuming it already has that ingredient), e.g. health potions
+				// todo: first it should try to put stuff into ingredients (assuming it already has that ingredient), e.g. health potions
 				if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon && ((item.potion && item.healLife > 0) || (item.healMana > 0 && !item.potion) || (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
 				{
 					if (InsertIntoOfType_AfterInventory<AlchemistBag>(SoundID.Grab))
@@ -161,7 +161,7 @@ public static partial class Hooking
 
 			cursor.EmitDelegate<Func<Item, int, int>>((weapon, ammoCount) =>
 			{
-				foreach (BaseAmmoBag bag in GetAmmoBags(Main.LocalPlayer))
+				foreach (BaseAmmoBag bag in Main.LocalPlayer.inventory.OfModItemType<BaseAmmoBag>())
 				{
 					ItemStorage storage = bag.GetItemStorage();
 
@@ -180,7 +180,7 @@ public static partial class Hooking
 
 			cursor.EmitDelegate<Func<int, int>>(bait =>
 			{
-				foreach (FishingBelt bag in GetFishingBelts(Main.LocalPlayer))
+				foreach (FishingBelt bag in Main.LocalPlayer.inventory.OfModItemType<FishingBelt>())
 				{
 					ItemStorage storage = bag.GetItemStorage();
 
