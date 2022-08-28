@@ -34,5 +34,5 @@ public abstract class BaseNormalBag : BaseBag, ICraftingStorage
 		Item.height = 34;
 	}
 
-	public IEnumerable<int> GetSlotsForCrafting() => Enumerable.Range(0, SlotCount);
+	public ItemStorage GetCraftingStorage() => Storage;
 }

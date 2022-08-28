@@ -25,7 +25,7 @@ public static partial class Hooking
 		{
 			ItemStorage storage = bag.GetItemStorage();
 
-			for (int i = 0; i < AlchemistBag.PotionSlots; i++)
+			for (int i = 0; i < storage.Count; i++)
 			{
 				Item item = storage[i];
 
@@ -86,7 +86,7 @@ public static partial class Hooking
 		{
 			ItemStorage storage = bag.GetItemStorage();
 
-			for (int i = 0; i < AlchemistBag.PotionSlots; i++)
+			for (int i = 0; i < storage.Count; i++)
 			{
 				Item item = storage[i];
 				if (item.IsAir || !item.potion || item.healLife <= 0 || !CombinedHooks.CanUseItem(player, item)) continue;
@@ -148,7 +148,7 @@ public static partial class Hooking
 				{
 					ItemStorage storage = bag.GetItemStorage();
 
-					for (int i = 0; i < AlchemistBag.PotionSlots; i++)
+					for (int i = 0; i < storage.Count; i++)
 					{
 						Item item = storage[i];
 						if (item.IsAir || item.healMana <= 0 || (player.potionDelay > 0 && item.potion) || !CombinedHooks.CanUseItem(player, item)) continue;
@@ -232,7 +232,7 @@ public static partial class Hooking
 		{
 			ItemStorage storage = bag.GetItemStorage();
 
-			for (int i = 0; i < AlchemistBag.PotionSlots; i++)
+			for (int i = 0; i < storage.Count; i++)
 			{
 				Item item = storage[i];
 				if (item.IsAir) continue;

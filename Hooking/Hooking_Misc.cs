@@ -33,14 +33,16 @@ public static partial class Hooking
 			{
 				Item temp = item.Clone();
 
-				bool InsertIntoOfType_AfterInventory<T>(SoundStyle sound) where T : BaseBag
+				bool InsertIntoOfType_AfterInventory<T>(SoundStyle sound, Func<T, ItemStorage> selector = null) where T : BaseBag
 				{
+					selector ??= bag => bag.GetItemStorage();
+
 					foreach (T bag in player.inventory.OfModItemType<T>())
 					{
 						if (bag.PickupMode != PickupMode.AfterInventory) continue;
 
-						ItemStorage storage = bag.GetItemStorage();
-						if (storage.Contains(item.type) && storage.InsertItem(player, ref item))
+						ItemStorage storage = selector(bag);
+						if (storage.InsertItem(player, ref item))
 						{
 							BagPopupText.NewText(PopupTextContext.RegularItemPickup, bag.Item, temp, temp.stack - item.stack);
 							SoundEngine.PlaySound(sound);
@@ -85,23 +87,10 @@ public static partial class Hooking
 
 				if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon && ((item.potion && item.healLife > 0) || (item.healMana > 0 && !item.potion) || (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
 				{
-					// insert into ingredient slots first
-					foreach (AlchemistBag bag in player.inventory.OfModItemType<AlchemistBag>())
-					{
-						if (bag.PickupMode != PickupMode.AfterInventory) continue;
-
-						ItemStorage storage = bag.GetItemStorage();
-						if (storage.Contains(item.type) && storage.InsertItem(player, ref item, AlchemistBag.PotionSlots))
-						{
-							BagPopupText.NewText(PopupTextContext.RegularItemPickup, bag.Item, temp, temp.stack - item.stack);
-							SoundEngine.PlaySound(SoundID.Grab);
-						}
-
-						if (item is null || item.IsAir || !item.active)
-							return false;
-					}
-
 					if (InsertIntoOfType_AfterInventory<AlchemistBag>(SoundID.Grab))
+						return false;
+
+					if (InsertIntoOfType_AfterInventory<AlchemistBag>(SoundID.Grab, bag => bag.IngredientStorage))
 						return false;
 				}
 

@@ -1,4 +1,5 @@
-﻿using BaseLibrary.Utility;
+﻿using System;
+using BaseLibrary.Utility;
 using ContainerLibrary;
 using PortableStorage.Items;
 using Terraria;
@@ -21,13 +22,15 @@ public class PSItem : GlobalItem
 		// note: config options to specify order?
 
 		#region ExistingItems
-		bool InsertIntoOfType_Existing<T>(SoundStyle sound) where T : BaseBag
+		bool InsertIntoOfType_Existing<T>(SoundStyle sound, Func<T, ItemStorage> selector = null) where T : BaseBag
 		{
+			selector ??= bag => bag.GetItemStorage();
+
 			foreach (T bag in player.inventory.OfModItemType<T>())
 			{
 				if (bag.PickupMode != PickupMode.ExistingOnly) continue;
 
-				ItemStorage storage = bag.GetItemStorage();
+				ItemStorage storage = selector(bag);
 				if (storage.Contains(item.type) && storage.InsertItem(player, ref item))
 				{
 					BagPopupText.NewText(PopupTextContext.RegularItemPickup, bag.Item, temp, temp.stack - item.stack);
@@ -85,21 +88,8 @@ public class PSItem : GlobalItem
 
 		if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon && ((item.potion && item.healLife > 0) || (item.healMana > 0 && !item.potion) || (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
 		{
-			// insert into ingredient slots first
-			foreach (AlchemistBag bag in player.inventory.OfModItemType<AlchemistBag>())
-			{
-				if (bag.PickupMode != PickupMode.ExistingOnly) continue;
-
-				ItemStorage storage = bag.GetItemStorage();
-				if (storage.Contains(item.type) && storage.InsertItem(player, ref item, AlchemistBag.PotionSlots))
-				{
-					BagPopupText.NewText(PopupTextContext.RegularItemPickup, bag.Item, temp, temp.stack - item.stack);
-					SoundEngine.PlaySound(SoundID.Grab);
-				}
-
-				if (item is null || item.IsAir || !item.active)
-					return false;
-			}
+			if (InsertIntoOfType_Existing<AlchemistBag>(SoundID.Grab, bag => bag.IngredientStorage))
+				return false;
 
 			if (InsertIntoOfType_Existing<AlchemistBag>(SoundID.Grab))
 				return false;
@@ -113,13 +103,15 @@ public class PSItem : GlobalItem
 		#endregion
 
 		#region BeforeInventory
-		bool InsertIntoOfType_BeforeInventory<T>(SoundStyle sound) where T : BaseBag
+		bool InsertIntoOfType_BeforeInventory<T>(SoundStyle sound, Func<T, ItemStorage> selector = null) where T : BaseBag
 		{
+			selector ??= bag => bag.GetItemStorage();
+
 			foreach (T bag in player.inventory.OfModItemType<T>())
 			{
 				if (bag.PickupMode != PickupMode.BeforeInventory) continue;
 
-				ItemStorage storage = bag.GetItemStorage();
+				ItemStorage storage = selector(bag);
 				if (storage.InsertItem(player, ref item))
 				{
 					BagPopupText.NewText(PopupTextContext.RegularItemPickup, bag.Item, temp, temp.stack - item.stack);
@@ -165,23 +157,10 @@ public class PSItem : GlobalItem
 
 		if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon && ((item.potion && item.healLife > 0) || (item.healMana > 0 && !item.potion) || (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
 		{
-			// insert into ingredient slots first
-			foreach (AlchemistBag bag in player.inventory.OfModItemType<AlchemistBag>())
-			{
-				if (bag.PickupMode != PickupMode.BeforeInventory) continue;
-
-				ItemStorage storage = bag.GetItemStorage();
-				if (storage.Contains(item.type) && storage.InsertItem(player, ref item, AlchemistBag.PotionSlots))
-				{
-					BagPopupText.NewText(PopupTextContext.RegularItemPickup, bag.Item, temp, temp.stack - item.stack);
-					SoundEngine.PlaySound(SoundID.Grab);
-				}
-
-				if (item is null || item.IsAir || !item.active)
-					return false;
-			}
-
 			if (InsertIntoOfType_BeforeInventory<AlchemistBag>(SoundID.Grab))
+				return false;
+
+			if (InsertIntoOfType_BeforeInventory<AlchemistBag>(SoundID.Grab, bag => bag.IngredientStorage))
 				return false;
 		}
 

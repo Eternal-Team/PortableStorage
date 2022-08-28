@@ -1,43 +1,103 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using BaseLibrary.Utility;
 using ContainerLibrary;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items;
 
 public class AlchemistBag : BaseBag, ICraftingStorage
 {
-	private class AlchemistBagItemStorage : BagStorage
+	private class AlchemistBagPotionStorage : BagStorage
 	{
-		public AlchemistBagItemStorage(BaseBag bag) : base(bag, PotionSlots + IngredientSlots)
+		public AlchemistBagPotionStorage(BaseBag bag) : base(bag, PotionSlots)
 		{
 		}
 
 		public override bool IsItemValid(int slot, Item item)
 		{
-			if (slot < PotionSlots)
-			{
-				return item.DamageType != DamageClass.Summon &&
-				       ((item.potion && item.healLife > 0) ||
-				        (item.healMana > 0 && !item.potion) ||
-				        (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item);
-			}
+			return item.DamageType != DamageClass.Summon &&
+			       ((item.potion && item.healLife > 0) ||
+			        (item.healMana > 0 && !item.potion) ||
+			        (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item);
+		}
+	}
 
+	private class AlchemistBagIngredientStorage : BagStorage
+	{
+		public AlchemistBagIngredientStorage(BaseBag bag) : base(bag, IngredientSlots)
+		{
+		}
+
+		public override bool IsItemValid(int slot, Item item)
+		{
 			return Utility.AlchemistBagWhitelist.Contains(item.type);
 		}
 	}
 
 	public override string Texture => PortableStorage.AssetPath + "Textures/Items/AlchemistBag";
 
-	// note: separate into 2 ItemStorages?
 	public const int PotionSlots = 18;
 	public const int IngredientSlots = 63;
 
+	public ItemStorage IngredientStorage;
+
 	public AlchemistBag()
 	{
-		Storage = new AlchemistBagItemStorage(this);
+		Storage = new AlchemistBagPotionStorage(this);
+		IngredientStorage = new AlchemistBagIngredientStorage(this);
+	}
+
+	public override ModItem Clone(Item item)
+	{
+		AlchemistBag clone = (AlchemistBag)base.Clone(item);
+		clone.IngredientStorage = IngredientStorage.Clone();
+		return clone;
+	}
+
+	public override void SaveData(TagCompound tag)
+	{
+		base.SaveData(tag);
+
+		tag.Set("Ingredient", IngredientStorage.Save());
+	}
+
+	public override void LoadData(TagCompound tag)
+	{
+		ID = tag.Get<Guid>("ID");
+		PickupMode = (PickupMode)tag.GetByte("PickupMode");
+
+		var items = tag.GetCompound("Items").GetList<Item>("Value");
+		if (items.Count == PotionSlots + IngredientSlots)
+		{
+			Storage.SetValue("Items", items.Take(PotionSlots).ToArray());
+			IngredientStorage.SetValue("Items", items.Skip(PotionSlots).ToArray());
+		}
+		else
+		{
+			Storage.Load(tag.Get<TagCompound>("Items"));
+			IngredientStorage.Load(tag.Get<TagCompound>("Ingredient"));
+		}
+	}
+
+	public override void NetSend(BinaryWriter writer)
+	{
+		base.NetSend(writer);
+
+		IngredientStorage.Write(writer);
+	}
+
+	public override void NetReceive(BinaryReader reader)
+	{
+		base.NetReceive(reader);
+
+		IngredientStorage.Read(reader);
 	}
 
 	public override void SetDefaults()
@@ -65,8 +125,5 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 			.Register();
 	}
 
-	public IEnumerable<int> GetSlotsForCrafting()
-	{
-		for (int i = PotionSlots; i < IngredientSlots; i++) yield return i;
-	}
+	public ItemStorage GetCraftingStorage() => IngredientStorage;
 }
