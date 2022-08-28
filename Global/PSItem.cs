@@ -18,6 +18,8 @@ public class PSItem : GlobalItem
 
 		Item temp = item.Clone();
 
+		// note: config options to specify order?
+
 		#region ExistingItems
 		bool InsertIntoOfType_Existing<T>(SoundStyle sound) where T : BaseBag
 		{
@@ -57,6 +59,18 @@ public class PSItem : GlobalItem
 				return false;
 		}
 
+		if (item.createTile >= TileID.Dirt || item.createWall > WallID.None)
+		{
+			if (InsertIntoOfType_Existing<BuilderReserve>(SoundID.Grab))
+				return false;
+		}
+
+		if (Utility.SeedWhitelist.Contains(item.type))
+		{
+			if (InsertIntoOfType_Existing<GardenerSatchel>(SoundID.Grab))
+				return false;
+		}
+		
 		if (Utility.OreWhitelist.Contains(item.type))
 		{
 			if (InsertIntoOfType_Existing<MinersBackpack>(SoundID.Grab))
@@ -126,6 +140,18 @@ public class PSItem : GlobalItem
 		if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon && ((item.potion && item.healLife > 0) || (item.healMana > 0 && !item.potion) || (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
 		{
 			if (InsertIntoOfType_BeforeInventory<AlchemistBag>(SoundID.Grab))
+				return false;
+		}
+
+		if (item.createTile >= TileID.Dirt || item.createWall > WallID.None)
+		{
+			if (InsertIntoOfType_BeforeInventory<BuilderReserve>(SoundID.Grab))
+				return false;
+		}
+
+		if (Utility.SeedWhitelist.Contains(item.type))
+		{
+			if (InsertIntoOfType_BeforeInventory<GardenerSatchel>(SoundID.Grab))
 				return false;
 		}
 

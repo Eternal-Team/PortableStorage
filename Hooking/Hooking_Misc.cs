@@ -84,6 +84,18 @@ public static partial class Hooking
 						return false;
 				}
 
+				if (item.createTile >= TileID.Dirt || item.createWall > WallID.None)
+				{
+					if (InsertIntoOfType_AfterInventory<BuilderReserve>(SoundID.Grab))
+						return false;
+				}
+
+				if (Utility.SeedWhitelist.Contains(item.type))
+				{
+					if (InsertIntoOfType_AfterInventory<GardenerSatchel>(SoundID.Grab))
+						return false;
+				}
+
 				if (item.type is not 184 or 1735 or 1668 or 58 or 1734 or 1867 && !ItemID.Sets.NebulaPickup[item.type])
 				{
 					if (InsertIntoOfType_AfterInventory<BaseNormalBag>(SoundID.Grab))
