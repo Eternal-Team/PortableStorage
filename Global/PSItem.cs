@@ -83,9 +83,24 @@ public class PSItem : GlobalItem
 				return false;
 		}
 
-		// first it should try to put stuff into ingredients (assuming it already has that ingredient), e.g. health potions
 		if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon && ((item.potion && item.healLife > 0) || (item.healMana > 0 && !item.potion) || (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
 		{
+			// insert into ingredient slots first
+			foreach (AlchemistBag bag in player.inventory.OfModItemType<AlchemistBag>())
+			{
+				if (bag.PickupMode != PickupMode.ExistingOnly) continue;
+
+				ItemStorage storage = bag.GetItemStorage();
+				if (storage.Contains(item.type) && storage.InsertItem(player, ref item, AlchemistBag.PotionSlots))
+				{
+					BagPopupText.NewText(PopupTextContext.RegularItemPickup, bag.Item, temp, temp.stack - item.stack);
+					SoundEngine.PlaySound(SoundID.Grab);
+				}
+
+				if (item is null || item.IsAir || !item.active)
+					return false;
+			}
+
 			if (InsertIntoOfType_Existing<AlchemistBag>(SoundID.Grab))
 				return false;
 		}
@@ -148,9 +163,24 @@ public class PSItem : GlobalItem
 				return false;
 		}
 
-		// first it should try to put stuff into ingredients (assuming it already has that ingredient), e.g. health potions
 		if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon && ((item.potion && item.healLife > 0) || (item.healMana > 0 && !item.potion) || (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
 		{
+			// insert into ingredient slots first
+			foreach (AlchemistBag bag in player.inventory.OfModItemType<AlchemistBag>())
+			{
+				if (bag.PickupMode != PickupMode.BeforeInventory) continue;
+
+				ItemStorage storage = bag.GetItemStorage();
+				if (storage.Contains(item.type) && storage.InsertItem(player, ref item, AlchemistBag.PotionSlots))
+				{
+					BagPopupText.NewText(PopupTextContext.RegularItemPickup, bag.Item, temp, temp.stack - item.stack);
+					SoundEngine.PlaySound(SoundID.Grab);
+				}
+
+				if (item is null || item.IsAir || !item.active)
+					return false;
+			}
+
 			if (InsertIntoOfType_BeforeInventory<AlchemistBag>(SoundID.Grab))
 				return false;
 		}
