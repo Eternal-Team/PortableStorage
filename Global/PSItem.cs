@@ -70,10 +70,16 @@ public class PSItem : GlobalItem
 			if (InsertIntoOfType_Existing<GardenerSatchel>(SoundID.Grab))
 				return false;
 		}
-		
+
 		if (Utility.OreWhitelist.Contains(item.type))
 		{
 			if (InsertIntoOfType_Existing<MinersBackpack>(SoundID.Grab))
+				return false;
+		}
+
+		if (Utility.WiringWhitelist.Contains(item.type))
+		{
+			if (InsertIntoOfType_Existing<WiringBag>(SoundID.Grab))
 				return false;
 		}
 
@@ -133,6 +139,12 @@ public class PSItem : GlobalItem
 		if (Utility.OreWhitelist.Contains(item.type))
 		{
 			if (InsertIntoOfType_BeforeInventory<MinersBackpack>(SoundID.Grab))
+				return false;
+		}
+
+		if (Utility.WiringWhitelist.Contains(item.type))
+		{
+			if (InsertIntoOfType_BeforeInventory<WiringBag>(SoundID.Grab))
 				return false;
 		}
 

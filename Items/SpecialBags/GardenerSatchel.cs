@@ -141,6 +141,7 @@ public class GardenerSatchel : BaseBag
 		SelectedIndex = reader.ReadInt32();
 	}
 
+	// bug: rightclicking consumes item
 	public override bool ConsumeItem(Player player)
 	{
 		if (SelectedItem is null || SelectedItem.IsAir) return false;

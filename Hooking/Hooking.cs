@@ -29,6 +29,9 @@ public static partial class Hooking
 		Player.QuickBuff_PickBestFoodItem += PickBestFoodItem;
 		Player.QuickBuff += QuickBuff;
 
+		Wiring.MassWireOperation += WiringOnMassWireOperation;
+		Player.ItemCheck_UseWiringTools += PlayerOnItemCheck_UseWiringTools;
+
 		On.Terraria.Player.ItemCheck_CheckFishingBobber_PickAndConsumeBait += PlayerOnItemCheck_CheckFishingBobber_PickAndConsumeBait;
 		On.Terraria.Player.Fishing_GetBestFishingPole += PlayerOnFishing_GetBestFishingPole;
 		On.Terraria.Player.Fishing_GetBait += PlayerOnFishing_GetBait;
