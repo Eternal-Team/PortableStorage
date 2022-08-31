@@ -219,9 +219,9 @@ public static partial class Hooking
 			throw new Exception("IL edit failed");
 
 		cursor.Index += 6;
-		cursor.Emit(OpCodes.Ldloca, 35);
+		cursor.Emit(OpCodes.Ldloc, 35);
 
-		cursor.EmitDelegate((ref int wires) =>
+		cursor.EmitDelegate<Func<int, int>>(wires =>
 		{
 			foreach (WiringBag bag in Main.LocalPlayer.inventory.OfModItemType<WiringBag>())
 			{
@@ -229,7 +229,10 @@ public static partial class Hooking
 
 				wires += storage.Where(item => !item.IsAir && item.type == ItemID.Wire).Sum(item => item.stack);
 			}
+
+			return wires;
 		});
+		cursor.Emit(OpCodes.Stloc, 35);
 	}
 
 	private static void MainOnDrawInterface_40_InteractItemIcon(ILContext il)
@@ -240,13 +243,13 @@ public static partial class Hooking
 			throw new Exception("IL edit failed");
 
 		cursor.Index++;
-		cursor.Emit(OpCodes.Ldloca, 6);
-		cursor.EmitDelegate((ref float scale) =>
+		cursor.Emit(OpCodes.Ldloc, 6);
+		cursor.EmitDelegate<Func<float, float>>(scale =>
 		{
 			Item hotbarItem = Main.LocalPlayer.inventory[Main.LocalPlayer.selectedItem];
 
 			if (hotbarItem.IsAir)
-				return;
+				return scale;
 
 			Item selectedItem = hotbarItem.ModItem switch
 			{
@@ -256,7 +259,7 @@ public static partial class Hooking
 			};
 
 			if (selectedItem is null || selectedItem.IsAir)
-				return;
+				return scale;
 
 			scale = 1f;
 			Main.instance.LoadItem(selectedItem.type);
@@ -269,7 +272,10 @@ public static partial class Hooking
 			Vector2 textSize = FontAssets.MouseText.Value.MeasureString(text);
 
 			ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.MouseText.Value, text, position + new Vector2(size.X * 0.5f, size.Y), Color.White, 0f, new Vector2(textSize.X * 0.5f, 0f), new Vector2(0.75f));
+
+			return scale;
 		});
+		cursor.Emit(OpCodes.Stloc, 6);
 	}
 
 	private static void PlayerOnItemCheck_UseWiringTools(ILContext il)
