@@ -6,8 +6,6 @@
             PickupAfterInventory: Pickup after inventory
             PickupExistingOnly: Pickup items already inside bag
 			
-			Close: Close
-
 			LootAll: Move items to inventory
 			DepositAll: Move items to bag
 			QuickStack: Move items to bag (if already present)

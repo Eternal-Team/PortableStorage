@@ -121,7 +121,7 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 			Height = { Pixels = 20 },
 			Width = { Pixels = 20 },
 			X = { Percent = 100 },
-			HoverText = Language.GetText("Mods.PortableStorage.UI.Close")
+			HoverText = Language.GetText("Mods.BaseLibrary.UI.Close")
 		};
 		buttonClose.OnMouseDown += args =>
 		{
