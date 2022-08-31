@@ -13,29 +13,18 @@ AAMod,AbyssiumOre,IncineriteOre,EventideAbyssiumOre,DaybreakIncineriteOre,Lumini
 UniverseOfSwordsMod,DamascusOreTile
 */
 
-using ContainerLibrary;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace PortableStorage.Items;
 
 public class MinersBackpack : BaseBag
 {
-	private class MinersBackpackItemStorage : ItemStorage
+	private class MinersBackpackItemStorage : BagStorage
 	{
-		private MinersBackpack bag;
-
-		public MinersBackpackItemStorage(int slots, MinersBackpack bag) : base(slots)
+		public MinersBackpackItemStorage(int slots, BaseBag bag) : base(bag, slots)
 		{
-			this.bag = bag;
 		}
-
-		// public void OnContentsChanged(object user, int slot, Item item)
-		// {
-		// 	Recipe.FindRecipes();
-		// 	Utility.SyncBag(bag);
-		// }
 
 		public override bool IsItemValid(int slot, Item item)
 		{
@@ -45,10 +34,8 @@ public class MinersBackpack : BaseBag
 
 	public override string Texture => PortableStorage.AssetPath + "Textures/Items/MinersBackpack";
 
-	public override void OnCreate(ItemCreationContext context)
+	public MinersBackpack()
 	{
-		base.OnCreate(context);
-
 		Storage = new MinersBackpackItemStorage(18, this);
 	}
 

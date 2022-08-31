@@ -1,4 +1,5 @@
-﻿using BaseLibrary.UI;
+﻿using System.Linq;
+using BaseLibrary.UI;
 using PortableStorage.Items;
 
 namespace PortableStorage.UI;
@@ -29,4 +30,22 @@ public class NormalBagPanel : BaseBagPanel<BaseNormalBag>
 			gridItems.Add(slot);
 		}
 	}
+
+	// protected override void Activate()
+	// {
+	// 	var grid = Children.FirstOrDefault(x=>x is UIGrid<UIContainerSlot>);
+	// 	if (grid is null) return;
+	// 	
+	// 	grid.Clear();
+	// 	
+	// 	for (int i = 0; i < Container.GetItemStorage().Count; i++)
+	// 	{
+	// 		UIContainerSlot slot = new UIContainerSlot(Container.GetItemStorage(), i)
+	// 		{
+	// 			Width = { Pixels = SlotSize },
+	// 			Height = { Pixels = SlotSize }
+	// 		};
+	// 		grid.Add(slot);
+	// 	}
+	// }
 }

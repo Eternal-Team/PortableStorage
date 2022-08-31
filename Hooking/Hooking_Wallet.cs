@@ -68,9 +68,9 @@ public static partial class Hooking
 			{
 				long coins = 0;
 
-				foreach (Item pItem in player.inventory)
+				foreach (Wallet wallet in player.inventory.OfModItemType<Wallet>())
 				{
-					if (pItem.ModItem is Wallet wallet) coins += wallet.GetItemStorage().CountCoins();
+					coins += wallet.GetItemStorage().CountCoins();
 				}
 
 				return coins;
@@ -104,18 +104,15 @@ public static partial class Hooking
 	{
 		int priceRemaining = price;
 
-		foreach (Item pItem in player.inventory)
+		foreach (Wallet wallet in player.inventory.OfModItemType<Wallet>())
 		{
-			if (pItem.ModItem is Wallet wallet)
-			{
-				ItemStorage storage = wallet.GetItemStorage();
-				long walletCoins = storage.CountCoins();
-				long sub = Math.Min(walletCoins, priceRemaining);
-				priceRemaining -= (int)sub;
-				storage.RemoveCoins(player, ref sub);
+			ItemStorage storage = wallet.GetItemStorage();
+			long walletCoins = storage.CountCoins();
+			long sub = Math.Min(walletCoins, priceRemaining);
+			priceRemaining -= (int)sub;
+			storage.RemoveCoins(player, ref sub);
 
-				if (priceRemaining <= 0) return false;
-			}
+			if (priceRemaining <= 0) return false;
 		}
 
 		return Orig_TryPurchasing.InvokeStatic<bool>(priceRemaining, inv, slotCoins, slotsEmpty, slotEmptyBank, slotEmptyBank2, slotEmptyBank3, slotEmptyBank4);
@@ -133,13 +130,10 @@ public static partial class Hooking
 
 			cursor.EmitDelegate<Func<Player, int, bool>>((player, price) =>
 			{
-				foreach (Item pItem in player.inventory)
+				foreach (Wallet wallet in player.inventory.OfModItemType<Wallet>())
 				{
-					if (!pItem.IsAir && pItem.ModItem is Wallet wallet)
-					{
-						wallet.GetItemStorage().InsertCoins(player, price);
-						return true;
-					}
+					wallet.GetItemStorage().InsertCoins(player, price);
+					return true;
 				}
 
 				return false;
@@ -165,9 +159,9 @@ public static partial class Hooking
 			{
 				long coins = 0;
 
-				foreach (Item pItem in player.inventory)
+				foreach (Wallet wallet in player.inventory.OfModItemType<Wallet>())
 				{
-					if (pItem.ModItem is Wallet wallet) coins += wallet.GetItemStorage().CountCoins();
+					coins += wallet.GetItemStorage().CountCoins();
 				}
 
 				return coins;
@@ -213,12 +207,9 @@ public static partial class Hooking
 	{
 		long val = 0;
 
-		foreach (Item pItem in player.inventory)
+		foreach (Wallet wallet in player.inventory.OfModItemType<Wallet>())
 		{
-			if (pItem.ModItem is Wallet wallet)
-			{
-				val += system.CountCurrency(out overflowing, wallet.GetItemStorage().ToArray());
-			}
+			val += system.CountCurrency(out overflowing, wallet.GetItemStorage().ToArray());
 		}
 
 		return val;
@@ -273,23 +264,20 @@ public static partial class Hooking
 	{
 		int priceRemaining = price;
 
-		foreach (Item pItem in player.inventory)
+		foreach (Wallet wallet in player.inventory.OfModItemType<Wallet>())
 		{
-			if (pItem.ModItem is Wallet wallet)
+			ItemStorage storage = wallet.GetItemStorage();
+
+			for (var i = 0; i < storage.Count; i++)
 			{
-				ItemStorage storage = wallet.GetItemStorage();
-
-				for (var i = 0; i < storage.Count; i++)
+				Item item = storage[i];
+				if (system.Accepts(item))
 				{
-					Item item = storage[i];
-					if (system.Accepts(item))
-					{
-						int toRemove = Math.Min(priceRemaining, item.stack);
-						storage.ModifyStackSize(player, i, -toRemove);
-						priceRemaining -= toRemove;
+					int toRemove = Math.Min(priceRemaining, item.stack);
+					storage.ModifyStackSize(player, i, -toRemove);
+					priceRemaining -= toRemove;
 
-						if (priceRemaining <= 0) return true;
-					}
+					if (priceRemaining <= 0) return true;
 				}
 			}
 		}

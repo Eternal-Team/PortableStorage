@@ -32,6 +32,7 @@ public static class Utility
 	internal static HashSet<int> ExplosiveWhitelist = new();
 	internal static HashSet<int> FishingWhitelist = new();
 	internal static HashSet<int> SeedWhitelist = new();
+	internal static HashSet<int> WiringWhitelist = new();
 
 	internal static RecipeGroup YoYoStrings;
 
@@ -54,6 +55,21 @@ public static class Utility
 				AlchemistBagWhitelist.Add(item.type);
 			}
 		}
+
+		// modded ores courtesy of Vein Miner (will be different in 1.4, use as a reference)
+/*
+ThoriumMod,SmoothCoal,ThoriumOre,LifeQuartz,MagmaOre,Aquaite,LodeStone,ValadiumChunk,IllumiteChunk,SynthGold,SynthPlatinum,Opal,PearlStone,Onyx,PlacedGem
+SpiritMod,FloranOreTile,MarbleOre,GraniteOre,CryoliteOreTile,SpiritOreTile,ThermiteOre
+CalamityMod,AerialiteOre,CryonicOre,PerennialOre,CharredOre,AstralOre,ChaoticOre,UelibloomOre,AuricOre,SeaPrism
+Tremor,IceOre,AngeliteOreTile,ArgiteOre,CollapsiumOreTile,CometiteOreTile,FrostoneOreTile,HardCometiteOreTile,NightmareOreTile
+CheezeMod,StarlightOre
+Antiaris,EnchantedStone
+SacredTools,LapisOre,OblivionOreBlock,Flarium,BismuthOre,VenomiteOre
+Bluemagic,PuriumOre
+CrystiliumMod,RadiantOre
+AAMod,AbyssiumOre,IncineriteOre,EventideAbyssiumOre,DaybreakIncineriteOre,LuminiteOre,Apocalyptite,DynaskullOre,YtriumOre,UraniumOre,TechneciumOre,RadiumOre,PrismOre,HallowedOre,DoomitePlate
+UniverseOfSwordsMod,DamascusOreTile
+*/
 
 		OreWhitelist = new HashSet<int>
 		{
@@ -202,6 +218,47 @@ public static class Utility
 			ItemID.PumpkinSeed
 		};
 
+		WiringWhitelist = new HashSet<int>
+		{
+			ItemID.Wrench,
+			ItemID.BlueWrench,
+			ItemID.GreenWrench,
+			ItemID.YellowWrench,
+			ItemID.MulticolorWrench,
+			ItemID.WireCutter,
+
+			ItemID.Wire,
+			ItemID.Lever,
+			ItemID.Switch,
+			ItemID.InletPump,
+			ItemID.OutletPump,
+			ItemID.Actuator,
+			ItemID.Teleporter,
+			ItemID.Detonator,
+
+			ItemID.Timer1Second,
+			ItemID.Timer3Second,
+			ItemID.Timer5Second,
+			ItemID.TimerOneHalfSecond,
+			ItemID.TimerOneFourthSecond,
+
+			ItemID.RedPressurePlate,
+			ItemID.GreenPressurePlate,
+			ItemID.GrayPressurePlate,
+			ItemID.BrownPressurePlate,
+			ItemID.BluePressurePlate,
+			ItemID.YellowPressurePlate,
+			ItemID.LihzahrdPressurePlate,
+
+			ItemID.WeightedPressurePlatePink,
+			ItemID.WeightedPressurePlateOrange,
+			ItemID.WeightedPressurePlatePurple,
+			ItemID.WeightedPressurePlateCyan,
+
+			ItemID.ProjectilePressurePad,
+			ItemID.PressureTrack
+		};
+
 		Ammos.Clear();
 
 		void Add(string key, int ammoType)
@@ -241,7 +298,7 @@ public static class Utility
 
 		return checkItem && checkBuff;
 	}
-	
+
 	// use ModPacket with a cache of all bags?
 	// internal static void SyncBag(BaseBag bag)
 	// {

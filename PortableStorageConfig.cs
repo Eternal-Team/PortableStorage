@@ -7,7 +7,7 @@ public class PortableStorageConfig : ModConfig
 {
 	public override ConfigScope Mode => ConfigScope.ClientSide;
 
-	[Header("$Mods.PortableStorage.Config.AlchemistBag")] [Label("$Mods.PortableStorage.Config.AlchemistBagQuickBuff")] [DefaultValue(true)]
+	[Header("$Mods.PortableStorage.ItemName.AlchemistBag")] [Label("$Mods.PortableStorage.Config.AlchemistBagQuickBuff")] [DefaultValue(true)]
 	public bool AlchemistBagQuickBuff;
 
 	[Label("$Mods.PortableStorage.Config.AlchemistBagQuickHeal")] [DefaultValue(true)]

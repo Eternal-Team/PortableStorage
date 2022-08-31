@@ -1,26 +1,15 @@
-﻿using ContainerLibrary;
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace PortableStorage.Items;
 
 public class FishingBelt : BaseBag
 {
-	private class FishingBeltItemStorage : ItemStorage
+	private class FishingBeltItemStorage : BagStorage
 	{
-		private FishingBelt bag;
-
-		public FishingBeltItemStorage(int slots, FishingBelt bag) : base(slots)
+		public FishingBeltItemStorage(int slots, BaseBag bag) : base(bag, slots)
 		{
-			this.bag = bag;
 		}
-
-		// public void OnContentsChanged(object user, int slot, Item item)
-		// {
-		// 	Recipe.FindRecipes();
-		// 	Utility.SyncBag(bag);
-		// }
 
 		public override bool IsItemValid(int slot, Item item)
 		{
@@ -30,10 +19,8 @@ public class FishingBelt : BaseBag
 
 	public override string Texture => PortableStorage.AssetPath + "Textures/Items/FishingBelt";
 
-	public override void OnCreate(ItemCreationContext context)
+	public FishingBelt()
 	{
-		base.OnCreate(context);
-
 		Storage = new FishingBeltItemStorage(18, this);
 	}
 

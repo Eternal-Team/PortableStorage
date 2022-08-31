@@ -8,7 +8,7 @@ public class AlchemistBagPanel : BaseBagPanel<AlchemistBag>
 	public AlchemistBagPanel(AlchemistBag bag) : base(bag)
 	{
 		Width.Pixels = 12 + (SlotSize + SlotMargin) * 9;
-		Height.Pixels = 100 + (SlotSize + SlotMargin) * Container.GetItemStorage().Count / 9;
+		Height.Pixels = 100 + (SlotSize + SlotMargin) * (Container.GetItemStorage().Count + Container.IngredientStorage.Count) / 9;
 
 		UIText textPotions = new UIText("Potions")
 		{
@@ -25,7 +25,7 @@ public class AlchemistBagPanel : BaseBagPanel<AlchemistBag>
 		};
 		Add(gridItems);
 
-		for (int i = 0; i < AlchemistBag.PotionSlots; i++)
+		for (int i = 0; i < Container.GetItemStorage().Count; i++)
 		{
 			UIContainerSlot slot = new UIContainerSlot(Container.GetItemStorage(), i)
 			{
@@ -50,9 +50,9 @@ public class AlchemistBagPanel : BaseBagPanel<AlchemistBag>
 		};
 		Add(gridIngredients);
 
-		for (int i = AlchemistBag.PotionSlots; i < AlchemistBag.PotionSlots + AlchemistBag.IngredientSlots; i++)
+		for (int i = 0; i < Container.IngredientStorage.Count; i++)
 		{
-			UIContainerSlot slot = new UIContainerSlot(Container.GetItemStorage(), i)
+			UIContainerSlot slot = new UIContainerSlot(Container.IngredientStorage, i)
 			{
 				Width = { Pixels = SlotSize },
 				Height = { Pixels = SlotSize }

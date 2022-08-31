@@ -1,13 +1,17 @@
 ﻿Mods: {
 	PortableStorage: {
 		UI: {
-			PickupToggleOff: Toggle Pickup Off
-			PickupToggleOn: Toggle Pickup On
-			Close: Close
+			PickupDisabled: Pickup disabled
+            PickupBeforeInventory: Pickup before inventory
+            PickupAfterInventory: Pickup after inventory
+            PickupExistingOnly: Pickup items already inside bag
+			
+			LootAll: Move items to inventory
+			DepositAll: Move items to bag
+			QuickStack: Move items to bag (if already present)
 		}
 		
 		Config: {
-			AlchemistBag: Alchemist's Bag
 			AlchemistBagQuickBuff: Allow quick buff
             AlchemistBagQuickHeal: Allow quick heal
             AlchemistBagQuickMana: Allow quick mana
@@ -31,6 +35,7 @@
             FishingBelt: Fishing Belt
             MinersBackpack: Miner's Backpack
             GardenerSatchel: Gardener's Satchel
+            WiringBag: Mechanic's Belt
 		}
 		
 		BagTooltip: {
@@ -140,6 +145,12 @@
             Right-Click to open UI, use to place seeds or gather flowers
             Alt+Left-Click on slot to select
             "The seeds of a whole new world, to be nurtured with care and they will bring life to this arid place."
+            '''
+            WiringBag:
+            '''
+            {$Mods.PortableStorage.BagTooltip.StoresTip} wiring supplies
+            {$Mods.PortableStorage.BagTooltip.UseTip} 
+            "Just hope it does not release the magic white smoke."
             '''
 		}
 	}

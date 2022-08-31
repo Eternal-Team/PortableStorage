@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using BaseLibrary;
 using BaseLibrary.UI;
+using BaseLibrary.Utility;
 using ContainerLibrary;
 using Terraria;
 using Terraria.Audio;
@@ -12,23 +14,53 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items;
 
+public class BagStorage : ItemStorage
+{
+	protected readonly BaseBag bag;
+
+	protected BagStorage(BaseBag bag, int size) : base(size)
+	{
+		this.bag = bag;
+		OnContentsChanged += (_, _, _) => ModContent.GetInstance<BagSyncSystem>().Register(bag);
+	}
+}
+
+public enum PickupMode
+{
+	Disabled,
+	BeforeInventory,
+	AfterInventory,
+	ExistingOnly
+}
+
 public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 {
 	public SoundStyle? GetOpenSound() => new SoundStyle("PortableStorage/Assets/Sounds/BagOpen");
 	public SoundStyle? GetCloseSound() => new SoundStyle("PortableStorage/Assets/Sounds/BagClose");
 
-	public Guid ID;
-	protected ItemStorage storage;
-	public bool EnablePickup = true;
+	protected override bool CloneNewInstances => false;
 
-	protected ItemStorage Storage
+	public Guid ID;
+
+	private PickupMode pickupMode;
+
+	public PickupMode PickupMode
 	{
-		set => storage = value;
-		get
+		get => pickupMode;
+		set
 		{
-			if (storage == null) OnCreate(null);
-			return storage;
+			pickupMode = value;
+
+			ModContent.GetInstance<BagSyncSystem>().Register(this);
 		}
+	}
+
+	protected ItemStorage Storage;
+
+	public BaseBag()
+	{
+		ID = Guid.NewGuid();
+		PickupMode = PickupMode.Disabled;
 	}
 
 	public override ModItem Clone(Item item)
@@ -36,14 +68,8 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 		BaseBag clone = (BaseBag)base.Clone(item);
 		clone.Storage = Storage.Clone();
 		clone.ID = ID;
-		clone.EnablePickup = EnablePickup;
+		clone.PickupMode = PickupMode;
 		return clone;
-	}
-
-	public override void OnCreate(ItemCreationContext context)
-	{
-		ID = Guid.NewGuid();
-		EnablePickup = true;
 	}
 
 	public override void SetStaticDefaults()
@@ -76,7 +102,6 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	public override bool CanRightClick() => true;
 
-	// bug: also plays the default right click sound (grab)
 	public override void RightClick(Player player)
 	{
 		if (player.whoAmI == Main.LocalPlayer.whoAmI)
@@ -87,14 +112,28 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	{
 		tag.Set("ID", ID);
 		tag.Set("Items", Storage.Save());
-		tag.Set("EnablePickup", EnablePickup);
+		tag.Set("PickupMode", (byte)PickupMode);
 	}
 
 	public override void LoadData(TagCompound tag)
 	{
 		ID = tag.Get<Guid>("ID");
 		Storage.Load(tag.Get<TagCompound>("Items"));
-		EnablePickup = tag.GetBool("EnablePickup");
+		PickupMode = (PickupMode)tag.GetByte("PickupMode");
+	}
+
+	public override void NetSend(BinaryWriter writer)
+	{
+		writer.Write(ID);
+		Storage.Write(writer);
+		writer.Write((byte)PickupMode);
+	}
+
+	public override void NetReceive(BinaryReader reader)
+	{
+		ID = reader.ReadGuid();
+		Storage.Read(reader);
+		PickupMode = (PickupMode)reader.ReadByte();
 	}
 
 	public ItemStorage GetItemStorage() => Storage;
