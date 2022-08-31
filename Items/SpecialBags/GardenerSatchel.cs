@@ -101,7 +101,7 @@ public class GardenerSatchel : BaseBag
 			.AddIngredient(ItemID.ChlorophyteBar, 3)
 			.AddIngredient(ItemID.AncientCloth, 7)
 			.AddTile(TileID.LivingLoom)
-			.Create();
+			.Register();
 	}
 
 	public override bool AltFunctionUse(Player player) => true;
