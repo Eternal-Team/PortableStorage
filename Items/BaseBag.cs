@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using BaseLibrary;
@@ -60,7 +60,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	public BaseBag()
 	{
 		ID = Guid.NewGuid();
-		PickupMode = PickupMode.Disabled;
+		pickupMode = PickupMode.Disabled;
 	}
 
 	public override ModItem Clone(Item item)
@@ -68,7 +68,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 		BaseBag clone = (BaseBag)base.Clone(item);
 		clone.Storage = Storage.Clone();
 		clone.ID = ID;
-		clone.PickupMode = PickupMode;
+		clone.pickupMode = pickupMode;
 		return clone;
 	}
 
@@ -119,7 +119,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	{
 		ID = tag.Get<Guid>("ID");
 		Storage.Load(tag.Get<TagCompound>("Items"));
-		PickupMode = (PickupMode)tag.GetByte("PickupMode");
+		pickupMode = (PickupMode)tag.GetByte("PickupMode");
 	}
 
 	public override void NetSend(BinaryWriter writer)
@@ -133,7 +133,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	{
 		ID = reader.ReadGuid();
 		Storage.Read(reader);
-		PickupMode = (PickupMode)reader.ReadByte();
+		pickupMode = (PickupMode)reader.ReadByte();
 	}
 
 	public ItemStorage GetItemStorage() => Storage;
