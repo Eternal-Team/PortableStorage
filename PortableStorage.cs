@@ -27,7 +27,7 @@ public class BagSyncSystem : ModSystem
 			Player player = Main.LocalPlayer;
 
 			int slot = player.inventory.ToList().FindIndex(x => (x.ModItem as BaseBag)?.ID == bag.ID);
-			if (slot < 0) return;
+			if (slot < 0) continue;
 
 			NetMessage.SendData(MessageID.SyncEquipment, -1, -1, null, Main.myPlayer, slot);
 		}
