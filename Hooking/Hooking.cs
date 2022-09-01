@@ -1,6 +1,11 @@
-﻿using IL.Terraria;
-using IL.Terraria.GameContent.UI;
+﻿using IL.Terraria.GameContent.UI;
 using IL.Terraria.UI;
+using On.Terraria;
+using PortableStorage.Items;
+using Terraria.ModLoader;
+using Main = IL.Terraria.Main;
+using Player = IL.Terraria.Player;
+using Wiring = IL.Terraria.Wiring;
 
 namespace PortableStorage.Hooking;
 
@@ -35,5 +40,28 @@ public static partial class Hooking
 		Player.GrabItems += PlayerOnGrabItems;
 
 		Main.DrawInterface_40_InteractItemIcon += MainOnDrawInterface_40_InteractItemIcon;
+
+		Item.TurnToAir += ItemOnTurnToAir;
+		Item.ResetStats += ItemOnResetStats;
+	}
+
+	private static void ItemOnResetStats(Item.orig_ResetStats orig, Terraria.Item self, int type)
+	{
+		if (self.ModItem is BaseBag bag)
+		{
+			ModContent.GetInstance<BagSyncSystem>().AllBags.Remove(bag.ID);
+		}
+
+		orig(self, type);
+	}
+
+	private static void ItemOnTurnToAir(Item.orig_TurnToAir orig, Terraria.Item self)
+	{
+		if (self.ModItem is BaseBag bag)
+		{
+			ModContent.GetInstance<BagSyncSystem>().AllBags.Remove(bag.ID);
+		}
+
+		orig(self);
 	}
 }

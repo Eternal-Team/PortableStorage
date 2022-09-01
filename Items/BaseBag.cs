@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using BaseLibrary;
@@ -61,6 +61,8 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	{
 		ID = Guid.NewGuid();
 		pickupMode = PickupMode.Disabled;
+
+		ModContent.GetInstance<BagSyncSystem>().AllBags.Add(ID, this);
 	}
 
 	public override ModItem Clone(Item item)
@@ -117,9 +119,18 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	public override void LoadData(TagCompound tag)
 	{
+		var bags = ModContent.GetInstance<BagSyncSystem>().AllBags;
+		if (bags.ContainsKey(ID))
+		{
+			bags.Remove(ID);
+		}
+		
 		ID = tag.Get<Guid>("ID");
 		Storage.Load(tag.Get<TagCompound>("Items"));
 		pickupMode = (PickupMode)tag.GetByte("PickupMode");
+
+		if (bags.ContainsKey(ID)) bags.Remove(ID);
+		bags.Add(ID, this);
 	}
 
 	public override void NetSend(BinaryWriter writer)
