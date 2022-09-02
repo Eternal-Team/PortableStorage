@@ -1,14 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using BaseLibrary.Utility;
+using Microsoft.Xna.Framework;
 using PortableStorage.Items;
 using Terraria;
+using Terraria.Chat;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace PortableStorage;
 
-// note: one way to track what storages dont exist is to hook into TurnToAir and SetDefaults (type=0)
+public enum PacketID : byte
+{
+	SyncBag
+}
 
 public class BagSyncSystem : ModSystem
 {
@@ -24,19 +30,27 @@ public class BagSyncSystem : ModSystem
 
 	public override void PostUpdateItems()
 	{
-		Main.NewText($"Tracking {AllBags.Count} bags");
-		
+		if (Main.netMode == NetmodeID.MultiplayerClient)
+			Main.NewText($"[CLIENT {Main.LocalPlayer.whoAmI}] Tracking {AllBags.Count} bags");
+		else
+			ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral($"[SERVER] Tracking {AllBags.Count} bags"), Color.White);
+
 		if (Main.netMode != NetmodeID.MultiplayerClient)
 			return;
 
-		foreach (BaseBag bag in Bags)
+		foreach (var bag in Bags)
 		{
+			if (!AllBags.ContainsKey(bag.ID)) continue;
+		
 			Player player = Main.LocalPlayer;
-
-			int slot = player.inventory.ToList().FindIndex(x => (x.ModItem as BaseBag)?.ID == bag.ID);
-			if (slot < 0) continue;
-
-			NetMessage.SendData(MessageID.SyncEquipment, -1, -1, null, Main.myPlayer, slot);
+		
+			ModPacket packet = Mod.GetPacket();
+			packet.Write((byte)PacketID.SyncBag);
+			packet.Write((byte)player.whoAmI);
+			packet.Write(bag.ID);
+			var itemStorage = AllBags[bag.ID].GetItemStorage();
+			itemStorage.Write(packet);
+			packet.Send();
 		}
 
 		Bags.Clear();

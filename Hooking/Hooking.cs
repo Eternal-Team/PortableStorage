@@ -45,22 +45,23 @@ public static partial class Hooking
 		Item.ResetStats += ItemOnResetStats;
 	}
 
+	// bug: mouseitem not causing proper deletion
 	private static void ItemOnResetStats(Item.orig_ResetStats orig, Terraria.Item self, int type)
 	{
-		if (self.ModItem is BaseBag bag)
-		{
-			ModContent.GetInstance<BagSyncSystem>().AllBags.Remove(bag.ID);
-		}
+		// if (self.ModItem is BaseBag bag)
+		// {
+		// 	ModContent.GetInstance<BagSyncSystem>().AllBags.Remove(bag.ID);
+		// }
 
 		orig(self, type);
 	}
 
 	private static void ItemOnTurnToAir(Item.orig_TurnToAir orig, Terraria.Item self)
 	{
-		if (self.ModItem is BaseBag bag)
-		{
-			ModContent.GetInstance<BagSyncSystem>().AllBags.Remove(bag.ID);
-		}
+		// if (self.ModItem is BaseBag bag)
+		// {
+		// 	ModContent.GetInstance<BagSyncSystem>().AllBags.Remove(bag.ID);
+		// }
 
 		orig(self);
 	}

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace PortableStorage.Items;
 
@@ -19,8 +20,10 @@ public abstract class BaseAmmoBag : BaseBag
 
 	protected abstract string AmmoType { get; }
 
-	public BaseAmmoBag()
+	public override void OnCreate(ItemCreationContext context)
 	{
+		base.OnCreate(context);
+
 		Storage = new AmmoBagItemStorage(9, this);
 	}
 }

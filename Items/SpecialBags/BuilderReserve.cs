@@ -17,11 +17,14 @@ public class BuilderReserve : BaseBag
 	{
 		public BuilderReserveItemStorage(int slots, BaseBag bag) : base(bag, slots)
 		{
-			OnContentsChanged += (_, _, slot) =>
-			{
-				if (this[slot].IsAir && bag is BuilderReserve reserve)
-					reserve.SelectedIndex = -1;
-			};
+		}
+
+		public override void OnContentsChanged(object user, Operation operation, int slot)
+		{
+			base.OnContentsChanged(user,operation,slot);
+			
+			if (this[slot].IsAir && bag is BuilderReserve reserve)
+				reserve.SelectedIndex = -1;
 		}
 
 		public override bool IsItemValid(int slot, Item Item)
@@ -72,8 +75,10 @@ public class BuilderReserve : BaseBag
 		}
 	}
 
-	public BuilderReserve()
+	public override void OnCreate(ItemCreationContext context)
 	{
+		base.OnCreate(context);
+		
 		Storage = new BuilderReserveItemStorage(9, this);
 		selectedIndex = -1;
 	}
