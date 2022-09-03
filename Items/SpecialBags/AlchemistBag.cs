@@ -66,16 +66,16 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 	public override void SaveData(TagCompound tag)
 	{
 		base.SaveData(tag);
-
+// todo: sync
 		tag.Set("Ingredient", IngredientStorage.Save());
 	}
 
 	public override void LoadData(TagCompound tag)
 	{
-		var bags = ModContent.GetInstance<BagSyncSystem>().AllBags;
+		var bags = BagSyncSystem.Instance.AllBags;
 
 		var newID = tag.Get<Guid>("ID");
-		pickupMode = (PickupMode)tag.GetByte("PickupMode");
+		PickupMode = (PickupMode)tag.GetByte("PickupMode");
 
 		var items = tag.GetCompound("Items").GetList<Item>("Value");
 		if (items.Count == PotionSlots + IngredientSlots)
@@ -94,7 +94,7 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 			if (bags.ContainsKey(ID)) bags.Remove(ID);
 
 			bags.TryAdd(newID, this);
-			id = newID;
+			ID = newID;
 		}
 	}
 

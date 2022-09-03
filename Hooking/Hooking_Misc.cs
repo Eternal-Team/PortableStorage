@@ -17,6 +17,93 @@ namespace PortableStorage.Hooking;
 
 public static partial class Hooking
 {
+	private static bool PlayerOnGrabItems_Del(Player player, ref Item item)
+	{
+		Item temp = item.Clone();
+
+		bool InsertIntoOfType_AfterInventory<T>(ref Item item, SoundStyle sound, Func<T, ItemStorage> selector = null) where T : BaseBag
+		{
+			selector ??= bag => bag.GetItemStorage();
+
+			foreach (T bag in player.inventory.OfModItemType<T>())
+			{
+				if (bag.PickupMode != PickupMode.AfterInventory) continue;
+
+				ItemStorage storage = selector(bag);
+				if (storage.InsertItem(player, ref item))
+				{
+					BagPopupText.NewText(PopupTextContext.RegularItemPickup, bag.Item, temp, temp.stack - item.stack);
+					SoundEngine.PlaySound(sound);
+				}
+
+				if (item is null || item.IsAir || !item.active)
+					return true;
+			}
+
+			return false;
+		}
+
+		if (item.IsCurrency)
+		{
+			if (InsertIntoOfType_AfterInventory<Wallet>(ref item, SoundID.CoinPickup))
+				return false;
+		}
+
+		if (item.ammo > 0)
+		{
+			if (InsertIntoOfType_AfterInventory<AmmoPouch>(ref item, SoundID.Grab))
+				return false;
+		}
+
+		if (item.bait > 0 || Utility.FishingWhitelist.Contains(item.type))
+		{
+			if (InsertIntoOfType_AfterInventory<FishingBelt>(ref item, SoundID.Grab))
+				return false;
+		}
+
+		if (Utility.OreWhitelist.Contains(item.type))
+		{
+			if (InsertIntoOfType_AfterInventory<MinersBackpack>(ref item, SoundID.Grab))
+				return false;
+		}
+
+		if (Utility.WiringWhitelist.Contains(item.type))
+		{
+			if (InsertIntoOfType_AfterInventory<WiringBag>(ref item, SoundID.Grab))
+				return false;
+		}
+
+		if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon && ((item.potion && item.healLife > 0) || (item.healMana > 0 && !item.potion) || (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
+		{
+			if (InsertIntoOfType_AfterInventory<AlchemistBag>(ref item, SoundID.Grab))
+				return false;
+
+			if (InsertIntoOfType_AfterInventory<AlchemistBag>(ref item, SoundID.Grab, bag => bag.IngredientStorage))
+				return false;
+		}
+
+		if (item.createTile >= TileID.Dirt || item.createWall > WallID.None)
+		{
+			if (InsertIntoOfType_AfterInventory<BuilderReserve>(ref item, SoundID.Grab))
+				return false;
+		}
+
+		if (Utility.SeedWhitelist.Contains(item.type))
+		{
+			if (InsertIntoOfType_AfterInventory<GardenerSatchel>(ref item, SoundID.Grab))
+				return false;
+		}
+
+		if (item.type is not 184 or 1735 or 1668 or 58 or 1734 or 1867 && !ItemID.Sets.NebulaPickup[item.type])
+		{
+			if (InsertIntoOfType_AfterInventory<BaseNormalBag>(ref item, SoundID.Grab))
+				return false;
+		}
+
+		return true;
+	}
+
+
 	private static void PlayerOnGrabItems(ILContext il)
 	{
 		ILCursor cursor = new ILCursor(il);
@@ -27,93 +114,9 @@ public static partial class Hooking
 			cursor.Index += 2;
 
 			cursor.Emit(OpCodes.Ldarg, 0);
-			cursor.Emit(OpCodes.Ldloc, 1);
+			cursor.Emit(OpCodes.Ldloca, 1);
 
-			cursor.EmitDelegate<Func<Player, Item, bool>>((player, item) =>
-			{
-				Item temp = item.Clone();
-
-				bool InsertIntoOfType_AfterInventory<T>(SoundStyle sound, Func<T, ItemStorage> selector = null) where T : BaseBag
-				{
-					selector ??= bag => bag.GetItemStorage();
-
-					foreach (T bag in player.inventory.OfModItemType<T>())
-					{
-						if (bag.PickupMode != PickupMode.AfterInventory) continue;
-
-						ItemStorage storage = selector(bag);
-						if (storage.InsertItem(player, ref item))
-						{
-							BagPopupText.NewText(PopupTextContext.RegularItemPickup, bag.Item, temp, temp.stack - item.stack);
-							SoundEngine.PlaySound(sound);
-						}
-
-						if (item is null || item.IsAir || !item.active)
-							return true;
-					}
-
-					return false;
-				}
-
-				if (item.IsCurrency)
-				{
-					if (InsertIntoOfType_AfterInventory<Wallet>(SoundID.CoinPickup))
-						return false;
-				}
-
-				if (item.ammo > 0)
-				{
-					if (InsertIntoOfType_AfterInventory<AmmoPouch>(SoundID.Grab))
-						return false;
-				}
-
-				if (item.bait > 0 || Utility.FishingWhitelist.Contains(item.type))
-				{
-					if (InsertIntoOfType_AfterInventory<FishingBelt>(SoundID.Grab))
-						return false;
-				}
-
-				if (Utility.OreWhitelist.Contains(item.type))
-				{
-					if (InsertIntoOfType_AfterInventory<MinersBackpack>(SoundID.Grab))
-						return false;
-				}
-
-				if (Utility.WiringWhitelist.Contains(item.type))
-				{
-					if (InsertIntoOfType_AfterInventory<WiringBag>(SoundID.Grab))
-						return false;
-				}
-
-				if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon && ((item.potion && item.healLife > 0) || (item.healMana > 0 && !item.potion) || (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
-				{
-					if (InsertIntoOfType_AfterInventory<AlchemistBag>(SoundID.Grab))
-						return false;
-
-					if (InsertIntoOfType_AfterInventory<AlchemistBag>(SoundID.Grab, bag => bag.IngredientStorage))
-						return false;
-				}
-
-				if (item.createTile >= TileID.Dirt || item.createWall > WallID.None)
-				{
-					if (InsertIntoOfType_AfterInventory<BuilderReserve>(SoundID.Grab))
-						return false;
-				}
-
-				if (Utility.SeedWhitelist.Contains(item.type))
-				{
-					if (InsertIntoOfType_AfterInventory<GardenerSatchel>(SoundID.Grab))
-						return false;
-				}
-
-				if (item.type is not 184 or 1735 or 1668 or 58 or 1734 or 1867 && !ItemID.Sets.NebulaPickup[item.type])
-				{
-					if (InsertIntoOfType_AfterInventory<BaseNormalBag>(SoundID.Grab))
-						return false;
-				}
-
-				return true;
-			});
+			cursor.EmitDelegate(PlayerOnGrabItems_Del);
 
 			cursor.Emit(OpCodes.Brfalse, label);
 		}

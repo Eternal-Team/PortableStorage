@@ -50,7 +50,7 @@ public static partial class Hooking
 	{
 		// if (self.ModItem is BaseBag bag)
 		// {
-		// 	ModContent.GetInstance<BagSyncSystem>().AllBags.Remove(bag.ID);
+		// 	BagSyncSystem.Instance.AllBags.Remove(bag.ID);
 		// }
 
 		orig(self, type);
@@ -60,7 +60,7 @@ public static partial class Hooking
 	{
 		// if (self.ModItem is BaseBag bag)
 		// {
-		// 	ModContent.GetInstance<BagSyncSystem>().AllBags.Remove(bag.ID);
+		// 	BagSyncSystem.Instance.AllBags.Remove(bag.ID);
 		// }
 
 		orig(self);
