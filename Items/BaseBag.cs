@@ -29,7 +29,7 @@ public class BagStorage : ItemStorage
 	}
 }
 
-public enum PickupMode:byte
+public enum PickupMode : byte
 {
 	Disabled,
 	BeforeInventory,
@@ -50,9 +50,6 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	public override void OnCreate(ItemCreationContext context)
 	{
-		if (ID != Guid.Empty) return;
-		if (Storage is not null) return;
-
 		ID = Guid.NewGuid();
 		PickupMode = PickupMode.Disabled;
 
@@ -88,7 +85,6 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	public override void ModifyTooltips(List<TooltipLine> tooltips)
 	{
 		tooltips.Add(new TooltipLine(Mod, "PortableStorage:BagTooltip", Language.GetText("Mods.PortableStorage.BagTooltip." + GetType().Name).Format(Storage.Count)));
-		tooltips.Add(new TooltipLine(Mod, "debugid-1", (ModContent.GetInstance<BagSyncSystem>().AllBags[ID].GetItemStorage() == GetItemStorage()).ToString()));
 	}
 
 	public override bool ConsumeItem(Player player) => false;
