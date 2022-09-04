@@ -1,8 +1,6 @@
 ﻿using IL.Terraria.GameContent.UI;
 using IL.Terraria.UI;
 using On.Terraria;
-using PortableStorage.Items;
-using Terraria.ModLoader;
 using Main = IL.Terraria.Main;
 using Player = IL.Terraria.Player;
 using Wiring = IL.Terraria.Wiring;
@@ -37,7 +35,7 @@ public static partial class Hooking
 		On.Terraria.Player.Fishing_GetBestFishingPole += PlayerOnFishing_GetBestFishingPole;
 		On.Terraria.Player.Fishing_GetBait += PlayerOnFishing_GetBait;
 
-		Player.GrabItems += PlayerOnGrabItems;
+		Player.PickupItem += PlayerOnPickupItem;
 
 		Main.DrawInterface_40_InteractItemIcon += MainOnDrawInterface_40_InteractItemIcon;
 
