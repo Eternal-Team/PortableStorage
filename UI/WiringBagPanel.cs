@@ -35,6 +35,8 @@ public class WiringBagPanel : BaseBagPanel<WiringBag>
 
 	protected override void Activate()
 	{
+		base.Activate();
+
 		gridItems.Clear();
 
 		ItemStorage storage = BagSyncSystem.Instance.AllBags[Container.GetID()].GetItemStorage();

@@ -67,6 +67,8 @@ public class AlchemistBagPanel : BaseBagPanel<AlchemistBag>
 
 	protected override void Activate()
 	{
+		base.Activate();
+
 		if (BagSyncSystem.Instance.AllBags[Container.GetID()] is not AlchemistBag bag) return;
 		gridItems.Clear();
 
