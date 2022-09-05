@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using BaseLibrary;
@@ -21,11 +21,15 @@ public class BagStorage : ItemStorage
 	protected BagStorage(BaseBag bag, int size) : base(size)
 	{
 		this.bag = bag;
-		OnContentsChanged += (_, _, _) => ModContent.GetInstance<BagSyncSystem>().Register(bag);
+	}
+
+	protected override void OnContentsChanged(object user, Operation operation, int slot)
+	{
+		BagSyncSystem.Instance.Sync(bag.GetID(), PacketID.Inventory);
 	}
 }
 
-public enum PickupMode
+public enum PickupMode : byte
 {
 	Disabled,
 	BeforeInventory,
@@ -40,35 +44,26 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	protected override bool CloneNewInstances => false;
 
-	public Guid ID;
-
-	private PickupMode pickupMode;
-
-	public PickupMode PickupMode
-	{
-		get => pickupMode;
-		set
-		{
-			pickupMode = value;
-
-			ModContent.GetInstance<BagSyncSystem>().Register(this);
-		}
-	}
-
+	protected Guid ID;
+	public PickupMode PickupMode;
 	protected ItemStorage Storage;
 
-	public BaseBag()
+	public override void OnCreate(ItemCreationContext context)
 	{
 		ID = Guid.NewGuid();
-		pickupMode = PickupMode.Disabled;
+		PickupMode = PickupMode.Disabled;
+
+		BagSyncSystem.Instance.AllBags.Add(ID, this);
 	}
 
 	public override ModItem Clone(Item item)
 	{
 		BaseBag clone = (BaseBag)base.Clone(item);
-		clone.Storage = Storage.Clone();
+		clone.Storage = Storage /*.Clone()*/; // note: this is a stupid behavior, try to fix elsehow
 		clone.ID = ID;
-		clone.pickupMode = pickupMode;
+		clone.PickupMode = PickupMode;
+		if (BagSyncSystem.Instance.AllBags.ContainsKey(ID)) BagSyncSystem.Instance.AllBags.Remove(ID);
+		BagSyncSystem.Instance.AllBags.Add(ID, clone);
 		return clone;
 	}
 
@@ -83,6 +78,8 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 		Item.useAnimation = 5;
 		Item.useStyle = ItemUseStyleID.Swing;
 		Item.rare = ItemRarityID.White;
+
+		OnCreate(null);
 	}
 
 	public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -94,8 +91,8 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	public override bool? UseItem(Player player)
 	{
-		if (player.whoAmI == Main.LocalPlayer.whoAmI)
-			PanelUI.Instance.HandleUI(this);
+		if (Main.netMode != NetmodeID.Server && player.whoAmI == Main.LocalPlayer.whoAmI)
+			PanelUI.Instance?.HandleUI(this);
 
 		return true;
 	}
@@ -104,8 +101,8 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	public override void RightClick(Player player)
 	{
-		if (player.whoAmI == Main.LocalPlayer.whoAmI)
-			PanelUI.Instance.HandleUI(this);
+		if (Main.netMode != NetmodeID.Server && player.whoAmI == Main.LocalPlayer.whoAmI)
+			PanelUI.Instance?.HandleUI(this);
 	}
 
 	public override void SaveData(TagCompound tag)
@@ -117,9 +114,20 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	public override void LoadData(TagCompound tag)
 	{
-		ID = tag.Get<Guid>("ID");
+		var bags = BagSyncSystem.Instance.AllBags;
+
+		var newID = tag.Get<Guid>("ID");
 		Storage.Load(tag.Get<TagCompound>("Items"));
-		pickupMode = (PickupMode)tag.GetByte("PickupMode");
+		PickupMode = (PickupMode)tag.GetByte("PickupMode");
+
+		if (newID != ID)
+		{
+			if (bags.ContainsKey(ID)) bags.Remove(ID);
+			if (bags.ContainsKey(newID)) bags.Remove(newID);
+
+			bags.Add(newID, this);
+			ID = newID;
+		}
 	}
 
 	public override void NetSend(BinaryWriter writer)
@@ -131,9 +139,20 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	public override void NetReceive(BinaryReader reader)
 	{
-		ID = reader.ReadGuid();
+		var bags = BagSyncSystem.Instance.AllBags;
+
+		var newID = reader.ReadGuid();
 		Storage.Read(reader);
-		pickupMode = (PickupMode)reader.ReadByte();
+		PickupMode = (PickupMode)reader.ReadByte();
+
+		if (newID != ID)
+		{
+			if (bags.ContainsKey(ID)) bags.Remove(ID);
+			if (bags.ContainsKey(newID)) bags.Remove(newID);
+
+			bags.Add(newID, this);
+			ID = newID;
+		}
 	}
 
 	public ItemStorage GetItemStorage() => Storage;

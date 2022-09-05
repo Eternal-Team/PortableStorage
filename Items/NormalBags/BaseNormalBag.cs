@@ -2,6 +2,7 @@
 using System.Linq;
 using ContainerLibrary;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace PortableStorage.Items;
 
@@ -21,8 +22,10 @@ public abstract class BaseNormalBag : BaseBag, ICraftingStorage
 
 	protected abstract int SlotCount { get; }
 
-	public BaseNormalBag()
+	public override void OnCreate(ItemCreationContext context)
 	{
+		base.OnCreate(context);
+
 		Storage = new NormalBagItemStorage(this);
 	}
 

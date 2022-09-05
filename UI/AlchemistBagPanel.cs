@@ -1,10 +1,14 @@
 ﻿using BaseLibrary.UI;
+using ContainerLibrary;
 using PortableStorage.Items;
 
 namespace PortableStorage.UI;
 
 public class AlchemistBagPanel : BaseBagPanel<AlchemistBag>
 {
+	private UIGrid<UIContainerSlot> gridItems;
+	private UIGrid<UIContainerSlot> gridIngredients;
+
 	public AlchemistBagPanel(AlchemistBag bag) : base(bag)
 	{
 		Width.Pixels = 12 + (SlotSize + SlotMargin) * 9;
@@ -16,7 +20,7 @@ public class AlchemistBagPanel : BaseBagPanel<AlchemistBag>
 		};
 		Add(textPotions);
 
-		UIGrid<UIContainerSlot> gridItems = new UIGrid<UIContainerSlot>(9)
+		gridItems = new UIGrid<UIContainerSlot>(9)
 		{
 			Width = { Percent = 100 },
 			Height = { Pixels = SlotSize * 2 + SlotMargin },
@@ -41,7 +45,7 @@ public class AlchemistBagPanel : BaseBagPanel<AlchemistBag>
 		};
 		Add(textIngredients);
 
-		UIGrid<UIContainerSlot> gridIngredients = new UIGrid<UIContainerSlot>(9)
+		gridIngredients = new UIGrid<UIContainerSlot>(9)
 		{
 			Width = { Percent = 100 },
 			Height = { Pixels = (SlotSize + SlotMargin) * 7 - SlotMargin },
@@ -53,6 +57,34 @@ public class AlchemistBagPanel : BaseBagPanel<AlchemistBag>
 		for (int i = 0; i < Container.IngredientStorage.Count; i++)
 		{
 			UIContainerSlot slot = new UIContainerSlot(Container.IngredientStorage, i)
+			{
+				Width = { Pixels = SlotSize },
+				Height = { Pixels = SlotSize }
+			};
+			gridIngredients.Add(slot);
+		}
+	}
+
+	protected override void Activate()
+	{
+		if (BagSyncSystem.Instance.AllBags[Container.GetID()] is not AlchemistBag bag) return;
+		gridItems.Clear();
+
+		ItemStorage storage = bag.GetItemStorage();
+		for (int i = 0; i < storage.Count; i++)
+		{
+			UIContainerSlot slot = new UIContainerSlot(storage, i)
+			{
+				Width = { Pixels = SlotSize },
+				Height = { Pixels = SlotSize }
+			};
+			gridItems.Add(slot);
+		}
+
+		gridIngredients.Clear();
+		for (int i = 0; i < bag.IngredientStorage.Count; i++)
+		{
+			UIContainerSlot slot = new UIContainerSlot(bag.IngredientStorage, i)
 			{
 				Width = { Pixels = SlotSize },
 				Height = { Pixels = SlotSize }

@@ -48,8 +48,10 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 
 	public ItemStorage IngredientStorage;
 
-	public AlchemistBag()
+	public override void OnCreate(ItemCreationContext context)
 	{
+		base.OnCreate(context);
+
 		Storage = new AlchemistBagPotionStorage(this);
 		IngredientStorage = new AlchemistBagIngredientStorage(this);
 	}
@@ -57,7 +59,7 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 	public override ModItem Clone(Item item)
 	{
 		AlchemistBag clone = (AlchemistBag)base.Clone(item);
-		clone.IngredientStorage = IngredientStorage.Clone();
+		clone.IngredientStorage = IngredientStorage/*.Clone()*/;
 		return clone;
 	}
 
@@ -70,7 +72,9 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 
 	public override void LoadData(TagCompound tag)
 	{
-		ID = tag.Get<Guid>("ID");
+		var bags = BagSyncSystem.Instance.AllBags;
+
+		var newID = tag.Get<Guid>("ID");
 		PickupMode = (PickupMode)tag.GetByte("PickupMode");
 
 		var items = tag.GetCompound("Items").GetList<Item>("Value");
@@ -83,6 +87,15 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 		{
 			Storage.Load(tag.Get<TagCompound>("Items"));
 			IngredientStorage.Load(tag.Get<TagCompound>("Ingredient"));
+		}
+
+		if (newID != ID)
+		{
+			if (bags.ContainsKey(ID)) bags.Remove(ID);
+			if (bags.ContainsKey(newID)) bags.Remove(newID);
+
+			bags.Add(newID, this);
+			ID = newID;
 		}
 	}
 

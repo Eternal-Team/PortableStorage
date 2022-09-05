@@ -107,12 +107,12 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 		buttonPickup.OnMouseDown += args =>
 		{
 			if (args.Button != MouseButton.Left) return;
+			args.Handled = true;
 
 			bag.PickupMode = bag.PickupMode.NextEnum();
+			BagSyncSystem.Instance.Sync(Container.GetID(), PacketID.PickupMode);
 
 			SoundEngine.PlaySound(SoundID.MenuTick);
-
-			args.Handled = true;
 		};
 		Add(buttonPickup);
 
@@ -126,9 +126,9 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 		buttonClose.OnMouseDown += args =>
 		{
 			if (args.Button != MouseButton.Left) return;
-
-			PanelUI.Instance.CloseUI(Container);
 			args.Handled = true;
+
+			PanelUI.Instance?.CloseUI(Container);
 		};
 		buttonClose.OnMouseEnter += _ => buttonClose.Settings.TextColor = Color.Red;
 		buttonClose.OnMouseLeave += _ => buttonClose.Settings.TextColor = Color.White;

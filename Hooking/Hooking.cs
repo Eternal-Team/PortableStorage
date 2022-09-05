@@ -1,6 +1,9 @@
-﻿using IL.Terraria;
-using IL.Terraria.GameContent.UI;
+﻿using IL.Terraria.GameContent.UI;
 using IL.Terraria.UI;
+using On.Terraria;
+using Main = IL.Terraria.Main;
+using Player = IL.Terraria.Player;
+using Wiring = IL.Terraria.Wiring;
 
 namespace PortableStorage.Hooking;
 
@@ -32,8 +35,32 @@ public static partial class Hooking
 		On.Terraria.Player.Fishing_GetBestFishingPole += PlayerOnFishing_GetBestFishingPole;
 		On.Terraria.Player.Fishing_GetBait += PlayerOnFishing_GetBait;
 
-		Player.GrabItems += PlayerOnGrabItems;
+		Player.PickupItem += PlayerOnPickupItem;
 
 		Main.DrawInterface_40_InteractItemIcon += MainOnDrawInterface_40_InteractItemIcon;
+
+		Item.TurnToAir += ItemOnTurnToAir;
+		Item.ResetStats += ItemOnResetStats;
+	}
+
+	// bug: mouseitem not causing proper deletion
+	private static void ItemOnResetStats(Item.orig_ResetStats orig, Terraria.Item self, int type)
+	{
+		// if (self.ModItem is BaseBag bag)
+		// {
+		// 	BagSyncSystem.Instance.AllBags.Remove(bag.ID);
+		// }
+
+		orig(self, type);
+	}
+
+	private static void ItemOnTurnToAir(Item.orig_TurnToAir orig, Terraria.Item self)
+	{
+		// if (self.ModItem is BaseBag bag)
+		// {
+		// 	BagSyncSystem.Instance.AllBags.Remove(bag.ID);
+		// }
+
+		orig(self);
 	}
 }

@@ -1,46 +1,11 @@
-using System.Collections.Generic;
-using System.Linq;
-using PortableStorage.Items;
-using Terraria;
-using Terraria.ID;
+using System.IO;
 using Terraria.ModLoader;
 
 namespace PortableStorage;
 
-public class BagSyncSystem : ModSystem
-{
-	private List<BaseBag> Bags = new();
-
-	public void Register(BaseBag item)
-	{
-		if (!Bags.Contains(item))
-			Bags.Add(item);
-	}
-
-	public override void PostUpdateItems()
-	{
-		if (Main.netMode != NetmodeID.MultiplayerClient)
-			return;
-
-		foreach (BaseBag bag in Bags)
-		{
-			Player player = Main.LocalPlayer;
-
-			int slot = player.inventory.ToList().FindIndex(x => (x.ModItem as BaseBag)?.ID == bag.ID);
-			if (slot < 0) continue;
-
-			NetMessage.SendData(MessageID.SyncEquipment, -1, -1, null, Main.myPlayer, slot);
-		}
-
-		Bags.Clear();
-	}
-}
-
 public class PortableStorage : Mod
 {
 	public const string AssetPath = "PortableStorage/Assets/";
-
-	public static PortableStorage Instance => ModContent.GetInstance<PortableStorage>();
 
 	public override void Load()
 	{
@@ -48,14 +13,19 @@ public class PortableStorage : Mod
 		BagPopupText.Load();
 	}
 
-	public override void PostSetupContent()
+	public override void HandlePacket(BinaryReader reader, int whoAmI)
 	{
-		Utility.PostSetupContent();
+		BagSyncSystem.Instance.HandlePacket(reader, whoAmI);
 	}
 }
 
 public class PortableStorageSystem : ModSystem
 {
+	public override void PostSetupContent()
+	{
+		Utility.PostSetupContent();
+	}
+
 	public override void AddRecipeGroups()
 	{
 		Utility.AddRecipeGroups();
