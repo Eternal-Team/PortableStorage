@@ -49,8 +49,8 @@ public class BuilderReservePanel : BaseBagPanel<BuilderReserve>
 	protected override void Activate()
 	{
 		gridItems.Clear();
-	
-		ItemStorage storage = BagSyncSystem.Instance.AllBags[Container.ID].GetItemStorage();
+
+		ItemStorage storage = BagSyncSystem.Instance.AllBags[Container.GetID()].GetItemStorage();
 		for (int i = 0; i < storage.Count; i++)
 		{
 			UISelectableBagSlot slot = new UISelectableBagSlot(Container, i)
@@ -96,7 +96,7 @@ public class GardenerSatchelPanel : BaseBagPanel<GardenerSatchel>
 	{
 		gridItems.Clear();
 
-		ItemStorage storage = BagSyncSystem.Instance.AllBags[Container.ID].GetItemStorage();
+		ItemStorage storage = BagSyncSystem.Instance.AllBags[Container.GetID()].GetItemStorage();
 		for (int i = 0; i < storage.Count; i++)
 		{
 			UISelectableBagSlot slot = new UISelectableBagSlot(Container, i)
@@ -123,7 +123,7 @@ internal class UISelectableBagSlot : UIContainerSlot
 
 		this.bag = bag;
 	}
-	
+
 	protected override void MouseDown(MouseButtonEventArgs args)
 	{
 		if (args.Button != MouseButton.Left) return;
@@ -142,7 +142,7 @@ internal class UISelectableBagSlot : UIContainerSlot
 			if (bag.SelectedIndex == slot) bag.SelectedIndex = -1;
 			else bag.SelectedIndex = slot;
 
-			BagSyncSystem.Instance.Sync(bag.ID, PacketID.SelectedIndex);
+			BagSyncSystem.Instance.Sync(bag.GetID(), PacketID.SelectedIndex);
 		}
 		else
 		{

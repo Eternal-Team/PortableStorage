@@ -51,7 +51,7 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 	public override void OnCreate(ItemCreationContext context)
 	{
 		base.OnCreate(context);
-		
+
 		Storage = new AlchemistBagPotionStorage(this);
 		IngredientStorage = new AlchemistBagIngredientStorage(this);
 	}
@@ -59,14 +59,14 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 	public override ModItem Clone(Item item)
 	{
 		AlchemistBag clone = (AlchemistBag)base.Clone(item);
-		clone.IngredientStorage = IngredientStorage.Clone();
+		clone.IngredientStorage = IngredientStorage/*.Clone()*/;
 		return clone;
 	}
 
 	public override void SaveData(TagCompound tag)
 	{
 		base.SaveData(tag);
-// todo: sync
+
 		tag.Set("Ingredient", IngredientStorage.Save());
 	}
 
@@ -92,8 +92,9 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 		if (newID != ID)
 		{
 			if (bags.ContainsKey(ID)) bags.Remove(ID);
+			if (bags.ContainsKey(newID)) bags.Remove(newID);
 
-			bags.TryAdd(newID, this);
+			bags.Add(newID, this);
 			ID = newID;
 		}
 	}
@@ -122,10 +123,10 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 		Item.value = Item.buyPrice(gold: 3);
 	}
 
-	// public override void ModifyTooltips(List<TooltipLine> tooltips)
-	// {
-	// 	tooltips.Add(new TooltipLine(Mod, "PortableStorage:BagTooltip", Language.GetText("Mods.PortableStorage.BagTooltip." + GetType().Name).Format(PotionSlots, IngredientSlots)));
-	// }
+	public override void ModifyTooltips(List<TooltipLine> tooltips)
+	{
+		tooltips.Add(new TooltipLine(Mod, "PortableStorage:BagTooltip", Language.GetText("Mods.PortableStorage.BagTooltip." + GetType().Name).Format(PotionSlots, IngredientSlots)));
+	}
 
 	public override void AddRecipes()
 	{

@@ -38,7 +38,7 @@ public class WalletPanel : BaseBagPanel<Wallet>
 	{
 		gridItems.Clear();
 
-		ItemStorage storage = BagSyncSystem.Instance.AllBags[Container.ID].GetItemStorage();
+		ItemStorage storage = BagSyncSystem.Instance.AllBags[Container.GetID()].GetItemStorage();
 		for (int i = 0; i < storage.Count; i++)
 		{
 			UIContainerSlot slot = new UIContainerSlot(storage, i)

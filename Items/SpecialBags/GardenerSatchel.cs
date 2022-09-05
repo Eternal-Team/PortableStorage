@@ -19,7 +19,7 @@ public class GardenerSatchel : BaseSelectableBag
 			if (this[slot].IsAir && bag is BuilderReserve reserve)
 			{
 				reserve.SelectedIndex = -1;
-				BagSyncSystem.Instance.Sync(reserve.ID, PacketID.SelectedIndex);
+				BagSyncSystem.Instance.Sync(reserve.GetID(), PacketID.SelectedIndex);
 			}
 		}
 

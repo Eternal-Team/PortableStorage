@@ -110,7 +110,7 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 			args.Handled = true;
 
 			bag.PickupMode = bag.PickupMode.NextEnum();
-			BagSyncSystem.Instance.Sync(Container.ID, PacketID.PickupMode);
+			BagSyncSystem.Instance.Sync(Container.GetID(), PacketID.PickupMode);
 
 			SoundEngine.PlaySound(SoundID.MenuTick);
 		};

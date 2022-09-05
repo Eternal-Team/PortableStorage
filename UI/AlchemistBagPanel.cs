@@ -1,7 +1,6 @@
 ﻿using BaseLibrary.UI;
 using ContainerLibrary;
 using PortableStorage.Items;
-using Terraria;
 
 namespace PortableStorage.UI;
 
@@ -9,7 +8,7 @@ public class AlchemistBagPanel : BaseBagPanel<AlchemistBag>
 {
 	private UIGrid<UIContainerSlot> gridItems;
 	private UIGrid<UIContainerSlot> gridIngredients;
-	
+
 	public AlchemistBagPanel(AlchemistBag bag) : base(bag)
 	{
 		Width.Pixels = 12 + (SlotSize + SlotMargin) * 9;
@@ -65,13 +64,13 @@ public class AlchemistBagPanel : BaseBagPanel<AlchemistBag>
 			gridIngredients.Add(slot);
 		}
 	}
-	
+
 	protected override void Activate()
 	{
+		if (BagSyncSystem.Instance.AllBags[Container.GetID()] is not AlchemistBag bag) return;
 		gridItems.Clear();
 
-		ItemStorage storage = BagSyncSystem.Instance.AllBags[Container.ID].GetItemStorage();
-		Main.NewText(storage == Container.GetItemStorage());
+		ItemStorage storage = bag.GetItemStorage();
 		for (int i = 0; i < storage.Count; i++)
 		{
 			UIContainerSlot slot = new UIContainerSlot(storage, i)
@@ -81,12 +80,11 @@ public class AlchemistBagPanel : BaseBagPanel<AlchemistBag>
 			};
 			gridItems.Add(slot);
 		}
-		
+
 		gridIngredients.Clear();
-		// todo: pull from all bags
-		for (int i = 0; i < Container.IngredientStorage.Count; i++)
+		for (int i = 0; i < bag.IngredientStorage.Count; i++)
 		{
-			UIContainerSlot slot = new UIContainerSlot(Container.IngredientStorage, i)
+			UIContainerSlot slot = new UIContainerSlot(bag.IngredientStorage, i)
 			{
 				Width = { Pixels = SlotSize },
 				Height = { Pixels = SlotSize }

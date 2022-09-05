@@ -25,7 +25,7 @@ public class BagStorage : ItemStorage
 
 	protected override void OnContentsChanged(object user, Operation operation, int slot)
 	{
-		BagSyncSystem.Instance.Sync(bag.ID, PacketID.Inventory);
+		BagSyncSystem.Instance.Sync(bag.GetID(), PacketID.Inventory);
 	}
 }
 
@@ -44,7 +44,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	protected override bool CloneNewInstances => false;
 
-	public Guid ID;
+	protected Guid ID;
 	public PickupMode PickupMode;
 	protected ItemStorage Storage;
 
@@ -59,7 +59,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	public override ModItem Clone(Item item)
 	{
 		BaseBag clone = (BaseBag)base.Clone(item);
-		clone.Storage = Storage /*.Clone()*/;
+		clone.Storage = Storage /*.Clone()*/; // note: this is a stupid behavior, try to fix elsehow
 		clone.ID = ID;
 		clone.PickupMode = PickupMode;
 		if (BagSyncSystem.Instance.AllBags.ContainsKey(ID)) BagSyncSystem.Instance.AllBags.Remove(ID);

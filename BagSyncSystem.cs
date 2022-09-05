@@ -49,11 +49,13 @@ public class BagSyncSystem : ModSystem
 		{
 			if (!AllBags.ContainsKey(id)) continue;
 
+			// todo: change this to something like virtual BaseBag.GetPacket
 			ModPacket packet = Mod.GetPacket();
 			packet.Write((byte)PacketID.Inventory);
 			packet.Write((byte)Main.LocalPlayer.whoAmI);
 			packet.Write(id);
 			AllBags[id].GetItemStorage().Write(packet);
+			if (AllBags[id] is AlchemistBag alchemistBag) alchemistBag.IngredientStorage.Write(packet);
 			packet.Send();
 		}
 
@@ -104,6 +106,8 @@ public class BagSyncSystem : ModSystem
 				ItemStorage storage = AllBags[id].GetItemStorage();
 				storage.Read(reader);
 
+				if (AllBags[id] is AlchemistBag alchemistBag) alchemistBag.IngredientStorage.Read(reader);
+
 				if (Main.netMode == NetmodeID.Server)
 				{
 					ModPacket packet = Mod.GetPacket();
@@ -111,6 +115,7 @@ public class BagSyncSystem : ModSystem
 					packet.Write(sender);
 					packet.Write(id);
 					storage.Write(packet);
+					if (AllBags[id] is AlchemistBag a) a.IngredientStorage.Write(packet);
 					packet.Send(-1, sender);
 				}
 

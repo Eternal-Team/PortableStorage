@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using BaseLibrary.UI;
+﻿using BaseLibrary.UI;
 using ContainerLibrary;
 using PortableStorage.Items;
-using Terraria.ModLoader;
 
 namespace PortableStorage.UI;
 
@@ -38,8 +36,8 @@ public class NormalBagPanel : BaseBagPanel<BaseNormalBag>
 	protected override void Activate()
 	{
 		gridItems.Clear();
-	
-		ItemStorage storage = BagSyncSystem.Instance.AllBags[Container.ID].GetItemStorage();
+
+		ItemStorage storage = BagSyncSystem.Instance.AllBags[Container.GetID()].GetItemStorage();
 		for (int i = 0; i < storage.Count; i++)
 		{
 			UIContainerSlot slot = new UIContainerSlot(storage, i)
