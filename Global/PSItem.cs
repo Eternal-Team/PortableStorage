@@ -4,7 +4,6 @@ using ContainerLibrary;
 using PortableStorage.Items;
 using Terraria;
 using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -190,8 +189,8 @@ public class PSItem : GlobalItem
 	public override void ModifyItemLoot(Item item, ItemLoot itemLoot)
 	{
 		if (item.type == ItemID.IronCrate)
-			itemLoot.Add(new CommonDrop(ModContent.ItemType<FishingBelt>(), 20));
+			itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<FishingBelt>(), 20));
 		else if (item.type == ItemID.GoldenCrate)
-			itemLoot.Add(new CommonDrop(ModContent.ItemType<FishingBelt>(), 10));
+			itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<FishingBelt>(), 10));
 	}
 }

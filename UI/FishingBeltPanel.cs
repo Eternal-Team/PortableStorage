@@ -36,7 +36,7 @@ public class FishingBeltPanel : BaseBagPanel<FishingBelt>
 	protected override void Activate()
 	{
 		base.Activate();
-		
+
 		gridItems.Clear();
 
 		ItemStorage storage = BagSyncSystem.Instance.AllBags[Container.GetID()].GetItemStorage();

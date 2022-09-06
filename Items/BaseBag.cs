@@ -59,7 +59,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 	public override ModItem Clone(Item item)
 	{
 		BaseBag clone = (BaseBag)base.Clone(item);
-		clone.Storage = Storage /*.Clone()*/; // note: this is a stupid behavior, try to fix elsehow
+		clone.Storage = Storage /*.Clone()*/; // note: this is a stupid behavior, try to fix elsehow, caused by playuer cloning in MP?
 		clone.ID = ID;
 		clone.PickupMode = PickupMode;
 		if (BagSyncSystem.Instance.AllBags.ContainsKey(ID)) BagSyncSystem.Instance.AllBags.Remove(ID);
