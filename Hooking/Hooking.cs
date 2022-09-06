@@ -41,6 +41,7 @@ public static partial class Hooking
 
 		Item.TurnToAir += ItemOnTurnToAir;
 		Item.ResetStats += ItemOnResetStats;
+		ItemSlot.HandleShopSlot += ItemSlotOnHandleShopSlot;
 	}
 
 	// bug: mouseitem not causing proper deletion

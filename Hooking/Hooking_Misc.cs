@@ -266,4 +266,14 @@ public static partial class Hooking
 		});
 		cursor.Emit(OpCodes.Stloc, 6);
 	}
+
+	private static void ItemSlotOnHandleShopSlot(ILContext il)
+	{
+		ILCursor cursor = new ILCursor(il);
+
+		if (!cursor.TryGotoNext(MoveType.After, i => i.MatchCallvirt<Item>("Clone"), i => i.MatchStsfld<Main>("mouseItem")))
+			throw new Exception("IL edit failed");
+
+		cursor.EmitDelegate(() => ItemLoader.OnCreate(Main.mouseItem, null));
+	}
 }

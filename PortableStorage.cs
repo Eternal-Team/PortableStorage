@@ -3,6 +3,7 @@ using Terraria.ModLoader;
 
 namespace PortableStorage;
 
+// todo: sorting feature
 public class PortableStorage : Mod
 {
 	public const string AssetPath = "PortableStorage/Assets/";
