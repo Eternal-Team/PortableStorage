@@ -35,6 +35,8 @@ public class BuilderReservePanel : BaseBagPanel<BuilderReserve>
 		};
 		Add(gridItems);
 
+		// Main.NewText($"ctor: {Container.GetItemStorage() == BagSyncSystem.Instance.AllBags[Container.GetID()].GetItemStorage()}");
+
 		for (int i = 0; i < Container.GetItemStorage().Count; i++)
 		{
 			UISelectableBagSlot slot = new UISelectableBagSlot(Container, i)
@@ -48,7 +50,11 @@ public class BuilderReservePanel : BaseBagPanel<BuilderReserve>
 
 	protected override void Activate()
 	{
+		base.Activate();
+
 		gridItems.Clear();
+
+		// Main.NewText($"activate: {Container.GetItemStorage() == BagSyncSystem.Instance.AllBags[Container.GetID()].GetItemStorage()}");
 
 		ItemStorage storage = BagSyncSystem.Instance.AllBags[Container.GetID()].GetItemStorage();
 		for (int i = 0; i < storage.Count; i++)
