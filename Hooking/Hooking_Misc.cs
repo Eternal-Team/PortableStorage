@@ -276,4 +276,18 @@ public static partial class Hooking
 
 		cursor.EmitDelegate(() => ItemLoader.OnCreate(Main.mouseItem, null));
 	}
+
+	private static void WorldGenOnKillTile_GetItemDrops(ILContext il)
+	{
+		ILCursor cursor = new ILCursor(il);
+
+		if (!cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdfld<Item>("type"), i => i.MatchLdcI4(ItemID.StaffofRegrowth)))
+			throw new Exception("IL edit failed");
+
+		cursor.EmitDelegate((Item item) => item.type == ItemID.StaffofRegrowth || item.type == ModContent.ItemType<GardenerSatchel>());
+		cursor.RemoveRange(2);
+		var label = cursor.Next.Operand as ILLabel;
+		cursor.Emit(OpCodes.Brfalse, label);
+		cursor.Remove();
+	}
 }

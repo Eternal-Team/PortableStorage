@@ -4,6 +4,7 @@ using On.Terraria;
 using Main = IL.Terraria.Main;
 using Player = IL.Terraria.Player;
 using Wiring = IL.Terraria.Wiring;
+using WorldGen = IL.Terraria.WorldGen;
 
 namespace PortableStorage.Hooking;
 
@@ -42,6 +43,8 @@ public static partial class Hooking
 		Item.TurnToAir += ItemOnTurnToAir;
 		Item.ResetStats += ItemOnResetStats;
 		ItemSlot.HandleShopSlot += ItemSlotOnHandleShopSlot;
+
+		WorldGen.KillTile_GetItemDrops += WorldGenOnKillTile_GetItemDrops;
 	}
 
 	// bug: mouseitem not causing proper deletion
