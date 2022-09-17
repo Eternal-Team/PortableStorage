@@ -79,7 +79,11 @@ public abstract class BaseSelectableBag : BaseBag
 
 	public override bool ConsumeItem(Player player)
 	{
-		if (SelectedItem is null || SelectedItem.IsAir || player.altFunctionUse == 2 || rightClicked) return false;
+		if (SelectedItem is null || SelectedItem.IsAir || player.altFunctionUse == 2 || rightClicked)
+		{
+			rightClicked = false;
+			return false;
+		}
 
 		rightClicked = false;
 		Storage.ModifyStackSize(player, SelectedIndex, -1);
