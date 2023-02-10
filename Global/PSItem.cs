@@ -95,7 +95,7 @@ public class PSItem : GlobalItem
 				return false;
 		}
 
-		if (item.type is not 184 or 1735 or 1668 or 58 or 1734 or 1867 && !ItemID.Sets.NebulaPickup[item.type])
+		if (ItemStorageUtility.IsValidItemForStorage(item))
 		{
 			if (InsertIntoOfType_Existing<BaseNormalBag>(SoundID.Grab))
 				return false;
@@ -176,7 +176,7 @@ public class PSItem : GlobalItem
 				return false;
 		}
 
-		if (item.type is not 184 or 1735 or 1668 or 58 or 1734 or 1867 && !ItemID.Sets.NebulaPickup[item.type])
+		if (ItemStorageUtility.IsValidItemForStorage(item))
 		{
 			if (InsertIntoOfType_BeforeInventory<BaseNormalBag>(SoundID.Grab))
 				return false;
