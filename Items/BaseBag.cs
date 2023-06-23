@@ -7,6 +7,8 @@ using BaseLibrary.Utility;
 using ContainerLibrary;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -46,15 +48,15 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 
 	protected Guid ID;
 	public PickupMode PickupMode;
-	protected ItemStorage Storage;
+	protected internal ItemStorage Storage;
 
-	public override void OnCreate(ItemCreationContext context)
-	{
-		ID = Guid.NewGuid();
-		PickupMode = PickupMode.Disabled;
-
-		BagSyncSystem.Instance.AllBags.Add(ID, this);
-	}
+	// public override void OnCreated(ItemCreationContext context)
+	// {
+	// 	ID = Guid.NewGuid();
+	// 	PickupMode = PickupMode.Disabled;
+	// 	
+	// 	BagSyncSystem.Instance.AllBags.Add(ID, this);
+	// }
 
 	public override ModItem Clone(Item item)
 	{
@@ -67,9 +69,15 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 		return clone;
 	}
 
-	public override void SetStaticDefaults()
+	public override ModItem NewInstance(Item entity)
 	{
-		SacrificeTotal = 1;
+		var ee = base.NewInstance(entity) as BaseBag;
+		ee.ID = Guid.NewGuid();
+		ee.PickupMode = PickupMode.Disabled;
+	
+		BagSyncSystem.Instance.AllBags.Add(ee.ID, ee);
+
+		return ee;
 	}
 
 	public override void SetDefaults()
@@ -79,7 +87,7 @@ public abstract class BaseBag : BaseItem, IItemStorage, IHasUI
 		Item.useStyle = ItemUseStyleID.Swing;
 		Item.rare = ItemRarityID.White;
 
-		OnCreate(null);
+		// OnCreated(null);
 	}
 
 	public override void ModifyTooltips(List<TooltipLine> tooltips)

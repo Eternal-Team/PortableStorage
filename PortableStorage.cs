@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 namespace PortableStorage;
 
 // todo: sorting feature
+// note: creative bag, textures for UI, upgrade slots?
 public class PortableStorage : Mod
 {
 	public const string AssetPath = "PortableStorage/Assets/";

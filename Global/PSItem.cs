@@ -44,56 +44,56 @@ public class PSItem : GlobalItem
 			return false;
 		}
 
-		if (item.IsCurrency)
-		{
-			if (InsertIntoOfType_Existing<Wallet>(SoundID.CoinPickup))
-				return false;
-		}
-
-		if (item.ammo > 0)
-		{
-			if (InsertIntoOfType_Existing<AmmoPouch>(SoundID.Grab))
-				return false;
-		}
-
-		if (item.bait > 0 || Utility.FishingWhitelist.Contains(item.type))
-		{
-			if (InsertIntoOfType_Existing<FishingBelt>(SoundID.Grab))
-				return false;
-		}
-
-		if (item.createTile >= TileID.Dirt || item.createWall > WallID.None)
-		{
-			if (InsertIntoOfType_Existing<BuilderReserve>(SoundID.Grab))
-				return false;
-		}
-
-		if (Utility.SeedWhitelist.Contains(item.type))
-		{
-			if (InsertIntoOfType_Existing<GardenerSatchel>(SoundID.Grab))
-				return false;
-		}
-
-		if (Utility.OreWhitelist.Contains(item.type))
-		{
-			if (InsertIntoOfType_Existing<MinersBackpack>(SoundID.Grab))
-				return false;
-		}
-
-		if (Utility.WiringWhitelist.Contains(item.type))
-		{
-			if (InsertIntoOfType_Existing<WiringBag>(SoundID.Grab))
-				return false;
-		}
-
-		if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon && ((item.potion && item.healLife > 0) || (item.healMana > 0 && !item.potion) || (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
-		{
-			if (InsertIntoOfType_Existing<AlchemistBag>(SoundID.Grab, bag => bag.IngredientStorage))
-				return false;
-
-			if (InsertIntoOfType_Existing<AlchemistBag>(SoundID.Grab))
-				return false;
-		}
+		// if (item.IsCurrency)
+		// {
+		// 	if (InsertIntoOfType_Existing<Wallet>(SoundID.CoinPickup))
+		// 		return false;
+		// }
+		//
+		// if (item.ammo > 0)
+		// {
+		// 	if (InsertIntoOfType_Existing<AmmoPouch>(SoundID.Grab))
+		// 		return false;
+		// }
+		//
+		// if (item.bait > 0 || Utility.FishingWhitelist.Contains(item.type))
+		// {
+		// 	if (InsertIntoOfType_Existing<FishingBelt>(SoundID.Grab))
+		// 		return false;
+		// }
+		//
+		// if (item.createTile >= TileID.Dirt || item.createWall > WallID.None)
+		// {
+		// 	if (InsertIntoOfType_Existing<BuilderReserve>(SoundID.Grab))
+		// 		return false;
+		// }
+		//
+		// if (Utility.SeedWhitelist.Contains(item.type))
+		// {
+		// 	if (InsertIntoOfType_Existing<GardenerSatchel>(SoundID.Grab))
+		// 		return false;
+		// }
+		//
+		// if (Utility.OreWhitelist.Contains(item.type))
+		// {
+		// 	if (InsertIntoOfType_Existing<MinersBackpack>(SoundID.Grab))
+		// 		return false;
+		// }
+		//
+		// if (Utility.WiringWhitelist.Contains(item.type))
+		// {
+		// 	if (InsertIntoOfType_Existing<WiringBag>(SoundID.Grab))
+		// 		return false;
+		// }
+		//
+		// if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon && ((item.potion && item.healLife > 0) || (item.healMana > 0 && !item.potion) || (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
+		// {
+		// 	if (InsertIntoOfType_Existing<AlchemistBag>(SoundID.Grab, bag => bag.IngredientStorage))
+		// 		return false;
+		//
+		// 	if (InsertIntoOfType_Existing<AlchemistBag>(SoundID.Grab))
+		// 		return false;
+		// }
 
 		if (ItemStorageUtility.IsValidItemForStorage(item))
 		{
@@ -125,56 +125,56 @@ public class PSItem : GlobalItem
 			return false;
 		}
 
-		if (item.IsCurrency)
-		{
-			if (InsertIntoOfType_BeforeInventory<Wallet>(SoundID.CoinPickup))
-				return false;
-		}
-
-		if (item.ammo > 0)
-		{
-			if (InsertIntoOfType_BeforeInventory<BaseAmmoBag>(SoundID.Grab))
-				return false;
-		}
-
-		if (item.bait > 0 || Utility.FishingWhitelist.Contains(item.type))
-		{
-			if (InsertIntoOfType_BeforeInventory<FishingBelt>(SoundID.Grab))
-				return false;
-		}
-
-		if (Utility.OreWhitelist.Contains(item.type))
-		{
-			if (InsertIntoOfType_BeforeInventory<MinersBackpack>(SoundID.Grab))
-				return false;
-		}
-
-		if (Utility.WiringWhitelist.Contains(item.type))
-		{
-			if (InsertIntoOfType_BeforeInventory<WiringBag>(SoundID.Grab))
-				return false;
-		}
-
-		if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon && ((item.potion && item.healLife > 0) || (item.healMana > 0 && !item.potion) || (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
-		{
-			if (InsertIntoOfType_BeforeInventory<AlchemistBag>(SoundID.Grab))
-				return false;
-
-			if (InsertIntoOfType_BeforeInventory<AlchemistBag>(SoundID.Grab, bag => bag.IngredientStorage))
-				return false;
-		}
-
-		if (item.createTile >= TileID.Dirt || item.createWall > WallID.None)
-		{
-			if (InsertIntoOfType_BeforeInventory<BuilderReserve>(SoundID.Grab))
-				return false;
-		}
-
-		if (Utility.SeedWhitelist.Contains(item.type))
-		{
-			if (InsertIntoOfType_BeforeInventory<GardenerSatchel>(SoundID.Grab))
-				return false;
-		}
+		// if (item.IsCurrency)
+		// {
+		// 	if (InsertIntoOfType_BeforeInventory<Wallet>(SoundID.CoinPickup))
+		// 		return false;
+		// }
+		//
+		// if (item.ammo > 0)
+		// {
+		// 	if (InsertIntoOfType_BeforeInventory<BaseAmmoBag>(SoundID.Grab))
+		// 		return false;
+		// }
+		//
+		// if (item.bait > 0 || Utility.FishingWhitelist.Contains(item.type))
+		// {
+		// 	if (InsertIntoOfType_BeforeInventory<FishingBelt>(SoundID.Grab))
+		// 		return false;
+		// }
+		//
+		// if (Utility.OreWhitelist.Contains(item.type))
+		// {
+		// 	if (InsertIntoOfType_BeforeInventory<MinersBackpack>(SoundID.Grab))
+		// 		return false;
+		// }
+		//
+		// if (Utility.WiringWhitelist.Contains(item.type))
+		// {
+		// 	if (InsertIntoOfType_BeforeInventory<WiringBag>(SoundID.Grab))
+		// 		return false;
+		// }
+		//
+		// if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon && ((item.potion && item.healLife > 0) || (item.healMana > 0 && !item.potion) || (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
+		// {
+		// 	if (InsertIntoOfType_BeforeInventory<AlchemistBag>(SoundID.Grab))
+		// 		return false;
+		//
+		// 	if (InsertIntoOfType_BeforeInventory<AlchemistBag>(SoundID.Grab, bag => bag.IngredientStorage))
+		// 		return false;
+		// }
+		//
+		// if (item.createTile >= TileID.Dirt || item.createWall > WallID.None)
+		// {
+		// 	if (InsertIntoOfType_BeforeInventory<BuilderReserve>(SoundID.Grab))
+		// 		return false;
+		// }
+		//
+		// if (Utility.SeedWhitelist.Contains(item.type))
+		// {
+		// 	if (InsertIntoOfType_BeforeInventory<GardenerSatchel>(SoundID.Grab))
+		// 		return false;
+		// }
 
 		if (ItemStorageUtility.IsValidItemForStorage(item))
 		{
@@ -188,9 +188,9 @@ public class PSItem : GlobalItem
 
 	public override void ModifyItemLoot(Item item, ItemLoot itemLoot)
 	{
-		if (item.type == ItemID.IronCrate)
-			itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<FishingBelt>(), 20));
-		else if (item.type == ItemID.GoldenCrate)
-			itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<FishingBelt>(), 10));
+		// if (item.type == ItemID.IronCrate)
+		// 	itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<FishingBelt>(), 20));
+		// else if (item.type == ItemID.GoldenCrate)
+		// 	itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<FishingBelt>(), 10));
 	}
 }

@@ -46,56 +46,56 @@ public static partial class Hooking
 			return false;
 		}
 
-		if (item.IsCurrency)
-		{
-			if (InsertIntoOfType_AfterInventory<Wallet>(ref item, SoundID.CoinPickup))
-				return;
-		}
-
-		if (item.ammo > 0)
-		{
-			if (InsertIntoOfType_AfterInventory<AmmoPouch>(ref item, SoundID.Grab))
-				return;
-		}
-
-		if (item.bait > 0 || Utility.FishingWhitelist.Contains(item.type))
-		{
-			if (InsertIntoOfType_AfterInventory<FishingBelt>(ref item, SoundID.Grab))
-				return;
-		}
-
-		if (Utility.OreWhitelist.Contains(item.type))
-		{
-			if (InsertIntoOfType_AfterInventory<MinersBackpack>(ref item, SoundID.Grab))
-				return;
-		}
-
-		if (Utility.WiringWhitelist.Contains(item.type))
-		{
-			if (InsertIntoOfType_AfterInventory<WiringBag>(ref item, SoundID.Grab))
-				return;
-		}
-
-		if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon && ((item.potion && item.healLife > 0) || (item.healMana > 0 && !item.potion) || (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
-		{
-			if (InsertIntoOfType_AfterInventory<AlchemistBag>(ref item, SoundID.Grab))
-				return;
-
-			if (InsertIntoOfType_AfterInventory<AlchemistBag>(ref item, SoundID.Grab, bag => bag.IngredientStorage))
-				return;
-		}
-
-		if (item.createTile >= TileID.Dirt || item.createWall > WallID.None)
-		{
-			if (InsertIntoOfType_AfterInventory<BuilderReserve>(ref item, SoundID.Grab))
-				return;
-		}
-
-		if (Utility.SeedWhitelist.Contains(item.type))
-		{
-			if (InsertIntoOfType_AfterInventory<GardenerSatchel>(ref item, SoundID.Grab))
-				return;
-		}
+		// if (item.IsCurrency)
+		// {
+		// 	if (InsertIntoOfType_AfterInventory<Wallet>(ref item, SoundID.CoinPickup))
+		// 		return;
+		// }
+		//
+		// if (item.ammo > 0)
+		// {
+		// 	if (InsertIntoOfType_AfterInventory<AmmoPouch>(ref item, SoundID.Grab))
+		// 		return;
+		// }
+		//
+		// if (item.bait > 0 || Utility.FishingWhitelist.Contains(item.type))
+		// {
+		// 	if (InsertIntoOfType_AfterInventory<FishingBelt>(ref item, SoundID.Grab))
+		// 		return;
+		// }
+		//
+		// if (Utility.OreWhitelist.Contains(item.type))
+		// {
+		// 	if (InsertIntoOfType_AfterInventory<MinersBackpack>(ref item, SoundID.Grab))
+		// 		return;
+		// }
+		//
+		// if (Utility.WiringWhitelist.Contains(item.type))
+		// {
+		// 	if (InsertIntoOfType_AfterInventory<WiringBag>(ref item, SoundID.Grab))
+		// 		return;
+		// }
+		//
+		// if (Utility.AlchemistBagWhitelist.Contains(item.type) || (item.DamageType != DamageClass.Summon && ((item.potion && item.healLife > 0) || (item.healMana > 0 && !item.potion) || (item.buffType > 0 && item.buffType != BuffID.Rudolph)) && !ItemID.Sets.NebulaPickup[item.type] && !Utility.IsPetItem(item)))
+		// {
+		// 	if (InsertIntoOfType_AfterInventory<AlchemistBag>(ref item, SoundID.Grab))
+		// 		return;
+		//
+		// 	if (InsertIntoOfType_AfterInventory<AlchemistBag>(ref item, SoundID.Grab, bag => bag.IngredientStorage))
+		// 		return;
+		// }
+		//
+		// if (item.createTile >= TileID.Dirt || item.createWall > WallID.None)
+		// {
+		// 	if (InsertIntoOfType_AfterInventory<BuilderReserve>(ref item, SoundID.Grab))
+		// 		return;
+		// }
+		//
+		// if (Utility.SeedWhitelist.Contains(item.type))
+		// {
+		// 	if (InsertIntoOfType_AfterInventory<GardenerSatchel>(ref item, SoundID.Grab))
+		// 		return;
+		// }
 
 		InsertIntoOfType_AfterInventory<BaseNormalBag>(ref item, SoundID.Grab);
 	}
@@ -121,11 +121,11 @@ public static partial class Hooking
 		{
 			if (pItem.ModItem is BaseBag bag)
 			{
-				if (bag is Wallet wallet)
-				{
-					walletCoins += wallet.GetItemStorage().CountCoins();
-					continue;
-				}
+				// if (bag is Wallet wallet)
+				// {
+				// 	walletCoins += wallet.GetItemStorage().CountCoins();
+				// 	continue;
+				// }
 
 				ItemStorage storage = bag.GetItemStorage();
 				foreach (Item item in storage)
@@ -172,12 +172,12 @@ public static partial class Hooking
 
 			cursor.EmitDelegate<Func<Item, int, int>>((weapon, ammoCount) =>
 			{
-				foreach (BaseAmmoBag bag in Main.LocalPlayer.inventory.OfModItemType<BaseAmmoBag>())
-				{
-					ItemStorage storage = bag.GetItemStorage();
-
-					ammoCount += storage.Where(item => !item.IsAir && ItemLoader.CanChooseAmmo(weapon, item, Main.LocalPlayer)).Sum(item => item.stack);
-				}
+				// foreach (BaseAmmoBag bag in Main.LocalPlayer.inventory.OfModItemType<BaseAmmoBag>())
+				// {
+				// 	ItemStorage storage = bag.GetItemStorage();
+				//
+				// 	ammoCount += storage.Where(item => !item.IsAir && ItemLoader.CanChooseAmmo(weapon, item, Main.LocalPlayer)).Sum(item => item.stack);
+				// }
 
 				return ammoCount;
 			});
@@ -191,12 +191,12 @@ public static partial class Hooking
 
 			cursor.EmitDelegate<Func<int, int>>(bait =>
 			{
-				foreach (FishingBelt bag in Main.LocalPlayer.inventory.OfModItemType<FishingBelt>())
-				{
-					ItemStorage storage = bag.GetItemStorage();
-
-					bait += storage.Where(item => !item.IsAir && item.bait > 0).Sum(item => item.stack);
-				}
+				// foreach (FishingBelt bag in Main.LocalPlayer.inventory.OfModItemType<FishingBelt>())
+				// {
+				// 	ItemStorage storage = bag.GetItemStorage();
+				//
+				// 	bait += storage.Where(item => !item.IsAir && item.bait > 0).Sum(item => item.stack);
+				// }
 
 				return bait;
 			});
@@ -212,12 +212,12 @@ public static partial class Hooking
 
 		cursor.EmitDelegate<Func<int, int>>(wires =>
 		{
-			foreach (WiringBag bag in Main.LocalPlayer.inventory.OfModItemType<WiringBag>())
-			{
-				ItemStorage storage = bag.GetItemStorage();
-
-				wires += storage.Where(item => !item.IsAir && item.type == ItemID.Wire).Sum(item => item.stack);
-			}
+			// foreach (WiringBag bag in Main.LocalPlayer.inventory.OfModItemType<WiringBag>())
+			// {
+			// 	ItemStorage storage = bag.GetItemStorage();
+			//
+			// 	wires += storage.Where(item => !item.IsAir && item.type == ItemID.Wire).Sum(item => item.stack);
+			// }
 
 			return wires;
 		});
@@ -242,8 +242,8 @@ public static partial class Hooking
 
 			Item selectedItem = hotbarItem.ModItem switch
 			{
-				BuilderReserve reserve => reserve.SelectedItem,
-				GardenerSatchel satchel => satchel.SelectedItem,
+				// BuilderReserve reserve => reserve.SelectedItem,
+				// GardenerSatchel satchel => satchel.SelectedItem,
 				_ => null
 			};
 
@@ -274,20 +274,20 @@ public static partial class Hooking
 		if (!cursor.TryGotoNext(MoveType.After, i => i.MatchCallvirt<Item>("Clone"), i => i.MatchStsfld<Main>("mouseItem")))
 			throw new Exception("IL edit failed");
 
-		cursor.EmitDelegate(() => ItemLoader.OnCreate(Main.mouseItem, null));
+		// cursor.EmitDelegate(() => ItemLoader.OnCreated(Main.mouseItem, null));
 	}
 
 	private static void WorldGenOnKillTile_GetItemDrops(ILContext il)
 	{
-		ILCursor cursor = new ILCursor(il);
-
-		if (!cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdfld<Item>("type"), i => i.MatchLdcI4(ItemID.StaffofRegrowth)))
-			throw new Exception("IL edit failed");
-
-		cursor.EmitDelegate((Item item) => item.type == ItemID.StaffofRegrowth || item.type == ModContent.ItemType<GardenerSatchel>());
-		cursor.RemoveRange(2);
-		var label = cursor.Next.Operand as ILLabel;
-		cursor.Emit(OpCodes.Brfalse, label);
-		cursor.Remove();
+		// ILCursor cursor = new ILCursor(il);
+		//
+		// if (!cursor.TryGotoNext(MoveType.AfterLabel, i => i.MatchLdfld<Item>("type"), i => i.MatchLdcI4(ItemID.StaffofRegrowth)))
+		// 	throw new Exception("IL edit failed");
+		//
+		// cursor.EmitDelegate((Item item) => item.type == ItemID.StaffofRegrowth || item.type == ModContent.ItemType<GardenerSatchel>());
+		// cursor.RemoveRange(2);
+		// var label = cursor.Next.Operand as ILLabel;
+		// cursor.Emit(OpCodes.Brfalse, label);
+		// cursor.Remove();
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BaseLibrary;
 using BaseLibrary.UI;
 using ContainerLibrary;
@@ -19,9 +20,12 @@ public abstract class BaseBagPanel<T> : BaseUIPanel<T>, IItemStorageUI where T :
 	protected const int SlotSize = 44;
 	protected const int SlotMargin = 4;
 
-	public ItemStorage GetItemStorage() => Container.GetItemStorage();
+	public IEnumerable<ItemStorage> GetItemStorages()
+	{
+		yield return Container.GetItemStorage();
+	}
 
-	public string GetCursorTexture(Item item) => Container.Texture;
+	public string GetCursorTexture(Item item, ItemStorage storage) => Container.Texture;
 
 	protected override void Activate()
 	{

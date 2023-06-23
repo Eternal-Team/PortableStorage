@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -33,9 +34,9 @@ public class GardenerSatchel : BaseSelectableBag
 
 	public override string Texture => PortableStorage.AssetPath + "Textures/Items/GardenerSatchel";
 
-	public override void OnCreate(ItemCreationContext context)
+	public override void OnCreated(ItemCreationContext context)
 	{
-		base.OnCreate(context);
+		base.OnCreated(context);
 
 		Storage = new GardenerSatchelItemStorage(18, this);
 		SelectedIndex = -1;

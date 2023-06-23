@@ -14,6 +14,7 @@ UniverseOfSwordsMod,DamascusOreTile
 */
 
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -35,9 +36,9 @@ public class MinersBackpack : BaseBag
 
 	public override string Texture => PortableStorage.AssetPath + "Textures/Items/MinersBackpack";
 
-	public override void OnCreate(ItemCreationContext context)
+	public override void OnCreated(ItemCreationContext context)
 	{
-		base.OnCreate(context);
+		base.OnCreated(context);
 
 		Storage = new MinersBackpackItemStorage(18, this);
 	}

@@ -5,6 +5,7 @@ using System.Linq;
 using BaseLibrary.Utility;
 using ContainerLibrary;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -48,9 +49,9 @@ public class AlchemistBag : BaseBag, ICraftingStorage
 
 	public ItemStorage IngredientStorage;
 
-	public override void OnCreate(ItemCreationContext context)
+	public override void OnCreated(ItemCreationContext context)
 	{
-		base.OnCreate(context);
+		base.OnCreated(context);
 
 		Storage = new AlchemistBagPotionStorage(this);
 		IngredientStorage = new AlchemistBagIngredientStorage(this);

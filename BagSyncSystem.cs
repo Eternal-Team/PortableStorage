@@ -55,7 +55,7 @@ public class BagSyncSystem : ModSystem
 			packet.Write((byte)Main.LocalPlayer.whoAmI);
 			packet.Write(id);
 			AllBags[id].GetItemStorage().Write(packet);
-			if (AllBags[id] is AlchemistBag alchemistBag) alchemistBag.IngredientStorage.Write(packet);
+			// if (AllBags[id] is AlchemistBag alchemistBag) alchemistBag.IngredientStorage.Write(packet);
 			packet.Send();
 		}
 
@@ -77,14 +77,14 @@ public class BagSyncSystem : ModSystem
 
 		foreach (var id in BagsToSync[PacketID.SelectedIndex])
 		{
-			if (!AllBags.ContainsKey(id) || AllBags[id] is not BaseSelectableBag bag) continue;
-
-			ModPacket packet = Mod.GetPacket();
-			packet.Write((byte)PacketID.SelectedIndex);
-			packet.Write((byte)Main.LocalPlayer.whoAmI);
-			packet.Write(id);
-			packet.Write(bag.SelectedIndex);
-			packet.Send();
+			// if (!AllBags.ContainsKey(id) || AllBags[id] is not BaseSelectableBag bag) continue;
+			//
+			// ModPacket packet = Mod.GetPacket();
+			// packet.Write((byte)PacketID.SelectedIndex);
+			// packet.Write((byte)Main.LocalPlayer.whoAmI);
+			// packet.Write(id);
+			// packet.Write(bag.SelectedIndex);
+			// packet.Send();
 		}
 
 		BagsToSync[PacketID.SelectedIndex].Clear();
@@ -106,7 +106,7 @@ public class BagSyncSystem : ModSystem
 				ItemStorage storage = AllBags[id].GetItemStorage();
 				storage.Read(reader);
 
-				if (AllBags[id] is AlchemistBag alchemistBag) alchemistBag.IngredientStorage.Read(reader);
+				// if (AllBags[id] is AlchemistBag alchemistBag) alchemistBag.IngredientStorage.Read(reader);
 
 				if (Main.netMode == NetmodeID.Server)
 				{
@@ -115,7 +115,7 @@ public class BagSyncSystem : ModSystem
 					packet.Write(sender);
 					packet.Write(id);
 					storage.Write(packet);
-					if (AllBags[id] is AlchemistBag a) a.IngredientStorage.Write(packet);
+					// if (AllBags[id] is AlchemistBag a) a.IngredientStorage.Write(packet);
 					packet.Send(-1, sender);
 				}
 
@@ -151,7 +151,7 @@ public class BagSyncSystem : ModSystem
 
 				// if (!AllBags.ContainsKey(id)) return;
 
-				((BaseSelectableBag)AllBags[id]).SelectedIndex = selectedIndex;
+				// ((BaseSelectableBag)AllBags[id]).SelectedIndex = selectedIndex;
 
 				if (Main.netMode == NetmodeID.Server)
 				{

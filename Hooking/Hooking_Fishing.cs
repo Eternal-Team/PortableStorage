@@ -1,5 +1,6 @@
 ﻿using BaseLibrary.Utility;
 using ContainerLibrary;
+using Humanizer;
 using PortableStorage.Items;
 using Terraria;
 using Terraria.ID;
@@ -9,7 +10,7 @@ namespace PortableStorage.Hooking;
 
 public static partial class Hooking
 {
-	private static void PlayerOnItemCheck_CheckFishingBobber_PickAndConsumeBait(On.Terraria.Player.orig_ItemCheck_CheckFishingBobber_PickAndConsumeBait orig, Player player, Projectile bobber, out bool pullTheBobber, out int baitTypeUsed)
+	private static void PlayerOnItemCheck_CheckFishingBobber_PickAndConsumeBait(On_Player.orig_ItemCheck_CheckFishingBobber_PickAndConsumeBait orig, Player player, Projectile bobber, out bool pullTheBobber, out int baitTypeUsed)
 	{
 		pullTheBobber = false;
 		baitTypeUsed = 0;
@@ -130,7 +131,7 @@ public static partial class Hooking
 		}
 	}
 
-	private static void PlayerOnFishing_GetBestFishingPole(On.Terraria.Player.orig_Fishing_GetBestFishingPole orig, Player player, out Item pole)
+	private static void PlayerOnFishing_GetBestFishingPole(On_Player.orig_Fishing_GetBestFishingPole orig, Player player, out Item pole)
 	{
 		pole = player.inventory[player.selectedItem];
 		if (pole.fishingPole != 0)
@@ -153,7 +154,7 @@ public static partial class Hooking
 		}
 	}
 
-	private static void PlayerOnFishing_GetBait(On.Terraria.Player.orig_Fishing_GetBait orig, Player player, out Item bait)
+	private static void PlayerOnFishing_GetBait(On_Player.orig_Fishing_GetBait orig, Player player, out Item bait)
 	{
 		bait = null;
 

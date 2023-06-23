@@ -12,11 +12,11 @@ public class PSNPC : GlobalNPC
 	{
 		if (npc.type == NPCID.UndeadMiner)
 		{
-			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<MinersBackpack>(), 5));
+			// npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<MinersBackpack>(), 5));
 		}
 	}
 
-	public override void SetupShop(int type, Chest shop, ref int nextSlot)
+	/*public override void SetupShop(int type, Chest shop, ref int nextSlot)
 	{
 		switch (type)
 		{
@@ -43,14 +43,14 @@ public class PSNPC : GlobalNPC
 				nextSlot++;
 				break;
 		}
-	}
+	}*/
 
 	public override void SetupTravelShop(int[] shop, ref int nextSlot)
 	{
 		if (Main.rand.NextBool(4))
 		{
-			shop[nextSlot] = ModContent.ItemType<Wallet>();
-			nextSlot++;
+			// shop[nextSlot] = ModContent.ItemType<Wallet>();
+			// nextSlot++;
 		}
 	}
 }

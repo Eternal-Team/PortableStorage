@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -20,9 +21,9 @@ public class WiringBag: BaseBag
 
 	// public override string Texture => PortableStorage.AssetPath + "Textures/Items/WiringBag";
 
-	public override void OnCreate(ItemCreationContext context)
+	public override void OnCreated(ItemCreationContext context)
 	{
-		base.OnCreate(context);
+		base.OnCreated(context);
 	
 		Storage = new WiringBagItemStorage(18, this);
 	}

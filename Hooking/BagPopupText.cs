@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using BaseLibrary.Utility;
+using Humanizer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
@@ -205,7 +206,7 @@ public static class BagPopupText
 		return slotIndex;
 	}
 
-	private static void DrawItemTextPopups(On.Terraria.Main.orig_DrawItemTextPopups orig, float scaleTarget)
+	private static void DrawItemTextPopups(On_Main.orig_DrawItemTextPopups orig, float scaleTarget)
 	{
 		for (int i = 0; i < 20; i++)
 		{
@@ -314,7 +315,7 @@ public static class BagPopupText
 		}
 	}
 
-	private static void PopupTextOnResetText(On.Terraria.PopupText.orig_ResetText orig, PopupText text)
+	private static void PopupTextOnResetText(On_PopupText.orig_ResetText orig, PopupText text)
 	{
 		orig(text);
 
@@ -326,7 +327,7 @@ public static class BagPopupText
 	{
 		ItemTextBags = new Item[Main.popupText.Length];
 		for (int i = 0; i < ItemTextBags.Length; i++) ItemTextBags[i] = new Item();
-		On.Terraria.Main.DrawItemTextPopups += DrawItemTextPopups;
-		On.Terraria.PopupText.ResetText += PopupTextOnResetText;
+		On_Main.DrawItemTextPopups += DrawItemTextPopups;
+		On_PopupText.ResetText += PopupTextOnResetText;
 	}
 }
