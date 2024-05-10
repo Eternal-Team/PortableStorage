@@ -1,0 +1,10 @@
+displayName = Portable Storage 4
+author = Itorius & team
+version = 4.0
+homepage = https://terraria.itorius.com/
+hideCode = false
+hideResources = true
+includeSource = false
+buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, .git\*, .editorconfig, .gitignore, *.sln, *.md, *.fx
+includePDB = true
+modReferences = BaseLibrary, ContainerLibrary

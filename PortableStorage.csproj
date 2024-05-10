@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\Mods.targets" />
+	<ItemGroup>
+	  <ProjectReference Include="..\BaseLibrary\BaseLibrary.csproj" />
+	  <ProjectReference Include="..\ContainerLibrary\ContainerLibrary.csproj" />
+	</ItemGroup>
+</Project>
