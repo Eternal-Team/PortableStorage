@@ -7,7 +7,6 @@ namespace PortableStorage
     {
         public override void Load()
         {
-            Console.WriteLine("test");
         }
     }
 }
