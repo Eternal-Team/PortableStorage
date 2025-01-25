@@ -1,12 +1,17 @@
-using System;
+using BaseLibrary.UI;
+using PortableStorage.Items;
+using Terraria;
 using Terraria.ModLoader;
 
-namespace PortableStorage
+namespace PortableStorage;
+
+public class PortableStorage : Mod
 {
-    public class PortableStorage : Mod
-    {
-        public override void Load()
-        {
-        }
-    }
+	public override void Load()
+	{
+		if (!Main.dedServ)
+		{
+			UISystem.UILayer.Add(new BagUI());
+		}
+	}
 }

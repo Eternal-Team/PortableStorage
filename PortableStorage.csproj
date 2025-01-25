@@ -2,6 +2,7 @@
 	<Import Project="..\Mods.targets" />
 	<ItemGroup>
 	  <ProjectReference Include="..\BaseLibrary\BaseLibrary.csproj" />
+	  <ProjectReference Include="..\BookLibrary\BookLibrary.csproj" />
 	  <ProjectReference Include="..\ContainerLibrary\ContainerLibrary.csproj" />
 	</ItemGroup>
 </Project>

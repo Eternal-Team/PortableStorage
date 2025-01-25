@@ -7,4 +7,4 @@ hideResources = true
 includeSource = false
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, .git\*, .editorconfig, .gitignore, *.sln, *.md, *.fx
 includePDB = true
-modReferences = BaseLibrary, ContainerLibrary
+modReferences = BaseLibrary, ContainerLibrary, BookLibrary

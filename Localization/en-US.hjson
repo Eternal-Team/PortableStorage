@@ -1,0 +1,17 @@
+Mods: {
+	PortableStorage: {  
+		Books: {
+			PortableStorageBook: {
+				Name: Portable Storage
+				Category: {
+					Items: Items
+					Mechanics: Mechanics
+				}
+				Entry: {
+					Crafting: Crafting
+					NormalBags: Normal Bags
+				}
+			}
+		}
+	}
+}

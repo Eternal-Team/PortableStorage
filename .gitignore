@@ -32,6 +32,8 @@
 
 *.xnb
 
+*.aup3
+
 packages/*
 bin/*
 obj/*
