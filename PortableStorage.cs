@@ -9,6 +9,8 @@ public class PortableStorage : Mod
 {
 	public override void Load()
 	{
+		Hooking.Hooking.Load();
+		
 		if (!Main.dedServ)
 		{
 			UISystem.UILayer.Add(new BagUI());
