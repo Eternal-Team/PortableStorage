@@ -61,15 +61,16 @@ public class UIStorageSlot : BaseElement
 			return;
 		}
 
+		bool actionOccured = false;
 		if (Main.mouseItem.IsAir)
 		{
-			storage.RemoveItem(player, index, out Main.mouseItem);
+			actionOccured = storage.RemoveItem(player, index, out Main.mouseItem).IsSuccess();
 		}
 		else
 		{
 			if (Item.type == Main.mouseItem.type || Item.IsAir)
 			{
-				storage.InsertItem(player, index, ref Main.mouseItem);
+				actionOccured = storage.InsertItem(player, index, ref Main.mouseItem).IsSuccess();
 			}
 			else
 			{
@@ -79,13 +80,15 @@ public class UIStorageSlot : BaseElement
 					storage.RemoveItem(player, index, out Item item);
 					storage.InsertItem(player, index, ref Main.mouseItem);
 					Main.mouseItem = item;
+					
+					actionOccured = true;
 				}
 			}
 		}
 
 		if (!Main.mouseItem.IsAir) AchievementsHelper.NotifyItemPickup(player, Main.mouseItem);
 
-		if (!Main.mouseItem.IsAir || !Item.IsAir)
+		if (actionOccured)
 		{
 			Recipe.FindRecipes();
 			SoundEngine.PlaySound(SoundID.Grab);
