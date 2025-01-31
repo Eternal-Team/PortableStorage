@@ -6,7 +6,10 @@ using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.GameContent.Achievements;
+using Terraria.ID;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
@@ -76,6 +79,14 @@ public class UIStorageSlot : BaseElement
 					Main.mouseItem = item;
 				}
 			}
+		}
+
+		if (!Main.mouseItem.IsAir) AchievementsHelper.NotifyItemPickup(player, Main.mouseItem);
+
+		if (!Main.mouseItem.IsAir || !Item.IsAir)
+		{
+			Recipe.FindRecipes();
+			SoundEngine.PlaySound(SoundID.Grab);
 		}
 	}
 
