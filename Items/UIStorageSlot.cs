@@ -10,6 +10,7 @@ using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.Achievements;
 using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
@@ -87,6 +88,33 @@ public class UIStorageSlot : BaseElement
 		{
 			Recipe.FindRecipes();
 			SoundEngine.PlaySound(SoundID.Grab);
+		}
+	}
+
+	protected override void MouseHeld(MouseButtonEventArgs args)
+	{
+		if (args.Button != MouseButton.Right) return;
+		args.Handled = true;
+
+		if (Item.IsAir || (Item.maxStack <= 1 && Item.stack <= 1) || Main.LocalPlayer.itemAnimation > 0 || Main.stackSplit > 1)
+			return;
+
+		int num = Main.superFastStack + 1;
+		for (int i = 0; i < num; i++)
+		{
+			if ((Main.mouseItem.type == Item.type && ItemLoader.CanStack(Main.mouseItem, Item) || Main.mouseItem.IsAir) && (Main.mouseItem.stack < Main.mouseItem.maxStack || Main.mouseItem.IsAir))
+			{
+				if (storage.RemoveItem(Main.LocalPlayer, index, out Item item, 1).IsSuccess())
+				{
+					if (Main.mouseItem.IsAir)
+						Main.mouseItem = item;
+					else
+						ItemLoader.StackItems(Main.mouseItem, item, out _);
+				}
+
+				SoundEngine.PlaySound(SoundID.MenuTick);
+				ItemSlot.RefreshStackSplitCooldown();
+			}
 		}
 	}
 
