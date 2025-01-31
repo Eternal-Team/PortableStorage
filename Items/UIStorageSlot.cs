@@ -68,7 +68,13 @@ public class UIStorageSlot : BaseElement
 			}
 			else
 			{
-				// this should swap items, but only if the mouseItem stack is leq max for slot
+				// Only swap items if mouseItem fully fits into a slot and the existing item can be fully removed.
+				if (storage.CheckFit(player, index, Main.mouseItem) && storage.SimulateRemoveItem(player, index, out _) == ItemStorage.Result.Success)
+				{
+					storage.RemoveItem(player, index, out Item item);
+					storage.InsertItem(player, index, ref Main.mouseItem);
+					Main.mouseItem = item;
+				}
 			}
 		}
 	}
