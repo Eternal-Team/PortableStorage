@@ -7,7 +7,7 @@ public class BagUI : UIPanel
 {
 	public static BagUI Instance = null!;
 
-	private Bag bag;
+	public Bag bag;
 
 	private UIText text;
 	private UIGrid<UIStorageSlot> gridItems;

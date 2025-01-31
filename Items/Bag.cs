@@ -47,6 +47,22 @@ public class Bag : BaseItem
 
 	public override bool ConsumeItem(Player player) => false;
 
+	public override void UpdateInventory(Player player)
+	{
+		int index = -1;
+		for (int i = 0; i < 50; i++)
+		{
+			if (player.inventory[i] == Item)
+			{
+				index = i;
+				break;
+			}
+		}
+
+		if (index != -1)
+			Hooking.Hooking.Locks[index] = BagUI.Instance.bag == this;
+	}
+
 	public override bool? UseItem(Player player)
 	{
 		if (Main.netMode != NetmodeID.Server && player.whoAmI == Main.LocalPlayer.whoAmI)
@@ -55,14 +71,23 @@ public class Bag : BaseItem
 			BagUI.Instance.SetBag(this);
 			BagUI.Instance.Recalculate();*/
 
-			UISystem.UILayer.Remove(BagUI.Instance);
-			UISystem.UILayer.Add(new BagUI());
-			BagUI.Instance.Display = Display.Visible;
+			if (BagUI.Instance.Display == Display.Visible)
+			{
+				BagUI.Instance.Display = Display.None;
+				UISystem.UILayer.Remove(BagUI.Instance);
+				BagUI.Instance.bag = null;
+			}
+			else
+			{
+				// UISystem.UILayer.Remove(BagUI.Instance);
+				UISystem.UILayer.Add(new BagUI());
+				BagUI.Instance.Display = Display.Visible;
 
-			// BookUI.Instance = new BookUI();
-			// BookUI.Instance.Display = BookUI.Instance.Display == Display.Visible ? Display.None : Display.Visible;
-			BagUI.Instance.Recalculate();
-			BagUI.Instance.SetBag(this);
+				// BookUI.Instance = new BookUI();
+				// BookUI.Instance.Display = BookUI.Instance.Display == Display.Visible ? Display.None : Display.Visible;
+				BagUI.Instance.Recalculate();
+				BagUI.Instance.SetBag(this);
+			}
 		}
 
 		return true;

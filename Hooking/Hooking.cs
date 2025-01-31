@@ -19,10 +19,11 @@ internal static class Hooking
 		IL_Main.DrawInventory += IL_MainOnDrawInventory;
 	}
 	
+	// BUG: actions like deposit all will ignore Locks
+	// TODO: mouse over lock icon
+	
 	private static void IL_MainOnDrawInventory(ILContext il)
 	{
-		Locks[9] = true; // temp, figure out a way for open bag to lock the slot later
-
 		ILCursor cursor = new ILCursor(il);
 
 		#region Block interaction with slot
