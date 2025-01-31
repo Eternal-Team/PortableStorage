@@ -18,10 +18,8 @@ internal static class Hooking
 	{
 		IL_Main.DrawInventory += IL_MainOnDrawInventory;
 	}
-	
+
 	// BUG: actions like deposit all will ignore Locks
-	// TODO: mouse over lock icon
-	
 	private static void IL_MainOnDrawInventory(ILContext il)
 	{
 		ILCursor cursor = new ILCursor(il);
@@ -42,8 +40,44 @@ internal static class Hooking
 
 		#endregion
 
+		#region Lock icon - hover
 
-		#region Draw lock icon
+		if (!cursor.TryGotoNext(MoveType.AfterLabel,
+			    i => i.MatchLdsfld<Main>("player"),
+			    i => i.MatchLdsfld<Main>("myPlayer"),
+			    i => i.MatchLdelemRef(),
+			    i => i.MatchLdfld<Player>("inventory"),
+			    i => i.MatchLdcI4(0),
+			    i => i.MatchLdloc(36),
+			    i => i.MatchCall<ItemSlot>("MouseHover")))
+			throw new Exception("Could not find matching instruction in ILCursor");
+
+		label = il.DefineLabel();
+
+		cursor.EmitLdloc(36);
+		cursor.EmitLdloc(34);
+		cursor.EmitLdloc(35);
+		cursor.EmitDelegate((int slot, int x, int y) => {
+			if (!Locks[slot])
+				return false;
+
+			Vector2 position = new Vector2(x, y) + new Vector2(26) * Main.inventoryScale;
+			Vector2 size = new Vector2(22) * Main.inventoryScale;
+
+			if (!(Main.mouseX >= position.X) || !(Main.mouseX <= position.X + size.X) || !(Main.mouseY >= position.Y) || !(Main.mouseY <= position.Y + size.Y)) return false;
+
+			Main.instance.MouseText(PortableStorage.Instance.GetLocalization("UI.Locked").ToString());
+
+			return true;
+		});
+		cursor.EmitBrtrue(label);
+
+		cursor.Index += 7;
+		cursor.MarkLabel(label);
+
+		#endregion
+
+		#region Lock icon - draw
 
 		if (!cursor.TryGotoNext(i => i.MatchCall<ItemSlot>("Draw")))
 			throw new Exception("Could not find matching instruction in ILCursor");
