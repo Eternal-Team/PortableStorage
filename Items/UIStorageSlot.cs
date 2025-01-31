@@ -26,7 +26,7 @@ public class UIStorageSlot : BaseElement
 		this.storage = storage;
 		this.index = index;
 
-		Padding = new Padding(8);
+		Padding = new Padding(12);
 	}
 
 	protected override void MouseDown(MouseButtonEventArgs args)
@@ -39,14 +39,18 @@ public class UIStorageSlot : BaseElement
 
 		Item.newAndShiny = false;
 
-		if (ItemSlot.ShiftInUse)
+		// Vanilla behavior is shift-click works regardless of mouseItem 
+		if (ItemSlot.ShiftInUse && !Item.IsAir)
 		{
-			storage.RemoveItem(player, index, out Item temp);
-			temp.position = player.Center;
-			temp = player.GetItem(Main.myPlayer, temp, GetItemSettings.LootAllSettings);
-			if (!temp.IsAir)
+			if (storage.SimulateRemoveItem(player, index, out Item temp).IsSuccess())
 			{
-				storage.InsertItem(player, index, ref temp);
+				int originalAmount = temp.stack;
+
+				temp.position = player.Center;
+				temp = player.GetItem(Main.myPlayer, temp, GetItemSettings.InventoryEntityToPlayerInventorySettings);
+
+				int difference = originalAmount - temp.stack;
+				storage.RemoveItem(player, index, out _, difference);
 			}
 
 			return;
@@ -58,13 +62,20 @@ public class UIStorageSlot : BaseElement
 		}
 		else
 		{
-			storage.InsertItem(player, index, ref Main.mouseItem);
+			if (Item.type == Main.mouseItem.type || Item.IsAir)
+			{
+				storage.InsertItem(player, index, ref Main.mouseItem);
+			}
+			else
+			{
+				// this should swap items, but only if the mouseItem stack is leq max for slot
+			}
 		}
 	}
 
 	protected override void Draw(SpriteBatch spriteBatch)
 	{
-		spriteBatch.Draw(TextureAssets.MagicPixel.Value, Dimensions, new Color(40, 25, 14, 100));
+		spriteBatch.Draw(TextureAssets.MagicPixel.Value, Dimensions.Modified(2, 2, -4, -4), new Color(252, 221, 159, 255));
 
 		Vector2 position = Dimensions.TopLeft();
 		Vector2 size = Dimensions.Size();
@@ -78,10 +89,10 @@ public class UIStorageSlot : BaseElement
 		if (Item.stack > 1)
 		{
 			string text = Item.stack.ToString();
-			float texscale = 0.75f;
+			const float textScale = 0.9f;
 
-			Vector2 textPos = InnerDimensions.BottomLeft() - new Vector2(0f, FontAssets.MouseText.Value.MeasureString(text).Y) * texscale;
-			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, text, textPos, Color.White, 0f, Vector2.Zero, new Vector2(texscale));
+			Vector2 textPos = InnerDimensions.BottomLeft() + new Vector2(-2f, 0f);
+			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.ItemStack.Value, text, textPos, Color.White, 0f, new Vector2(0f, FontAssets.ItemStack.Value.MeasureString(text).Y - 8f), new Vector2(textScale), -1f, textScale);
 		}
 
 		if (IsMouseHovering)
