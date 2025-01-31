@@ -5,6 +5,7 @@ using BaseLibrary.UI;
 using ContainerLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -114,6 +115,35 @@ public class UIStorageSlot : BaseElement
 
 				SoundEngine.PlaySound(SoundID.MenuTick);
 				ItemSlot.RefreshStackSplitCooldown();
+			}
+		}
+	}
+
+	protected override void MouseScroll(MouseScrollEventArgs args)
+	{
+		if (!(KeyboardInput.IsKeyDown(Keys.LeftAlt) || KeyboardInput.IsKeyDown(Keys.RightAlt))) return;
+		args.Handled = true;
+
+		if (args.OffsetY > 0)
+		{
+			if ((Main.mouseItem.type == Item.type && ItemLoader.CanStack(Main.mouseItem, Item) || Main.mouseItem.IsAir) && (Main.mouseItem.stack < Main.mouseItem.maxStack || Main.mouseItem.IsAir))
+			{
+				if (storage.RemoveItem(Main.LocalPlayer, index, out Item item, 1).IsSuccess())
+				{
+					if (Main.mouseItem.IsAir)
+						Main.mouseItem = item;
+					else
+						ItemLoader.StackItems(Main.mouseItem, item, out _);
+
+					SoundEngine.PlaySound(SoundID.MenuTick);
+				}
+			}
+		}
+		else if (args.OffsetY < 0)
+		{
+			if (storage.InsertItem(Main.LocalPlayer, index, ref Main.mouseItem, 1).IsSuccess())
+			{
+				SoundEngine.PlaySound(SoundID.MenuTick);
 			}
 		}
 	}
