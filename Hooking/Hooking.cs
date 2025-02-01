@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using BaseLibrary;
 using Microsoft.Xna.Framework;
@@ -13,22 +12,56 @@ namespace PortableStorage.Hooking;
 internal static class Hooking
 {
 	internal static bool[] Locks = new bool[50];
+	internal static bool[] ChangedState = new bool[50];
+
+	internal static void SetLock(Item item)
+	{
+		int index = -1;
+		for (int i = 0; i < 50; i++)
+		{
+			if (Main.LocalPlayer.inventory[i] == item)
+			{
+				index = i;
+				break;
+			}
+		}
+
+		if (index == -1) return;
+
+		Locks[index] = !Locks[index];
+	}
 
 	internal static void Load()
 	{
 		IL_Main.DrawInventory += IL_MainOnDrawInventory;
 	}
 
-	// BUG: actions like deposit all will ignore Locks
 	private static void IL_MainOnDrawInventory(ILContext il)
 	{
 		ILCursor cursor = new ILCursor(il);
 
+		#region Item.favorited reset
+
+		ILUtility.TryGotoNext(cursor, i => i.MatchLdcI4(100), i => i.MatchLdcI4(100), i => i.MatchLdcI4(100), i => i.MatchLdcI4(100));
+
+		cursor.EmitLdloc(36);
+		cursor.EmitDelegate((int slot) => {
+			Item item = Main.LocalPlayer.inventory[slot];
+
+			if (!item.IsAir && ChangedState[slot])
+			{
+				item.favorited = false;
+				ChangedState[slot] = false;
+			}
+		});
+
+		#endregion
+
 		#region Block interaction with slot
 
 		ILLabel label = null;
-		if (!cursor.TryGotoNext(i => i.MatchLdfld<Player>("inventoryChestStack"), i => i.MatchLdloc(36), i => i.MatchLdelemU1(), i => i.MatchBrtrue(out label)))
-			throw new Exception("Could not find matching instruction in ILCursor");
+
+		ILUtility.TryGotoNext(cursor, i => i.MatchLdfld<Player>("inventoryChestStack"), i => i.MatchLdloc(36), i => i.MatchLdelemU1(), i => i.MatchBrtrue(out label));
 
 		cursor.Index += 4;
 
@@ -42,15 +75,14 @@ internal static class Hooking
 
 		#region Lock icon - hover
 
-		if (!cursor.TryGotoNext(MoveType.AfterLabel,
-			    i => i.MatchLdsfld<Main>("player"),
-			    i => i.MatchLdsfld<Main>("myPlayer"),
-			    i => i.MatchLdelemRef(),
-			    i => i.MatchLdfld<Player>("inventory"),
-			    i => i.MatchLdcI4(0),
-			    i => i.MatchLdloc(36),
-			    i => i.MatchCall<ItemSlot>("MouseHover")))
-			throw new Exception("Could not find matching instruction in ILCursor");
+		ILUtility.TryGotoNext(cursor, MoveType.AfterLabel,
+			i => i.MatchLdsfld<Main>("player"),
+			i => i.MatchLdsfld<Main>("myPlayer"),
+			i => i.MatchLdelemRef(),
+			i => i.MatchLdfld<Player>("inventory"),
+			i => i.MatchLdcI4(0),
+			i => i.MatchLdloc(36),
+			i => i.MatchCall<ItemSlot>("MouseHover"));
 
 		label = il.DefineLabel();
 
@@ -79,10 +111,7 @@ internal static class Hooking
 
 		#region Lock icon - draw
 
-		if (!cursor.TryGotoNext(i => i.MatchCall<ItemSlot>("Draw")))
-			throw new Exception("Could not find matching instruction in ILCursor");
-
-		cursor.Index++;
+		ILUtility.TryGotoNext(cursor, MoveType.After, i => i.MatchCall<ItemSlot>("Draw"));
 
 		field = typeof(Main).GetField("spriteBatch", ReflectionUtility.DefaultFlags_Static);
 		cursor.EmitLdsfld(field);
@@ -91,6 +120,14 @@ internal static class Hooking
 		cursor.EmitLdloc(35);
 		cursor.EmitDelegate((SpriteBatch spriteBatch, int slot, int x, int y) => {
 			if (!Locks[slot]) return;
+
+			Item item = Main.LocalPlayer.inventory[slot];
+
+			if (!item.IsAir)
+			{
+				if (!item.favorited) ChangedState[slot] = true;
+				item.favorited = true;
+			}
 
 			float inventoryScale = Main.inventoryScale;
 			Vector2 position = new Vector2(x, y) + new Vector2(26) * inventoryScale;

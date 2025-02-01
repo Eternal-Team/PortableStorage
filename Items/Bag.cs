@@ -30,7 +30,7 @@ public class Bag : BaseItem
 				_ => null
 			};
 		});
-		Bags.Add((bag.ID, Environment.StackTrace));
+		// Bags.Add((bag.ID, Environment.StackTrace));
 
 		return bag;
 	}
@@ -47,22 +47,6 @@ public class Bag : BaseItem
 
 	public override bool ConsumeItem(Player player) => false;
 
-	public override void UpdateInventory(Player player)
-	{
-		int index = -1;
-		for (int i = 0; i < 50; i++)
-		{
-			if (player.inventory[i] == Item)
-			{
-				index = i;
-				break;
-			}
-		}
-
-		if (index != -1)
-			Hooking.Hooking.Locks[index] = BagUI.Instance.bag == this;
-	}
-
 	public override bool? UseItem(Player player)
 	{
 		if (Main.netMode != NetmodeID.Server && player.whoAmI == Main.LocalPlayer.whoAmI)
@@ -76,6 +60,8 @@ public class Bag : BaseItem
 				BagUI.Instance.Display = Display.None;
 				UISystem.UILayer.Remove(BagUI.Instance);
 				BagUI.Instance.bag = null;
+
+				Hooking.Hooking.SetLock(Item);
 			}
 			else
 			{
@@ -87,6 +73,8 @@ public class Bag : BaseItem
 				// BookUI.Instance.Display = BookUI.Instance.Display == Display.Visible ? Display.None : Display.Visible;
 				BagUI.Instance.Recalculate();
 				BagUI.Instance.SetBag(this);
+
+				Hooking.Hooking.SetLock(Item);
 			}
 		}
 
