@@ -153,7 +153,7 @@ public class UIStorageSlot : BaseElement
 
 	protected override void Draw(SpriteBatch spriteBatch)
 	{
-		spriteBatch.Draw(TextureAssets.MagicPixel.Value, Dimensions.Modified(2, 2, -4, -4), new Color(252, 221, 159, 255));
+		spriteBatch.Draw(TextureAssets.MagicPixel.Value, Dimensions.Modified(2, 2, -4, -4), new Color(40, 25, 14, 150));
 
 		Vector2 position = Dimensions.TopLeft();
 		Vector2 size = Dimensions.Size();

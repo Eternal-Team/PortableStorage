@@ -1,4 +1,4 @@
-using BaseLibrary.UI;
+/*using BaseLibrary.UI;
 using Microsoft.Xna.Framework;
 
 namespace PortableStorage.Items;
@@ -54,4 +54,4 @@ public class BagUI : UIPanel
 			});
 		}
 	}
-}
+}*/

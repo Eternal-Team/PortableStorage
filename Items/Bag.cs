@@ -10,14 +10,12 @@ using Terraria.ModLoader.IO;
 
 namespace PortableStorage.Items;
 
-public class Bag : BaseItem
+public class Bag : BaseItem, IHasUI
 {
 	protected override bool CloneNewInstances => false;
 
 	protected internal ItemStorage Storage;
 	protected internal Guid ID;
-
-	public static List<(Guid id, string stacktract)> Bags = [];
 
 	public override ModItem NewInstance(Item entity)
 	{
@@ -30,7 +28,6 @@ public class Bag : BaseItem
 				_ => null
 			};
 		});
-		// Bags.Add((bag.ID, Environment.StackTrace));
 
 		return bag;
 	}
@@ -51,31 +48,8 @@ public class Bag : BaseItem
 	{
 		if (Main.netMode != NetmodeID.Server && player.whoAmI == Main.LocalPlayer.whoAmI)
 		{
-			/*BagUI.Instance.Display = BagUI.Instance.Display == Display.Visible ? Display.None : Display.Visible;
-			BagUI.Instance.SetBag(this);
-			BagUI.Instance.Recalculate();*/
-
-			if (BagUI.Instance.Display == Display.Visible)
-			{
-				BagUI.Instance.Display = Display.None;
-				UISystem.UILayer.Remove(BagUI.Instance);
-				BagUI.Instance.bag = null;
-
-				Hooking.Hooking.SetLock(Item);
-			}
-			else
-			{
-				// UISystem.UILayer.Remove(BagUI.Instance);
-				UISystem.UILayer.Add(new BagUI());
-				BagUI.Instance.Display = Display.Visible;
-
-				// BookUI.Instance = new BookUI();
-				// BookUI.Instance.Display = BookUI.Instance.Display == Display.Visible ? Display.None : Display.Visible;
-				BagUI.Instance.Recalculate();
-				BagUI.Instance.SetBag(this);
-
-				Hooking.Hooking.SetLock(Item);
-			}
+			WindowUI.Instance?.HandleUI(this);
+			Hooking.Hooking.SetLock(Item);
 		}
 
 		return true;
@@ -92,4 +66,6 @@ public class Bag : BaseItem
 		ID = tag.Get<Guid>("ID");
 		Storage.Load(tag.Get<TagCompound>("Items"));
 	}
+
+	public Guid GetID() => ID;
 }
