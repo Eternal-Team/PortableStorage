@@ -43,7 +43,23 @@ public class BagPanel : BaseUIPanel<Bag>
 
 	protected override void Draw(SpriteBatch spriteBatch)
 	{
-		base.Draw(spriteBatch);
+		if (IsMouseHovering)
+		{
+			Main.LocalPlayer.mouseInterface = true;
+			Main.instance.SetMouseNPC(-1, -1);
+			Main.LocalPlayer.cursorItemIconEnabled = false;
+			Main.LocalPlayer.cursorItemIconText = string.Empty;
+			Main.signHover = -1;
+			Main.ItemIconCacheUpdate(0);
+			Main.mouseText = true;
+			Main.HoverItem = new Item();
+			Main.hoverItemName = "";
+		}
+
+		if (Settings.Texture is not null)
+		{
+			spriteBatch.Draw(Settings.Texture.Value, Dimensions.TopLeft().OffsetBy(6, 6), new Rectangle(0, 0, Dimensions.Width - 12, Dimensions.Height - 12), Color.White);
+		}
 
 		DrawingUtility.DrawAchievementBorder(spriteBatch, Dimensions.TopLeft(), Dimensions.Size(), new Color(170, 170, 170, 255));
 	}
