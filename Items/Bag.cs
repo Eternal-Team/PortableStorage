@@ -2,6 +2,7 @@ using System;
 using BaseLibrary.Items;
 using BaseLibrary.UI;
 using ContainerLibrary;
+using PortableStorage.IL;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -48,8 +49,7 @@ public class Bag : BaseItem, IHasUI
 	{
 		if (Main.netMode != NetmodeID.Server && player.whoAmI == Main.LocalPlayer.whoAmI)
 		{
-			WindowUI.Instance?.HandleUI(this);
-			Hooking.Hooking.SetLock(Item);
+			WindowUI.Instance.HandleUI(this);
 		}
 
 		return true;
@@ -61,8 +61,15 @@ public class Bag : BaseItem, IHasUI
 	{
 		if (Main.netMode != NetmodeID.Server && player.whoAmI == Main.LocalPlayer.whoAmI)
 		{
-			WindowUI.Instance?.HandleUI(this);
-			Hooking.Hooking.SetLock(Item);
+			WindowUI.Instance.HandleUI(this);
+		}
+	}
+
+	public override void UpdateInventory(Player player)
+	{
+		if (Main.netMode != NetmodeID.Server && player.whoAmI == Main.LocalPlayer.whoAmI)
+		{
+			Hooking.SetLock(Item, WindowUI.Instance.IsOpen(this));
 		}
 	}
 

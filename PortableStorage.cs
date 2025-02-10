@@ -1,5 +1,4 @@
-using BaseLibrary.UI;
-using PortableStorage.Items;
+using PortableStorage.IL;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -39,7 +38,7 @@ public class PortableStorage : Mod
 	{
 		Instance = this;
 
-		Hooking.Hooking.Load();
+		Hooking.Load();
 
 		if (!Main.dedServ)
 		{

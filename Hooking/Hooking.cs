@@ -3,18 +3,20 @@ using BaseLibrary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
+using PortableStorage.Items;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace PortableStorage.Hooking;
+namespace PortableStorage.IL;
 
 internal static class Hooking
 {
 	internal static bool[] Locks = new bool[50];
 	internal static bool[] ChangedState = new bool[50];
 
-	internal static void SetLock(Item item)
+	internal static void SetLock(Item item, bool value)
 	{
 		int index = -1;
 		for (int i = 0; i < 50; i++)
@@ -28,7 +30,7 @@ internal static class Hooking
 
 		if (index == -1) return;
 
-		Locks[index] = !Locks[index];
+		Locks[index] = value;
 	}
 
 	internal static void Load()
@@ -36,6 +38,7 @@ internal static class Hooking
 		IL_Main.DrawInventory += IL_MainOnDrawInventory;
 	}
 
+	// note: hook ItemLoader.RightClick to prevent vanilla sound from playing 
 	private static void IL_MainOnDrawInventory(ILContext il)
 	{
 		ILCursor cursor = new ILCursor(il);
@@ -61,14 +64,23 @@ internal static class Hooking
 
 		ILLabel label = null;
 
-		ILUtility.TryGotoNext(cursor, i => i.MatchLdfld<Player>("inventoryChestStack"), i => i.MatchLdloc(36), i => i.MatchLdelemU1(), i => i.MatchBrtrue(out label));
+		ILUtility.TryGotoNext(cursor, MoveType.After, i => i.MatchLdfld<Player>("inventoryChestStack"), i => i.MatchLdloc(36), i => i.MatchLdelemU1(), i => i.MatchBrtrue(out label));
 
-		cursor.Index += 4;
+		ILLabel labelAfterLeftClick = il.DefineLabel();
 
 		FieldInfo field = typeof(Hooking).GetField("Locks", ReflectionUtility.DefaultFlags_Static);
+
 		cursor.EmitLdsfld(field);
 		cursor.EmitLdloc(36);
 		cursor.EmitLdelemU1();
+		cursor.EmitBrtrue(labelAfterLeftClick);
+
+		ILUtility.TryGotoNext(cursor, MoveType.After, i => i.MatchCall<ItemSlot>("LeftClick"));
+
+		cursor.MarkLabel(labelAfterLeftClick);
+
+		cursor.EmitLdloc(36);
+		cursor.EmitDelegate((int slot) => Locks[slot] && !Main.LocalPlayer.inventory[slot].IsAir && Main.LocalPlayer.inventory[slot].ModItem is not Bag);
 		cursor.EmitBrtrue(label);
 
 		#endregion
