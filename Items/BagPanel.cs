@@ -31,7 +31,7 @@ public class BagPanel : BaseUIPanel<Bag>
 		UITexture buttonClose = new UITexture(ModContent.Request<Texture2D>(PortableStorage.Textures + "CloseButton")) {
 			Position = Dimension.FromPercent(100, 0),
 			Size = Dimension.FromPixels(20),
-			Margin = new Margin(0,0,6,0),
+			Margin = new Margin(0, 0, 6, 0),
 			HoverText = "Close"
 		};
 		buttonClose.OnClick += args => {
@@ -71,6 +71,12 @@ public class BagPanel : BaseUIPanel<Bag>
 			Main.mouseText = true;
 			Main.HoverItem = new Item();
 			Main.hoverItemName = "";
+
+			object mouseTextCache = FieldMouseTextCache.GetValue(Main.instance);
+			FieldIsValid.SetValue(mouseTextCache, false);
+			FieldMouseTextCache.SetValue(Main.instance, mouseTextCache);
+
+			FieldAchievementAdvisor.GetValue(Main.instance).Update();
 		}
 
 		if (Settings.Texture is not null)
