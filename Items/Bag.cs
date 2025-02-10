@@ -1,9 +1,9 @@
 using System;
-using System.Collections.Generic;
 using BaseLibrary.Items;
 using BaseLibrary.UI;
 using ContainerLibrary;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -55,6 +55,17 @@ public class Bag : BaseItem, IHasUI
 		return true;
 	}
 
+	public override bool CanRightClick() => true;
+
+	public override void RightClick(Player player)
+	{
+		if (Main.netMode != NetmodeID.Server && player.whoAmI == Main.LocalPlayer.whoAmI)
+		{
+			WindowUI.Instance?.HandleUI(this);
+			Hooking.Hooking.SetLock(Item);
+		}
+	}
+
 	public override void SaveData(TagCompound tag)
 	{
 		tag.Set("ID", ID);
@@ -68,4 +79,8 @@ public class Bag : BaseItem, IHasUI
 	}
 
 	public Guid GetID() => ID;
+
+	public SoundStyle? GetOpenSound() => new SoundStyle("PortableStorage/Assets/Sound/BagOpen");
+
+	public SoundStyle? GetCloseSound() => new SoundStyle("PortableStorage/Assets/Sound/BagClose");
 }

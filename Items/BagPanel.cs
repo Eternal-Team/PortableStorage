@@ -1,4 +1,5 @@
 using BaseLibrary;
+using BaseLibrary.Input;
 using BaseLibrary.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,22 +12,38 @@ public class BagPanel : BaseUIPanel<Bag>
 {
 	public BagPanel(Bag container) : base(container)
 	{
+		Settings.CaptureAllInputs = true;
 		Settings.Texture = ModContent.Request<Texture2D>(PortableStorage.Textures + "InventoryBG");
-		Padding = new Padding(16);
 
-		UIText text = new UIText(container.GetID().ToString()) {
+		Size = Dimension.FromPixels(532, 108);
+		Padding = new Padding(10);
+
+		UIText text = new UIText("Bilbo Baggins") {
 			Size = new Dimension(0, 20, 100, 0),
 			Settings = {
 				HorizontalAlignment = HorizontalAlignment.Center,
-				TextColor = Color.White,
-				BorderColor = Color.Black
+				TextColor = new Color(40, 25, 14),
+				BorderColor = Color.Transparent
 			}
 		};
 		base.Add(text);
 
+		UITexture buttonClose = new UITexture(ModContent.Request<Texture2D>(PortableStorage.Textures + "CloseButton")) {
+			Position = Dimension.FromPercent(100, 0),
+			Size = Dimension.FromPixels(20),
+			Margin = new Margin(0,0,6,0),
+			HoverText = "Close"
+		};
+		buttonClose.OnClick += args => {
+			if (args.Button != MouseButton.Left) return;
+
+			WindowUI.Instance?.CloseUI(container);
+		};
+		base.Add(buttonClose);
+
 		UIGrid<UIStorageSlot> gridItems = new UIGrid<UIStorageSlot>(9) {
-			Size = new Dimension(0, -28, 100, 100),
-			Position = Dimension.FromPixels(0, 28),
+			Size = new Dimension(500, -28, 0, 100),
+			Position = new Dimension(0, 28, 50, 0),
 			Settings = {
 				ItemMargin = 4
 			}
