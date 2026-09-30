@@ -13,7 +13,7 @@ namespace PortableStorage;
 /// - Fishing Belt supplies bait, also as best fishing pole
 /// - How Wiring Bag, Gardener's Satchel and Builder's Reserve works
 
-// TODO: (more of a Container Library thing) display if crafting will use items from storages
+// TODO: (more of a Container Library thing) display that crafting will use items from storages
 
 public class PortableStorageBook : ModBook
 {

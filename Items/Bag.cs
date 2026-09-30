@@ -2,7 +2,7 @@ using System;
 using BaseLibrary.Items;
 using BaseLibrary.UI;
 using ContainerLibrary;
-using PortableStorage.IL;
+using ContainerLibrary.ItemStorage;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -15,15 +15,19 @@ public class Bag : BaseItem, IHasUI
 {
 	protected override bool CloneNewInstances => false;
 
+	[CloneByReference]
 	protected internal ItemStorage Storage;
 	protected internal Guid ID;
 
 	public override ModItem NewInstance(Item entity)
 	{
-		Bag bag = base.NewInstance(entity) as Bag;
+		if (base.NewInstance(entity) is not Bag bag) throw new Exception("Bag could not be created");
+		
 		bag.ID = Guid.NewGuid();
-		bag.Storage = new ItemStorage(9).SetStackOverride(slot => {
-			return slot switch {
+		bag.Storage = new ItemStorage(9).SetStackOverride(slot =>
+		{
+			return slot switch
+			{
 				8 => 20000,
 				7 => 50,
 				_ => null
@@ -69,7 +73,7 @@ public class Bag : BaseItem, IHasUI
 	{
 		if (Main.netMode != NetmodeID.Server && player.whoAmI == Main.LocalPlayer.whoAmI)
 		{
-			Hooking.SetLock(Item, WindowUI.Instance.IsOpen(this));
+			Hooking.Hooking.SetLock(Item, WindowUI.Instance.IsOpen(this));
 		}
 	}
 

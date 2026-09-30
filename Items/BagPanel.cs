@@ -76,7 +76,7 @@ public class BagPanel : BaseUIPanel<Bag>
 			FieldIsValid.SetValue(mouseTextCache, false);
 			FieldMouseTextCache.SetValue(Main.instance, mouseTextCache);
 
-			FieldAchievementAdvisor.GetValue(Main.instance).Update();
+			FieldAchievementAdvisor(Main.instance).Update();
 		}
 
 		if (Settings.Texture is not null)

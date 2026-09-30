@@ -6,15 +6,14 @@ using MonoMod.Cil;
 using PortableStorage.Items;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace PortableStorage.IL;
+namespace PortableStorage.Hooking;
 
 internal static class Hooking
 {
-	internal static bool[] Locks = new bool[50];
-	internal static bool[] ChangedState = new bool[50];
+	private static readonly bool[] Locks = new bool[50];
+	private static readonly bool[] ChangedState = new bool[50];
 
 	internal static void SetLock(Item item, bool value)
 	{
@@ -38,7 +37,7 @@ internal static class Hooking
 		IL_Main.DrawInventory += IL_MainOnDrawInventory;
 	}
 
-	// note: hook ItemLoader.RightClick to prevent vanilla sound from playing 
+	// TODO: hook ItemLoader.RightClick to prevent vanilla sound from playing
 	private static void IL_MainOnDrawInventory(ILContext il)
 	{
 		ILCursor cursor = new ILCursor(il);

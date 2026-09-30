@@ -3,6 +3,7 @@ using BaseLibrary;
 using BaseLibrary.Input;
 using BaseLibrary.UI;
 using ContainerLibrary;
+using ContainerLibrary.ItemStorage;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
